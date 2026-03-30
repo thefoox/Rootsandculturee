@@ -19,8 +19,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Produkter (PROD)
 
-- [ ] **PROD-01**: Produktkatalog med kategorier (drikke, kaffe/te, naturprodukter)
-- [ ] **PROD-02**: Produktdetaljside med bilder, beskrivelse, pris og legg-i-handlekurv
+- [x] **PROD-01**: Produktkatalog med kategorier (drikke, kaffe/te, naturprodukter)
+- [x] **PROD-02**: Produktdetaljside med bilder, beskrivelse, pris og legg-i-handlekurv
 - [ ] **PROD-03**: Handlekurv som overlever sidenavigasjon og refresh
 - [ ] **PROD-04**: Fraktkostnad vist for checkout (flat rate eller vektbasert tabell)
 - [ ] **PROD-05**: Checkout-flow med Stripe (bade gjest og innlogget bruker)
@@ -29,22 +29,22 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Booking (BOOK)
 
-- [ ] **BOOK-01**: Opplevelsesliste med tilgjengelige datoer, plasser igjen og pris
-- [ ] **BOOK-02**: Opplevelsesdetaljside med beskrivelse, bilder, hva som er inkludert, sted og kanselleringsvilkar
+- [x] **BOOK-01**: Opplevelsesliste med tilgjengelige datoer, plasser igjen og pris
+- [x] **BOOK-02**: Opplevelsesdetaljside med beskrivelse, bilder, hva som er inkludert, sted og kanselleringsvilkar
 - [ ] **BOOK-03**: Dato-/sesjonsvelger som viser tilgjengelige datoer med gjenstaende plasser
 - [ ] **BOOK-04**: Booking-checkout via Stripe med atomisk plassreservering (Firestore transaction)
 - [ ] **BOOK-05**: Bookingbekreftelse med unik bekreftelseskode pa side og via e-post
 - [ ] **BOOK-06**: Kapasitetssperring — bookingen blokkeres nar alle plasser er fylt
-- [ ] **BOOK-07**: Vanskelighetsgrad-indikator pa opplevelser (lett, moderat, krevende)
+- [x] **BOOK-07**: Vanskelighetsgrad-indikator pa opplevelser (lett, moderat, krevende)
 - [ ] **BOOK-08**: "Hva du ma ta med"-sjekkliste pa bookingbekreftelse
 
 ### Innhold (CONT)
 
-- [ ] **CONT-01**: Bloggoversiktsside med artikler sortert etter publiseringsdato
-- [ ] **CONT-02**: Artikkeldetaljside med tittel, brødtekst, bilder og publiseringsdato
-- [ ] **CONT-03**: SEO-metadata (tittel, beskrivelse, OG-tags) pa alle sider
-- [ ] **CONT-04**: SSR for produkter og opplevelser, SSG/ISR for artikler
-- [ ] **CONT-05**: Sitemap og robots.txt
+- [x] **CONT-01**: Bloggoversiktsside med artikler sortert etter publiseringsdato
+- [x] **CONT-02**: Artikkeldetaljside med tittel, brødtekst, bilder og publiseringsdato
+- [x] **CONT-03**: SEO-metadata (tittel, beskrivelse, OG-tags) pa alle sider
+- [x] **CONT-04**: SSR for produkter og opplevelser, SSG/ISR for artikler
+- [x] **CONT-05**: Sitemap og robots.txt
 
 ### Admin CMS (ADMN)
 
@@ -69,7 +69,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **WCAG-01**: Tastaturnavigasjon pa hele nettsiden med synlig fokus-indikator
 - [x] **WCAG-02**: Tilstrekkelig fargekontrast (minimum 4.5:1) pa all tekst
 - [x] **WCAG-03**: Skjermleser-stotte med semantisk HTML, ARIA-attributter og korrekt overskriftshierarki
-- [ ] **WCAG-04**: Alt-tekst pa alle bilder (med patvunget felt i admin CMS)
+- [x] **WCAG-04**: Alt-tekst pa alle bilder (med patvunget felt i admin CMS)
 - [x] **WCAG-05**: Tilgjengelige skjemafeilmeldinger med aria-describedby
 - [x] **WCAG-06**: Skip-link til hovedinnhold
 
@@ -126,23 +126,23 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WCAG-03 | Phase 1 | Complete |
 | WCAG-05 | Phase 1 | Complete |
 | WCAG-06 | Phase 1 | Complete |
-| PROD-01 | Phase 2 | Pending |
-| PROD-02 | Phase 2 | Pending |
-| BOOK-01 | Phase 2 | Pending |
-| BOOK-02 | Phase 2 | Pending |
-| BOOK-07 | Phase 2 | Pending |
-| CONT-01 | Phase 2 | Pending |
-| CONT-02 | Phase 2 | Pending |
-| CONT-03 | Phase 2 | Pending |
-| CONT-04 | Phase 2 | Pending |
-| CONT-05 | Phase 2 | Pending |
+| PROD-01 | Phase 2 | Complete |
+| PROD-02 | Phase 2 | Complete |
+| BOOK-01 | Phase 2 | Complete |
+| BOOK-02 | Phase 2 | Complete |
+| BOOK-07 | Phase 2 | Complete |
+| CONT-01 | Phase 2 | Complete |
+| CONT-02 | Phase 2 | Complete |
+| CONT-03 | Phase 2 | Complete |
+| CONT-04 | Phase 2 | Complete |
+| CONT-05 | Phase 2 | Complete |
 | ADMN-01 | Phase 2 | Pending |
 | ADMN-02 | Phase 2 | Pending |
 | ADMN-03 | Phase 2 | Pending |
 | ADMN-04 | Phase 2 | Pending |
 | ADMN-07 | Phase 2 | Pending |
 | ADMN-08 | Phase 2 | Pending |
-| WCAG-04 | Phase 2 | Pending |
+| WCAG-04 | Phase 2 | Complete |
 | PROD-03 | Phase 3 | Pending |
 | PROD-04 | Phase 3 | Pending |
 | PROD-05 | Phase 3 | Pending |

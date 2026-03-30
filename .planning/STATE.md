@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-03-30T19:35:17.695Z"
+status: executing
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-30T20:03:50.335Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 7
+  completed_plans: 6
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturopplevelser i en informativ og tilgjengelig nettbutikk.
-**Current focus:** Phase 01 — Fundament
+**Current focus:** Phase 02 — Butikkvindu og Admin
 
 ## Current Position
 
-Phase: 01 (Fundament) — EXECUTING
-Plan: 5 of 5
-Status: Phase complete — ready for verification
+Phase: 02 (Butikkvindu og Admin) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-03-30
 
 Progress: [░░░░░░░░░░] 0%
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P03 | 3min | 2 tasks | 8 files |
 | Phase 01 P04 | 2min | 2 tasks | 6 files |
 | Phase 01 P05 | 2min | 2 tasks | 6 files |
+| Phase 02-01 P01 | 7min | 3 tasks | 34 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,8 @@ Recent decisions affecting current work:
 - [Phase 01]: MegaMenuNav uses grid-cols-2 dropdown (not 4) — 2 columns fits 3 category items better
 - [Phase 01]: Cookie name __session for Firebase/Vercel compatibility; middleware redirects to / not login for admin enumeration prevention; admin role via Custom Claims not Firestore reads; DAL returns null not throw
 - [Phase 01]: AuthModal rendered inside Header with z-150 layering; MobileNav receives onLoginClick for auth modal access
+- [Phase 02-01]: Firebase Admin SDK returns null when credentials missing for build-time safety
+- [Phase 02-01]: Root layout <main> unconstrained; each page controls its own max-width container
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T19:35:17.691Z
-Stopped at: Phase 2 UI-SPEC approved
-Resume file: .planning/phases/02-butikkvindu-og-admin/02-UI-SPEC.md
+Last session: 2026-03-30T20:03:50.332Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
