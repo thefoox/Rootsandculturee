@@ -7,9 +7,10 @@ import { mainNavItems } from '@/lib/navigation'
 
 interface MobileNavProps {
   onClose: () => void
+  onLoginClick?: () => void
 }
 
-export function MobileNav({ onClose }: MobileNavProps) {
+export function MobileNav({ onClose, onLoginClick }: MobileNavProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const navRef = useRef<HTMLDivElement>(null)
 
@@ -115,7 +116,7 @@ export function MobileNav({ onClose }: MobileNavProps) {
         <button
           type="button"
           className="w-full rounded-md bg-ember py-3 text-center font-body text-[15px] font-medium text-cream"
-          onClick={onClose}
+          onClick={onLoginClick || onClose}
         >
           Logg inn
         </button>

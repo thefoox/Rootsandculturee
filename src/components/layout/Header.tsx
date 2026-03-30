@@ -5,9 +5,25 @@ import Link from 'next/link'
 import { Menu, ShoppingBag } from 'lucide-react'
 import { MegaMenuNav } from './MegaMenuNav'
 import { MobileNav } from './MobileNav'
+import { AuthModal } from '@/components/auth/AuthModal'
+import { LoginForm } from '@/components/auth/LoginForm'
+import { RegisterForm } from '@/components/auth/RegisterForm'
+import { PasswordResetForm } from '@/components/auth/PasswordResetForm'
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [authOpen, setAuthOpen] = useState(false)
+  const [authView, setAuthView] = useState<'login' | 'register' | 'reset'>('login')
+
+  function handleAuthClose() {
+    setAuthOpen(false)
+    setAuthView('login')
+  }
+
+  function handleAuthOpen() {
+    setAuthOpen(true)
+    setMobileOpen(false)
+  }
 
   return (
     <header
@@ -37,10 +53,11 @@ export function Header() {
           <ShoppingBag className="h-5 w-5" aria-hidden="true" />
         </Link>
 
-        {/* Auth trigger -- placeholder until Plan 05 wires AuthModal */}
+        {/* Auth trigger -- opens AuthModal */}
         <button
           type="button"
           className="text-[15px] text-forest hover:opacity-85"
+          onClick={() => setAuthOpen(true)}
           aria-label="Logg inn"
         >
           Logg inn
@@ -72,8 +89,34 @@ export function Header() {
 
       {/* Mobile nav overlay */}
       {mobileOpen && (
-        <MobileNav onClose={() => setMobileOpen(false)} />
+        <MobileNav onClose={() => setMobileOpen(false)} onLoginClick={handleAuthOpen} />
       )}
+
+      {/* Auth modal */}
+      <AuthModal
+        isOpen={authOpen}
+        onClose={handleAuthClose}
+        title={authView === 'login' ? 'Logg inn' : authView === 'register' ? 'Opprett konto' : 'Tilbakestill passord'}
+      >
+        {authView === 'login' && (
+          <LoginForm
+            onSwitchToRegister={() => setAuthView('register')}
+            onSwitchToReset={() => setAuthView('reset')}
+            onSuccess={handleAuthClose}
+          />
+        )}
+        {authView === 'register' && (
+          <RegisterForm
+            onSwitchToLogin={() => setAuthView('login')}
+            onSuccess={handleAuthClose}
+          />
+        )}
+        {authView === 'reset' && (
+          <PasswordResetForm
+            onSwitchToLogin={() => setAuthView('login')}
+          />
+        )}
+      </AuthModal>
     </header>
   )
 }
