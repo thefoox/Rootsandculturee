@@ -121,44 +121,44 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-05 | Phase 1 | Pending |
 | FOUND-06 | Phase 1 | Pending |
 | FOUND-07 | Phase 1 | Pending |
+| WCAG-01 | Phase 1 | Pending |
+| WCAG-02 | Phase 1 | Pending |
+| WCAG-03 | Phase 1 | Pending |
+| WCAG-05 | Phase 1 | Pending |
+| WCAG-06 | Phase 1 | Pending |
 | PROD-01 | Phase 2 | Pending |
 | PROD-02 | Phase 2 | Pending |
-| PROD-03 | Phase 2 | Pending |
-| PROD-04 | Phase 2 | Pending |
-| PROD-05 | Phase 2 | Pending |
-| PROD-06 | Phase 2 | Pending |
-| PROD-07 | Phase 2 | Pending |
-| BOOK-01 | Phase 3 | Pending |
-| BOOK-02 | Phase 3 | Pending |
+| BOOK-01 | Phase 2 | Pending |
+| BOOK-02 | Phase 2 | Pending |
+| BOOK-07 | Phase 2 | Pending |
+| CONT-01 | Phase 2 | Pending |
+| CONT-02 | Phase 2 | Pending |
+| CONT-03 | Phase 2 | Pending |
+| CONT-04 | Phase 2 | Pending |
+| CONT-05 | Phase 2 | Pending |
+| ADMN-01 | Phase 2 | Pending |
+| ADMN-02 | Phase 2 | Pending |
+| ADMN-03 | Phase 2 | Pending |
+| ADMN-04 | Phase 2 | Pending |
+| ADMN-07 | Phase 2 | Pending |
+| ADMN-08 | Phase 2 | Pending |
+| WCAG-04 | Phase 2 | Pending |
+| PROD-03 | Phase 3 | Pending |
+| PROD-04 | Phase 3 | Pending |
+| PROD-05 | Phase 3 | Pending |
+| PROD-06 | Phase 3 | Pending |
+| PROD-07 | Phase 3 | Pending |
 | BOOK-03 | Phase 3 | Pending |
 | BOOK-04 | Phase 3 | Pending |
 | BOOK-05 | Phase 3 | Pending |
 | BOOK-06 | Phase 3 | Pending |
-| BOOK-07 | Phase 3 | Pending |
 | BOOK-08 | Phase 3 | Pending |
-| CONT-01 | Phase 4 | Pending |
-| CONT-02 | Phase 4 | Pending |
-| CONT-03 | Phase 4 | Pending |
-| CONT-04 | Phase 4 | Pending |
-| CONT-05 | Phase 4 | Pending |
-| ADMN-01 | Phase 5 | Pending |
-| ADMN-02 | Phase 5 | Pending |
-| ADMN-03 | Phase 5 | Pending |
-| ADMN-04 | Phase 5 | Pending |
-| ADMN-05 | Phase 5 | Pending |
-| ADMN-06 | Phase 5 | Pending |
-| ADMN-07 | Phase 5 | Pending |
-| ADMN-08 | Phase 5 | Pending |
-| CUST-01 | Phase 6 | Pending |
-| CUST-02 | Phase 6 | Pending |
-| CUST-03 | Phase 6 | Pending |
-| CUST-04 | Phase 6 | Pending |
-| WCAG-01 | Phase 1 | Pending |
-| WCAG-02 | Phase 1 | Pending |
-| WCAG-03 | Phase 1 | Pending |
-| WCAG-04 | Phase 5 | Pending |
-| WCAG-05 | Phase 1 | Pending |
-| WCAG-06 | Phase 1 | Pending |
+| ADMN-05 | Phase 3 | Pending |
+| ADMN-06 | Phase 3 | Pending |
+| CUST-01 | Phase 4 | Pending |
+| CUST-02 | Phase 4 | Pending |
+| CUST-03 | Phase 4 | Pending |
+| CUST-04 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 42 total
@@ -167,4 +167,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-30*
-*Last updated: 2026-03-30 after initial definition*
+*Last updated: 2026-03-30 — Traceability updated for coarse 4-phase roadmap*
