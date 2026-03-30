@@ -72,7 +72,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Cart, checkout with Stripe Elements, webhook, email confirmations, order fulfillment
-- [ ] 03-02-PLAN.md — Booking date picker, booking flow, admin order/booking management
+- [x] 03-02-PLAN.md — Booking date picker, booking flow, admin order/booking management
 
 **UI hint**: yes
 

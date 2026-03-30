@@ -31,12 +31,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **BOOK-01**: Opplevelsesliste med tilgjengelige datoer, plasser igjen og pris
 - [x] **BOOK-02**: Opplevelsesdetaljside med beskrivelse, bilder, hva som er inkludert, sted og kanselleringsvilkar
-- [ ] **BOOK-03**: Dato-/sesjonsvelger som viser tilgjengelige datoer med gjenstaende plasser
-- [ ] **BOOK-04**: Booking-checkout via Stripe med atomisk plassreservering (Firestore transaction)
-- [ ] **BOOK-05**: Bookingbekreftelse med unik bekreftelseskode pa side og via e-post
-- [ ] **BOOK-06**: Kapasitetssperring — bookingen blokkeres nar alle plasser er fylt
+- [x] **BOOK-03**: Dato-/sesjonsvelger som viser tilgjengelige datoer med gjenstaende plasser
+- [x] **BOOK-04**: Booking-checkout via Stripe med atomisk plassreservering (Firestore transaction)
+- [x] **BOOK-05**: Bookingbekreftelse med unik bekreftelseskode pa side og via e-post
+- [x] **BOOK-06**: Kapasitetssperring — bookingen blokkeres nar alle plasser er fylt
 - [x] **BOOK-07**: Vanskelighetsgrad-indikator pa opplevelser (lett, moderat, krevende)
-- [ ] **BOOK-08**: "Hva du ma ta med"-sjekkliste pa bookingbekreftelse
+- [x] **BOOK-08**: "Hva du ma ta med"-sjekkliste pa bookingbekreftelse
 
 ### Innhold (CONT)
 
@@ -52,8 +52,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **ADMN-02**: Produkthandtering — opprett, rediger, slett produkter med bilder, pris, kategori og lagertall
 - [x] **ADMN-03**: Opplevelseshandtering — opprett, rediger, slett opplevelser med datoer, plassgrenser og innhold
 - [x] **ADMN-04**: Artikkelhandtering — opprett, rediger, publiser/avpubliser artikler med rik tekst og bilder
-- [ ] **ADMN-05**: Ordrehandtering — vis ordrer, oppdater status (bekreftet, sendt, levert)
-- [ ] **ADMN-06**: Bookinghandtering — vis bookinger per opplevelse/dato, kanseller
+- [x] **ADMN-05**: Ordrehandtering — vis ordrer, oppdater status (bekreftet, sendt, levert)
+- [x] **ADMN-06**: Bookinghandtering — vis bookinger per opplevelse/dato, kanseller
 - [x] **ADMN-07**: Bildeopplasting til Firebase Storage fra admin-UI
 - [x] **ADMN-08**: Innholdsredigering pa nettsiden (hero-tekst, om oss, etc.)
 
@@ -148,13 +148,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROD-05 | Phase 3 | Complete |
 | PROD-06 | Phase 3 | Complete |
 | PROD-07 | Phase 3 | Complete |
-| BOOK-03 | Phase 3 | Pending |
-| BOOK-04 | Phase 3 | Pending |
-| BOOK-05 | Phase 3 | Pending |
-| BOOK-06 | Phase 3 | Pending |
-| BOOK-08 | Phase 3 | Pending |
-| ADMN-05 | Phase 3 | Pending |
-| ADMN-06 | Phase 3 | Pending |
+| BOOK-03 | Phase 3 | Complete |
+| BOOK-04 | Phase 3 | Complete |
+| BOOK-05 | Phase 3 | Complete |
+| BOOK-06 | Phase 3 | Complete |
+| BOOK-08 | Phase 3 | Complete |
+| ADMN-05 | Phase 3 | Complete |
+| ADMN-06 | Phase 3 | Complete |
 | CUST-01 | Phase 4 | Pending |
 | CUST-02 | Phase 4 | Pending |
 | CUST-03 | Phase 4 | Pending |
