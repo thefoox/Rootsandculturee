@@ -40,6 +40,8 @@ function mapExperienceDate(doc: FirebaseFirestore.DocumentSnapshot): ExperienceD
 
 export const getExperiences = unstable_cache(
   async (): Promise<Experience[]> => {
+    if (!adminDb) return []
+
     const snapshot = await adminDb
       .collection('experiences')
       .where('publishedAt', '!=', null)
@@ -54,6 +56,8 @@ export const getExperiences = unstable_cache(
 
 export const getExperienceBySlug = unstable_cache(
   async (slug: string): Promise<Experience | null> => {
+    if (!adminDb) return null
+
     const snapshot = await adminDb
       .collection('experiences')
       .where('slug', '==', slug)
@@ -70,6 +74,8 @@ export const getExperienceBySlug = unstable_cache(
 
 export const getExperienceDates = unstable_cache(
   async (experienceId: string): Promise<ExperienceDate[]> => {
+    if (!adminDb) return []
+
     const now = new Date()
     const snapshot = await adminDb
       .collection('experiences')

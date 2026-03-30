@@ -23,6 +23,8 @@ function mapProduct(doc: FirebaseFirestore.DocumentSnapshot): Product {
 
 export const getProducts = unstable_cache(
   async (): Promise<Product[]> => {
+    if (!adminDb) return []
+
     const snapshot = await adminDb
       .collection('products')
       .where('publishedAt', '!=', null)
@@ -37,6 +39,8 @@ export const getProducts = unstable_cache(
 
 export const getProductsByCategory = unstable_cache(
   async (category: ProductCategory): Promise<Product[]> => {
+    if (!adminDb) return []
+
     const snapshot = await adminDb
       .collection('products')
       .where('publishedAt', '!=', null)
@@ -52,6 +56,8 @@ export const getProductsByCategory = unstable_cache(
 
 export const getProductBySlug = unstable_cache(
   async (slug: string): Promise<Product | null> => {
+    if (!adminDb) return null
+
     const snapshot = await adminDb
       .collection('products')
       .where('slug', '==', slug)

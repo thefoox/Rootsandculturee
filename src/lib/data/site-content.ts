@@ -5,6 +5,8 @@ import type { SiteContent } from '@/types'
 
 export const getSiteContent = unstable_cache(
   async (): Promise<SiteContent | null> => {
+    if (!adminDb) return null
+
     const doc = await adminDb.collection('siteContent').doc('main').get()
 
     if (!doc.exists) return null

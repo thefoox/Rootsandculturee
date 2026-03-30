@@ -7,6 +7,9 @@ import type { AuthResult } from '@/types'
 
 export async function loginAction(idToken: string): Promise<AuthResult> {
   try {
+    if (!adminAuth) {
+      return { success: false, error: 'Server er ikke konfigurert. Kontakt administrator.' }
+    }
     const decoded = await adminAuth.verifyIdToken(idToken)
 
     // Get user role from custom claims
@@ -30,6 +33,9 @@ export async function registerAction(
   address: string
 ): Promise<AuthResult> {
   try {
+    if (!adminAuth || !adminDb) {
+      return { success: false, error: 'Server er ikke konfigurert. Kontakt administrator.' }
+    }
     const decoded = await adminAuth.verifyIdToken(idToken)
 
     // Create user document in Firestore

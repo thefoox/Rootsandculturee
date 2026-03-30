@@ -25,6 +25,8 @@ function mapArticle(doc: FirebaseFirestore.DocumentSnapshot): Article {
 
 export const getArticles = unstable_cache(
   async (): Promise<Article[]> => {
+    if (!adminDb) return []
+
     const snapshot = await adminDb
       .collection('articles')
       .where('status', '==', 'published')
@@ -40,6 +42,8 @@ export const getArticles = unstable_cache(
 
 export const getArticleBySlug = unstable_cache(
   async (slug: string): Promise<Article | null> => {
+    if (!adminDb) return null
+
     const snapshot = await adminDb
       .collection('articles')
       .where('slug', '==', slug)
