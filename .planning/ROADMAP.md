@@ -85,7 +85,11 @@ Plans:
   2. Kunden kan klikke inn pa en ordre og se status (bekreftet, sendt, levert)
   3. Kunden kan se kommende og tidligere bookinger med detaljer og bekreftelseskode
   4. Kunden kan oppdatere navn, e-post og adresse fra profilsiden
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 04-01-PLAN.md — Customer dashboard with tabs, order/booking history, profile editing
+
 **UI hint**: yes
 
 ## Progress
@@ -98,4 +102,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Fundament | 5/5 | Complete | 2026-03-30 |
 | 2. Butikkvindu og Admin | 0/2 | Planned | - |
 | 3. Betaling og Booking | 0/2 | Planned | - |
-| 4. Kundekonto | 0/? | Not started | - |
+| 4. Kundekonto | 0/1 | Not started | - |
