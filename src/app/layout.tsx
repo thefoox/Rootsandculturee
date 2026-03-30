@@ -1,5 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter, Merriweather } from 'next/font/google'
+import { Toaster } from 'sonner'
+import { SkipLink } from '@/components/layout/SkipLink'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 import './globals.css'
 
 const inter = Inter({
@@ -23,7 +27,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="nb" className={`${inter.variable} ${merriweather.variable}`}>
-      <body>{children}</body>
+      <body>
+        <SkipLink />
+        <Header />
+        <main id="main-content" className="mx-auto max-w-[1200px] px-4 lg:px-8">
+          {children}
+        </main>
+        <Footer />
+        <Toaster position="bottom-right" />
+      </body>
     </html>
   )
 }
