@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SkipLink />
         <Header />
-        <main id="main-content" className="mx-auto max-w-[1200px] px-4 lg:px-8">
+        <main id="main-content">
           {children}
         </main>
         <Footer />
