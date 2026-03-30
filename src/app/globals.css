@@ -1,1 +1,56 @@
 @import "tailwindcss";
+
+@theme {
+  /* Brand palette */
+  --color-forest: #1B4332;
+  --color-cream: #FEFCF3;
+  --color-card: #F5F0E8;
+  --color-rust: #A0522D;
+  --color-ember: #B84D00;
+  --color-bark: #5C3D1E;
+  --color-destructive: #C0392B;
+
+  /* Typography */
+  --font-heading: var(--font-merriweather), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Global base styles */
+body {
+  @apply bg-cream text-forest font-body;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Focus ring: visible on all interactive elements */
+*:focus-visible {
+  outline: 2px solid #1B4332;
+  outline-offset: 2px;
+}
+
+/* Inverted focus ring for dark surfaces (header, mobile nav, footer) */
+.dark-surface *:focus-visible {
+  outline-color: #FEFCF3;
+}
+
+/*
+ * Motion guard: OPT-IN pattern per UI-SPEC Accessibility Contract.
+ * Transitions/animations are OFF by default and only enabled when
+ * user has no reduced-motion preference (prefers-reduced-motion: no-preference).
+ * Components should use the `motion-safe:` Tailwind modifier for transition
+ * classes, OR place their own transitions inside this media query.
+ * This global block zeroes out any transitions that leak through.
+ */
+*, *::before, *::after {
+  animation-duration: 0ms;
+  transition-duration: 0ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  *, *::before, *::after {
+    /* Re-enable transitions for users without a reduced-motion preference.
+       Component-level durations (e.g. duration-100) now take effect. */
+    animation-duration: revert;
+    transition-duration: revert;
+  }
+}
