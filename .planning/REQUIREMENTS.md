@@ -10,8 +10,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Foundation (FOUND)
 
 - [x] **FOUND-01**: Next.js App Router prosjekt med Tailwind v4, TypeScript og Firebase oppsett
-- [ ] **FOUND-02**: Firebase Auth (email/passord) med registrering, innlogging, utlogging og passord-reset
-- [ ] **FOUND-03**: Server-side auth via jose-krypterte HttpOnly cookies og middleware-beskyttelse
+- [x] **FOUND-02**: Firebase Auth (email/passord) med registrering, innlogging, utlogging og passord-reset
+- [x] **FOUND-03**: Server-side auth via jose-krypterte HttpOnly cookies og middleware-beskyttelse
 - [x] **FOUND-04**: Firestore sikkerhetstestede security rules for alle collections
 - [x] **FOUND-05**: Design system med morkgronn + hostfarger (rustrod, brent oransje, varm brun) som oppfyller WCAG 2.1 AA kontrastkrav
 - [x] **FOUND-06**: Responsivt layout-system (mobil-first, 375px+)
@@ -115,8 +115,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | FOUND-01 | Phase 1 | Complete |
-| FOUND-02 | Phase 1 | Pending |
-| FOUND-03 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Complete |
+| FOUND-03 | Phase 1 | Complete |
 | FOUND-04 | Phase 1 | Complete |
 | FOUND-05 | Phase 1 | Complete |
 | FOUND-06 | Phase 1 | Complete |

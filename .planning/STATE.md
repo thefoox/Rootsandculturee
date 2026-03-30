@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-03-30T17:00:16.550Z"
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-03-30T17:03:55.936Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 01 (Fundament) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-03-30
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P01 | 4min | 2 tasks | 20 files |
 | Phase 01 P02 | 2min | 2 tasks | 6 files |
 | Phase 01 P03 | 3min | 2 tasks | 8 files |
+| Phase 01 P04 | 2min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,7 @@ Recent decisions affecting current work:
 - [Phase 01]: Motion guard uses opt-in pattern (prefers-reduced-motion: no-preference) per UI-SPEC -- transitions OFF by default
 - [Phase 01]: Sonner Toaster role set per-toast (not in toastOptions prop)
 - [Phase 01]: MegaMenuNav uses grid-cols-2 dropdown (not 4) — 2 columns fits 3 category items better
+- [Phase 01]: Cookie name __session for Firebase/Vercel compatibility; middleware redirects to / not login for admin enumeration prevention; admin role via Custom Claims not Firestore reads; DAL returns null not throw
 
 ### Pending Todos
 
@@ -87,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T17:00:16.546Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-03-30T17:03:55.933Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
