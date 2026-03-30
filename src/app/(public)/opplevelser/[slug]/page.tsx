@@ -5,7 +5,7 @@ import { HeroImage } from '@/components/shared/HeroImage'
 import { PriceBadge } from '@/components/shared/PriceBadge'
 import { DifficultyBadge } from '@/components/experiences/DifficultyBadge'
 import { SpotsRemaining } from '@/components/experiences/SpotsRemaining'
-import { Button } from '@/components/ui/Button'
+import { DateCardPicker } from '@/components/experiences/DateCardPicker'
 import { formatDate } from '@/lib/format'
 import { CalendarDays, MapPin } from 'lucide-react'
 
@@ -141,18 +141,15 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Booking button */}
-        <div className="mt-12">
-          <Button
-            variant="primary"
-            disabled
-            aria-disabled="true"
-            title="Bestilling kommer snart"
-            className="w-full md:w-auto"
-          >
-            Bestill opplevelse
-          </Button>
-        </div>
+        {/* Booking date picker */}
+        <DateCardPicker
+          experienceId={experience.id}
+          dates={dates.map((d) => ({
+            ...d,
+            date: d.date instanceof Date ? d.date : new Date(d.date),
+          }))}
+          experience={experience}
+        />
       </div>
     </>
   )
