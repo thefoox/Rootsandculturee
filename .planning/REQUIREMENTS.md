@@ -48,14 +48,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Admin CMS (ADMN)
 
-- [ ] **ADMN-01**: Admin-ruter (/admin) beskyttet med rollebasert tilgang
-- [ ] **ADMN-02**: Produkthandtering — opprett, rediger, slett produkter med bilder, pris, kategori og lagertall
-- [ ] **ADMN-03**: Opplevelseshandtering — opprett, rediger, slett opplevelser med datoer, plassgrenser og innhold
-- [ ] **ADMN-04**: Artikkelhandtering — opprett, rediger, publiser/avpubliser artikler med rik tekst og bilder
+- [x] **ADMN-01**: Admin-ruter (/admin) beskyttet med rollebasert tilgang
+- [x] **ADMN-02**: Produkthandtering — opprett, rediger, slett produkter med bilder, pris, kategori og lagertall
+- [x] **ADMN-03**: Opplevelseshandtering — opprett, rediger, slett opplevelser med datoer, plassgrenser og innhold
+- [x] **ADMN-04**: Artikkelhandtering — opprett, rediger, publiser/avpubliser artikler med rik tekst og bilder
 - [ ] **ADMN-05**: Ordrehandtering — vis ordrer, oppdater status (bekreftet, sendt, levert)
 - [ ] **ADMN-06**: Bookinghandtering — vis bookinger per opplevelse/dato, kanseller
-- [ ] **ADMN-07**: Bildeopplasting til Firebase Storage fra admin-UI
-- [ ] **ADMN-08**: Innholdsredigering pa nettsiden (hero-tekst, om oss, etc.)
+- [x] **ADMN-07**: Bildeopplasting til Firebase Storage fra admin-UI
+- [x] **ADMN-08**: Innholdsredigering pa nettsiden (hero-tekst, om oss, etc.)
 
 ### Kundeprofil (CUST)
 
@@ -136,12 +136,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-03 | Phase 2 | Complete |
 | CONT-04 | Phase 2 | Complete |
 | CONT-05 | Phase 2 | Complete |
-| ADMN-01 | Phase 2 | Pending |
-| ADMN-02 | Phase 2 | Pending |
-| ADMN-03 | Phase 2 | Pending |
-| ADMN-04 | Phase 2 | Pending |
-| ADMN-07 | Phase 2 | Pending |
-| ADMN-08 | Phase 2 | Pending |
+| ADMN-01 | Phase 2 | Complete |
+| ADMN-02 | Phase 2 | Complete |
+| ADMN-03 | Phase 2 | Complete |
+| ADMN-04 | Phase 2 | Complete |
+| ADMN-07 | Phase 2 | Complete |
+| ADMN-08 | Phase 2 | Complete |
 | WCAG-04 | Phase 2 | Complete |
 | PROD-03 | Phase 3 | Pending |
 | PROD-04 | Phase 3 | Pending |

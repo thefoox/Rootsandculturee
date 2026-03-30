@@ -54,7 +54,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — Public storefront: types, data layer, product/experience/blog pages, SEO, sitemap
-- [ ] 02-02-PLAN.md — Admin CMS: shell, CRUD for products/experiences/articles, image upload, content editing
+- [x] 02-02-PLAN.md — Admin CMS: shell, CRUD for products/experiences/articles, image upload, content editing
 
 **UI hint**: yes
 
