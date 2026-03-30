@@ -101,7 +101,7 @@ All Phase 1 type roles carry forward unchanged. Phase 2 uses exactly 4 sizes.
 | Role | Font | Size | Weight | Line Height | Usage |
 |------|------|------|--------|-------------|-------|
 | Body | Inter | 15px | 400 (regular) | 1.5 | Product descriptions, form labels, table cell content, article prose (see prose wrapper note) |
-| Label | Inter | 13px | 400 (regular) | 1.4 | Input labels, table column headers, meta text, badges, category tabs, breadcrumb items |
+| Label | Inter | 13px | 400 (regular) | 1.4 | Input labels, table column headers, meta text, badges, category tabs, breadcrumb items, admin sidebar section labels |
 | Heading (h3/h4) | Merriweather | 20px | 700 (bold) | 1.25 | Card titles, section subheadings, admin panel headings |
 | Heading (h1/h2) | Merriweather | 28px | 700 (bold) | 1.2 | Page headings, product detail title, article title, experience title |
 
@@ -234,7 +234,7 @@ All Phase 1 color contract carries forward. Phase 2 additions:
 - Title over hero bottom: Merriweather 28px 700, cream, padded 32px from bottom of hero
 - Content below hero: `<article>` with max-width 800px, centered, `px-4 md:px-8`, `pt-48 pb-64`
 - Info row: date, price, spots remaining in horizontal strip with `bg-card`, `rounded-lg`, `p-16`, `border border-forest/12`
-- Difficulty badge: positioned in info row. Sizes: 13px Inter 400, `rounded-full`, `px-12 py-4`. Colors: see badge tokens above
+- Difficulty badge: positioned in info row. Sizes: 13px Inter 400, `rounded-full`, `px-8 py-4`. Colors: see badge tokens above
 - Sections with `<h2>` 20px Merriweather: "Beskrivelse", "Hva er inkludert", "Sted", "Kanselleringsvilkar"
 - "Bestill opplevelse" button: `Button variant="primary"`. Phase 2: disabled with `aria-disabled="true"`, tooltip "Bestilling kommer snart"
 
@@ -301,7 +301,7 @@ INNHOLD (section label — rust, 13px uppercase tracking-wide)
 - Nav link: 44px height, `px-16`, flex row, 16px icon + 16px gap + 15px text
 - Active: `bg-[rgba(254,252,243,0.08)]`, `border-l-3 border-ember`, cream text
 - Hover: `bg-[rgba(254,252,243,0.08)]`
-- Section label: `px-16 pt-24 pb-8`, rust, 11px Inter, `tracking-wider`, uppercase
+- Section label: `px-16 pt-24 pb-8`, rust, 13px Inter, `tracking-wider`, uppercase
 
 ### Admin Breadcrumb
 
@@ -647,6 +647,7 @@ All Phase 1 WCAG requirements carry forward. Phase 2 additions:
 | Image upload drop zone | `role="region"`, `aria-label="Bildeopplasting"`. Hidden `<input type="file">` with `<label>` for keyboard access |
 | Progress bar | `role="progressbar"`, `aria-valuenow`, `aria-valuemin="0"`, `aria-valuemax="100"` |
 | Tiptap editor | `role="textbox"`, `aria-multiline="true"`, `aria-label="Artikkelinnhold"` on editable div |
+| Tiptap toolbar buttons | Each toolbar button must have an explicit `aria-label` in Norwegian: Bold → `aria-label="Fet skrift"`, Italic → `aria-label="Kursiv"`, Underline → `aria-label="Understreking"`, H2 → `aria-label="Overskrift 2"`, H3 → `aria-label="Overskrift 3"`, BulletList → `aria-label="Punktliste"`, OrderedList → `aria-label="Nummerert liste"`, Blockquote → `aria-label="Sitat"`, Link → `aria-label="Lenke"`, Image → `aria-label="Sett inn bilde"`. All buttons also carry `title` matching `aria-label` for sighted tooltip. |
 | Admin sidebar | `<nav aria-label="Admin-navigasjon">`, current page link has `aria-current="page"` |
 | Spots remaining urgency | Color change alone does not convey meaning; include screen-reader text: `<span className="sr-only"> (lavt antall)</span>` when ≤ 3 spots |
 
@@ -801,4 +802,5 @@ export const metadata: Metadata = {
 | globals.css (live codebase) | All 7 CSS custom properties confirmed present |
 | Contrast calculator | 3 new badge color pairs verified 2026-03-30 |
 | Checker revision 2026-03-30 | 4 issues fixed: delete copy, typography scale, focal points, publish copy |
+| Checker revision 2026-03-30 (2) | 3 issues fixed: sidebar section label 11px→13px, difficulty badge px-12→px-8, Tiptap toolbar aria-labels added |
 | User input this session | 0 (all decisions pre-populated from upstream artifacts) |
