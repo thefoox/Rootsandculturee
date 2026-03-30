@@ -1,0 +1,105 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import {
+  Package,
+  Mountain,
+  FileText,
+  Layout,
+  ArrowLeft,
+  LogOut,
+  X,
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { logoutAction } from '@/actions/auth'
+
+const navItems = [
+  { href: '/admin/produkter', label: 'Produkter', icon: Package },
+  { href: '/admin/opplevelser', label: 'Opplevelser', icon: Mountain },
+  { href: '/admin/artikler', label: 'Artikler', icon: FileText },
+  { href: '/admin/innhold', label: 'Sideinnhold', icon: Layout },
+]
+
+interface AdminSidebarProps {
+  mobile?: boolean
+  onClose?: () => void
+}
+
+export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
+  const pathname = usePathname()
+
+  return (
+    <aside
+      className={cn(
+        'dark-surface flex h-full w-[240px] flex-col bg-admin-sidebar',
+        mobile && 'fixed inset-y-0 left-0 z-[250]'
+      )}
+    >
+      <div className="flex items-center justify-between px-4 pb-4 pt-6">
+        <span className="font-body text-[13px] text-cream">
+          Roots &amp; Culture Admin
+        </span>
+        {mobile && (
+          <button
+            onClick={onClose}
+            className="flex h-[44px] w-[44px] items-center justify-center text-cream"
+            aria-label="Lukk admin-meny"
+          >
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
+        )}
+      </div>
+
+      <nav aria-label="Admin-navigasjon" className="flex-1">
+        <div className="px-4 pb-2 pt-6">
+          <span className="text-[13px] uppercase tracking-wider text-rust">
+            Innhold
+          </span>
+        </div>
+        <ul className="flex flex-col">
+          {navItems.map((item) => {
+            const isActive =
+              pathname === item.href || pathname.startsWith(item.href + '/')
+            const Icon = item.icon
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={onClose}
+                  className={cn(
+                    'flex h-[44px] items-center gap-4 px-4 text-[15px] text-cream',
+                    'hover:bg-[rgba(254,252,243,0.08)]',
+                    isActive &&
+                      'border-l-[3px] border-ember bg-[rgba(254,252,243,0.08)]'
+                  )}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  {item.label}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      </nav>
+
+      <div className="border-t border-cream/10 px-4 py-4">
+        <Link
+          href="/"
+          className="flex h-[44px] items-center gap-4 text-[15px] text-cream hover:bg-[rgba(254,252,243,0.08)]"
+        >
+          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
+          Tilbake til nettbutikk
+        </Link>
+        <button
+          onClick={() => logoutAction()}
+          className="flex h-[44px] w-full items-center gap-4 text-[15px] text-cream hover:bg-[rgba(254,252,243,0.08)]"
+        >
+          <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
+          Logg ut
+        </button>
+      </div>
+    </aside>
+  )
+}
