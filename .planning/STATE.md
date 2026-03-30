@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-03-30T16:50:43.242Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-30T16:54:57.124Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 01 (Fundament) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-03-30
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01 P01 | 4min | 2 tasks | 20 files |
+| Phase 01 P02 | 2min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Tailwind v4 with @tailwindcss/postcss (CSS-native config, no tailwind.config.js)
 - [Phase 01]: Firebase Admin SDK singleton with getApps() guard and server-only import
 - [Phase 01]: Firestore security rules use Custom Claims for admin checks (not document reads)
+- [Phase 01]: Font variables use var(--font-inter) and var(--font-merriweather) to bridge next/font CSS vars to Tailwind @theme
+- [Phase 01]: Motion guard uses opt-in pattern (prefers-reduced-motion: no-preference) per UI-SPEC -- transitions OFF by default
 
 ### Pending Todos
 
@@ -81,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T16:50:43.238Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-03-30T16:54:57.120Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
