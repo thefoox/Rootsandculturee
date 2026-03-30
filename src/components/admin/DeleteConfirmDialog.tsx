@@ -9,6 +9,10 @@ interface DeleteConfirmDialogProps {
   onConfirm: () => void
   itemName: string
   isDeleting: boolean
+  heading?: string
+  body?: string
+  confirmLabel?: string
+  cancelLabel?: string
 }
 
 export function DeleteConfirmDialog({
@@ -17,6 +21,10 @@ export function DeleteConfirmDialog({
   onConfirm,
   itemName,
   isDeleting,
+  heading,
+  body,
+  confirmLabel,
+  cancelLabel,
 }: DeleteConfirmDialogProps) {
   const cancelRef = useRef<HTMLButtonElement>(null)
 
@@ -59,10 +67,10 @@ export function DeleteConfirmDialog({
           id="delete-dialog-title"
           className="font-heading text-[20px] font-bold text-forest"
         >
-          Slett {itemName}?
+          {heading || `Slett ${itemName}?`}
         </h2>
         <p className="mt-2 text-[15px] text-bark">
-          Dette kan ikke angres. Vil du fortsette?
+          {body || 'Dette kan ikke angres. Vil du fortsette?'}
         </p>
         <div className="mt-6 flex justify-end gap-3">
           <Button
@@ -70,7 +78,7 @@ export function DeleteConfirmDialog({
             variant="secondary"
             onClick={onClose}
           >
-            Nei, behold
+            {cancelLabel || 'Nei, behold'}
           </Button>
           <Button
             variant="primary"
@@ -78,7 +86,7 @@ export function DeleteConfirmDialog({
             onClick={onConfirm}
             loading={isDeleting}
           >
-            {isDeleting ? 'Sletter...' : 'Ja, slett'}
+            {isDeleting ? 'Behandler...' : (confirmLabel || 'Ja, slett')}
           </Button>
         </div>
       </div>
