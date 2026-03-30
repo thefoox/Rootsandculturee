@@ -14,8 +14,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **FOUND-03**: Server-side auth via jose-krypterte HttpOnly cookies og middleware-beskyttelse
 - [x] **FOUND-04**: Firestore sikkerhetstestede security rules for alle collections
 - [x] **FOUND-05**: Design system med morkgronn + hostfarger (rustrod, brent oransje, varm brun) som oppfyller WCAG 2.1 AA kontrastkrav
-- [ ] **FOUND-06**: Responsivt layout-system (mobil-first, 375px+)
-- [ ] **FOUND-07**: Norsk sprak gjennomgaende i all UI, feilmeldinger og varsler
+- [x] **FOUND-06**: Responsivt layout-system (mobil-first, 375px+)
+- [x] **FOUND-07**: Norsk sprak gjennomgaende i all UI, feilmeldinger og varsler
 
 ### Produkter (PROD)
 
@@ -68,10 +68,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **WCAG-01**: Tastaturnavigasjon pa hele nettsiden med synlig fokus-indikator
 - [x] **WCAG-02**: Tilstrekkelig fargekontrast (minimum 4.5:1) pa all tekst
-- [ ] **WCAG-03**: Skjermleser-stotte med semantisk HTML, ARIA-attributter og korrekt overskriftshierarki
+- [x] **WCAG-03**: Skjermleser-stotte med semantisk HTML, ARIA-attributter og korrekt overskriftshierarki
 - [ ] **WCAG-04**: Alt-tekst pa alle bilder (med patvunget felt i admin CMS)
 - [ ] **WCAG-05**: Tilgjengelige skjemafeilmeldinger med aria-describedby
-- [ ] **WCAG-06**: Skip-link til hovedinnhold
+- [x] **WCAG-06**: Skip-link til hovedinnhold
 
 ## v2 Requirements
 
@@ -119,13 +119,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-03 | Phase 1 | Pending |
 | FOUND-04 | Phase 1 | Complete |
 | FOUND-05 | Phase 1 | Complete |
-| FOUND-06 | Phase 1 | Pending |
-| FOUND-07 | Phase 1 | Pending |
+| FOUND-06 | Phase 1 | Complete |
+| FOUND-07 | Phase 1 | Complete |
 | WCAG-01 | Phase 1 | Complete |
 | WCAG-02 | Phase 1 | Complete |
-| WCAG-03 | Phase 1 | Pending |
+| WCAG-03 | Phase 1 | Complete |
 | WCAG-05 | Phase 1 | Pending |
-| WCAG-06 | Phase 1 | Pending |
+| WCAG-06 | Phase 1 | Complete |
 | PROD-01 | Phase 2 | Pending |
 | PROD-02 | Phase 2 | Pending |
 | BOOK-01 | Phase 2 | Pending |
