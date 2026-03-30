@@ -70,7 +70,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **WCAG-02**: Tilstrekkelig fargekontrast (minimum 4.5:1) pa all tekst
 - [x] **WCAG-03**: Skjermleser-stotte med semantisk HTML, ARIA-attributter og korrekt overskriftshierarki
 - [ ] **WCAG-04**: Alt-tekst pa alle bilder (med patvunget felt i admin CMS)
-- [ ] **WCAG-05**: Tilgjengelige skjemafeilmeldinger med aria-describedby
+- [x] **WCAG-05**: Tilgjengelige skjemafeilmeldinger med aria-describedby
 - [x] **WCAG-06**: Skip-link til hovedinnhold
 
 ## v2 Requirements
@@ -124,7 +124,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WCAG-01 | Phase 1 | Complete |
 | WCAG-02 | Phase 1 | Complete |
 | WCAG-03 | Phase 1 | Complete |
-| WCAG-05 | Phase 1 | Pending |
+| WCAG-05 | Phase 1 | Complete |
 | WCAG-06 | Phase 1 | Complete |
 | PROD-01 | Phase 2 | Pending |
 | PROD-02 | Phase 2 | Pending |

@@ -36,7 +36,7 @@ Plans:
 - [x] 01-02-PLAN.md — Design system tokens, fonts, UI primitives (Button, Input, FormError)
 - [x] 01-03-PLAN.md — Layout shell (SkipLink, Header, MegaMenu, MobileNav, Footer)
 - [x] 01-04-PLAN.md — Auth backend (Firebase Auth, jose sessions, middleware, DAL)
-- [ ] 01-05-PLAN.md — Auth UI (AuthModal, login/register/reset forms, Header integration)
+- [x] 01-05-PLAN.md — Auth UI (AuthModal, login/register/reset forms, Header integration)
 
 **UI hint**: yes
 
