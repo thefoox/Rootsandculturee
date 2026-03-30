@@ -4,6 +4,7 @@ import { Toaster } from 'sonner'
 import { SkipLink } from '@/components/layout/SkipLink'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { CartProvider } from '@/components/cart/CartProvider'
 import './globals.css'
 
 const inter = Inter({
@@ -28,13 +29,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="nb" className={`${inter.variable} ${merriweather.variable}`}>
       <body>
-        <SkipLink />
-        <Header />
-        <main id="main-content">
-          {children}
-        </main>
-        <Footer />
-        <Toaster position="bottom-right" />
+        <CartProvider>
+          <SkipLink />
+          <Header />
+          <main id="main-content">
+            {children}
+          </main>
+          <Footer />
+          <Toaster position="bottom-right" />
+        </CartProvider>
       </body>
     </html>
   )

@@ -9,11 +9,16 @@ import { AuthModal } from '@/components/auth/AuthModal'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { RegisterForm } from '@/components/auth/RegisterForm'
 import { PasswordResetForm } from '@/components/auth/PasswordResetForm'
+import { CartBadge } from '@/components/cart/CartBadge'
+import { CartDrawer } from '@/components/cart/CartDrawer'
+import { useCart } from '@/components/cart/CartProvider'
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
   const [authView, setAuthView] = useState<'login' | 'register' | 'reset'>('login')
+  const [cartOpen, setCartOpen] = useState(false)
+  const { itemCount } = useCart()
 
   function handleAuthClose() {
     setAuthOpen(false)
@@ -24,6 +29,10 @@ export function Header() {
     setAuthOpen(true)
     setMobileOpen(false)
   }
+
+  const cartLabel = itemCount > 0
+    ? `Handlekurv, ${itemCount} varer`
+    : 'Handlekurv, tom'
 
   return (
     <header
@@ -44,14 +53,16 @@ export function Header() {
 
       {/* Right section: cart icon + auth trigger (desktop) */}
       <div className="ml-auto hidden items-center gap-2 lg:flex">
-        {/* Cart icon placeholder per D-14 -- links to future /handlekurv route */}
-        <Link
-          href="/handlekurv"
-          className="flex h-11 w-11 items-center justify-center rounded text-forest hover:opacity-85"
-          aria-label="Handlekurv"
+        {/* Cart button -- opens drawer */}
+        <button
+          type="button"
+          onClick={() => setCartOpen(true)}
+          className="relative flex h-11 w-11 items-center justify-center rounded text-forest hover:opacity-85"
+          aria-label={cartLabel}
         >
           <ShoppingBag className="h-5 w-5" aria-hidden="true" />
-        </Link>
+          <CartBadge />
+        </button>
 
         {/* Auth trigger -- opens AuthModal */}
         <button
@@ -66,14 +77,16 @@ export function Header() {
 
       {/* Mobile: cart icon + hamburger (visible below lg) */}
       <div className="ml-auto flex items-center gap-1 lg:hidden">
-        {/* Cart icon placeholder per D-14 (mobile) */}
-        <Link
-          href="/handlekurv"
-          className="flex h-11 w-11 items-center justify-center"
-          aria-label="Handlekurv"
+        {/* Cart button -- opens drawer (mobile) */}
+        <button
+          type="button"
+          onClick={() => setCartOpen(true)}
+          className="relative flex h-11 w-11 items-center justify-center"
+          aria-label={cartLabel}
         >
           <ShoppingBag className="h-5 w-5 text-forest" aria-hidden="true" />
-        </Link>
+          <CartBadge />
+        </button>
 
         {/* Hamburger */}
         <button
@@ -91,6 +104,9 @@ export function Header() {
       {mobileOpen && (
         <MobileNav onClose={() => setMobileOpen(false)} onLoginClick={handleAuthOpen} />
       )}
+
+      {/* Cart drawer */}
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
 
       {/* Auth modal */}
       <AuthModal

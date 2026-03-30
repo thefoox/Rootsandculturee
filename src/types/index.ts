@@ -105,3 +105,83 @@ export interface SiteContent {
   aboutText: string
   updatedAt: Date
 }
+
+// Phase 3: Cart types
+export type CartItemType = 'product' | 'experience'
+
+export interface CartItem {
+  id: string              // product ID or experience ID
+  type: CartItemType
+  name: string
+  price: number           // NOK in ore -- snapshot at add time
+  quantity: number         // Always 1 for experiences (per D-11)
+  image: ProductImage | null
+  slug: string
+  // Experience-specific fields (null for products)
+  experienceDateId: string | null
+  experienceDate: string | null    // ISO string of the date
+  experienceName: string | null
+}
+
+// Phase 3: Order types
+export type OrderStatus = 'pending' | 'paid' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled'
+
+export interface OrderItem {
+  productId: string
+  name: string
+  price: number           // ore, snapshot
+  quantity: number
+  image: ProductImage | null
+}
+
+export interface ShippingAddress {
+  fullName: string
+  address: string
+  postalCode: string
+  city: string
+}
+
+export interface Order {
+  id: string
+  stripeSessionId: string
+  stripePaymentIntentId: string
+  customerId: string | null       // Firebase UID, null for guest
+  customerEmail: string
+  status: OrderStatus
+  items: OrderItem[]
+  shipping: ShippingAddress | null  // null if only bookings
+  subtotal: number                  // ore
+  shippingCost: number              // ore
+  total: number                     // ore
+  createdAt: Date
+  paidAt: Date | null
+  fulfilledAt: Date | null
+}
+
+// Phase 3: Booking types
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled'
+
+export interface Booking {
+  id: string
+  confirmationCode: string
+  stripeSessionId: string
+  customerId: string | null
+  customerEmail: string
+  customerName: string
+  experienceId: string
+  experienceName: string
+  dateId: string
+  date: Date
+  seats: number
+  pricePerSeat: number       // ore, snapshot
+  total: number               // ore
+  whatToBring: string
+  status: BookingStatus
+  createdAt: Date
+  confirmedAt: Date | null
+}
+
+// Phase 3: Shipping config
+export interface ShippingConfig {
+  flatRate: number  // ore -- admin-configurable stored in siteContent
+}
