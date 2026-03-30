@@ -96,19 +96,30 @@ Identical to Phase 1. No changes.
 
 ## Typography
 
-All Phase 1 type roles carry forward unchanged. Phase 2 adds one role.
+All Phase 1 type roles carry forward unchanged. Phase 2 uses exactly 4 sizes.
 
 | Role | Font | Size | Weight | Line Height | Usage |
 |------|------|------|--------|-------------|-------|
-| Body | Inter | 15px | 400 (regular) | 1.5 | Product descriptions, article body text, form labels, table cell content |
+| Body | Inter | 15px | 400 (regular) | 1.5 | Product descriptions, form labels, table cell content, article prose (see prose wrapper note) |
 | Label | Inter | 13px | 400 (regular) | 1.4 | Input labels, table column headers, meta text, badges, category tabs, breadcrumb items |
 | Heading (h3/h4) | Merriweather | 20px | 700 (bold) | 1.25 | Card titles, section subheadings, admin panel headings |
 | Heading (h1/h2) | Merriweather | 28px | 700 (bold) | 1.2 | Page headings, product detail title, article title, experience title |
-| Article body | Inter | 17px | 400 (regular) | 1.65 | Long-form blog article prose — slightly larger and looser than UI body for readability |
 
 **Weights in use: 2 (Inter 400, Merriweather 700)**
 
-**Source:** 01-UI-SPEC.md (first four roles); article body is Phase 2 addition for reading comfort
+**Article prose note:** Blog article body text uses the same 15px Inter 400 as the Body role, but rendered inside an `<ArticleProse>` wrapper that applies `line-height: 1.65` (instead of the standard 1.5). No separate font size is introduced — the wrapper class overrides line-height only. This keeps the type scale at exactly 4 sizes.
+
+```css
+/* ArticleProse wrapper — line-height override only, no size change */
+.article-prose {
+  font-size: 15px;    /* same as body — no new size */
+  line-height: 1.65;  /* looser for long-form reading comfort */
+}
+.article-prose h2 { font-size: 20px; font-family: var(--font-heading); font-weight: 700; }
+.article-prose h3 { font-size: 15px; font-family: var(--font-heading); font-weight: 700; }
+```
+
+**Source:** 01-UI-SPEC.md (first four roles); prose wrapper is Phase 2 addition for reading comfort; 4-size maximum enforced per checker requirement
 
 ---
 
@@ -248,8 +259,8 @@ All Phase 1 color contract carries forward. Phase 2 additions:
 - Article: `<article>`, max-width 720px, centered, `px-4 md:px-8`, `pt-48 pb-64`
 - Title: `<h1>` Merriweather 28px 700, forest, `pb-16`
 - Published date: Inter 13px 400, bark, `pb-32`
-- Body prose: Inter 17px 400, line-height 1.65 (article body role). Rendered from Tiptap HTML output.
-- Prose headings in article: Merriweather 20px 700 for `<h2>`, Merriweather 17px 700 for `<h3>`
+- Body prose: 15px Inter 400, line-height 1.65 via `.article-prose` wrapper class (see Typography section). Rendered from Tiptap HTML output inside `<ArticleProse>`.
+- Prose headings in article: Merriweather 20px 700 for `<h2>`, Merriweather 15px 700 for `<h3>` (bold weight via `.article-prose h3`, no size increase)
 - Prose links in article: forest underline, ember on hover
 - Prose images in article: max-width 100%, border-radius 4px, 24px vertical margin
 - Prose blockquote: left border 4px solid `#B84D00`, `pl-16`, italic, bark text
@@ -413,8 +424,9 @@ Used for create/edit product, experience, article. Opens as a new route (`/admin
 - Background: `#F5F0E8` with `border-t border-forest/12`
 - Padding: 16px 32px
 - Left: "Lagre kladd" (`Button variant="secondary"`)
-- Right: "Publiser" (`Button variant="primary"`)
-- For articles: "Avpubliser" button shown when article is already published (`Button variant="secondary"`)
+- Right: "Publiser artikkel" (`Button variant="primary"`) — for articles
+- Right: "Publiser" (`Button variant="primary"`) — for products and experiences (no content type ambiguity in those contexts)
+- For articles: "Avpubliser artikkel" button shown when article is already published (`Button variant="secondary"`)
 
 ### Image Upload Component
 
@@ -455,7 +467,7 @@ Used in product, experience, and article forms.
 
 **Editor area:**
 - `bg-cream`, `border border-forest/12 border-t-0`, `rounded-b-lg`, min-height 400px, `p-24`, `outline: none`
-- Prose styles match article detail page: Inter 17px 400, line-height 1.65
+- Prose styles match article detail page: 15px Inter 400, line-height 1.65 (via `.article-prose` wrapper)
 - Placeholder text: "Begynn a skrive artikkelen her..." Inter 15px, bark/60%, visible only when editor is empty
 - Focus: editor border changes to `border-forest` (full opacity)
 
@@ -485,7 +497,7 @@ These are the components the executor must build in this phase. Reused Phase 1 c
 - `<BlogCard>` — card for blog overview grid
 - `<BlogGrid>` — responsive grid wrapper for blog cards
 - `<HeroImage>` — full-width hero with gradient overlay + title (used on experience + article detail)
-- `<ArticleProse>` — prose wrapper applying article body typography styles to Tiptap-rendered HTML
+- `<ArticleProse>` — prose wrapper applying `.article-prose` class to Tiptap-rendered HTML (line-height 1.65 override, no font size change)
 - `<PriceBadge>` — NOK-formatted price in rust color
 
 ### New — Admin CMS
@@ -547,6 +559,44 @@ These are the components the executor must build in this phase. Reused Phase 1 c
 - Flex row, `justify-between`, `items-center`, `mb-32`
 - Left: `<h1>`
 - Right: `Button variant="primary"` with Plus icon
+
+### Primary Screen Focal Points
+
+Each screen has one primary focal element that draws the eye first. Executors must implement these in the order listed; secondary elements are subordinate.
+
+**`/produkter` (Product Catalog)**
+- Primary focal point: The product grid itself — cards fill the viewport below the sticky tab bar
+- Category tabs are navigation, not content; they sit in a contained sticky bar and do not compete with the grid
+- Empty state focal: centered icon + heading at vertical midpoint of viewport
+
+**`/produkter/[slug]` (Product Detail)**
+- Primary focal point: Main product image (left column, 60% width on desktop)
+- Secondary: Product name `<h1>` at top of right column, immediately readable alongside image
+- CTA ("Legg i handlekurv") anchors the right column bottom — visually conclusive
+
+**`/opplevelser` (Experience List)**
+- Primary focal point: First experience card — large horizontal card occupies full content width
+- Cards stack vertically; each card's hero image (280px left column) is the visual anchor per card
+
+**`/opplevelser/[slug]` (Experience Detail)**
+- Primary focal point: Full-width hero image (650px height desktop) spanning edge-to-edge
+- Title overlays hero bottom with gradient; content begins below fold
+- Info row (date, price, spots, difficulty) is the secondary anchor — compact strip immediately below hero
+
+**`/blogg` (Blog Overview)**
+- Primary focal point: The 3-column card grid
+- Each card's hero image (16:9, top of card) carries the visual identity of the article
+
+**`/blogg/[slug]` (Article Detail)**
+- Primary focal point: Full-width hero image (450px height desktop)
+- Title `<h1>` below hero is the secondary anchor — Merriweather 28px sets reading context before prose begins
+- Article prose is the sustained focus; max-width 720px constrains line length for readability
+
+**`/admin/*` (Admin pages — all routes)**
+- Primary focal point: The `<DataTable>` on list pages, or the form heading `<h1>` on edit pages
+- Admin sidebar is navigation chrome — it must not compete with content area; sidebar uses dark background (`#1A2E23`) to visually recede
+- Active sidebar link (`border-l-3 border-ember`) orients the user without dominating
+- On mobile: full-screen content area (sidebar hidden); top bar is minimal chrome only
 
 ---
 
@@ -646,8 +696,9 @@ All copy in Norwegian Bokmål (FOUND-07).
 | Add experience button | "Legg til opplevelse" |
 | Add article button | "Ny artikkel" |
 | Publish bar: save draft | "Lagre kladd" |
-| Publish bar: publish | "Publiser" |
-| Publish bar: unpublish | "Avpubliser" |
+| Publish bar: publish (articles) | "Publiser artikkel" |
+| Publish bar: publish (products/experiences) | "Publiser" |
+| Publish bar: unpublish (articles) | "Avpubliser artikkel" |
 | Publish bar: loading save | "Lagrer..." |
 | Publish bar: loading publish | "Publiserer..." |
 | Empty table — products | Heading: "Ingen produkter" / Body: "Kom i gang ved a legge til ditt forste produkt." |
@@ -661,8 +712,8 @@ All copy in Norwegian Bokmål (FOUND-07).
 | Upload success | "Bilde lastet opp." (sonner toast, role="status") |
 | Delete confirmation heading | "Slett {item name}?" |
 | Delete confirmation body | "Dette kan ikke angres. Vil du fortsette?" |
-| Delete confirmation: confirm | "Slett" (Button variant="primary", bg red override: `bg-destructive text-cream`) |
-| Delete confirmation: cancel | "Avbryt" (Button variant="secondary") |
+| Delete confirmation: confirm | "Ja, slett" (Button variant="primary", bg red override: `bg-destructive text-cream`) |
+| Delete confirmation: cancel | "Nei, behold" (Button variant="secondary") |
 | Delete success | "{item name} er slettet." (sonner toast, role="status") |
 | Delete error | "Kunne ikke slette. Prover pa nytt." (sonner toast, role="alert") |
 | Tiptap placeholder | "Begynn a skrive artikkelen her..." |
@@ -676,7 +727,7 @@ All copy in Norwegian Bokmål (FOUND-07).
 | Slug field hint | "Brukes i nettadressen. Kun bokstaver, tall og bindestreker." |
 
 **Destructive actions in Phase 2:**
-1. **Slett produkt** — confirmation dialog, two-step (dialog opens on trash icon click, explicit "Slett" confirm required)
+1. **Slett produkt** — confirmation dialog, two-step (dialog opens on trash icon click, explicit "Ja, slett" confirm required)
 2. **Slett opplevelse** — same pattern as above
 3. **Slett artikkel** — same pattern as above
 4. **Fjern bilde (from upload)** — inline X button on uploaded tile, immediate (no dialog — action is reversible before save)
@@ -749,4 +800,5 @@ export const metadata: Metadata = {
 | STACK.md | Tiptap, date-fns nb locale, firebase storage, Intl currency/date patterns |
 | globals.css (live codebase) | All 7 CSS custom properties confirmed present |
 | Contrast calculator | 3 new badge color pairs verified 2026-03-30 |
+| Checker revision 2026-03-30 | 4 issues fixed: delete copy, typography scale, focal points, publish copy |
 | User input this session | 0 (all decisions pre-populated from upstream artifacts) |
