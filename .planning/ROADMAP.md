@@ -50,7 +50,12 @@ Plans:
   3. En kunde kan lese en bloggartikkel og finne siden via Google (SSR/SSG, SEO-metadata, sitemap og robots.txt er pa plass)
   4. En admin kan opprette, redigere og slette produkter, opplevelser, artikler og generelt innhold via /admin-grensesnittet
   5. Alle bilder i admin har et patapt alt-tekst-felt — siden kan ikke publiseres uten det
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Public storefront: types, data layer, product/experience/blog pages, SEO, sitemap
+- [ ] 02-02-PLAN.md — Admin CMS: shell, CRUD for products/experiences/articles, image upload, content editing
+
 **UI hint**: yes
 
 ### Phase 3: Betaling og Booking
@@ -85,7 +90,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Fundament | 0/5 | Planned | - |
-| 2. Butikkvindu og Admin | 0/? | Not started | - |
+| 1. Fundament | 5/5 | Complete | 2026-03-30 |
+| 2. Butikkvindu og Admin | 0/2 | Planned | - |
 | 3. Betaling og Booking | 0/? | Not started | - |
 | 4. Kundekonto | 0/? | Not started | - |
