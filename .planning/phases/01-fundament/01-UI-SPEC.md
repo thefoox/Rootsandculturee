@@ -85,11 +85,11 @@ Declared values (multiples of 4, 8-point grid):
 | Role | Font | Size | Weight | Line Height | Usage |
 |------|------|------|--------|-------------|-------|
 | Body | Inter | 15px | 400 (regular) | 1.5 | Paragraph text, descriptions, form labels |
-| Label | Inter | 13px | 500 (medium) | 1.4 | Input labels, table headers, meta text, badges |
+| Label | Inter | 13px | 400 (regular) | 1.4 | Input labels, table headers, meta text, badges — differentiated from Body by size (13px vs 15px) and `tracking-wide` letter-spacing |
 | Heading (h3/h4) | Merriweather | 20px | 700 (bold) | 1.25 | Card titles, section subheadings |
 | Heading (h1/h2) | Merriweather | 28px | 700 (bold) | 1.2 | Page headings, hero titles |
 
-**Weights in use: 2 (Inter 400/500, Merriweather 700)**
+**Weights in use: 2 (Inter 400, Merriweather 700)**
 
 **Source:** CONTEXT.md D-06, D-07, D-08 (compact direction); standard scale defaults
 
@@ -109,11 +109,12 @@ Declared values (multiples of 4, 8-point grid):
 
 **Accent (`#B84D00`) reserved for:**
 1. Primary action buttons ("Logg inn", "Registrer deg", "Tilbakestill passord")
-2. Focus ring on interactive elements (2px solid `#1B4332` — forest, not ember)
-3. Active/selected nav state indicator (left border or underline)
-4. Form submission buttons
+2. Active/selected nav state indicator (left border or underline)
+3. Form submission buttons
 
-**Accent is NOT used for:** body text, headings, placeholder text, borders on non-interactive elements, decorative dividers.
+**Accent is NOT used for:** body text, headings, placeholder text, borders on non-interactive elements, decorative dividers, focus rings.
+
+**Focus ring color:** 2px solid `#1B4332` (forest) on light surfaces; 2px solid `#FEFCF3` (cream) on dark surfaces (header, mobile nav, footer). See Interaction States.
 
 **Dominant/secondary split:** `#FEFCF3` for `<body>` background and `<main>` content area; `#F5F0E8` for `<header>` (sticky nav), cards, modal overlays, form field backgrounds.
 
@@ -148,6 +149,10 @@ These are the components the executor must build in this phase. No others.
 
 ## Layout Specifications
 
+### Primary Screen Focal Point
+
+The primary screen's main content area (`<main>`) is a centered, cream (`#FEFCF3`) column, max-width 1200px, with the sticky forest header anchoring visual weight at the top. The eye is drawn first to the header logo, then downward into the main content region. The auth modal, when open, becomes the sole focal point via the darkened forest overlay.
+
 ### Header (sticky)
 - Height: 64px
 - Background: `#F5F0E8` (secondary surface)
@@ -161,7 +166,7 @@ These are the components the executor must build in this phase. No others.
 - Triggered by hover (desktop) + click keyboard Enter/Space on nav item
 - Background: `#FEFCF3`, border: 1px solid `rgba(27, 67, 50, 0.15)`
 - Box-shadow: `0 8px 24px rgba(0,0,0,0.08)`
-- Category grid: 4 columns, each with a 48px icon area + label (13px, weight 500)
+- Category grid: 4 columns, each with a 48px icon area + label (13px, weight 400, `tracking-wide`)
 - Keyboard: Escape closes, Arrow keys navigate items, Tab moves to next top-level item
 
 ### Mobile nav overlay
