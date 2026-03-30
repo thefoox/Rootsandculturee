@@ -21,11 +21,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **PROD-01**: Produktkatalog med kategorier (drikke, kaffe/te, naturprodukter)
 - [x] **PROD-02**: Produktdetaljside med bilder, beskrivelse, pris og legg-i-handlekurv
-- [ ] **PROD-03**: Handlekurv som overlever sidenavigasjon og refresh
-- [ ] **PROD-04**: Fraktkostnad vist for checkout (flat rate eller vektbasert tabell)
-- [ ] **PROD-05**: Checkout-flow med Stripe (bade gjest og innlogget bruker)
-- [ ] **PROD-06**: Ordrebekreftelse pa side og via e-post etter betaling
-- [ ] **PROD-07**: Enkelt lagertall per produkt (manuelt oppdatert av admin)
+- [x] **PROD-03**: Handlekurv som overlever sidenavigasjon og refresh
+- [x] **PROD-04**: Fraktkostnad vist for checkout (flat rate eller vektbasert tabell)
+- [x] **PROD-05**: Checkout-flow med Stripe (bade gjest og innlogget bruker)
+- [x] **PROD-06**: Ordrebekreftelse pa side og via e-post etter betaling
+- [x] **PROD-07**: Enkelt lagertall per produkt (manuelt oppdatert av admin)
 
 ### Booking (BOOK)
 
@@ -143,11 +143,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMN-07 | Phase 2 | Complete |
 | ADMN-08 | Phase 2 | Complete |
 | WCAG-04 | Phase 2 | Complete |
-| PROD-03 | Phase 3 | Pending |
-| PROD-04 | Phase 3 | Pending |
-| PROD-05 | Phase 3 | Pending |
-| PROD-06 | Phase 3 | Pending |
-| PROD-07 | Phase 3 | Pending |
+| PROD-03 | Phase 3 | Complete |
+| PROD-04 | Phase 3 | Complete |
+| PROD-05 | Phase 3 | Complete |
+| PROD-06 | Phase 3 | Complete |
+| PROD-07 | Phase 3 | Complete |
 | BOOK-03 | Phase 3 | Pending |
 | BOOK-04 | Phase 3 | Pending |
 | BOOK-05 | Phase 3 | Pending |

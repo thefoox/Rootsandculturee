@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-03-30T20:49:07.029Z"
+status: executing
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-30T21:19:23.520Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 9
+  completed_plans: 8
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturopplevelser i en informativ og tilgjengelig nettbutikk.
-**Current focus:** Phase 02 — Butikkvindu og Admin
+**Current focus:** Phase 03 — Betaling og Booking
 
 ## Current Position
 
-Phase: 02 (Butikkvindu og Admin) — EXECUTING
+Phase: 03 (Betaling og Booking) — EXECUTING
 Plan: 2 of 2
-Status: Phase complete — ready for verification
+Status: Ready to execute
 Last activity: 2026-03-30
 
 Progress: [░░░░░░░░░░] 0%
@@ -59,6 +59,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P05 | 2min | 2 tasks | 6 files |
 | Phase 02-01 P01 | 7min | 3 tasks | 34 files |
 | Phase 02-02 P02 | 11min | 2 tasks | 32 files |
+| Phase 03-01 P01 | 11min | 2 tasks | 29 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,10 @@ Recent decisions affecting current work:
 - [Phase 02-02]: Admin layout uses fixed positioning (z-200) to overlay root Header/Footer
 - [Phase 02-02]: revalidateTag requires second arg 'max' in Next.js 16 for cache purge
 - [Phase 02-02]: Admin pages use server actions for data fetch (not server-only data layer)
+- [Phase 03-01]: Stripe/Resend SDKs use null-guard pattern (null when env vars missing) for build-time safety
+- [Phase 03-01]: Cart state via React Context + localStorage persistence, not Zustand
+- [Phase 03-01]: Webhook uses PaymentIntent metadata for fulfillment (no pending order doc)
+- [Phase 03-01]: Webhook idempotency via stripeEvents/{eventId} Firestore collection
 
 ### Pending Todos
 
@@ -98,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T20:49:07.023Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-betaling-og-booking/03-UI-SPEC.md
+Last session: 2026-03-30T21:19:23.515Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: None
