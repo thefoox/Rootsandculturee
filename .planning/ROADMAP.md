@@ -29,7 +29,15 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Alle farger i design-systemet oppfyller WCAG 2.1 AA kontrastkrav (minimum 4.5:1 for tekst)
   4. Hele grensesnittet er navigerbart med tastatur — fokus-indikator er synlig pa alle interaktive elementer og en skip-link til hovedinnhold finnes
   5. Siden er responsiv og brukbar pa 375px mobilskjerm, nettbrett og desktop
-**Plans**: TBD
+**Plans:** 5 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Project scaffold, Firebase SDK setup, Firestore security rules
+- [ ] 01-02-PLAN.md — Design system tokens, fonts, UI primitives (Button, Input, FormError)
+- [ ] 01-03-PLAN.md — Layout shell (SkipLink, Header, MegaMenu, MobileNav, Footer)
+- [ ] 01-04-PLAN.md — Auth backend (Firebase Auth, jose sessions, middleware, DAL)
+- [ ] 01-05-PLAN.md — Auth UI (AuthModal, login/register/reset forms, Header integration)
+
 **UI hint**: yes
 
 ### Phase 2: Butikkvindu og Admin
@@ -77,7 +85,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Fundament | 0/? | Not started | - |
+| 1. Fundament | 0/5 | Planned | - |
 | 2. Butikkvindu og Admin | 0/? | Not started | - |
 | 3. Betaling og Booking | 0/? | Not started | - |
 | 4. Kundekonto | 0/? | Not started | - |
