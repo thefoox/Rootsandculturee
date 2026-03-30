@@ -68,7 +68,12 @@ Plans:
   3. En kunde kan velge dato for en opplevelse, se gjenstaende plasser i sanntid og fulldfre booking — plasser reduseres atomisk og kunden mottar bekreftelseskode
   4. Nar alle plasser er fylt blokkeres booking og kunden ser en tydelig melding
   5. Admin kan se alle ordrer og bookinger og oppdatere statusen pa dem
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Cart, checkout with Stripe Elements, webhook, email confirmations, order fulfillment
+- [ ] 03-02-PLAN.md — Booking date picker, booking flow, admin order/booking management
+
 **UI hint**: yes
 
 ### Phase 4: Kundekonto
@@ -92,5 +97,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Fundament | 5/5 | Complete | 2026-03-30 |
 | 2. Butikkvindu og Admin | 0/2 | Planned | - |
-| 3. Betaling og Booking | 0/? | Not started | - |
+| 3. Betaling og Booking | 0/2 | Planned | - |
 | 4. Kundekonto | 0/? | Not started | - |
