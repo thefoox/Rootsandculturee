@@ -32,7 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 5 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffold, Firebase SDK setup, Firestore security rules
+- [x] 01-01-PLAN.md — Project scaffold, Firebase SDK setup, Firestore security rules
 - [ ] 01-02-PLAN.md — Design system tokens, fonts, UI primitives (Button, Input, FormError)
 - [ ] 01-03-PLAN.md — Layout shell (SkipLink, Header, MegaMenu, MobileNav, Footer)
 - [ ] 01-04-PLAN.md — Auth backend (Firebase Auth, jose sessions, middleware, DAL)

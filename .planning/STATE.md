@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-03-30T15:54:30.689Z"
-last_activity: 2026-03-30 — Roadmap created, ready for phase planning
+status: executing
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-03-30T16:50:43.242Z"
+last_activity: 2026-03-30
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 5
+  completed_plans: 1
   percent: 0
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturopplevelser i en informativ og tilgjengelig nettbutikk.
-**Current focus:** Phase 1 — Fundament
+**Current focus:** Phase 01 — Fundament
 
 ## Current Position
 
-Phase: 1 of 4 (Fundament)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-03-30 — Roadmap created, ready for phase planning
+Phase: 01 (Fundament) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute
+Last activity: 2026-03-30
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01 P01 | 4min | 2 tasks | 20 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,9 @@ Recent decisions affecting current work:
 - Init: Admin pa /admin-ruter i samme Next.js-app (delt kodebase, rollebasert tilgang)
 - Init: jose-krypterte HttpOnly cookies for session — Edge Runtime-kompatibel
 - Init: Priser lagres som heltall i ore (1 NOK = 100 ore) for a unnga float-feil
+- [Phase 01]: Tailwind v4 with @tailwindcss/postcss (CSS-native config, no tailwind.config.js)
+- [Phase 01]: Firebase Admin SDK singleton with getApps() guard and server-only import
+- [Phase 01]: Firestore security rules use Custom Claims for admin checks (not document reads)
 
 ### Pending Todos
 
@@ -77,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T15:54:30.685Z
-Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-fundament/01-UI-SPEC.md
+Last session: 2026-03-30T16:50:43.238Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: None
