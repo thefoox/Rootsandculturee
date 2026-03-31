@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getExperienceBySlug, getExperiences, getExperienceDates } from '@/lib/data/experiences'
-import { HeroImage } from '@/components/shared/HeroImage'
-import { PriceBadge } from '@/components/shared/PriceBadge'
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { DifficultyBadge } from '@/components/experiences/DifficultyBadge'
-import { SpotsRemaining } from '@/components/experiences/SpotsRemaining'
 import { DateCardPicker } from '@/components/experiences/DateCardPicker'
-import { formatDate } from '@/lib/format'
-import { CalendarDays, MapPin } from 'lucide-react'
+import { formatPrice } from '@/lib/format'
+import { MapPin, Clock, CheckCircle, Backpack, ShieldCheck } from 'lucide-react'
 
 export const revalidate = 3600
 
@@ -48,108 +47,211 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
   }
 
   const dates = await getExperienceDates(experience.id)
-  const nextDate = dates[0]
   const mainImage = experience.images[0]
+  const galleryImages = experience.images.slice(1)
 
   return (
     <>
+      {/* ── Hero Section (full-width) ── */}
       {mainImage && (
-        <HeroImage
-          src={mainImage.url}
-          alt={mainImage.alt}
-          title={experience.name}
-          heightClass="h-[300px] md:h-[650px]"
-        />
-      )}
-      <div className="mx-auto max-w-[800px] px-4 pb-16 pt-12 md:px-8">
-        {/* Info row */}
-        <div className="flex flex-wrap items-center gap-4 rounded-lg border border-forest/12 bg-card p-4">
-          {nextDate && (
-            <span className="flex items-center gap-1 font-body text-[13px] text-bark">
-              <CalendarDays className="h-4 w-4" aria-hidden="true" />
-              {formatDate(nextDate.date)}
-            </span>
-          )}
-          <PriceBadge priceInOre={nextDate?.priceOverride ?? experience.basePrice} />
-          {nextDate && (
-            <SpotsRemaining
-              available={nextDate.availableSeats}
-              total={nextDate.maxSeats}
-            />
-          )}
-          <DifficultyBadge difficulty={experience.difficulty} />
+        <div className="relative w-full h-[340px] md:h-[520px] lg:h-[620px]">
+          <Image
+            src={mainImage.url}
+            alt={mainImage.alt}
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(to bottom, rgba(27,67,50,0.15) 0%, rgba(27,67,50,0.7) 100%)',
+            }}
+          />
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+            <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+              <h1 className="font-heading text-[32px] md:text-[42px] font-bold text-cream leading-tight">
+                {experience.name}
+              </h1>
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-cream/90 font-body text-[14px]">
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="h-4 w-4" aria-hidden="true" />
+                  {experience.location}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" aria-hidden="true" />
+                  {experience.durationText}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
+      )}
 
-        {/* Description */}
-        <section className="mt-8">
-          <h2 className="font-heading text-[20px] font-bold text-forest">
-            Beskrivelse
-          </h2>
-          <p className="mt-4 font-body text-[15px] leading-[1.5] text-forest">
-            {experience.description}
-          </p>
-        </section>
+      {/* ── Info Bar ── */}
+      <div className="bg-cream border-b border-forest/8">
+        <div className="mx-auto max-w-[1200px] px-4 md:px-8">
+          <div className="pt-4">
+            <Breadcrumbs
+              items={[
+                { label: 'Opplevelser', href: '/opplevelser' },
+                { label: experience.name },
+              ]}
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-6 py-5">
+            <span className="font-heading text-[24px] font-bold text-ember">
+              {formatPrice(experience.basePrice)}
+            </span>
+            <DifficultyBadge difficulty={experience.difficulty} />
+            <span className="flex items-center gap-1.5 font-body text-[14px] text-bark">
+              <Clock className="h-4 w-4" aria-hidden="true" />
+              {experience.durationText}
+            </span>
+            <span className="flex items-center gap-1.5 font-body text-[14px] text-bark">
+              <MapPin className="h-4 w-4" aria-hidden="true" />
+              {experience.location}
+            </span>
+          </div>
+        </div>
+      </div>
 
-        {/* What is included */}
-        {experience.whatIsIncluded.length > 0 && (
-          <section className="mt-8">
-            <h2 className="font-heading text-[20px] font-bold text-forest">
-              Hva er inkludert
+      {/* ── Description + Sidebar ── */}
+      <div className="bg-cream">
+        <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-8 md:py-16">
+          <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
+            {/* Left column: content (65%) */}
+            <div className="lg:w-[65%]">
+              {/* Description */}
+              <section>
+                <h2 className="font-heading text-[22px] font-bold text-forest">
+                  Om opplevelsen
+                </h2>
+                <p className="mt-4 font-body text-[15px] leading-[1.7] text-forest">
+                  {experience.description}
+                </p>
+              </section>
+
+              {/* What is included */}
+              {experience.whatIsIncluded.length > 0 && (
+                <section className="mt-10">
+                  <h2 className="font-heading text-[20px] font-bold text-forest">
+                    Hva er inkludert
+                  </h2>
+                  <ul className="mt-4 space-y-2.5">
+                    {experience.whatIsIncluded.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <CheckCircle
+                          className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-badge-easy"
+                          aria-hidden="true"
+                        />
+                        <span className="font-body text-[15px] text-forest">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {/* What to bring */}
+              {experience.whatToBring && (
+                <section className="mt-10">
+                  <h2 className="flex items-center gap-2 font-heading text-[20px] font-bold text-forest">
+                    <Backpack className="h-5 w-5 text-bark" aria-hidden="true" />
+                    Hva du bor ta med
+                  </h2>
+                  <p className="mt-4 font-body text-[15px] leading-[1.7] text-forest">
+                    {experience.whatToBring}
+                  </p>
+                </section>
+              )}
+
+              {/* Cancellation policy */}
+              {experience.cancellationPolicy && (
+                <section className="mt-10">
+                  <h2 className="flex items-center gap-2 font-heading text-[20px] font-bold text-forest">
+                    <ShieldCheck className="h-5 w-5 text-bark" aria-hidden="true" />
+                    Kanselleringsvilkar
+                  </h2>
+                  <p className="mt-4 font-body text-[15px] leading-[1.7] text-forest">
+                    {experience.cancellationPolicy}
+                  </p>
+                </section>
+              )}
+            </div>
+
+            {/* Right sidebar: booking widget (35%) */}
+            <div className="lg:w-[35%]">
+              <div className="lg:sticky lg:top-8">
+                <div className="rounded-xl border border-forest/8 bg-card p-6">
+                  <h2 className="font-heading text-[18px] font-bold text-forest">
+                    Bestill opplevelse
+                  </h2>
+                  <DateCardPicker
+                    experienceId={experience.id}
+                    dates={dates.map((d) => ({
+                      ...d,
+                      date: d.date instanceof Date ? d.date : new Date(d.date),
+                    }))}
+                    experience={experience}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Image Gallery ── */}
+      {galleryImages.length > 0 && (
+        <div className="bg-card">
+          <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-8 md:py-16">
+            <h2 className="font-heading text-[22px] font-bold text-forest">
+              Bilder
             </h2>
-            <ul className="mt-4 list-disc pl-6 font-body text-[15px] text-forest">
-              {experience.whatIsIncluded.map((item, i) => (
-                <li key={i} className="mb-1">
-                  {item}
-                </li>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {galleryImages.map((img, i) => (
+                <div
+                  key={i}
+                  className="relative aspect-[4/3] overflow-hidden rounded-lg"
+                >
+                  <Image
+                    src={img.url}
+                    alt={img.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 640px) 50vw, 100vw"
+                  />
+                </div>
               ))}
-            </ul>
-          </section>
-        )}
+            </div>
+          </div>
+        </div>
+      )}
 
-        {/* What to bring */}
-        {experience.whatToBring && (
-          <section className="mt-8">
-            <h2 className="font-heading text-[20px] font-bold text-forest">
-              Hva du bor ta med
-            </h2>
-            <p className="mt-4 font-body text-[15px] leading-[1.5] text-forest">
-              {experience.whatToBring}
-            </p>
-          </section>
-        )}
-
-        {/* Location */}
-        <section className="mt-8">
-          <h2 className="font-heading text-[20px] font-bold text-forest">
+      {/* ── Location Section ── */}
+      <div className="bg-cream">
+        <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-8 md:py-16">
+          <h2 className="font-heading text-[22px] font-bold text-forest">
             Sted
           </h2>
-          <p className="mt-4 flex items-center gap-2 font-body text-[15px] text-forest">
-            <MapPin className="h-4 w-4 text-bark" aria-hidden="true" />
-            {experience.location}
-          </p>
-        </section>
-
-        {/* Cancellation policy */}
-        {experience.cancellationPolicy && (
-          <section className="mt-8">
-            <h2 className="font-heading text-[20px] font-bold text-forest">
-              Kanselleringsvilkar
-            </h2>
-            <p className="mt-4 font-body text-[15px] leading-[1.5] text-forest">
-              {experience.cancellationPolicy}
-            </p>
-          </section>
-        )}
-
-        {/* Booking date picker */}
-        <DateCardPicker
-          experienceId={experience.id}
-          dates={dates.map((d) => ({
-            ...d,
-            date: d.date instanceof Date ? d.date : new Date(d.date),
-          }))}
-          experience={experience}
-        />
+          <div className="mt-4 flex items-start gap-3">
+            <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-ember" aria-hidden="true" />
+            <div>
+              <p className="font-body text-[16px] font-medium text-forest">
+                {experience.location}
+              </p>
+              <p className="mt-2 font-body text-[15px] leading-[1.7] text-bark">
+                Opplevelsen finner sted i {experience.location}. Detaljert
+                veibeskrivelse og oppmotested sendes per e-post etter
+                bekreftet booking.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )

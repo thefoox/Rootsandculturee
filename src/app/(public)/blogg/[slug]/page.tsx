@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getArticleBySlug, getArticles } from '@/lib/data/articles'
 import { HeroImage } from '@/components/shared/HeroImage'
 import { ArticleProse } from '@/components/blog/ArticleProse'
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { formatDate } from '@/lib/format'
 
 export const revalidate = 3600
@@ -53,7 +54,8 @@ export default async function ArtikkelDetailPage({ params }: PageProps) {
         />
       )}
       <article className="mx-auto max-w-[720px] px-4 pb-16 pt-12 md:px-8">
-        <h1 className="pb-4 font-heading text-[28px] font-bold text-forest">
+        <Breadcrumbs items={[{ label: 'Blogg', href: '/blogg' }, { label: article.title }]} />
+        <h1 className="mt-4 pb-4 font-heading text-[28px] font-bold text-forest">
           {article.title}
         </h1>
         {article.publishedAt && (

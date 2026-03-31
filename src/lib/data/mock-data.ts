@@ -145,7 +145,7 @@ export const mockExperiences: Experience[] = [
     description:
       'En helg med skogsterapi og naturmeditasjon i hjertet av Nordmarka. Opplev den japansk-inspirerte tradisjonen shinrin-yoku tilpasset norsk natur, med guidede vandringer, pusteøvelser og stille refleksjon mellom hundre år gamle grantrær.',
     category: 'retreat',
-    images: [{ url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-20-desktop.webp', alt: 'Skogsbad i Nordmarka' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-12-desktop.webp', alt: 'Naturmeditasjon i skogen' }],
+    images: [{ url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-20-desktop.webp', alt: 'Skogsbad i Nordmarka' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-12-desktop.webp', alt: 'Naturmeditasjon i skogen' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-11-desktop.webp', alt: 'Stille morgenstund mellom grantrærne' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-16-desktop.webp', alt: 'Guidet vandring i Nordmarka' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-25-desktop.webp', alt: 'Te-seremoni i skogen' }],
     basePrice: 349900,
     location: 'Nordmarka, Oslo',
     durationText: '2 dager',
@@ -170,7 +170,7 @@ export const mockExperiences: Experience[] = [
     description:
       'Lær å finne og bruke ville urter i det norske fjellandskapet. En erfaren botaniker guider deg gjennom fjellenger og bekkedaler der du lærer å identifisere, plukke og tilberede urter til mat og drikke.',
     category: 'kurs',
-    images: [{ url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-01-desktop.webp', alt: 'Urtesamling i fjellet' }, { url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-05-desktop.webp', alt: 'Ville urter i fjellet' }],
+    images: [{ url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-01-desktop.webp', alt: 'Urtesamling i fjellet' }, { url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-05-desktop.webp', alt: 'Ville urter i fjellet' }, { url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-03-desktop.webp', alt: 'Identifisering av fjellurter' }, { url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-07-desktop.webp', alt: 'Urtebok og sanking i naturen' }, { url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-09-desktop.webp', alt: 'Tilberedning av urter til mat' }],
     basePrice: 149900,
     location: 'Jotunheimen',
     durationText: '1 dag',
@@ -194,7 +194,7 @@ export const mockExperiences: Experience[] = [
     description:
       'Matlagingskurs med lokale råvarer på en tradisjonell vestlandsgård. Lær å lage klassiske norske retter med moderne vri, fra flatbrød og rakfisk til nyskapende desserter med ville bær. Alt med råvarer hentet fra gårdens egen jord.',
     category: 'matopplevelse',
-    images: [{ url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-06-desktop.webp', alt: 'Gårdsmat-opplevelse matlagingskurs' }, { url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-03-desktop.webp', alt: 'Lokale råvarer på vestlandsgård' }],
+    images: [{ url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-06-desktop.webp', alt: 'Gårdsmat-opplevelse matlagingskurs' }, { url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-03-desktop.webp', alt: 'Lokale råvarer på vestlandsgård' }, { url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-04-desktop.webp', alt: 'Tradisjonell matlaging med lokale ingredienser' }, { url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-08-desktop.webp', alt: 'Ferske grønnsaker fra gården' }, { url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-12-desktop.webp', alt: 'Servering av gårdsmat' }],
     basePrice: 189900,
     location: 'Voss, Vestland',
     durationText: '1 dag',
@@ -219,7 +219,7 @@ export const mockExperiences: Experience[] = [
     description:
       'Tre dagers retreat ved Sognefjorden der du kobler helt av fra hverdagen. Kombinerer fjellvandring, kajakkpadling og meditasjon med enkel, naturlig mat laget over bål. Sov i lavvo med utsikt over fjorden under stjernehimmelen.',
     category: 'retreat',
-    images: [{ url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp', alt: 'Villmarksretreat ved Sognefjorden' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-09-desktop.webp', alt: 'Kajakkpadling ved fjorden' }],
+    images: [{ url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp', alt: 'Villmarksretreat ved Sognefjorden' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-09-desktop.webp', alt: 'Kajakkpadling ved fjorden' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-02-desktop.webp', alt: 'Morgenmeditasjon ved fjorden' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-05-desktop.webp', alt: 'Bålmat i villmarka' }, { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-17-desktop.webp', alt: 'Lavvo under stjernehimmelen' }],
     basePrice: 599900,
     location: 'Sognefjorden, Vestland',
     durationText: '3 dager',

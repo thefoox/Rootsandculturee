@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getProductBySlug, getProducts } from '@/lib/data/products'
 import { ProductGallery } from '@/components/products/ProductGallery'
 import { PriceBadge } from '@/components/shared/PriceBadge'
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { Button } from '@/components/ui/Button'
 
 export const revalidate = 3600
@@ -45,7 +46,8 @@ export default async function ProduktDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-12 md:px-8">
-      <article className="flex flex-col gap-8 lg:flex-row lg:gap-12">
+      <Breadcrumbs items={[{ label: 'Produkter', href: '/produkter' }, { label: product.name }]} />
+      <article className="mt-4 flex flex-col gap-8 lg:flex-row lg:gap-12">
         <div className="lg:w-[60%]">
           <ProductGallery images={product.images} />
         </div>
