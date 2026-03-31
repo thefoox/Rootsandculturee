@@ -8,27 +8,27 @@ Roots & Culture uses 28 generic lucide-react icons across the site. The product 
 
 ### Product Categories (3)
 
-| Name | File | Description | Replaces |
-|------|------|-------------|----------|
-| Drikke | `drikke.svg` | Traditional Norwegian beverages | `Wine` (lucide) |
-| Kaffe og te | `kaffe-te.svg` | Hand-picked coffee and herbal tea | `Coffee` (lucide) |
-| Naturprodukter | `naturprodukter.svg` | Authentic Norwegian nature products | `Leaf` (lucide) |
+| Name | File | Visual Concept | Replaces |
+|------|------|----------------|----------|
+| Drikke | `drikke.svg` | En flaske | `Wine` (lucide) |
+| Kaffe og te | `kaffe-te.svg` | En kopp med damp | `Coffee` (lucide) |
+| Naturprodukter | `naturprodukter.svg` | En brennesle-plante | `Leaf` (lucide) |
 
 ### Experience Categories (3)
 
-| Name | File | Description | Replaces |
-|------|------|-------------|----------|
-| Naturretreater | `retreat.svg` | Peace and immersion in nature | `Mountain` (lucide) |
-| Kurs | `kurs.svg` | Traditions and handicraft courses | `BookOpen` (lucide) |
-| Matopplevelser | `matopplevelse.svg` | Norwegian food culture experiences | `UtensilsCrossed` (lucide) |
+| Name | File | Visual Concept | Replaces |
+|------|------|----------------|----------|
+| Naturretreater | `retreat.svg` | Granskog-silhuett | `Mountain` (lucide) |
+| Kurs | `kurs.svg` | Skriveblokk med en plante på | `BookOpen` (lucide) |
+| Matopplevelser | `matopplevelse.svg` | Tallerken med blad-dekor | `UtensilsCrossed` (lucide) |
 
 ### Brand Values (3)
 
-| Name | File | Description | Replaces |
-|------|------|-------------|----------|
-| Natur | `natur.svg` | Respect for Norwegian nature | `Leaf` (lucide) |
-| Autentisitet | `autentisitet.svg` | Authentic and genuine | `Heart` (lucide) |
-| Fellesskap | `fellesskap.svg` | Connecting people together | `Users` (lucide) |
+| Name | File | Visual Concept | Replaces |
+|------|------|----------------|----------|
+| Natur | `natur.svg` | Et tre | `Leaf` (lucide) |
+| Autentisitet | `autentisitet.svg` | To mennesker som klemmer | `Heart` (lucide) |
+| Fellesskap | `fellesskap.svg` | Mennesker rundt et bål | `Users` (lucide) |
 
 ## Visual Style
 

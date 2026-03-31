@@ -45,7 +45,7 @@ export default async function Home() {
         {/* Diagonal gradient: dark bottom-left to transparent top-right */}
         <div
           className="absolute inset-0"
-          style={{ background: 'linear-gradient(to top right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.05) 100%)' }}
+          style={{ background: 'linear-gradient(to top right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.1) 100%)' }}
         />
 
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pt-28 md:px-8">

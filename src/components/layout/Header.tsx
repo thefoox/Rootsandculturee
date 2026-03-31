@@ -38,8 +38,9 @@ export function Header() {
   return (
     <>
       <header
-        className="absolute top-0 left-0 right-0 z-50 flex h-20 items-center px-6 lg:px-8"
+        className="absolute top-0 left-0 right-0 z-50 flex h-20 items-center justify-center"
       >
+      <div className="flex w-full max-w-[1200px] items-center px-6 lg:px-8">
         {/* Logo -- left */}
         <Link
           href="/"
@@ -104,6 +105,7 @@ export function Header() {
             <Menu className="h-6 w-6 text-cream" aria-hidden="true" />
           </button>
         </div>
+      </div>
       </header>
 
       {/* Overlays rendered OUTSIDE header to avoid backdrop-blur containing block */}
