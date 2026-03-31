@@ -39,33 +39,32 @@ function mapExperienceDate(doc: FirebaseFirestore.DocumentSnapshot): ExperienceD
   }
 }
 
-export const getExperiences = unstable_cache(
+const _getExperiences = unstable_cache(
   async (): Promise<Experience[]> => {
-    if (!adminDb) return mockExperiences
-
-    const snapshot = await adminDb
+    const snapshot = await adminDb!
       .collection('experiences')
       .where('publishedAt', '!=', null)
       .orderBy('publishedAt', 'desc')
       .get()
-
     return snapshot.docs.map(mapExperience)
   },
   ['experiences'],
   { revalidate: 3600, tags: ['experiences'] }
 )
 
-export const getExperienceBySlug = unstable_cache(
-  async (slug: string): Promise<Experience | null> => {
-    if (!adminDb) return mockExperiences.find((e) => e.slug === slug) ?? null
+export async function getExperiences(): Promise<Experience[]> {
+  if (!adminDb) return mockExperiences
+  return _getExperiences()
+}
 
-    const snapshot = await adminDb
+const _getExperienceBySlug = unstable_cache(
+  async (slug: string): Promise<Experience | null> => {
+    const snapshot = await adminDb!
       .collection('experiences')
       .where('slug', '==', slug)
       .where('publishedAt', '!=', null)
       .limit(1)
       .get()
-
     if (snapshot.empty) return null
     return mapExperience(snapshot.docs[0])
   },
@@ -73,12 +72,15 @@ export const getExperienceBySlug = unstable_cache(
   { revalidate: 3600, tags: ['experiences'] }
 )
 
-export const getExperienceDates = unstable_cache(
-  async (experienceId: string): Promise<ExperienceDate[]> => {
-    if (!adminDb) return mockExperienceDates.get(experienceId) ?? []
+export async function getExperienceBySlug(slug: string): Promise<Experience | null> {
+  if (!adminDb) return mockExperiences.find((e) => e.slug === slug) ?? null
+  return _getExperienceBySlug(slug)
+}
 
+const _getExperienceDates = unstable_cache(
+  async (experienceId: string): Promise<ExperienceDate[]> => {
     const now = new Date()
-    const snapshot = await adminDb
+    const snapshot = await adminDb!
       .collection('experiences')
       .doc(experienceId)
       .collection('dates')
@@ -86,9 +88,13 @@ export const getExperienceDates = unstable_cache(
       .where('date', '>=', now)
       .orderBy('date', 'asc')
       .get()
-
     return snapshot.docs.map(mapExperienceDate)
   },
   ['experience-dates'],
   { revalidate: 60, tags: ['experience-dates'] }
 )
+
+export async function getExperienceDates(experienceId: string): Promise<ExperienceDate[]> {
+  if (!adminDb) return mockExperienceDates.get(experienceId) ?? []
+  return _getExperienceDates(experienceId)
+}

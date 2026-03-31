@@ -24,37 +24,41 @@ function mapArticle(doc: FirebaseFirestore.DocumentSnapshot): Article {
   }
 }
 
-export const getArticles = unstable_cache(
+const _getArticles = unstable_cache(
   async (): Promise<Article[]> => {
-    if (!adminDb) return mockArticles
-
-    const snapshot = await adminDb
+    const snapshot = await adminDb!
       .collection('articles')
       .where('status', '==', 'published')
       .where('publishedAt', '!=', null)
       .orderBy('publishedAt', 'desc')
       .get()
-
     return snapshot.docs.map(mapArticle)
   },
   ['articles'],
   { revalidate: 3600, tags: ['articles'] }
 )
 
-export const getArticleBySlug = unstable_cache(
-  async (slug: string): Promise<Article | null> => {
-    if (!adminDb) return mockArticles.find((a) => a.slug === slug) ?? null
+export async function getArticles(): Promise<Article[]> {
+  if (!adminDb) return mockArticles
+  return _getArticles()
+}
 
-    const snapshot = await adminDb
+const _getArticleBySlug = unstable_cache(
+  async (slug: string): Promise<Article | null> => {
+    const snapshot = await adminDb!
       .collection('articles')
       .where('slug', '==', slug)
       .where('status', '==', 'published')
       .limit(1)
       .get()
-
     if (snapshot.empty) return null
     return mapArticle(snapshot.docs[0])
   },
   ['articles'],
   { revalidate: 3600, tags: ['articles'] }
 )
+
+export async function getArticleBySlug(slug: string): Promise<Article | null> {
+  if (!adminDb) return mockArticles.find((a) => a.slug === slug) ?? null
+  return _getArticleBySlug(slug)
+}

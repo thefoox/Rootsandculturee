@@ -22,53 +22,59 @@ function mapProduct(doc: FirebaseFirestore.DocumentSnapshot): Product {
   }
 }
 
-export const getProducts = unstable_cache(
+const _getProducts = unstable_cache(
   async (): Promise<Product[]> => {
-    if (!adminDb) return mockProducts
-
-    const snapshot = await adminDb
+    const snapshot = await adminDb!
       .collection('products')
       .where('publishedAt', '!=', null)
       .orderBy('publishedAt', 'desc')
       .get()
-
     return snapshot.docs.map(mapProduct)
   },
   ['products'],
   { revalidate: 3600, tags: ['products'] }
 )
 
-export const getProductsByCategory = unstable_cache(
-  async (category: ProductCategory): Promise<Product[]> => {
-    if (!adminDb) return mockProducts.filter((p) => p.category === category)
+export async function getProducts(): Promise<Product[]> {
+  if (!adminDb) return mockProducts
+  return _getProducts()
+}
 
-    const snapshot = await adminDb
+const _getProductsByCategory = unstable_cache(
+  async (category: ProductCategory): Promise<Product[]> => {
+    const snapshot = await adminDb!
       .collection('products')
       .where('publishedAt', '!=', null)
       .where('category', '==', category)
       .orderBy('publishedAt', 'desc')
       .get()
-
     return snapshot.docs.map(mapProduct)
   },
   ['products'],
   { revalidate: 3600, tags: ['products'] }
 )
 
-export const getProductBySlug = unstable_cache(
-  async (slug: string): Promise<Product | null> => {
-    if (!adminDb) return mockProducts.find((p) => p.slug === slug) ?? null
+export async function getProductsByCategory(category: ProductCategory): Promise<Product[]> {
+  if (!adminDb) return mockProducts.filter((p) => p.category === category)
+  return _getProductsByCategory(category)
+}
 
-    const snapshot = await adminDb
+const _getProductBySlug = unstable_cache(
+  async (slug: string): Promise<Product | null> => {
+    const snapshot = await adminDb!
       .collection('products')
       .where('slug', '==', slug)
       .where('publishedAt', '!=', null)
       .limit(1)
       .get()
-
     if (snapshot.empty) return null
     return mapProduct(snapshot.docs[0])
   },
   ['products'],
   { revalidate: 3600, tags: ['products'] }
 )
+
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  if (!adminDb) return mockProducts.find((p) => p.slug === slug) ?? null
+  return _getProductBySlug(slug)
+}

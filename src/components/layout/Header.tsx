@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Menu, ShoppingBag } from 'lucide-react'
 import { MegaMenuNav } from './MegaMenuNav'
 import { MobileNav } from './MobileNav'
@@ -41,9 +42,19 @@ export function Header() {
       {/* Logo -- left */}
       <Link
         href="/"
-        className="mr-auto font-heading text-xl font-bold text-forest"
+        className="mr-auto flex items-center gap-2"
       >
-        Roots &amp; Culture
+        <Image
+          src="/logo_black.png"
+          alt="Roots & Culture"
+          width={40}
+          height={40}
+          className="h-10 w-10"
+          priority
+        />
+        <span className="hidden font-heading text-xl font-bold text-forest sm:inline">
+          Roots &amp; Culture
+        </span>
       </Link>
 
       {/* Desktop nav -- centered, hidden on mobile */}

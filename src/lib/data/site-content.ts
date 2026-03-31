@@ -4,14 +4,10 @@ import { adminDb } from '@/lib/firebase/admin'
 import type { SiteContent } from '@/types'
 import { mockSiteContent } from '@/lib/data/mock-data'
 
-export const getSiteContent = unstable_cache(
+const _getSiteContent = unstable_cache(
   async (): Promise<SiteContent | null> => {
-    if (!adminDb) return mockSiteContent
-
-    const doc = await adminDb.collection('siteContent').doc('main').get()
-
+    const doc = await adminDb!.collection('siteContent').doc('main').get()
     if (!doc.exists) return null
-
     const data = doc.data()!
     return {
       id: doc.id,
@@ -24,3 +20,8 @@ export const getSiteContent = unstable_cache(
   ['site-content'],
   { revalidate: 3600, tags: ['site-content'] }
 )
+
+export async function getSiteContent(): Promise<SiteContent | null> {
+  if (!adminDb) return mockSiteContent
+  return _getSiteContent()
+}
