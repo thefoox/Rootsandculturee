@@ -49,10 +49,15 @@ export default async function ProdukterPage({ searchParams }: PageProps) {
           activeCategory={isValidCategory ? kategori : ''}
         />
       </Suspense>
-      <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-        <h1 className="pb-8 pt-12 font-heading text-[28px] font-bold text-forest">
-          Produkter
-        </h1>
+      <div className="mx-auto max-w-[1200px] px-4 pb-16 md:px-8 md:pb-24">
+        <div className="pb-8 pt-12">
+          <h1 className="font-heading text-[28px] font-bold text-forest">
+            Produkter
+          </h1>
+          <p className="mt-2 text-[15px] text-bark">
+            Utforsk vart handplukkede utvalg av autentiske norske produkter.
+          </p>
+        </div>
         {products.length > 0 ? (
           <ProductGrid products={products} />
         ) : (

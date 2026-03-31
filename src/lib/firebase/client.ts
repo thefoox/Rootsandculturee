@@ -1,7 +1,7 @@
-import { initializeApp, getApps } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
-import { getStorage } from 'firebase/storage'
+import { initializeApp, getApps, type FirebaseApp } from 'firebase/app'
+import { getFirestore, type Firestore } from 'firebase/firestore'
+import { getAuth, type Auth } from 'firebase/auth'
+import { getStorage, type FirebaseStorage } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,8 +12,18 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+function getApp(): FirebaseApp | null {
+  if (!firebaseConfig.apiKey) {
+    if (typeof window !== 'undefined') {
+      console.warn('Firebase: Missing API key. Auth and data features are disabled.')
+    }
+    return null
+  }
+  return getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+}
 
-export const db = getFirestore(app)
-export const auth = getAuth(app)
-export const storage = getStorage(app)
+const app = getApp()
+
+export const db: Firestore | null = app ? getFirestore(app) : null
+export const auth: Auth | null = app ? getAuth(app) : null
+export const storage: FirebaseStorage | null = app ? getStorage(app) : null

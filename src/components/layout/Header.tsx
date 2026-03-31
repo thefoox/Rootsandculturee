@@ -36,7 +36,7 @@ export function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 flex h-16 items-center border-b border-forest/12 bg-card px-4 lg:px-8"
+      className="sticky top-0 z-50 flex h-16 items-center bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] px-4 lg:px-8"
     >
       {/* Logo -- left */}
       <Link
@@ -67,7 +67,7 @@ export function Header() {
         {/* Auth trigger -- opens AuthModal */}
         <button
           type="button"
-          className="text-[15px] text-forest hover:opacity-85"
+          className="rounded-md px-3 py-1.5 text-[15px] font-medium text-forest hover:bg-forest/8 motion-safe:transition-colors motion-safe:duration-150"
           onClick={() => setAuthOpen(true)}
           aria-label="Logg inn"
         >

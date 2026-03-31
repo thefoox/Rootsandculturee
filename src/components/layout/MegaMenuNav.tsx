@@ -113,7 +113,7 @@ export function MegaMenuNav() {
             {/* Dropdown panel -- multi-column with icon areas per D-15 and UI-SPEC */}
             {hasChildren && isOpen && (
               <div
-                className="absolute left-0 top-full z-50 mt-0 w-[520px] rounded-b-lg border border-forest/15 bg-cream shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
+                className="absolute left-0 top-full z-50 mt-0 w-[520px] rounded-b-lg border border-forest/15 bg-cream shadow-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:animate-[fadeInDown_200ms_ease-out]"
                 role="menu"
               >
                 <ul className="grid grid-cols-2 gap-1 p-4">

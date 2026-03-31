@@ -15,9 +15,9 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link
       href={`/produkter/${product.slug}`}
       aria-label={`${product.name}, ${formatPrice(product.price)}`}
-      className="group block overflow-hidden rounded-lg bg-card shadow-sm motion-safe:transition-all motion-safe:duration-100 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md"
+      className="group block overflow-hidden rounded-xl border border-forest/8 bg-card shadow-sm motion-safe:transition-all motion-safe:duration-150 hover:shadow-lg hover:-translate-y-1"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-xl">
         {mainImage ? (
           <Image
             src={mainImage.url}

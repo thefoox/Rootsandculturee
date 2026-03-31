@@ -16,9 +16,9 @@ export function BlogCard({ article }: BlogCardProps) {
     <Link
       href={`/blogg/${article.slug}`}
       aria-label={`${article.title}${publishedDate ? `, publisert ${publishedDate}` : ''}`}
-      className="group block overflow-hidden rounded-lg bg-card shadow-sm motion-safe:transition-all motion-safe:duration-100 motion-safe:hover:shadow-md"
+      className="group block overflow-hidden rounded-xl border border-forest/8 bg-card shadow-sm motion-safe:transition-all motion-safe:duration-150 hover:shadow-lg hover:-translate-y-1"
     >
-      <div className="relative aspect-video w-full overflow-hidden">
+      <div className="relative aspect-video w-full overflow-hidden rounded-t-xl">
         {article.coverImage?.url ? (
           <Image
             src={article.coverImage.url}

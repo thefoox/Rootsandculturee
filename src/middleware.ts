@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 
-const secretKey = process.env.SESSION_SECRET
-const encodedKey = new TextEncoder().encode(secretKey)
+const secretKey = process.env.SESSION_SECRET || ''
+const encodedKey = secretKey ? new TextEncoder().encode(secretKey) : null
 const COOKIE_NAME = '__session'
 
 async function getSessionFromCookie(request: NextRequest) {
+  if (!encodedKey) return null
   const cookie = request.cookies.get(COOKIE_NAME)
   if (!cookie?.value) return null
 

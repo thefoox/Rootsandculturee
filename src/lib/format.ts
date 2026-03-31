@@ -7,10 +7,14 @@ export function formatPrice(priceInOre: number): string {
   }).format(priceInOre / 100)
 }
 
-export function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('nb-NO', { dateStyle: 'long' }).format(date)
+export function formatDate(date: Date | string | number): string {
+  const d = date instanceof Date ? date : new Date(date)
+  if (isNaN(d.getTime())) return ''
+  return new Intl.DateTimeFormat('nb-NO', { dateStyle: 'long' }).format(d)
 }
 
-export function formatDateMedium(date: Date): string {
-  return new Intl.DateTimeFormat('nb-NO', { dateStyle: 'medium' }).format(date)
+export function formatDateMedium(date: Date | string | number): string {
+  const d = date instanceof Date ? date : new Date(date)
+  if (isNaN(d.getTime())) return ''
+  return new Intl.DateTimeFormat('nb-NO', { dateStyle: 'medium' }).format(d)
 }
