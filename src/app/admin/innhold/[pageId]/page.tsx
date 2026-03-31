@@ -178,7 +178,13 @@ export default function EditPageContentPage() {
                     <div>
                       <label className="mb-1 block text-[13px] font-medium text-forest">Bilde</label>
                       {section.image?.url && (
-                        <div className="mb-2 text-[13px] text-body/70 break-all">{section.image.url}</div>
+                        <div className="mb-3 overflow-hidden rounded-lg border border-forest/10">
+                          <img
+                            src={section.image.url}
+                            alt={section.image.alt || ''}
+                            className="h-48 w-full object-cover"
+                          />
+                        </div>
                       )}
                       <Input
                         label="Bilde-URL"
@@ -236,11 +242,22 @@ export default function EditPageContentPage() {
                               />
                             </div>
                             {item.image && (
-                              <Input
-                                label="Bilde-URL"
-                                value={item.image.url}
-                                onChange={(e) => updateSectionItem(section.id, i, { image: { url: e.target.value, alt: item.image?.alt || '' } })}
-                              />
+                              <div>
+                                {item.image.url && (
+                                  <div className="mb-2 overflow-hidden rounded-lg border border-forest/10">
+                                    <img
+                                      src={item.image.url}
+                                      alt={item.image.alt || ''}
+                                      className="h-32 w-full object-cover"
+                                    />
+                                  </div>
+                                )}
+                                <Input
+                                  label="Bilde-URL"
+                                  value={item.image.url}
+                                  onChange={(e) => updateSectionItem(section.id, i, { image: { url: e.target.value, alt: item.image?.alt || '' } })}
+                                />
+                              </div>
                             )}
                             {item.icon !== undefined && (
                               <Input

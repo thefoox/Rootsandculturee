@@ -217,3 +217,32 @@ export interface Booking {
 export interface ShippingConfig {
   flatRate: number  // ore -- admin-configurable stored in siteContent
 }
+
+// Admin: Customer summary (aggregated from Firestore)
+export interface CustomerSummary {
+  uid: string
+  email: string
+  displayName: string
+  orderCount: number
+  bookingCount: number
+  totalSpent: number      // ore
+  lastOrderDate: Date | null
+  createdAt: Date
+}
+
+// Admin: Refund tracking (from Stripe)
+export interface OrderRefund {
+  id: string
+  amount: number          // ore
+  reason: string | null
+  status: string
+  createdAt: Date
+}
+
+// Admin: Internal order note
+export interface OrderNote {
+  id: string
+  text: string
+  createdBy: string       // admin email
+  createdAt: Date
+}
