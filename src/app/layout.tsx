@@ -4,6 +4,7 @@ import { Toaster } from 'sonner'
 import { SkipLink } from '@/components/layout/SkipLink'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { CookieBanner } from '@/components/layout/CookieBanner'
 import { CartProvider } from '@/components/cart/CartProvider'
 import './globals.css'
 
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
           <Footer />
+          <CookieBanner />
           <Toaster position="bottom-right" />
         </CartProvider>
       </body>

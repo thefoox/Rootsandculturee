@@ -4,7 +4,7 @@ import { getProductBySlug, getProducts } from '@/lib/data/products'
 import { ProductGallery } from '@/components/products/ProductGallery'
 import { PriceBadge } from '@/components/shared/PriceBadge'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
-import { Button } from '@/components/ui/Button'
+import { AddToCartButton } from '@/components/products/AddToCartButton'
 
 export const revalidate = 3600
 
@@ -60,15 +60,7 @@ export default async function ProduktDetailPage({ params }: PageProps) {
             {product.description}
           </p>
           <div className="mt-8">
-            <Button
-              variant="primary"
-              disabled
-              aria-disabled="true"
-              title="Handlekurv kommer snart"
-              className="w-full lg:w-auto"
-            >
-              Legg i handlekurv
-            </Button>
+            <AddToCartButton product={{ id: product.id, slug: product.slug, name: product.name, price: product.price, images: product.images }} />
           </div>
         </div>
       </article>

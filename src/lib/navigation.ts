@@ -57,6 +57,8 @@ export const footerColumns: FooterColumn[] = [
       { label: 'Kontakt oss', href: '/kontakt' },
       { label: 'Vanlige sporsmal', href: '/kontakt#faq' },
       { label: 'Frakt og retur', href: '/kontakt#frakt' },
+      { label: 'Personvern', href: '/personvern' },
+      { label: 'Vilkar', href: '/vilkar' },
     ],
   },
   {
