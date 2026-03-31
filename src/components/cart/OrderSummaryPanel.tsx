@@ -30,12 +30,12 @@ export function OrderSummaryPanel({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-[15px] text-body">Subtotal</span>
-          <span className="text-[15px] text-rust">{formatPrice(subtotal)}</span>
+          <span className="text-[15px] text-forest">{formatPrice(subtotal)}</span>
         </div>
 
         <div className="flex items-center justify-between">
           <span className="text-[15px] text-body">Frakt</span>
-          <span className="text-[15px] text-rust">
+          <span className="text-[15px] text-forest">
             {shippingCost > 0 ? formatPrice(shippingCost) : 'Gratis'}
           </span>
         </div>
@@ -44,7 +44,7 @@ export function OrderSummaryPanel({
 
         <div className="flex items-center justify-between">
           <span className="text-[15px] font-normal text-forest">Totalt</span>
-          <span className="text-[15px] text-rust">{formatPrice(total)}</span>
+          <span className="text-[15px] text-forest">{formatPrice(total)}</span>
         </div>
       </div>
 

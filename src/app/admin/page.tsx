@@ -52,7 +52,7 @@ export default async function AdminDashboard() {
               href={stat.href}
               className="flex items-center gap-4 rounded-lg border border-forest/12 bg-card p-6 hover:shadow-md"
             >
-              <Icon className="h-8 w-8 text-rust" aria-hidden="true" />
+              <Icon className="h-8 w-8 text-forest" aria-hidden="true" />
               <div>
                 <p className="text-[13px] text-body">{stat.label}</p>
                 {stat.count !== null && (

@@ -85,8 +85,8 @@ export function ImageUpload({
       <div
         className={`flex min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed ${
           dragOver
-            ? 'border-ember bg-[rgba(184,77,0,0.06)]'
-            : 'border-forest/30 hover:border-ember hover:bg-[rgba(184,77,0,0.04)]'
+            ? 'border-forest bg-forest/5'
+            : 'border-forest/30 hover:border-forest/50 hover:bg-forest/5'
         }`}
         onDragOver={(e) => {
           e.preventDefault()
@@ -96,7 +96,7 @@ export function ImageUpload({
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
       >
-        <UploadCloud className="h-8 w-8 text-rust" aria-hidden="true" />
+        <UploadCloud className="h-8 w-8 text-forest" aria-hidden="true" />
         <p className="mt-2 text-[15px] text-body">
           Slipp bilder her eller klikk for a velge
         </p>

@@ -49,7 +49,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <h3 className="mt-1 line-clamp-2 font-heading text-[18px] font-bold leading-[1.25] text-forest">
           {product.name}
         </h3>
-        <span className="mt-1 block font-body text-[15px] font-bold text-ember">
+        <span className="mt-1 block font-body text-[15px] font-bold text-forest">
           {formatPrice(product.price)}
         </span>
       </div>

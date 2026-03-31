@@ -103,7 +103,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         <div className="flex-1 overflow-y-auto p-4">
           {items.length === 0 ? (
             <div className="flex min-h-[200px] flex-col items-center justify-center text-center">
-              <ShoppingBag className="h-12 w-12 text-rust" aria-hidden="true" />
+              <ShoppingBag className="h-12 w-12 text-forest" aria-hidden="true" />
               <p className="mt-4 font-heading text-[20px] font-bold text-forest">
                 Handlekurven er tom
               </p>

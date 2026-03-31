@@ -39,7 +39,7 @@ export default async function KontoPage() {
           {orders.length > 0 && (
             <Link
               href="/konto/ordrer"
-              className="font-body text-[13px] text-ember hover:underline"
+              className="font-body text-[13px] text-forest hover:underline"
             >
               Se alle ordrer
             </Link>
@@ -65,7 +65,7 @@ export default async function KontoPage() {
           {bookings.length > 0 && (
             <Link
               href="/konto/bookinger"
-              className="font-body text-[13px] text-ember hover:underline"
+              className="font-body text-[13px] text-forest hover:underline"
             >
               Se alle bookinger
             </Link>

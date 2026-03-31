@@ -124,7 +124,7 @@ export default function OmOssPage() {
             <h3 className="mt-6 font-heading text-[22px] font-bold text-forest">
               Jacob
             </h3>
-            <p className="mt-1 text-[15px] font-medium text-ember">Grunnlegger</p>
+            <p className="mt-1 text-[15px] font-medium text-forest">Grunnlegger</p>
             <p className="mt-4 text-[15px] leading-relaxed text-body">
               Med en dyp lidenskap for norsk natur og kulturarv startet Jacob
               Roots &amp; Culture for å dele de opplevelsene som har formet ham.
@@ -148,7 +148,7 @@ export default function OmOssPage() {
               >
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-forest/10">
                   <value.icon
-                    className="h-7 w-7 text-ember"
+                    className="h-7 w-7 text-forest"
                     aria-hidden="true"
                   />
                 </div>

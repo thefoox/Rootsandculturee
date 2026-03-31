@@ -23,7 +23,7 @@ export function BookingChecklist({ items }: BookingChecklistProps) {
         {checklistItems.map((item, index) => (
           <li key={index} className="flex items-start gap-2">
             <CheckSquare
-              className="mt-0.5 h-4 w-4 flex-shrink-0 text-ember"
+              className="mt-0.5 h-4 w-4 flex-shrink-0 text-forest"
               aria-hidden="true"
             />
             <span className="text-[15px] text-forest">{item}</span>

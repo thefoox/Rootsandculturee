@@ -52,7 +52,7 @@ export default function OrdersListPage() {
       width: '100px',
       align: 'right',
       accessor: (row) => (
-        <span className="font-body text-[15px] text-rust">
+        <span className="font-body text-[15px] text-forest">
           {formatPrice(row.total)}
         </span>
       ),

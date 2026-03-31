@@ -33,7 +33,7 @@ export function KontoTabs() {
               className={cn(
                 'min-h-[44px] flex items-center px-4 py-3 font-body text-[15px] whitespace-nowrap transition-colors duration-100',
                 active
-                  ? 'border-b-2 border-ember text-forest font-medium'
+                  ? 'border-b-2 border-forest text-forest font-medium'
                   : 'text-body hover:text-forest'
               )}
               aria-current={active ? 'page' : undefined}

@@ -100,7 +100,7 @@ export function CartItem({ item }: CartItemProps) {
           )}
 
           {/* Item total */}
-          <span className="font-body text-[15px] text-rust">
+          <span className="font-body text-[15px] text-forest">
             {formatPrice(itemTotal)}
           </span>
         </div>

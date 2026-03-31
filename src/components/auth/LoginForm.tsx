@@ -122,7 +122,7 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
         Ny her?{' '}
         <button
           type="button"
-          className="text-ember hover:underline"
+          className="text-forest hover:underline"
           onClick={onSwitchToRegister}
         >
           Opprett konto

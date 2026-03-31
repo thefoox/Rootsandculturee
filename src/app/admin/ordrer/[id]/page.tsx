@@ -90,7 +90,7 @@ export default function OrderDetailPage() {
               <span className="text-forest">
                 {item.name} x {item.quantity}
               </span>
-              <span className="text-rust">
+              <span className="text-forest">
                 {formatPrice(item.price * item.quantity)}
               </span>
             </li>
@@ -107,7 +107,7 @@ export default function OrderDetailPage() {
           </div>
           <div className="mt-2 flex justify-between font-body text-[15px] font-medium">
             <span className="text-forest">Totalt</span>
-            <span className="text-rust">{formatPrice(order.total)}</span>
+            <span className="text-forest">{formatPrice(order.total)}</span>
           </div>
         </div>
       </section>
@@ -149,7 +149,7 @@ export default function OrderDetailPage() {
         <div className="mt-4 space-y-2 font-body text-[15px]">
           <p>
             <span className="text-body">Totalt betalt: </span>
-            <span className="text-rust">{formatPrice(order.total)}</span>
+            <span className="text-forest">{formatPrice(order.total)}</span>
           </p>
           {order.stripePaymentIntentId && (
             <p>

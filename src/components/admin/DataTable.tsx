@@ -42,7 +42,7 @@ export function DataTable<T extends { id: string }>({
     return (
       <div className="flex min-h-[200px] flex-col items-center justify-center rounded-lg border border-forest/12 bg-cream p-8">
         <Icon
-          className="h-12 w-12 text-rust"
+          className="h-12 w-12 text-forest"
           aria-hidden="true"
         />
         <h3 className="mt-4 font-heading text-[20px] font-bold text-forest">

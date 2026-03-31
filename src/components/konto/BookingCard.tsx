@@ -39,7 +39,7 @@ export function BookingCard({ booking, showWhatToBring = false }: BookingCardPro
       </div>
       {showWhatToBring && booking.whatToBring && (
         <div className="mt-3 flex items-start gap-2 rounded-md bg-card px-3 py-2">
-          <Info className="h-4 w-4 text-ember mt-0.5 shrink-0" aria-hidden="true" />
+          <Info className="h-4 w-4 text-forest mt-0.5 shrink-0" aria-hidden="true" />
           <div>
             <p className="font-body text-[13px] text-forest font-medium">
               Hva du ma ta med

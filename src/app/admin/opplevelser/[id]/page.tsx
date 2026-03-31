@@ -193,7 +193,7 @@ export default function EditExperiencePage() {
                       value={opt.value}
                       checked={difficulty === opt.value}
                       onChange={() => setDifficulty(opt.value)}
-                      className="h-4 w-4 accent-ember"
+                      className="h-4 w-4 accent-forest"
                     />
                     {opt.label}
                   </label>
@@ -229,7 +229,7 @@ export default function EditExperiencePage() {
                       value={opt.value}
                       checked={category === opt.value}
                       onChange={() => setCategory(opt.value)}
-                      className="h-4 w-4 accent-ember"
+                      className="h-4 w-4 accent-forest"
                     />
                     {opt.label}
                   </label>

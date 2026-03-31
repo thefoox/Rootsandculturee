@@ -60,7 +60,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
 
       <nav aria-label="Admin-navigasjon" className="flex-1">
         <div className="px-4 pb-2 pt-6">
-          <span className="text-[13px] uppercase tracking-wider text-rust">
+          <span className="text-[13px] uppercase tracking-wider text-forest">
             Innhold
           </span>
         </div>
@@ -78,7 +78,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
                     'flex h-[44px] items-center gap-4 px-4 text-[15px] text-cream',
                     'hover:bg-[rgba(254,252,243,0.08)]',
                     isActive &&
-                      'border-l-[3px] border-ember bg-[rgba(254,252,243,0.08)]'
+                      'border-l-[3px] border-forest bg-[rgba(254,252,243,0.08)]'
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >
@@ -91,7 +91,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
         </ul>
 
         <div className="px-4 pb-2 pt-6">
-          <span className="text-[13px] uppercase tracking-wider text-rust">
+          <span className="text-[13px] uppercase tracking-wider text-forest">
             Ordre
           </span>
         </div>
@@ -109,7 +109,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
                     'flex h-[44px] items-center gap-4 px-4 text-[15px] text-cream',
                     'hover:bg-[rgba(254,252,243,0.08)]',
                     isActive &&
-                      'border-l-[3px] border-ember bg-[rgba(254,252,243,0.08)]'
+                      'border-l-[3px] border-forest bg-[rgba(254,252,243,0.08)]'
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >

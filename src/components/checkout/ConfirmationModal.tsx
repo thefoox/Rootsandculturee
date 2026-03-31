@@ -172,7 +172,7 @@ export function ConfirmationModal({
                     {order.items.map((item, i) => (
                       <div key={i} className="flex justify-between text-[15px] text-forest">
                         <span>{item.name} x{item.quantity}</span>
-                        <span className="text-rust">{formatPrice(item.price * item.quantity)}</span>
+                        <span className="text-forest">{formatPrice(item.price * item.quantity)}</span>
                       </div>
                     ))}
                   </div>
@@ -188,7 +188,7 @@ export function ConfirmationModal({
 
                   <div className="flex justify-between border-t border-forest/12 pt-3 text-[15px] text-forest">
                     <span>Totalt betalt</span>
-                    <span className="text-rust">{formatPrice(order.total)}</span>
+                    <span className="text-forest">{formatPrice(order.total)}</span>
                   </div>
                 </div>
               )}
@@ -207,7 +207,7 @@ export function ConfirmationModal({
                     <p className="text-[13px] text-body">
                       Dato: {formatDate(new Date(booking.date))}
                     </p>
-                    <p className="text-[15px] text-rust">
+                    <p className="text-[15px] text-forest">
                       {formatPrice(booking.total)}
                     </p>
                     {booking.whatToBring && (

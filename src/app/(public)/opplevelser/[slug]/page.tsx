@@ -97,7 +97,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             />
           </div>
           <div className="flex flex-wrap items-center gap-6 py-5">
-            <span className="font-heading text-[24px] font-bold text-ember">
+            <span className="font-heading text-[24px] font-bold text-forest">
               {formatPrice(experience.basePrice)}
             </span>
             <DifficultyBadge difficulty={experience.difficulty} />
@@ -234,7 +234,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             Sted
           </h2>
           <div className="mt-4 flex items-start gap-3">
-            <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-ember" aria-hidden="true" />
+            <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-forest" aria-hidden="true" />
             <div>
               <p className="font-body text-[16px] font-medium text-forest">
                 {experience.location}

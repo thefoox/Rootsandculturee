@@ -5,8 +5,6 @@
   --color-forest: #1B4332;
   --color-cream: #FEFCF3;
   --color-card: #F5F0E8;
-  --color-rust: #A0522D;
-  --color-ember: #B84D00;
   --color-bark: #5C3D1E;
   --color-body: #374740;
   --color-destructive: #6B3A2A;
@@ -110,7 +108,7 @@ body {
   margin-bottom: 16px;
 }
 .article-prose blockquote {
-  border-left: 4px solid var(--color-ember);
+  border-left: 4px solid var(--color-forest);
   padding-left: 16px;
   font-style: italic;
   color: var(--color-body);
@@ -120,7 +118,7 @@ body {
   text-decoration: underline;
 }
 .article-prose a:hover {
-  color: var(--color-ember);
+  color: var(--color-forest);
 }
 .article-prose img {
   max-width: 100%;

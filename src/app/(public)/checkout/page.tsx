@@ -140,7 +140,7 @@ export default function CheckoutPage() {
                       {item.name}
                       {item.quantity > 1 ? ` x${item.quantity}` : ''}
                     </span>
-                    <span className="text-rust">
+                    <span className="text-forest">
                       {formatPrice(item.price * item.quantity)}
                     </span>
                   </div>
@@ -171,7 +171,7 @@ export default function CheckoutPage() {
                     {item.name}
                     {item.quantity > 1 ? ` x${item.quantity}` : ''}
                   </span>
-                  <span className="text-rust">
+                  <span className="text-forest">
                     {formatPrice(item.price * item.quantity)}
                   </span>
                 </div>

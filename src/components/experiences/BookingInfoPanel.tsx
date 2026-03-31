@@ -52,7 +52,7 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
         />
       </div>
 
-      <p className="mt-2 font-body text-[15px] font-medium text-rust">
+      <p className="mt-2 font-body text-[15px] font-medium text-forest">
         {formatPrice(price)}
       </p>
 

@@ -212,7 +212,7 @@ export default function EditProductPage() {
                     value={cat.value}
                     checked={category === cat.value}
                     onChange={() => setCategory(cat.value)}
-                    className="h-4 w-4 accent-ember"
+                    className="h-4 w-4 accent-forest"
                   />
                   {cat.label}
                 </label>

@@ -43,7 +43,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
               aria-pressed={index === activeIndex}
               className={`relative h-16 w-16 flex-shrink-0 overflow-hidden rounded border-2 ${
                 index === activeIndex
-                  ? 'border-ember'
+                  ? 'border-forest'
                   : 'border-transparent'
               }`}
             >

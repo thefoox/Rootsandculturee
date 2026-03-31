@@ -65,7 +65,7 @@ export default function ExperiencesListPage() {
       width: '100px',
       align: 'right',
       accessor: (row) => (
-        <span className="text-rust">{formatPrice(row.basePrice)}</span>
+        <span className="text-forest">{formatPrice(row.basePrice)}</span>
       ),
     },
   ]

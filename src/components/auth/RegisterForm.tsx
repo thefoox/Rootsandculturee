@@ -146,7 +146,7 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
         Har du konto?{' '}
         <button
           type="button"
-          className="text-ember hover:underline"
+          className="text-forest hover:underline"
           onClick={onSwitchToLogin}
         >
           Logg inn

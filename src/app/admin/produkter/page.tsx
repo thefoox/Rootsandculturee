@@ -74,7 +74,7 @@ export default function ProductsListPage() {
       width: '100px',
       align: 'right',
       accessor: (row) => (
-        <span className="text-rust">{formatPrice(row.price)}</span>
+        <span className="text-forest">{formatPrice(row.price)}</span>
       ),
     },
     {

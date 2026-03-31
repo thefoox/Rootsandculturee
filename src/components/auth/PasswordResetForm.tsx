@@ -52,7 +52,7 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
         </p>
         <button
           type="button"
-          className="text-[13px] text-ember hover:underline"
+          className="text-[13px] text-forest hover:underline"
           onClick={onSwitchToLogin}
         >
           Tilbake til innlogging
@@ -95,7 +95,7 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
       <p className="mt-4 text-center text-[13px] text-body">
         <button
           type="button"
-          className="text-ember hover:underline"
+          className="text-forest hover:underline"
           onClick={onSwitchToLogin}
         >
           Tilbake til innlogging

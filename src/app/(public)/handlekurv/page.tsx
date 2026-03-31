@@ -19,7 +19,7 @@ export default function HandlekurvPage() {
     return (
       <div className="mx-auto max-w-[1200px] px-4 pt-24 pb-16">
         <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
-          <ShoppingBag className="h-12 w-12 text-rust" aria-hidden="true" />
+          <ShoppingBag className="h-12 w-12 text-forest" aria-hidden="true" />
           <h1 className="mt-4 font-heading text-[20px] font-bold text-forest">
             Handlekurven er tom
           </h1>
