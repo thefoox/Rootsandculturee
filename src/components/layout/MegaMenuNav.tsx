@@ -15,7 +15,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   utensils: UtensilsCrossed,
 }
 
-export function MegaMenuNav() {
+export function MegaMenuNav({ transparent = true }: { transparent?: boolean }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const navRef = useRef<HTMLUListElement>(null)
   const dropdownRefs = useRef<(HTMLAnchorElement | null)[]>([])
@@ -72,7 +72,7 @@ export function MegaMenuNav() {
             {hasChildren ? (
               <button
                 type="button"
-                className="flex items-center gap-1 px-3 py-2 text-body text-cream hover:underline"
+                className={`flex items-center gap-1 px-3 py-2 text-body hover:underline ${transparent ? 'text-cream' : 'text-forest'}`}
                 role="menuitem"
                 aria-haspopup="true"
                 aria-expanded={isOpen}
@@ -103,7 +103,7 @@ export function MegaMenuNav() {
             ) : (
               <Link
                 href={item.href}
-                className="block px-3 py-2 text-body text-cream hover:underline"
+                className={`block px-3 py-2 text-body hover:underline ${transparent ? 'text-cream' : 'text-forest'}`}
                 role="menuitem"
               >
                 {item.label}

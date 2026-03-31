@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, ShoppingBag, User, LogOut } from 'lucide-react'
@@ -22,6 +23,13 @@ export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const { itemCount } = useCart()
+  const pathname = usePathname()
+
+  // Pages with hero images get transparent header with light text
+  const heroPages = ['/', '/opplevelser', '/opplevelser/retreat', '/opplevelser/kurs', '/opplevelser/matopplevelse', '/om-oss', '/kontakt']
+  const isHeroPage = heroPages.includes(pathname) || pathname.startsWith('/opplevelser/') && !pathname.includes('/opplevelser/retreat') && !pathname.includes('/opplevelser/kurs') && !pathname.includes('/opplevelser/matopplevelse') && pathname !== '/opplevelser'
+  // Simplify: any /opplevelser/* detail page also has hero
+  const isTransparent = heroPages.includes(pathname) || (pathname.startsWith('/opplevelser/') && pathname.split('/').length === 3)
 
   useEffect(() => {
     // Check if session cookie exists (set by mock-login or real auth)
@@ -52,7 +60,9 @@ export function Header() {
   return (
     <>
       <header
-        className="absolute top-0 left-0 right-0 z-50 flex h-20 items-center justify-center"
+        className={`absolute top-0 left-0 right-0 z-50 flex h-20 items-center justify-center ${
+          isTransparent ? '' : 'bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)]'
+        }`}
       >
       <div className="flex w-full max-w-[1200px] items-center px-6 lg:px-8">
         {/* Logo -- left */}
@@ -65,14 +75,14 @@ export function Header() {
             alt="Roots & Culture"
             width={48}
             height={48}
-            className="h-12 w-12 brightness-0 invert"
+            className={`h-12 w-12 ${isTransparent ? 'brightness-0 invert' : ''}`}
             priority
           />
         </Link>
 
         {/* Desktop nav -- centered, hidden on mobile */}
         <nav className="hidden lg:flex" aria-label="Hovednavigasjon">
-          <MegaMenuNav />
+          <MegaMenuNav transparent={isTransparent} />
         </nav>
 
         {/* Right section: cart icon + auth trigger (desktop) */}
@@ -80,7 +90,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setCartOpen(true)}
-            className="relative flex h-11 w-11 items-center justify-center rounded text-cream hover:opacity-85"
+            className={`relative flex h-11 w-11 items-center justify-center rounded hover:opacity-85 ${isTransparent ? 'text-cream' : 'text-forest'}`}
             aria-label={cartLabel}
           >
             <ShoppingBag className="h-5 w-5" aria-hidden="true" />
@@ -91,7 +101,9 @@ export function Header() {
             <div className="relative">
               <button
                 type="button"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-cream/20 text-cream hover:bg-cream/30"
+                className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                  isTransparent ? 'bg-cream/20 text-cream hover:bg-cream/30' : 'bg-forest/10 text-forest hover:bg-forest/20'
+                }`}
                 onClick={() => setProfileOpen(!profileOpen)}
                 aria-label="Min konto"
                 aria-expanded={profileOpen}
@@ -120,7 +132,11 @@ export function Header() {
           ) : (
             <button
               type="button"
-              className="rounded-full bg-forest px-4 py-2 text-body font-medium text-cream motion-safe:transition-colors motion-safe:duration-150 hover:bg-forest/80"
+              className={`rounded-full px-4 py-2 text-body font-medium motion-safe:transition-colors motion-safe:duration-150 ${
+                isTransparent
+                  ? 'bg-cream/20 text-cream hover:bg-cream/30'
+                  : 'bg-forest text-cream hover:bg-forest/80'
+              }`}
               onClick={() => setAuthOpen(true)}
               aria-label="Logg inn"
             >
@@ -137,7 +153,7 @@ export function Header() {
             className="relative flex h-11 w-11 items-center justify-center"
             aria-label={cartLabel}
           >
-            <ShoppingBag className="h-5 w-5 text-cream" aria-hidden="true" />
+            <ShoppingBag className={`h-5 w-5 ${isTransparent ? 'text-cream' : 'text-forest'}`} aria-hidden="true" />
             <CartBadge />
           </button>
 
@@ -148,7 +164,7 @@ export function Header() {
             aria-label="Apne meny"
             aria-expanded={mobileOpen}
           >
-            <Menu className="h-6 w-6 text-cream" aria-hidden="true" />
+            <Menu className={`h-6 w-6 ${isTransparent ? 'text-cream' : 'text-forest'}`} aria-hidden="true" />
           </button>
         </div>
       </div>
