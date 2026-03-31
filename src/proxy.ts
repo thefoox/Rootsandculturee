@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 
+// SESSION_SECRET validated at runtime via src/lib/env.ts validateEnv()
 const secretKey = process.env.SESSION_SECRET || 'dev-secret-for-mock-login-only'
 const encodedKey = new TextEncoder().encode(secretKey)
 const COOKIE_NAME = '__session'
@@ -20,7 +21,7 @@ async function getSessionFromCookie(request: NextRequest) {
   }
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Admin routes -- require admin role

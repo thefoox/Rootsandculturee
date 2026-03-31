@@ -40,6 +40,10 @@ interface GiftCardMetaItem {
 }
 
 export async function POST(req: Request) {
+  // Validate required env vars at runtime (not build time)
+  const { validateEnv } = await import('@/lib/env')
+  validateEnv()
+
   if (!stripe || !adminDb) {
     return NextResponse.json(
       { error: 'Server ikke konfigurert.' },
@@ -380,6 +384,39 @@ export async function POST(req: Request) {
         })
       } catch {
         // Contact sync failure should never break the webhook
+      }
+    } else if (event.type === 'charge.refunded') {
+      const charge = event.data.object
+      const paymentIntentId = typeof charge.payment_intent === 'string'
+        ? charge.payment_intent
+        : charge.payment_intent?.id || ''
+
+      if (paymentIntentId) {
+        // Find the order by PaymentIntent ID
+        const ordersSnapshot = await adminDb!
+          .collection('orders')
+          .where('stripePaymentIntentId', '==', paymentIntentId)
+          .limit(1)
+          .get()
+
+        if (!ordersSnapshot.empty) {
+          const orderDoc = ordersSnapshot.docs[0]
+          const refundAmount = charge.amount_refunded || 0
+
+          // Update order status
+          await orderDoc.ref.update({
+            status: 'cancelled',
+          })
+
+          // Log refund details
+          await orderDoc.ref.collection('refunds').add({
+            amount: refundAmount,
+            reason: charge.refunds?.data?.[0]?.reason || null,
+            status: 'succeeded',
+            stripeRefundId: charge.refunds?.data?.[0]?.id || '',
+            createdAt: new Date(),
+          })
+        }
       }
     }
   } catch (err) {

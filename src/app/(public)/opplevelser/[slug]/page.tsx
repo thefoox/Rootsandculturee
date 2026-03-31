@@ -6,6 +6,7 @@ import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { DifficultyBadge } from '@/components/experiences/DifficultyBadge'
 import { DateCardPicker } from '@/components/experiences/DateCardPicker'
 import { formatPrice } from '@/lib/format'
+import { experienceJsonLd } from '@/lib/json-ld'
 import { MapPin, Clock, CheckCircle, Backpack, ShieldCheck } from 'lucide-react'
 
 export const revalidate = 3600
@@ -52,6 +53,10 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(experienceJsonLd(experience)) }}
+      />
       {/* ── Hero Section (full-width) ── */}
       {mainImage && (
         <div className="relative w-full h-[340px] md:h-[520px] lg:h-[620px]">

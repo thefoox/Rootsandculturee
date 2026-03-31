@@ -5,6 +5,7 @@ import { ProductGallery } from '@/components/products/ProductGallery'
 import { PriceBadge } from '@/components/shared/PriceBadge'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { AddToCartButton } from '@/components/products/AddToCartButton'
+import { productJsonLd } from '@/lib/json-ld'
 
 export const revalidate = 3600
 
@@ -45,6 +46,11 @@ export default async function ProduktDetailPage({ params }: PageProps) {
   }
 
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd(product)) }}
+      />
     <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-24 md:px-8">
       <Breadcrumbs items={[{ label: 'Produkter', href: '/produkter' }, { label: product.name }]} />
       <article className="mt-4 flex flex-col gap-8 lg:flex-row lg:gap-12">
@@ -65,5 +71,6 @@ export default async function ProduktDetailPage({ params }: PageProps) {
         </div>
       </article>
     </div>
+    </>
   )
 }

@@ -8,6 +8,7 @@ import { getArticles } from '@/lib/data/articles'
 import { getPageContent, getSection } from '@/lib/data/page-content'
 import { formatPrice, formatDate } from '@/lib/format'
 import { BlogCard } from '@/components/blog/BlogCard'
+import { sanitizeHtml } from '@/lib/sanitize'
 
 export default async function Home() {
   const [products, experiences, articles, page] = await Promise.all([
@@ -241,7 +242,7 @@ export default async function Home() {
                 {omOss?.heading || 'Forankret i norsk natur'}
               </h2>
               {omOss?.body ? (
-                <div className="mt-5 font-body text-body leading-relaxed text-body" dangerouslySetInnerHTML={{ __html: omOss.body }} />
+                <div className="mt-5 font-body text-body leading-relaxed text-body" dangerouslySetInnerHTML={{ __html: sanitizeHtml(omOss.body) }} />
               ) : (
                 <>
                   <p className="mt-5 font-body text-body leading-relaxed text-body">

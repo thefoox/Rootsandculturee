@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import type { SessionPayload } from '@/types'
 
+// SESSION_SECRET validated at runtime via src/lib/env.ts validateEnv()
 const secretKey = process.env.SESSION_SECRET || 'dev-secret-for-mock-login-only'
 const encodedKey = new TextEncoder().encode(secretKey)
 const COOKIE_NAME = '__session'
