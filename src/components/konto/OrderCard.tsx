@@ -30,7 +30,7 @@ export function OrderCard({ order }: OrderCardProps) {
           <p className="font-body text-[15px] text-forest font-medium">
             {dateFormatter.format(order.createdAt)}
           </p>
-          <p className="font-body text-[13px] text-bark mt-0.5">
+          <p className="font-body text-[13px] text-body mt-0.5">
             {itemCount} {itemCount === 1 ? 'vare' : 'varer'}
           </p>
         </div>

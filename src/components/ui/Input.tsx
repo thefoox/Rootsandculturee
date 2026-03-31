@@ -25,7 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            'min-h-[44px] rounded-md border bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-bark/60',
+            'min-h-[44px] rounded-md border bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60',
             'transition-colors duration-100',
             error
               ? 'border-destructive'

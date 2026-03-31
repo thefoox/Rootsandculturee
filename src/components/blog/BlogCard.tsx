@@ -34,7 +34,7 @@ export function BlogCard({ article, className }: BlogCardProps) {
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-card text-bark">
+          <div className="flex h-full w-full items-center justify-center bg-card text-body">
             Ingen bilde
           </div>
         )}
@@ -43,11 +43,11 @@ export function BlogCard({ article, className }: BlogCardProps) {
         <h3 className="line-clamp-2 font-heading text-[20px] font-bold leading-[1.25] text-forest">
           {article.title}
         </h3>
-        <p className="mt-2 line-clamp-3 font-body text-[15px] text-bark">
+        <p className="mt-2 line-clamp-3 font-body text-[15px] text-body">
           {article.excerpt}
         </p>
         {publishedDate && (
-          <p className="mt-2 font-body text-[13px] text-bark">
+          <p className="mt-2 font-body text-[13px] text-body">
             {publishedDate}
           </p>
         )}

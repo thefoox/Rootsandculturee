@@ -18,7 +18,7 @@ export function AdminBreadcrumb({ items }: AdminBreadcrumbProps) {
           return (
             <li key={index} className="flex items-center gap-1">
               {index > 0 && (
-                <span className="text-bark" aria-hidden="true">
+                <span className="text-body" aria-hidden="true">
                   /
                 </span>
               )}
@@ -27,7 +27,7 @@ export function AdminBreadcrumb({ items }: AdminBreadcrumbProps) {
               ) : (
                 <Link
                   href={item.href}
-                  className="text-bark hover:underline"
+                  className="text-body hover:underline"
                 >
                   {item.label}
                 </Link>

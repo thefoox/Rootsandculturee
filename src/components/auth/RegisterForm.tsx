@@ -131,7 +131,7 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
         Opprett konto
       </Button>
 
-      <p className="mt-4 text-center text-[13px] text-bark">
+      <p className="mt-4 text-center text-[13px] text-body">
         Har du konto?{' '}
         <button
           type="button"

@@ -52,7 +52,7 @@ export function ContactForm() {
           rows={6}
           placeholder="Skriv din melding her..."
           required
-          className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-bark/60 motion-safe:transition-colors motion-safe:duration-100 focus:border-forest focus:outline-none focus-visible:outline-2 focus-visible:outline-forest"
+          className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 motion-safe:transition-colors motion-safe:duration-100 focus:border-forest focus:outline-none focus-visible:outline-2 focus-visible:outline-forest"
         />
       </div>
       <Button type="submit" loading={sending} className="w-full md:w-auto">

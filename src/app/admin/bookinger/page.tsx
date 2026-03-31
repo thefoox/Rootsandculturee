@@ -86,7 +86,7 @@ export default function BookingsListPage() {
       header: 'Kode',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] tracking-[0.04em] text-bark">
+        <span className="font-body text-[13px] tracking-[0.04em] text-body">
           {row.confirmationCode}
         </span>
       ),
@@ -103,7 +103,7 @@ export default function BookingsListPage() {
       header: 'Dato',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-bark">
+        <span className="font-body text-[13px] text-body">
           {formatDateMedium(row.date instanceof Date ? row.date : new Date(row.date))}
         </span>
       ),
@@ -112,7 +112,7 @@ export default function BookingsListPage() {
       header: 'Kunde',
       width: '160px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-bark">
+        <span className="font-body text-[13px] text-body">
           {row.customerEmail}
         </span>
       ),
@@ -130,7 +130,7 @@ export default function BookingsListPage() {
           {row.status !== 'cancelled' && (
             <button
               onClick={() => setCancelTarget(row)}
-              className="flex h-9 w-9 items-center justify-center rounded-md text-bark hover:text-[#C0392B]"
+              className="flex h-9 w-9 items-center justify-center rounded-md text-body hover:text-[#C0392B]"
               aria-label={`Kanseller booking ${row.confirmationCode}`}
             >
               <XCircle className="h-4 w-4" aria-hidden="true" />

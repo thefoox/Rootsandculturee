@@ -21,14 +21,14 @@ export function BookingCard({ booking, showWhatToBring = false }: BookingCardPro
           <p className="font-body text-[15px] text-forest font-medium">
             {booking.experienceName}
           </p>
-          <p className="font-body text-[13px] text-bark mt-0.5">
+          <p className="font-body text-[13px] text-body mt-0.5">
             {dateFormatter.format(booking.date)}
           </p>
           <div className="flex items-center gap-3 mt-1">
-            <span className="font-body text-[13px] text-bark">
+            <span className="font-body text-[13px] text-body">
               {booking.seats} {booking.seats === 1 ? 'plass' : 'plasser'}
             </span>
-            <span className="font-body text-[13px] text-bark">
+            <span className="font-body text-[13px] text-body">
               Kode: {booking.confirmationCode}
             </span>
           </div>
@@ -44,7 +44,7 @@ export function BookingCard({ booking, showWhatToBring = false }: BookingCardPro
             <p className="font-body text-[13px] text-forest font-medium">
               Hva du ma ta med
             </p>
-            <p className="font-body text-[13px] text-bark mt-0.5">
+            <p className="font-body text-[13px] text-body mt-0.5">
               {booking.whatToBring}
             </p>
           </div>

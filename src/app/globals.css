@@ -8,6 +8,7 @@
   --color-rust: #A0522D;
   --color-ember: #B84D00;
   --color-bark: #5C3D1E;
+  --color-body: #374740;
   --color-destructive: #6B3A2A;
 
   /* Typography */
@@ -112,7 +113,7 @@ body {
   border-left: 4px solid var(--color-ember);
   padding-left: 16px;
   font-style: italic;
-  color: var(--color-bark);
+  color: var(--color-body);
 }
 .article-prose a {
   color: var(--color-forest);

@@ -56,7 +56,7 @@ export default async function ProdukterPage({ searchParams }: PageProps) {
           <h1 className="mt-4 font-heading text-[28px] font-bold text-forest">
             Produkter
           </h1>
-          <p className="mt-2 text-[15px] text-bark">
+          <p className="mt-2 text-[15px] text-body">
             Utforsk vart handplukkede utvalg av autentiske norske produkter.
           </p>
         </div>

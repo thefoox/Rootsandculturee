@@ -12,7 +12,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
   }
 
   return (
-    <span className="inline-flex rounded-full border border-forest/20 bg-card px-2 py-1 text-[13px] text-bark">
+    <span className="inline-flex rounded-full border border-forest/20 bg-card px-2 py-1 text-[13px] text-body">
       Utkast
     </span>
   )

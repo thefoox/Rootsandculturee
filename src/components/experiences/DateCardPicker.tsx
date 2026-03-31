@@ -66,7 +66,7 @@ export function DateCardPicker({ experienceId, dates, experience }: DateCardPick
         <h2 className="font-heading text-[20px] font-bold text-forest">
           Velg dato
         </h2>
-        <p className="mt-4 font-body text-[15px] text-bark">
+        <p className="mt-4 font-body text-[15px] text-body">
           Ingen tilgjengelige datoer for oyeblikket.
         </p>
       </section>

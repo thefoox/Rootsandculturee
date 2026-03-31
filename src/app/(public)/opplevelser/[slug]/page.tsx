@@ -63,13 +63,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             className="object-cover"
             sizes="100vw"
           />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(to bottom, rgba(27,67,50,0.15) 0%, rgba(27,67,50,0.7) 100%)',
-            }}
-          />
+          <div className="absolute inset-0 bg-forest/50" />
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
             <div className="mx-auto max-w-[1200px] px-4 md:px-8">
               <h1 className="font-heading text-[32px] md:text-[42px] font-bold text-cream leading-tight">
@@ -106,11 +100,11 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               {formatPrice(experience.basePrice)}
             </span>
             <DifficultyBadge difficulty={experience.difficulty} />
-            <span className="flex items-center gap-1.5 font-body text-[14px] text-bark">
+            <span className="flex items-center gap-1.5 font-body text-[14px] text-body">
               <Clock className="h-4 w-4" aria-hidden="true" />
               {experience.durationText}
             </span>
-            <span className="flex items-center gap-1.5 font-body text-[14px] text-bark">
+            <span className="flex items-center gap-1.5 font-body text-[14px] text-body">
               <MapPin className="h-4 w-4" aria-hidden="true" />
               {experience.location}
             </span>
@@ -160,7 +154,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               {experience.whatToBring && (
                 <section className="mt-10">
                   <h2 className="flex items-center gap-2 font-heading text-[20px] font-bold text-forest">
-                    <Backpack className="h-5 w-5 text-bark" aria-hidden="true" />
+                    <Backpack className="h-5 w-5 text-body" aria-hidden="true" />
                     Hva du bor ta med
                   </h2>
                   <p className="mt-4 font-body text-[15px] leading-[1.7] text-forest">
@@ -173,7 +167,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               {experience.cancellationPolicy && (
                 <section className="mt-10">
                   <h2 className="flex items-center gap-2 font-heading text-[20px] font-bold text-forest">
-                    <ShieldCheck className="h-5 w-5 text-bark" aria-hidden="true" />
+                    <ShieldCheck className="h-5 w-5 text-body" aria-hidden="true" />
                     Kanselleringsvilkar
                   </h2>
                   <p className="mt-4 font-body text-[15px] leading-[1.7] text-forest">
@@ -244,7 +238,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               <p className="font-body text-[16px] font-medium text-forest">
                 {experience.location}
               </p>
-              <p className="mt-2 font-body text-[15px] leading-[1.7] text-bark">
+              <p className="mt-2 font-body text-[15px] leading-[1.7] text-body">
                 Opplevelsen finner sted i {experience.location}. Detaljert
                 veibeskrivelse og oppmotested sendes per e-post etter
                 bekreftet booking.

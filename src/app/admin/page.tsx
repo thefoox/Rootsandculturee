@@ -54,7 +54,7 @@ export default async function AdminDashboard() {
             >
               <Icon className="h-8 w-8 text-rust" aria-hidden="true" />
               <div>
-                <p className="text-[13px] text-bark">{stat.label}</p>
+                <p className="text-[13px] text-body">{stat.label}</p>
                 {stat.count !== null && (
                   <p className="font-heading text-[20px] font-bold text-forest">
                     {stat.count}

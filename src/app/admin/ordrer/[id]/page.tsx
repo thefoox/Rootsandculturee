@@ -55,7 +55,7 @@ export default function OrderDetailPage() {
             { label: 'Laster...' },
           ]}
         />
-        <p className="font-body text-[15px] text-bark">Laster ordre...</p>
+        <p className="font-body text-[15px] text-body">Laster ordre...</p>
       </div>
     )
   }
@@ -98,11 +98,11 @@ export default function OrderDetailPage() {
         </ul>
         <div className="mt-4 border-t border-forest/12 pt-4">
           <div className="flex justify-between font-body text-[15px]">
-            <span className="text-bark">Subtotal</span>
+            <span className="text-body">Subtotal</span>
             <span className="text-forest">{formatPrice(order.subtotal)}</span>
           </div>
           <div className="mt-1 flex justify-between font-body text-[15px]">
-            <span className="text-bark">Frakt</span>
+            <span className="text-body">Frakt</span>
             <span className="text-forest">{formatPrice(order.shippingCost)}</span>
           </div>
           <div className="mt-2 flex justify-between font-body text-[15px] font-medium">
@@ -119,21 +119,21 @@ export default function OrderDetailPage() {
         </h2>
         <div className="mt-4 space-y-2 font-body text-[15px] text-forest">
           <p>
-            <span className="text-bark">E-post: </span>
+            <span className="text-body">E-post: </span>
             {order.customerEmail}
           </p>
           {order.shipping && (
             <>
               <p>
-                <span className="text-bark">Navn: </span>
+                <span className="text-body">Navn: </span>
                 {order.shipping.fullName}
               </p>
               <p>
-                <span className="text-bark">Adresse: </span>
+                <span className="text-body">Adresse: </span>
                 {order.shipping.address}
               </p>
               <p>
-                <span className="text-bark">Postnummer: </span>
+                <span className="text-body">Postnummer: </span>
                 {order.shipping.postalCode} {order.shipping.city}
               </p>
             </>
@@ -148,20 +148,20 @@ export default function OrderDetailPage() {
         </h2>
         <div className="mt-4 space-y-2 font-body text-[15px]">
           <p>
-            <span className="text-bark">Totalt betalt: </span>
+            <span className="text-body">Totalt betalt: </span>
             <span className="text-rust">{formatPrice(order.total)}</span>
           </p>
           {order.stripePaymentIntentId && (
             <p>
-              <span className="text-bark">Stripe Payment Intent: </span>
-              <span className="font-body text-[13px] text-bark">
+              <span className="text-body">Stripe Payment Intent: </span>
+              <span className="font-body text-[13px] text-body">
                 {order.stripePaymentIntentId}
               </span>
             </p>
           )}
           {order.paidAt && (
             <p>
-              <span className="text-bark">Betalt: </span>
+              <span className="text-body">Betalt: </span>
               <span className="text-forest">
                 {formatDateMedium(order.paidAt instanceof Date ? order.paidAt : new Date(order.paidAt))}
               </span>
@@ -176,7 +176,7 @@ export default function OrderDetailPage() {
           Status
         </h2>
         <div className="mt-4 flex items-center gap-3">
-          <span className="font-body text-[13px] text-bark">Gjeldende:</span>
+          <span className="font-body text-[13px] text-body">Gjeldende:</span>
           <OrderStatusBadge status={order.status} />
         </div>
         <div className="mt-4">

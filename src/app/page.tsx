@@ -42,7 +42,7 @@ export default async function Home() {
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-forest via-forest/60 to-forest/20" />
+        <div className="absolute inset-0 bg-forest/50" />
 
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-20 md:px-8 md:pb-28">
           <h1 className="max-w-2xl font-heading text-[40px] font-bold leading-[1.1] text-cream md:text-[56px]">
@@ -77,7 +77,7 @@ export default async function Home() {
               <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
                 Opplevelser
               </h2>
-              <p className="mt-2 max-w-md font-body text-[15px] text-bark">
+              <p className="mt-2 max-w-md font-body text-[15px] text-body">
                 Naturretreater, kurs og matopplevelser som bringer deg nærmere norsk natur og kulturarv
               </p>
             </div>
@@ -110,7 +110,7 @@ export default async function Home() {
                     ) : (
                       <div className="h-full w-full bg-card" />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-forest/90 via-forest/30 to-transparent" />
+                    <div className="absolute inset-0 bg-forest/40" />
                   </div>
                   <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                     <h3 className="font-heading text-[22px] font-bold leading-tight text-cream md:text-[24px]">
@@ -156,7 +156,7 @@ export default async function Home() {
               <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
                 Produkter
               </h2>
-              <p className="mt-2 max-w-md font-body text-[15px] text-bark">
+              <p className="mt-2 max-w-md font-body text-[15px] text-body">
                 Håndplukkede naturprodukter fra norske produsenter
               </p>
             </div>
@@ -187,13 +187,13 @@ export default async function Home() {
                         sizes="(max-width: 768px) 50vw, 25vw"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-cream text-bark/50">
+                      <div className="flex h-full w-full items-center justify-center bg-cream text-body/50">
                         Bilde kommer
                       </div>
                     )}
                   </div>
                   <div className="p-4">
-                    <p className="text-[11px] uppercase tracking-wider text-bark/60">
+                    <p className="text-[11px] uppercase tracking-wider text-body/60">
                       {product.category === 'drikke' ? 'Drikke' : product.category === 'kaffe-te' ? 'Kaffe & Te' : 'Naturprodukter'}
                     </p>
                     <h3 className="mt-1 font-heading text-[17px] font-bold leading-tight text-forest">
@@ -236,10 +236,10 @@ export default async function Home() {
               <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
                 Forankret i norsk natur
               </h2>
-              <p className="mt-5 font-body text-[15px] leading-relaxed text-bark">
+              <p className="mt-5 font-body text-[15px] leading-relaxed text-body">
                 {aboutText || 'Roots & Culture er en norsk nettbutikk som formidler håndplukkede naturprodukter og unike opplevelser fra hele Norge. Vi samarbeider med lokale produsenter, bønder og guider som deler vår lidenskap for norsk natur og kulturarv.'}
               </p>
-              <p className="mt-4 font-body text-[15px] leading-relaxed text-bark">
+              <p className="mt-4 font-body text-[15px] leading-relaxed text-body">
                 Vårt mål er å gjøre det enkelt for deg å oppleve det beste Norge har å by på — enten det er gjennom en kopp urte-te fra fjellet eller et retreat ved fjorden.
               </p>
               <Link
@@ -262,7 +262,7 @@ export default async function Home() {
               <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
                 Fra bloggen
               </h2>
-              <p className="mt-2 max-w-md font-body text-[15px] text-bark">
+              <p className="mt-2 max-w-md font-body text-[15px] text-body">
                 Historier om natur, kultur og tradisjoner
               </p>
             </div>
@@ -300,7 +300,7 @@ export default async function Home() {
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-forest/75" />
+        <div className="absolute inset-0 bg-forest/50" />
         <div className="relative mx-auto max-w-[700px] px-6 text-center md:px-8">
           <h2 className="font-heading text-[32px] font-bold text-cream md:text-[40px]">
             Klar for en opplevelse?

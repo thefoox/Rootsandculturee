@@ -40,7 +40,7 @@ export default async function OrderDetailPage({
     <div>
       <Link
         href="/konto/ordrer"
-        className="inline-flex items-center gap-1 font-body text-[13px] text-bark hover:text-forest mb-6"
+        className="inline-flex items-center gap-1 font-body text-[13px] text-body hover:text-forest mb-6"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Tilbake til ordrer
@@ -51,7 +51,7 @@ export default async function OrderDetailPage({
           <h2 className="font-heading text-[20px] font-bold text-forest">
             Ordredetaljer
           </h2>
-          <p className="font-body text-[13px] text-bark mt-1">
+          <p className="font-body text-[13px] text-body mt-1">
             {dateFormatter.format(order.createdAt)}
           </p>
         </div>
@@ -70,7 +70,7 @@ export default async function OrderDetailPage({
                 <p className="font-body text-[15px] text-forest">
                   {item.name}
                 </p>
-                <p className="font-body text-[13px] text-bark mt-0.5">
+                <p className="font-body text-[13px] text-body mt-0.5">
                   Antall: {item.quantity}
                 </p>
               </div>
@@ -92,10 +92,10 @@ export default async function OrderDetailPage({
             <p className="font-body text-[15px] text-forest">
               {order.shipping.fullName}
             </p>
-            <p className="font-body text-[13px] text-bark mt-0.5">
+            <p className="font-body text-[13px] text-body mt-0.5">
               {order.shipping.address}
             </p>
-            <p className="font-body text-[13px] text-bark">
+            <p className="font-body text-[13px] text-body">
               {order.shipping.postalCode} {order.shipping.city}
             </p>
           </div>
@@ -109,13 +109,13 @@ export default async function OrderDetailPage({
         </h3>
         <div className="border border-forest/12 rounded-lg p-4">
           <div className="flex justify-between py-1">
-            <span className="font-body text-[13px] text-bark">Delsum</span>
+            <span className="font-body text-[13px] text-body">Delsum</span>
             <span className="font-body text-[13px] text-forest">
               {priceFormatter.format(order.subtotal / 100)}
             </span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="font-body text-[13px] text-bark">Frakt</span>
+            <span className="font-body text-[13px] text-body">Frakt</span>
             <span className="font-body text-[13px] text-forest">
               {priceFormatter.format(order.shippingCost / 100)}
             </span>

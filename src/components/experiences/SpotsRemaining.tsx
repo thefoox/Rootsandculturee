@@ -22,7 +22,7 @@ export function SpotsRemaining({ available, total }: SpotsRemainingProps) {
   }
 
   return (
-    <span className="font-body text-[13px] text-bark">
+    <span className="font-body text-[13px] text-body">
       {available} av {total} plasser igjen
     </span>
   )

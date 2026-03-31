@@ -63,7 +63,7 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <p className="mb-4 text-[15px] text-bark">
+      <p className="mb-4 text-[15px] text-body">
         Oppgi e-postadressen din, sa sender vi deg en lenke for a tilbakestille passordet.
       </p>
 
@@ -92,7 +92,7 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
         Send tilbakestillingslenke
       </Button>
 
-      <p className="mt-4 text-center text-[13px] text-bark">
+      <p className="mt-4 text-center text-[13px] text-body">
         <button
           type="button"
           className="text-ember hover:underline"

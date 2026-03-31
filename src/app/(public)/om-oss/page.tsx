@@ -55,13 +55,7 @@ export default function OmOssPage() {
           className="object-cover"
           sizes="100vw"
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to bottom, rgba(27,67,50,0.4) 0%, rgba(27,67,50,0.7) 100%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-forest/50" />
         <div className="relative z-10 mx-auto max-w-[1200px] px-4 py-20 text-center md:px-8">
           <h1 className="font-heading text-[32px] font-bold leading-tight text-cream md:text-[42px]">
             Om Roots &amp; Culture
@@ -86,7 +80,7 @@ export default function OmOssPage() {
           </div>
           <div>
             <SectionHeading title="Vår historie" />
-            <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-bark">
+            <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-body">
               <p>
                 Roots &amp; Culture ble født ut av en enkel overbevisning: at
                 forbindelsen mellom mennesker og norsk natur er noe av det mest
@@ -130,7 +124,7 @@ export default function OmOssPage() {
               Jacob
             </h3>
             <p className="mt-1 text-[15px] font-medium text-ember">Grunnlegger</p>
-            <p className="mt-4 text-[15px] leading-relaxed text-bark">
+            <p className="mt-4 text-[15px] leading-relaxed text-body">
               Med en dyp lidenskap for norsk natur og kulturarv startet Jacob
               Roots &amp; Culture for å dele de opplevelsene som har formet ham.
               Han tror at naturen har en unik evne til å samle mennesker, og at
@@ -160,7 +154,7 @@ export default function OmOssPage() {
                 <h3 className="mt-5 font-heading text-[20px] font-bold text-forest">
                   {value.title}
                 </h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-bark">
+                <p className="mt-3 text-[15px] leading-relaxed text-body">
                   {value.text}
                 </p>
               </div>
@@ -197,7 +191,7 @@ export default function OmOssPage() {
           <h2 className="font-heading text-[28px] font-bold text-forest">
             Klar for en opplevelse?
           </h2>
-          <p className="mx-auto mt-3 max-w-lg text-[15px] leading-relaxed text-bark">
+          <p className="mx-auto mt-3 max-w-lg text-[15px] leading-relaxed text-body">
             Utforsk våre unike naturopplevelser og finn din neste eventyr.
           </p>
           <Link

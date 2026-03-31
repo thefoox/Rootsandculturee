@@ -83,13 +83,7 @@ export default function KontaktPage() {
           className="object-cover"
           sizes="100vw"
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to bottom, rgba(27,67,50,0.4) 0%, rgba(27,67,50,0.7) 100%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-forest/50" />
         <div className="relative z-10 mx-auto max-w-[1200px] px-4 py-20 text-center md:px-8">
           <h1 className="font-heading text-[32px] font-bold leading-tight text-cream md:text-[42px]">
             Kontakt oss
@@ -122,7 +116,7 @@ export default function KontaktPage() {
                     {item.href ? (
                       <a
                         href={item.href}
-                        className="text-[15px] text-bark underline-offset-2 motion-safe:transition-colors motion-safe:duration-100 hover:text-forest hover:underline"
+                        className="text-[15px] text-body underline-offset-2 motion-safe:transition-colors motion-safe:duration-100 hover:text-forest hover:underline"
                         {...(item.href.startsWith('http')
                           ? { target: '_blank', rel: 'noopener noreferrer' }
                           : {})}
@@ -130,7 +124,7 @@ export default function KontaktPage() {
                         {item.value}
                       </a>
                     ) : (
-                      <p className="text-[15px] text-bark">{item.value}</p>
+                      <p className="text-[15px] text-body">{item.value}</p>
                     )}
                   </div>
                 </div>
@@ -175,13 +169,13 @@ export default function KontaktPage() {
                 <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-[15px] font-medium text-forest marker:content-none [&::-webkit-details-marker]:hidden">
                   <span>{item.question}</span>
                   <span
-                    className="ml-4 shrink-0 text-bark motion-safe:transition-transform motion-safe:duration-150 group-open:rotate-45"
+                    className="ml-4 shrink-0 text-body motion-safe:transition-transform motion-safe:duration-150 group-open:rotate-45"
                     aria-hidden="true"
                   >
                     +
                   </span>
                 </summary>
-                <div className="px-6 pb-5 text-[15px] leading-relaxed text-bark">
+                <div className="px-6 pb-5 text-[15px] leading-relaxed text-body">
                   {item.answer}
                 </div>
               </details>

@@ -48,7 +48,7 @@ export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps
       <span
         className={cn(
           'font-body text-[13px] font-normal',
-          isSelected && !isSoldOut ? 'text-cream' : 'text-bark'
+          isSelected && !isSoldOut ? 'text-cream' : 'text-body'
         )}
       >
         {weekday}
@@ -64,7 +64,7 @@ export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps
       <span
         className={cn(
           'font-body text-[13px] font-normal',
-          isSelected && !isSoldOut ? 'text-cream' : 'text-bark'
+          isSelected && !isSoldOut ? 'text-cream' : 'text-body'
         )}
       >
         {month}

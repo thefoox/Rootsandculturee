@@ -54,7 +54,7 @@ export default function ProductsListPage() {
             className="h-12 w-12 rounded object-cover"
           />
         ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded bg-card text-bark">
+          <div className="flex h-12 w-12 items-center justify-center rounded bg-card text-body">
             <Package className="h-5 w-5" aria-hidden="true" />
           </div>
         ),
@@ -64,7 +64,7 @@ export default function ProductsListPage() {
       header: 'Kategori',
       width: '140px',
       accessor: (row) => (
-        <span className="rounded-full border border-forest/20 bg-card px-2 py-1 text-[13px] text-bark">
+        <span className="rounded-full border border-forest/20 bg-card px-2 py-1 text-[13px] text-body">
           {categoryLabels[row.category] || row.category}
         </span>
       ),

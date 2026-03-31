@@ -13,7 +13,7 @@ export function EmptyState({ icon: Icon, heading, body }: EmptyStateProps) {
       <h2 className="mt-4 font-heading text-[20px] font-bold text-forest">
         {heading}
       </h2>
-      <p className="mt-2 font-body text-[15px] text-bark">
+      <p className="mt-2 font-body text-[15px] text-body">
         {body}
       </p>
     </div>

@@ -13,7 +13,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-video w-full items-center justify-center rounded-lg bg-card text-bark">
+      <div className="flex aspect-video w-full items-center justify-center rounded-lg bg-card text-body">
         Ingen bilder tilgjengelig
       </div>
     )

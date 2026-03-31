@@ -30,7 +30,7 @@ export function ExperienceCard({ experience, nextDate }: ExperienceCardProps) {
             sizes="(max-width: 768px) 100vw, 280px"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-card text-bark">
+          <div className="flex h-full w-full items-center justify-center bg-card text-body">
             Ingen bilde
           </div>
         )}
@@ -40,7 +40,7 @@ export function ExperienceCard({ experience, nextDate }: ExperienceCardProps) {
           {experience.name}
         </h3>
         {nextDate && (
-          <p className="mt-2 flex items-center gap-1 font-body text-[13px] text-bark">
+          <p className="mt-2 flex items-center gap-1 font-body text-[13px] text-body">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />
             {formatDate(nextDate.date)}
           </p>

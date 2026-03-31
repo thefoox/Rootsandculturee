@@ -41,7 +41,7 @@ export function BookingFilterRow({
       <div>
         <label
           htmlFor="filter-experience"
-          className="block font-body text-[13px] text-bark"
+          className="block font-body text-[13px] text-body"
         >
           Filtrer etter opplevelse:
         </label>
@@ -67,7 +67,7 @@ export function BookingFilterRow({
         <div>
           <label
             htmlFor="filter-date"
-            className="block font-body text-[13px] text-bark"
+            className="block font-body text-[13px] text-body"
           >
             Filtrer etter dato:
           </label>
@@ -91,7 +91,7 @@ export function BookingFilterRow({
       )}
 
       {(selectedExperienceId || selectedDateId) && (
-        <Button variant="ghost" onClick={onReset} className="text-bark">
+        <Button variant="ghost" onClick={onReset} className="text-body">
           Nullstill filter
         </Button>
       )}

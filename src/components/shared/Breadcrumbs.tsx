@@ -22,7 +22,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
           return (
             <li key={index} className="flex items-center gap-1">
               {index > 0 && (
-                <span className="text-bark/50" aria-hidden="true">
+                <span className="text-body/50" aria-hidden="true">
                   &#8250;
                 </span>
               )}
@@ -31,7 +31,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
               ) : (
                 <Link
                   href={item.href}
-                  className="text-bark motion-safe:transition-colors motion-safe:duration-100 hover:text-forest hover:underline"
+                  className="text-body motion-safe:transition-colors motion-safe:duration-100 hover:text-forest hover:underline"
                 >
                   {item.label}
                 </Link>

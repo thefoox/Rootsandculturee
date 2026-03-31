@@ -118,7 +118,7 @@ export default function EditExperiencePage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[200px] items-center justify-center text-bark">
+      <div className="flex min-h-[200px] items-center justify-center text-body">
         Laster...
       </div>
     )
@@ -174,7 +174,7 @@ export default function EditExperiencePage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-bark/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
               />
             </div>
             <fieldset>
@@ -276,7 +276,7 @@ export default function EditExperiencePage() {
                 value={whatIsIncluded}
                 onChange={(e) => setWhatIsIncluded(e.target.value)}
                 rows={4}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-bark/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -291,7 +291,7 @@ export default function EditExperiencePage() {
                 value={cancellationPolicy}
                 onChange={(e) => setCancellationPolicy(e.target.value)}
                 rows={3}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-bark/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -306,7 +306,7 @@ export default function EditExperiencePage() {
                 value={whatToBring}
                 onChange={(e) => setWhatToBring(e.target.value)}
                 rows={3}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-bark/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
               />
             </div>
           </div>

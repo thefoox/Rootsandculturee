@@ -49,7 +49,7 @@ export default function ExperiencesListPage() {
             className="h-12 w-12 rounded object-cover"
           />
         ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded bg-card text-bark">
+          <div className="flex h-12 w-12 items-center justify-center rounded bg-card text-body">
             <Mountain className="h-5 w-5" aria-hidden="true" />
           </div>
         ),

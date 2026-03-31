@@ -28,7 +28,7 @@ export default async function BloggPage() {
         <h1 className="mt-4 font-heading text-[28px] font-bold text-forest">
           Blogg
         </h1>
-        <p className="mt-2 text-[15px] text-bark">
+        <p className="mt-2 text-[15px] text-body">
           Artikler om norsk natur, kultur og tradisjoner.
         </p>
       </div>

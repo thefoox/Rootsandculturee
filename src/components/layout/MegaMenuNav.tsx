@@ -141,7 +141,7 @@ export function MegaMenuNav() {
                               {child.label}
                             </span>
                             {child.description && (
-                              <span className="block text-[13px] text-bark">
+                              <span className="block text-[13px] text-body">
                                 {child.description}
                               </span>
                             )}

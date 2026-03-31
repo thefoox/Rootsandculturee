@@ -36,7 +36,7 @@ export function CartItem({ item }: CartItemProps) {
           />
         </div>
       ) : (
-        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded bg-card text-bark/40">
+        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded bg-card text-body/40">
           <span className="text-[13px]">Bilde</span>
         </div>
       )}
@@ -49,11 +49,11 @@ export function CartItem({ item }: CartItemProps) {
               {item.name}
             </p>
             {isExperience && item.experienceDate && (
-              <p className="mt-1 text-[13px] text-bark">
+              <p className="mt-1 text-[13px] text-body">
                 Opplevelse &mdash; {formatDate(new Date(item.experienceDate))}
               </p>
             )}
-            <p className="mt-1 text-[13px] text-bark">
+            <p className="mt-1 text-[13px] text-body">
               {formatPrice(item.price)}
             </p>
           </div>
@@ -62,7 +62,7 @@ export function CartItem({ item }: CartItemProps) {
           <button
             type="button"
             onClick={handleRemove}
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center text-bark hover:text-destructive"
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center text-body hover:text-destructive"
             aria-label={`Fjern ${item.name} fra handlekurv`}
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -96,7 +96,7 @@ export function CartItem({ item }: CartItemProps) {
               </button>
             </div>
           ) : (
-            <span className="text-[13px] text-bark">1 plass</span>
+            <span className="text-[13px] text-body">1 plass</span>
           )}
 
           {/* Item total */}

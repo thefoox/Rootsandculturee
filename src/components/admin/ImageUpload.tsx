@@ -97,10 +97,10 @@ export function ImageUpload({
         onClick={() => fileInputRef.current?.click()}
       >
         <UploadCloud className="h-8 w-8 text-rust" aria-hidden="true" />
-        <p className="mt-2 text-[15px] text-bark">
+        <p className="mt-2 text-[15px] text-body">
           Slipp bilder her eller klikk for a velge
         </p>
-        <p className="mt-1 text-[13px] text-bark/60">
+        <p className="mt-1 text-[13px] text-body/60">
           Maks 5 MB per bilde. JPG, PNG, WebP.
         </p>
         <input

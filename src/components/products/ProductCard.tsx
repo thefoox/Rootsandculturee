@@ -37,13 +37,13 @@ export function ProductCard({ product }: ProductCardProps) {
             sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-card text-bark">
+          <div className="flex h-full w-full items-center justify-center bg-card text-body">
             Ingen bilde
           </div>
         )}
       </div>
       <div className="p-4">
-        <span className="text-[11px] uppercase tracking-wider text-bark/70">
+        <span className="text-[11px] uppercase tracking-wider text-body/70">
           {categoryLabel}
         </span>
         <h3 className="mt-1 line-clamp-2 font-heading text-[18px] font-bold leading-[1.25] text-forest">

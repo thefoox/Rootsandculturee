@@ -102,7 +102,7 @@ export default function CheckoutPage() {
           ) : (
             !initError && (
               <div className="flex items-center justify-center py-12">
-                <p className="text-[15px] text-bark">Laster betalingsskjema...</p>
+                <p className="text-[15px] text-body">Laster betalingsskjema...</p>
               </div>
             )
           )}

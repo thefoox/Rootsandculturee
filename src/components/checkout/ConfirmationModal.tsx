@@ -162,7 +162,7 @@ export function ConfirmationModal({
               {hasOrder && order && (
                 <div className="mb-6 space-y-3">
                   <div>
-                    <span className="text-[13px] text-bark">Ordrenummer:</span>
+                    <span className="text-[13px] text-body">Ordrenummer:</span>
                     <code className="ml-2 rounded bg-card px-2 py-1 text-[15px] tracking-wider">
                       {order.id}
                     </code>
@@ -178,7 +178,7 @@ export function ConfirmationModal({
                   </div>
 
                   {order.shipping && (
-                    <div className="text-[13px] text-bark">
+                    <div className="text-[13px] text-body">
                       <p>Leveres til:</p>
                       <p>{order.shipping.fullName}</p>
                       <p>{order.shipping.address}</p>
@@ -198,13 +198,13 @@ export function ConfirmationModal({
                 bookings.map((booking, i) => (
                   <div key={i} className="mb-6 space-y-3">
                     <div>
-                      <span className="text-[13px] text-bark">Bekreftelseskode:</span>
+                      <span className="text-[13px] text-body">Bekreftelseskode:</span>
                       <code className="ml-2 rounded bg-card px-2 py-1 text-[15px] tracking-wider">
                         {booking.confirmationCode}
                       </code>
                     </div>
                     <p className="text-[15px] text-forest">{booking.experienceName}</p>
-                    <p className="text-[13px] text-bark">
+                    <p className="text-[13px] text-body">
                       Dato: {formatDate(new Date(booking.date))}
                     </p>
                     <p className="text-[15px] text-rust">
@@ -217,7 +217,7 @@ export function ConfirmationModal({
                 ))}
 
               {/* Email notice */}
-              <div className="mb-6 flex items-center gap-2 text-[13px] text-bark">
+              <div className="mb-6 flex items-center gap-2 text-[13px] text-body">
                 <MailOpen className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
                 <span>En bekreftelse er sendt til {customerEmail}.</span>
               </div>

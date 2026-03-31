@@ -199,8 +199,8 @@ export function CheckoutForm({
           Betaling
         </h2>
         <div className="mb-4 flex items-center gap-2">
-          <LockKeyhole className="h-4 w-4 text-bark" aria-hidden="true" />
-          <span className="text-[13px] text-bark">Sikret med Stripe</span>
+          <LockKeyhole className="h-4 w-4 text-body" aria-hidden="true" />
+          <span className="text-[13px] text-body">Sikret med Stripe</span>
         </div>
         <div
           className="rounded-lg border border-forest/20 bg-card p-6"

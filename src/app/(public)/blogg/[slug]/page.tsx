@@ -59,7 +59,7 @@ export default async function ArtikkelDetailPage({ params }: PageProps) {
           {article.title}
         </h1>
         {article.publishedAt && (
-          <p className="pb-8 font-body text-[13px] text-bark">
+          <p className="pb-8 font-body text-[13px] text-body">
             Publisert {formatDate(article.publishedAt)}
           </p>
         )}

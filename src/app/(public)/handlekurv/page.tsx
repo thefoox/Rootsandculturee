@@ -23,7 +23,7 @@ export default function HandlekurvPage() {
           <h1 className="mt-4 font-heading text-[20px] font-bold text-forest">
             Handlekurven er tom
           </h1>
-          <p className="mt-2 text-[15px] text-bark">
+          <p className="mt-2 text-[15px] text-body">
             Du har ikke lagt til noe enda.
           </p>
           <Link href="/produkter" className="mt-6">

@@ -48,7 +48,7 @@ export function DataTable<T extends { id: string }>({
         <h3 className="mt-4 font-heading text-[20px] font-bold text-forest">
           {emptyState.heading}
         </h3>
-        <p className="mt-2 text-[15px] text-bark">{emptyState.body}</p>
+        <p className="mt-2 text-[15px] text-body">{emptyState.body}</p>
         <Link href={emptyState.ctaHref} className="mt-4">
           <Button variant="primary">{emptyState.ctaLabel}</Button>
         </Link>

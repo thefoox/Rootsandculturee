@@ -35,7 +35,7 @@ export function FAQAccordion({ items, heading }: FAQAccordionProps) {
             </summary>
             <div className="grid grid-rows-[0fr] motion-safe:transition-[grid-template-rows] motion-safe:duration-200 group-open:grid-rows-[1fr]">
               <div className="overflow-hidden">
-                <p className="pb-2 pt-2 text-[15px] leading-relaxed text-bark">
+                <p className="pb-2 pt-2 text-[15px] leading-relaxed text-body">
                   {item.answer}
                 </p>
               </div>

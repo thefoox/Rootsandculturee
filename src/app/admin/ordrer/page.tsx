@@ -24,7 +24,7 @@ export default function OrdersListPage() {
       header: 'Ordrenr.',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-bark">
+        <span className="font-body text-[13px] text-body">
           {row.id.slice(0, 8)}
         </span>
       ),
@@ -42,7 +42,7 @@ export default function OrdersListPage() {
       width: '80px',
       align: 'center',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-bark">
+        <span className="font-body text-[13px] text-body">
           {row.items.length}
         </span>
       ),
@@ -66,7 +66,7 @@ export default function OrdersListPage() {
       header: 'Dato',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-bark">
+        <span className="font-body text-[13px] text-body">
           {formatDateMedium(row.createdAt instanceof Date ? row.createdAt : new Date(row.createdAt))}
         </span>
       ),

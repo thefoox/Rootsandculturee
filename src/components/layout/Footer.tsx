@@ -1,15 +1,36 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { footerColumns } from '@/lib/navigation'
 
 export function Footer() {
   return (
-    <>
-      <div className="h-8 bg-gradient-to-b from-forest/5 to-transparent" aria-hidden="true" />
-      <footer className="dark-surface bg-forest px-4 py-12 text-cream lg:px-8">
-        <div className="mx-auto grid max-w-[1200px] gap-8 sm:grid-cols-2 md:grid-cols-4">
+    <footer className="border-t border-forest/10 bg-cream px-6 py-14 lg:px-8">
+      <div className="mx-auto max-w-[1200px]">
+        {/* Logo + columns */}
+        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-5">
+          {/* Brand column */}
+          <div className="md:col-span-1">
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/logo_black.png"
+                alt="Roots & Culture"
+                width={32}
+                height={32}
+                className="h-8 w-8"
+              />
+              <span className="font-heading text-[17px] font-bold text-forest">
+                Roots &amp; Culture
+              </span>
+            </Link>
+            <p className="mt-3 text-[13px] leading-relaxed text-body/70">
+              Autentiske norske naturprodukter og opplevelser.
+            </p>
+          </div>
+
+          {/* Nav columns */}
           {footerColumns.map((column) => (
             <div key={column.title}>
-              <h2 className="mb-4 font-heading text-[20px] font-bold tracking-tight">
+              <h2 className="mb-3 text-[13px] font-bold uppercase tracking-wider text-forest">
                 {column.title}
               </h2>
               <ul className="space-y-2">
@@ -20,7 +41,7 @@ export function Footer() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[15px] text-cream/80 hover:text-cream hover:underline"
+                        className="text-[14px] text-body/70 hover:text-forest hover:underline"
                         aria-label={`${link.label} (apner i nytt vindu)`}
                       >
                         {link.label}
@@ -28,7 +49,7 @@ export function Footer() {
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-[15px] text-cream/80 hover:text-cream hover:underline"
+                        className="text-[14px] text-body/70 hover:text-forest hover:underline"
                       >
                         {link.label}
                       </Link>
@@ -39,10 +60,11 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mx-auto mt-10 max-w-[1200px] border-t border-cream/15 pt-8 text-center text-[13px] text-cream/50">
+
+        <div className="mt-12 border-t border-forest/8 pt-6 text-center text-[13px] text-body/50">
           &copy; {new Date().getFullYear()} Roots &amp; Culture. Alle rettigheter reservert.
         </div>
-      </footer>
-    </>
+      </div>
+    </footer>
   )
 }

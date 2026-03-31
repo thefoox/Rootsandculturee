@@ -69,7 +69,7 @@ export function DeleteConfirmDialog({
         >
           {heading || `Slett ${itemName}?`}
         </h2>
-        <p className="mt-2 text-[15px] text-bark">
+        <p className="mt-2 text-[15px] text-body">
           {body || 'Dette kan ikke angres. Vil du fortsette?'}
         </p>
         <div className="mt-6 flex justify-end gap-3">

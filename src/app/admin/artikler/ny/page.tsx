@@ -155,7 +155,7 @@ export default function NewArticlePage() {
                 onChange={(e) => setMetaTitle(e.target.value)}
                 maxLength={70}
               />
-              <p className="mt-1 text-[13px] text-bark">
+              <p className="mt-1 text-[13px] text-body">
                 {metaTitle.length} / 70 tegn
               </p>
             </div>
@@ -173,10 +173,10 @@ export default function NewArticlePage() {
                   onChange={(e) => setMetaDescription(e.target.value)}
                   maxLength={160}
                   rows={3}
-                  className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-bark/60 focus:border-forest"
+                  className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
                 />
               </div>
-              <p className="mt-1 text-[13px] text-bark">
+              <p className="mt-1 text-[13px] text-body">
                 {metaDescription.length} / 160 tegn
               </p>
             </div>

@@ -102,7 +102,7 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
       <div className="mt-2 text-right">
         <button
           type="button"
-          className="text-[13px] text-bark hover:underline"
+          className="text-[13px] text-body hover:underline"
           onClick={onSwitchToReset}
         >
           Glemt passord?
@@ -118,7 +118,7 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
         Logg inn
       </Button>
 
-      <p className="mt-4 text-center text-[13px] text-bark">
+      <p className="mt-4 text-center text-[13px] text-body">
         Ny her?{' '}
         <button
           type="button"

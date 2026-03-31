@@ -94,7 +94,7 @@ export function AuthModal({ isOpen, onClose, title, children }: AuthModalProps) 
         <button
           ref={closeRef}
           type="button"
-          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded text-bark hover:text-forest"
+          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded text-body hover:text-forest"
           onClick={onClose}
           aria-label="Lukk"
         >

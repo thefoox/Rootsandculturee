@@ -29,12 +29,12 @@ export function OrderSummaryPanel({
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[15px] text-bark">Subtotal</span>
+          <span className="text-[15px] text-body">Subtotal</span>
           <span className="text-[15px] text-rust">{formatPrice(subtotal)}</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-[15px] text-bark">Frakt</span>
+          <span className="text-[15px] text-body">Frakt</span>
           <span className="text-[15px] text-rust">
             {shippingCost > 0 ? formatPrice(shippingCost) : 'Gratis'}
           </span>

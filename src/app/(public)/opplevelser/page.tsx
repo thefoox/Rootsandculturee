@@ -1,24 +1,18 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Compass } from 'lucide-react'
+import { ArrowRight, Compass } from 'lucide-react'
 import { getExperiences, getExperienceDates } from '@/lib/data/experiences'
 import { getArticles } from '@/lib/data/articles'
 import { ExperienceList } from '@/components/experiences/ExperienceList'
 import { BlogCard } from '@/components/blog/BlogCard'
 import { EmptyState } from '@/components/shared/EmptyState'
-import { SectionHeading } from '@/components/shared/SectionHeading'
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import type { Experience, ExperienceDate } from '@/types'
 
 export const metadata: Metadata = {
-  title: 'Opplevelser i norsk natur — Roots & Culture',
-  description:
-    'Opplev norsk natur og kultur gjennom naturretreater, kurs og matopplevelser. Book din neste naturopplevelse med Roots & Culture.',
-  openGraph: {
-    title: 'Opplevelser i norsk natur — Roots & Culture',
-    description:
-      'Opplev norsk natur og kultur gjennom naturretreater, kurs og matopplevelser. Book din neste naturopplevelse med Roots & Culture.',
-  },
+  title: 'Opplevelser — Roots & Culture',
+  description: 'Naturretreater, kurs og matopplevelser i norsk natur. Book din neste naturopplevelse.',
 }
 
 export const revalidate = 3600
@@ -26,182 +20,127 @@ export const revalidate = 3600
 const categories = [
   {
     title: 'Naturretreater',
-    description: 'Koble av i naturen med guidede retreater',
+    description: 'Koble av i naturen med guidede retreater og meditasjon',
     image: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp',
-    imageAlt: 'Naturretreat i norsk skog',
-    href: '/opplevelser?kategori=retreat',
+    href: '/opplevelser/retreat',
   },
   {
     title: 'Kurs',
-    description: 'L\u00e6r \u00e5 sanke, lage mat og opplev naturen',
+    description: 'Lær å sanke urter, lage mat og opplev naturen på nært hold',
     image: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-07-desktop.webp',
-    imageAlt: 'Kurs i naturen',
-    href: '/opplevelser?kategori=kurs',
+    href: '/opplevelser/kurs',
   },
   {
     title: 'Matopplevelser',
-    description: 'Smak p\u00e5 norske tradisjoner med lokale r\u00e5varer',
+    description: 'Smak på norske tradisjoner med lokale råvarer fra gård og natur',
     image: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-07-desktop.webp',
-    imageAlt: 'Matopplevelse med lokale r\u00e5varer',
-    href: '/opplevelser?kategori=matopplevelse',
+    href: '/opplevelser/matopplevelse',
   },
 ]
 
 const faqItems = [
-  {
-    question: 'Hva inkluderer prisen?',
-    answer:
-      'Prisen inkluderer alt som er listet under \u00abHva er inkludert\u00bb p\u00e5 hver opplevelse. Dette varierer, men omfatter vanligvis guiding, m\u00e5ltider og n\u00f8dvendig utstyr. Sjekk detaljsiden for den spesifikke opplevelsen for en fullstendig liste.',
-  },
-  {
-    question: 'Hvordan booker jeg?',
-    answer:
-      'Velg en opplevelse, velg en dato som passer for deg, og legg den i handlekurven. G\u00e5 til kassen og fullf\u00f8r betalingen med Stripe. Du mottar en bekreftelse med all praktisk informasjon p\u00e5 e-post.',
-  },
-  {
-    question: 'Kan jeg kansellere?',
-    answer:
-      'Ja, du kan kansellere en booking. Kanselleringsvilk\u00e5rene varierer fra opplevelse til opplevelse og er oppgitt p\u00e5 detaljsiden. Generelt tilbyr vi gratis avbestilling inntil 7\u201321 dager f\u00f8r, avhengig av opplevelsen.',
-  },
-  {
-    question: 'Hva b\u00f8r jeg ha med?',
-    answer:
-      'Hver opplevelse har en detaljert liste over hva du b\u00f8r ta med. Denne finner du p\u00e5 detaljsiden under \u00abHva du b\u00f8r ta med\u00bb. Vi sender ogs\u00e5 en p\u00e5minnelse med praktisk informasjon f\u00f8r opplevelsen.',
-  },
-  {
-    question: 'Er opplevelsene tilpasset nybegynnere?',
-    answer:
-      'Ja, vi har opplevelser for alle niv\u00e5er. Hver opplevelse er merket med vanskelighetsgrad \u2014 lett, moderat eller krevende \u2014 slik at du enkelt kan finne noe som passer for deg.',
-  },
-  {
-    question: 'Kan jeg gi en opplevelse i gave?',
-    answer:
-      'Absolutt! Kontakt oss p\u00e5 post@rootsculture.no for \u00e5 arrangere en gaveopplevelse. Vi hjelper deg med \u00e5 finne den perfekte opplevelsen og lage et fint gavekort.',
-  },
+  { question: 'Hva inkluderer prisen?', answer: 'Prisen inkluderer alt som er listet under «Hva er inkludert» på hver opplevelse. Sjekk detaljsiden for en fullstendig liste.' },
+  { question: 'Hvordan booker jeg?', answer: 'Velg en opplevelse, velg en dato, og legg den i handlekurven. Fullfør betalingen med kort — du mottar bekreftelse på e-post.' },
+  { question: 'Kan jeg kansellere?', answer: 'Ja. Kanselleringsvilkårene varierer og er oppgitt på detaljsiden. Generelt tilbyr vi gratis avbestilling inntil 7–21 dager før.' },
+  { question: 'Er opplevelsene tilpasset nybegynnere?', answer: 'Ja, vi har opplevelser for alle nivåer — merket med lett, moderat eller krevende.' },
+  { question: 'Kan jeg gi en opplevelse i gave?', answer: 'Absolutt! Kontakt oss på post@rootsculture.no så hjelper vi deg med gavekort.' },
 ]
 
 export default async function OpplevelserPage() {
-  const [experiences, articles] = await Promise.all([
-    getExperiences(),
-    getArticles(),
-  ])
+  const [experiences, articles] = await Promise.all([getExperiences(), getArticles()])
 
-  // Fetch the next upcoming date for each experience
   const experiencesWithDates: Array<Experience & { nextDate?: ExperienceDate }> =
     await Promise.all(
       experiences.map(async (experience) => {
         const dates = await getExperienceDates(experience.id)
-        return {
-          ...experience,
-          nextDate: dates[0] || undefined,
-        }
+        return { ...experience, nextDate: dates[0] || undefined }
       })
     )
 
-  const topArticles = articles.slice(0, 3)
-
   return (
     <>
-      {/* Section 1: Hero */}
-      <section className="relative flex min-h-[60vh] items-center justify-center">
+      {/* Hero */}
+      <section className="relative flex min-h-[60vh] items-end">
         <Image
           src="/bilder-brukt-paa-sidene/opplevelser-hovedside/retreat-20-desktop.webp"
-          alt="Opplevelser i norsk natur"
+          alt=""
           fill
           priority
           className="object-cover"
           sizes="100vw"
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to bottom, rgba(27,67,50,0.35) 0%, rgba(27,67,50,0.75) 100%)',
-          }}
-        />
-        <div className="relative z-10 mx-auto max-w-[1200px] px-4 py-24 text-center md:px-8">
-          <h1 className="font-heading text-[32px] font-bold leading-tight text-cream md:text-[42px]">
+        <div className="absolute inset-0 bg-forest/50" />
+        <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-16 md:px-8 md:pb-24">
+          <h1 className="max-w-2xl font-heading text-[36px] font-bold leading-[1.1] text-cream md:text-[48px]">
             Opplevelser i norsk natur
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-[17px] leading-relaxed text-cream/90">
-            {'Naturretreater, kurs og matopplevelser som bringer deg n\u00e6rmere naturen og norsk kulturarv'}
+          <p className="mt-4 max-w-lg text-[17px] leading-relaxed text-cream/85">
+            Naturretreater, kurs og matopplevelser som bringer deg nærmere naturen
           </p>
-          <a
-            href="#opplevelser"
-            className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
-          >
-            Se tilgjengelige opplevelser
-          </a>
         </div>
       </section>
 
-      {/* Section 2: Intro */}
-      <section className="bg-cream section-padding">
-        <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:grid-cols-5 md:items-center md:px-8">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-xl md:col-span-3">
+      {/* Breadcrumbs */}
+      <div className="mx-auto max-w-[1200px] px-6 pt-6 md:px-8">
+        <Breadcrumbs items={[{ label: 'Opplevelser' }]} />
+      </div>
+
+      {/* Intro */}
+      <section className="bg-cream py-16 md:py-24">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-6 md:grid-cols-5 md:items-center md:gap-16 md:px-8">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:col-span-3">
             <Image
               src="/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp"
-              alt={'Naturopplevelse som ber\u00f8rer'}
+              alt="Naturopplevelse i norsk skog"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 60vw"
             />
           </div>
           <div className="md:col-span-2">
-            <SectionHeading title={'Naturopplevelser som ber\u00f8rer'} />
-            <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-bark">
-              <p>
-                {'Hos Roots & Culture handler opplevelser om mer enn bare aktiviteter. Det handler om \u00e5 stoppe opp, puste dypt, og kjenne forbindelsen til naturen rundt deg \u2014 til skogen som hvisker, fjorden som speiler himmelen, og b\u00e5let som varmer.'}
-              </p>
-              <p>
-                {'V\u00e5re opplevelser er designet for \u00e5 skape genuine forbindelser med naturen og med hverandre. Hver opplevelse er n\u00f8ye kuratert av erfarne guider som deler v\u00e5r lidenskap for norsk natur og kulturarv.'}
-              </p>
-              <p>
-                {'Enten du s\u00f8ker ro i skogen, vil l\u00e6re om ville urter, eller dr\u00f8mmer om mat laget over b\u00e5l \u2014 vi har en opplevelse som passer for deg.'}
-              </p>
+            <h2 className="font-heading text-[28px] font-bold text-forest md:text-[32px]">
+              Naturopplevelser som berører
+            </h2>
+            <div className="mt-5 space-y-4 text-[15px] leading-relaxed text-body">
+              <p>Hos Roots & Culture handler opplevelser om mer enn bare aktiviteter. Det handler om å stoppe opp, puste dypt, og kjenne forbindelsen til naturen rundt deg.</p>
+              <p>Hver opplevelse er nøye kuratert av erfarne guider som deler vår lidenskap for norsk natur og kulturarv.</p>
             </div>
-            <Link
-              href="/opplevelser?kategori=retreat"
-              className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
+            <a
+              href="#opplevelser"
+              className="mt-6 inline-flex items-center gap-2 rounded-md bg-forest px-5 py-2.5 text-[15px] font-medium text-cream hover:bg-forest/90"
             >
-              Utforsk retreater
-            </Link>
+              Se tilgjengelige opplevelser
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Section 3: Category Grid */}
-      <section className="bg-card section-padding">
-        <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-          <SectionHeading title={'Utforsk v\u00e5re kategorier'} centered />
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+      {/* Kategorier */}
+      <section className="bg-card py-16 md:py-24">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-8">
+          <h2 className="text-center font-heading text-[28px] font-bold text-forest md:text-[32px]">
+            Utforsk våre kategorier
+          </h2>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
             {categories.map((cat) => (
               <Link
                 key={cat.title}
                 href={cat.href}
-                className="group relative aspect-[4/3] overflow-hidden rounded-xl shadow-sm motion-safe:transition-all motion-safe:duration-150 hover:shadow-lg hover:scale-[1.02]"
+                className="group overflow-hidden rounded-2xl bg-cream shadow-sm motion-safe:transition-all motion-safe:duration-200 hover:shadow-lg hover:-translate-y-1"
               >
-                <Image
-                  src={cat.image}
-                  alt={cat.imageAlt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      'linear-gradient(to top, rgba(27,67,50,0.8) 0%, rgba(27,67,50,0.1) 60%)',
-                  }}
-                />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="font-heading text-[22px] font-bold text-cream">
-                    {cat.title}
-                  </h3>
-                  <p className="mt-1 text-[15px] text-cream/85">
-                    {cat.description}
-                  </p>
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={cat.image}
+                    alt={cat.title}
+                    fill
+                    className="object-cover motion-safe:transition-transform motion-safe:duration-300 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div className="p-5">
+                  <h3 className="font-heading text-[20px] font-bold text-forest">{cat.title}</h3>
+                  <p className="mt-1 text-[14px] leading-relaxed text-body">{cat.description}</p>
                 </div>
               </Link>
             ))}
@@ -209,124 +148,56 @@ export default async function OpplevelserPage() {
         </div>
       </section>
 
-      {/* Section 4: Er dette noe for deg? */}
-      <section className="bg-cream section-padding">
-        <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:grid-cols-2 md:items-center md:px-8">
-          <div>
-            <SectionHeading title="Er dette noe for deg?" />
-            <p className="mt-6 text-[15px] leading-relaxed text-bark">
-              {'V\u00e5re opplevelser passer for alle som:'}
-            </p>
-            <ul className="mt-4 space-y-3">
-              {[
-                '\u00d8nsker \u00e5 koble av fra hverdagen',
-                'Er nysgjerrig p\u00e5 norsk natur og kultur',
-                'Vil pr\u00f8ve noe nytt i trygge rammer',
-                'Leter etter en meningsfull gave',
-              ].map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-3 text-[15px] leading-relaxed text-bark"
-                >
-                  <span
-                    className="mt-1.5 block h-2 w-2 shrink-0 rounded-full bg-forest"
-                    aria-hidden="true"
-                  />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <a
-              href="#opplevelser"
-              className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
-            >
-              Se kommende opplevelser
-            </a>
-          </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
-            <Image
-              src="/bilder-brukt-paa-sidene/opplevelser-catering/catering-05-desktop.webp"
-              alt={'Matopplevelse med lokale r\u00e5varer'}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Section 5: Kommende opplevelser */}
-      <section id="opplevelser" className="bg-card section-padding">
-        <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-          <SectionHeading
-            title="Kommende opplevelser"
-            subtitle="Book din neste naturopplevelse"
-            centered
-          />
-          <div className="mt-12">
+      {/* Kommende opplevelser */}
+      <section id="opplevelser" className="bg-cream py-16 md:py-24">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-8">
+          <h2 className="text-center font-heading text-[28px] font-bold text-forest md:text-[32px]">
+            Kommende opplevelser
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-center text-[15px] text-body">
+            Book din neste naturopplevelse
+          </p>
+          <div className="mt-10">
             {experiencesWithDates.length > 0 ? (
               <ExperienceList experiences={experiencesWithDates} />
             ) : (
-              <EmptyState
-                icon={Compass}
-                heading="Ingen opplevelser"
-                body={'Vi har ingen opplevelser tilgjengelig akkurat n\u00e5. Kom tilbake snart!'}
-              />
+              <EmptyState icon={Compass} heading="Ingen opplevelser" body="Kom tilbake snart!" />
             )}
           </div>
         </div>
       </section>
 
-      {/* Section 6: Related Articles */}
-      {topArticles.length > 0 && (
-        <section className="bg-cream section-padding">
-          <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-            <SectionHeading
-              title={'Du er kanskje ogs\u00e5 interessert i'}
-              centered
-            />
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {topArticles.map((article) => (
-                <BlogCard key={article.id} article={article} />
-              ))}
-            </div>
-            <div className="mt-10 text-center">
-              <Link
-                href="/blogg"
-                className="text-[15px] font-medium text-forest underline-offset-2 motion-safe:transition-colors motion-safe:duration-100 hover:text-ember hover:underline"
-              >
-                {'Les mer p\u00e5 bloggen \u2192'}
+      {/* Artikler */}
+      {articles.length > 0 && (
+        <section className="bg-card py-16 md:py-24">
+          <div className="mx-auto max-w-[1200px] px-6 md:px-8">
+            <div className="flex items-end justify-between">
+              <h2 className="font-heading text-[28px] font-bold text-forest">Fra bloggen</h2>
+              <Link href="/blogg" className="hidden items-center gap-1 text-[15px] font-medium text-forest hover:underline md:inline-flex">
+                Les alle <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
+            </div>
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {articles.slice(0, 3).map((article) => (
+                <BlogCard key={article.id} article={article} className="bg-cream" />
+              ))}
             </div>
           </div>
         </section>
       )}
 
-      {/* Section 7: FAQ */}
-      <section className="bg-card section-padding">
-        <div className="mx-auto max-w-[800px] px-4 md:px-8">
-          <SectionHeading
-            title={'Vanlige sp\u00f8rsm\u00e5l om v\u00e5re opplevelser'}
-            centered
-          />
-          <div className="mt-10 space-y-4">
+      {/* FAQ */}
+      <section className="bg-cream py-16 md:py-24">
+        <div className="mx-auto max-w-[800px] px-6 md:px-8">
+          <h2 className="text-center font-heading text-[28px] font-bold text-forest">Vanlige spørsmål</h2>
+          <div className="mt-8 divide-y divide-forest/10">
             {faqItems.map((item) => (
-              <details
-                key={item.question}
-                className="group rounded-xl bg-cream"
-              >
-                <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-[15px] font-medium text-forest marker:content-none [&::-webkit-details-marker]:hidden">
-                  <span>{item.question}</span>
-                  <span
-                    className="ml-4 shrink-0 text-bark motion-safe:transition-transform motion-safe:duration-150 group-open:rotate-45"
-                    aria-hidden="true"
-                  >
-                    +
-                  </span>
+              <details key={item.question} className="group py-4">
+                <summary className="flex cursor-pointer items-center justify-between text-[15px] font-medium text-forest [&::-webkit-details-marker]:hidden">
+                  {item.question}
+                  <span className="ml-4 shrink-0 motion-safe:transition-transform motion-safe:duration-150 group-open:rotate-45" aria-hidden="true">+</span>
                 </summary>
-                <div className="px-6 pb-5 text-[15px] leading-relaxed text-bark">
-                  {item.answer}
-                </div>
+                <p className="mt-3 text-[15px] leading-relaxed text-body">{item.answer}</p>
               </details>
             ))}
           </div>
