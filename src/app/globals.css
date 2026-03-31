@@ -8,7 +8,7 @@
   --color-rust: #A0522D;
   --color-ember: #B84D00;
   --color-bark: #5C3D1E;
-  --color-destructive: #C0392B;
+  --color-destructive: #6B3A2A;
 
   /* Typography */
   --font-heading: var(--font-merriweather), Georgia, serif;
@@ -18,16 +18,16 @@
   --color-admin-sidebar: #1A2E23;
   --color-badge-easy: #166534;
   --color-badge-easy-bg: #DCFCE7;
-  --color-badge-moderate: #92400E;
-  --color-badge-moderate-bg: #FEF3C7;
-  --color-badge-hard: #991B1B;
-  --color-badge-hard-bg: #FEE2E2;
+  --color-badge-moderate: #5C3D1E;
+  --color-badge-moderate-bg: #F5F0E8;
+  --color-badge-hard: #1B4332;
+  --color-badge-hard-bg: #E0EDE6;
 
   /* Phase 3 additions */
   --color-stripe-bg: #F5F0E8;
   --color-success: #166534;
   --color-success-bg: #DCFCE7;
-  --color-cart-badge: #C0392B;
+  --color-cart-badge: #B84D00;
 }
 
 /* Global base styles */
