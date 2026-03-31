@@ -2,12 +2,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Article } from '@/types'
 import { formatDate } from '@/lib/format'
+import { cn } from '@/lib/utils'
 
 interface BlogCardProps {
   article: Article
+  className?: string
 }
 
-export function BlogCard({ article }: BlogCardProps) {
+export function BlogCard({ article, className }: BlogCardProps) {
   const publishedDate = article.publishedAt
     ? formatDate(article.publishedAt)
     : ''
@@ -16,7 +18,10 @@ export function BlogCard({ article }: BlogCardProps) {
     <Link
       href={`/blogg/${article.slug}`}
       aria-label={`${article.title}${publishedDate ? `, publisert ${publishedDate}` : ''}`}
-      className="group block overflow-hidden rounded-xl border border-forest/8 bg-card shadow-sm motion-safe:transition-all motion-safe:duration-150 hover:shadow-lg hover:-translate-y-1"
+      className={cn(
+        'group block overflow-hidden rounded-xl border border-forest/8 bg-card shadow-sm motion-safe:transition-all motion-safe:duration-150 hover:shadow-lg hover:-translate-y-1',
+        className
+      )}
     >
       <div className="relative aspect-video w-full overflow-hidden rounded-t-xl">
         {article.coverImage?.url ? (

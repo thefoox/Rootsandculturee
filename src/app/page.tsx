@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { getProducts } from '@/lib/data/products'
 import { getExperiences } from '@/lib/data/experiences'
@@ -33,25 +34,18 @@ export default async function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative flex min-h-[70vh] items-center justify-center bg-gradient-to-b from-forest to-forest/85">
-        {/* Decorative forest pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <svg
-            className="h-full w-full"
-            preserveAspectRatio="xMidYMax slice"
-            viewBox="0 0 1200 600"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            {/* Abstract tree silhouettes */}
-            <path d="M100 600 L130 400 L110 420 L140 300 L120 320 L150 200 L80 320 L100 300 L70 420 L90 400 Z" fill="currentColor" className="text-cream" />
-            <path d="M300 600 L330 380 L310 400 L340 260 L320 280 L350 160 L280 280 L300 260 L270 400 L290 380 Z" fill="currentColor" className="text-cream" />
-            <path d="M550 600 L580 420 L560 440 L590 320 L570 340 L600 220 L530 340 L550 320 L520 440 L540 420 Z" fill="currentColor" className="text-cream" />
-            <path d="M800 600 L830 370 L810 390 L840 250 L820 270 L850 140 L780 270 L800 250 L770 390 L790 370 Z" fill="currentColor" className="text-cream" />
-            <path d="M1050 600 L1080 410 L1060 430 L1090 300 L1070 320 L1100 190 L1030 320 L1050 300 L1020 430 L1040 410 Z" fill="currentColor" className="text-cream" />
-          </svg>
-        </div>
+      <section className="relative flex min-h-[70vh] items-center justify-center">
+        {/* Background image */}
+        <Image
+          src="/bilder-brukt-paa-sidene/forside/retreat-22-desktop.webp"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-forest/80" />
 
         <div className="relative mx-auto max-w-[1200px] px-4 py-16 text-center md:px-8">
           <h1 className="mx-auto max-w-3xl font-heading text-[36px] font-bold leading-[1.2] text-cream md:text-[48px]">
@@ -76,7 +70,7 @@ export default async function Home() {
             Utvalgte produkter
           </h2>
           <p className="mt-2 font-body text-[15px] text-bark">
-            Håndplukkede naturprodukter fra norske produsenter
+            Handplukkede naturprodukter fra norske produsenter
           </p>
 
           <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
@@ -127,26 +121,30 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Fra bloggen */}
-      <section className="bg-cream py-16 md:py-24">
+      {/* Fra bloggen — dark section */}
+      <section className="bg-forest py-16 md:py-24">
         <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-          <h2 className="font-heading text-[28px] font-bold text-forest">
+          <h2 className="font-heading text-[28px] font-bold text-cream">
             Fra bloggen
           </h2>
-          <p className="mt-2 font-body text-[15px] text-bark">
+          <p className="mt-2 font-body text-[15px] text-cream/80">
             Historier om natur, kultur og tradisjoner
           </p>
 
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {articles.slice(0, 3).map((article) => (
-              <BlogCard key={article.id} article={article} />
+              <BlogCard
+                key={article.id}
+                article={article}
+                className="bg-cream border-cream/20"
+              />
             ))}
           </div>
 
           <div className="mt-8 text-center">
             <Link
               href="/blogg"
-              className="font-body text-[15px] font-medium text-ember hover:underline"
+              className="font-body text-[15px] font-medium text-cream hover:underline"
             >
               Les mer &rarr;
             </Link>
