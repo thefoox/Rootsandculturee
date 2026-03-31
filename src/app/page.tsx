@@ -113,6 +113,7 @@ export default async function Home() {
                     ) : (
                       <div className="h-full w-full bg-card" />
                     )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   </div>
                   <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                     <h3 className="font-heading text-[22px] font-bold leading-tight text-cream md:text-[24px]">
@@ -302,8 +303,8 @@ export default async function Home() {
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/25" />
-        
+        <div className="absolute inset-0 bg-black/45" />
+
         <div className="relative mx-auto max-w-[700px] px-6 text-center md:px-8">
           <h2 className="font-heading text-[32px] font-bold text-cream md:text-[40px]">
             Klar for en opplevelse?
