@@ -2,6 +2,7 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Experience, ExperienceDate } from '@/types'
+import { mockExperiences, mockExperienceDates } from '@/lib/data/mock-data'
 
 function mapExperience(doc: FirebaseFirestore.DocumentSnapshot): Experience {
   const data = doc.data()!
@@ -40,7 +41,7 @@ function mapExperienceDate(doc: FirebaseFirestore.DocumentSnapshot): ExperienceD
 
 export const getExperiences = unstable_cache(
   async (): Promise<Experience[]> => {
-    if (!adminDb) return []
+    if (!adminDb) return mockExperiences
 
     const snapshot = await adminDb
       .collection('experiences')
@@ -56,7 +57,7 @@ export const getExperiences = unstable_cache(
 
 export const getExperienceBySlug = unstable_cache(
   async (slug: string): Promise<Experience | null> => {
-    if (!adminDb) return null
+    if (!adminDb) return mockExperiences.find((e) => e.slug === slug) ?? null
 
     const snapshot = await adminDb
       .collection('experiences')
@@ -74,7 +75,7 @@ export const getExperienceBySlug = unstable_cache(
 
 export const getExperienceDates = unstable_cache(
   async (experienceId: string): Promise<ExperienceDate[]> => {
-    if (!adminDb) return []
+    if (!adminDb) return mockExperienceDates.get(experienceId) ?? []
 
     const now = new Date()
     const snapshot = await adminDb

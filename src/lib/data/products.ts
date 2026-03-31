@@ -2,6 +2,7 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Product, ProductCategory } from '@/types'
+import { mockProducts } from '@/lib/data/mock-data'
 
 function mapProduct(doc: FirebaseFirestore.DocumentSnapshot): Product {
   const data = doc.data()!
@@ -23,7 +24,7 @@ function mapProduct(doc: FirebaseFirestore.DocumentSnapshot): Product {
 
 export const getProducts = unstable_cache(
   async (): Promise<Product[]> => {
-    if (!adminDb) return []
+    if (!adminDb) return mockProducts
 
     const snapshot = await adminDb
       .collection('products')
@@ -39,7 +40,7 @@ export const getProducts = unstable_cache(
 
 export const getProductsByCategory = unstable_cache(
   async (category: ProductCategory): Promise<Product[]> => {
-    if (!adminDb) return []
+    if (!adminDb) return mockProducts.filter((p) => p.category === category)
 
     const snapshot = await adminDb
       .collection('products')
@@ -56,7 +57,7 @@ export const getProductsByCategory = unstable_cache(
 
 export const getProductBySlug = unstable_cache(
   async (slug: string): Promise<Product | null> => {
-    if (!adminDb) return null
+    if (!adminDb) return mockProducts.find((p) => p.slug === slug) ?? null
 
     const snapshot = await adminDb
       .collection('products')

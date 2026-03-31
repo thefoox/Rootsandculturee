@@ -2,10 +2,11 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { SiteContent } from '@/types'
+import { mockSiteContent } from '@/lib/data/mock-data'
 
 export const getSiteContent = unstable_cache(
   async (): Promise<SiteContent | null> => {
-    if (!adminDb) return null
+    if (!adminDb) return mockSiteContent
 
     const doc = await adminDb.collection('siteContent').doc('main').get()
 

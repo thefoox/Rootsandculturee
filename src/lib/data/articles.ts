@@ -2,6 +2,7 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Article } from '@/types'
+import { mockArticles } from '@/lib/data/mock-data'
 
 function mapArticle(doc: FirebaseFirestore.DocumentSnapshot): Article {
   const data = doc.data()!
@@ -25,7 +26,7 @@ function mapArticle(doc: FirebaseFirestore.DocumentSnapshot): Article {
 
 export const getArticles = unstable_cache(
   async (): Promise<Article[]> => {
-    if (!adminDb) return []
+    if (!adminDb) return mockArticles
 
     const snapshot = await adminDb
       .collection('articles')
@@ -42,7 +43,7 @@ export const getArticles = unstable_cache(
 
 export const getArticleBySlug = unstable_cache(
   async (slug: string): Promise<Article | null> => {
-    if (!adminDb) return null
+    if (!adminDb) return mockArticles.find((a) => a.slug === slug) ?? null
 
     const snapshot = await adminDb
       .collection('articles')
