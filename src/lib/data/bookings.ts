@@ -47,6 +47,19 @@ export const getBookings = unstable_cache(
   { tags: ['bookings'] }
 )
 
+export async function getBookingsByUser(uid: string): Promise<Booking[]> {
+  if (!adminDb) return []
+
+  const snapshot = await adminDb
+    .collection('bookings')
+    .where('customerId', '==', uid)
+    .orderBy('date', 'desc')
+    .limit(50)
+    .get()
+
+  return snapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
+}
+
 export async function getBookingsByExperience(experienceId: string): Promise<Booking[]> {
   if (!adminDb) return []
 

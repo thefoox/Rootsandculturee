@@ -44,6 +44,19 @@ export const getOrders = unstable_cache(
   { tags: ['orders'] }
 )
 
+export async function getOrdersByUser(uid: string): Promise<Order[]> {
+  if (!adminDb) return []
+
+  const snapshot = await adminDb
+    .collection('orders')
+    .where('customerId', '==', uid)
+    .orderBy('createdAt', 'desc')
+    .limit(50)
+    .get()
+
+  return snapshot.docs.map((doc) => docToOrder(doc.id, doc.data()))
+}
+
 export async function getOrderById(orderId: string): Promise<Order | null> {
   if (!adminDb) return null
 
