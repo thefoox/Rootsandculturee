@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { footerColumns } from '@/lib/navigation'
+import { NewsletterSignup } from './NewsletterSignup'
 
 export function Footer() {
   return (
@@ -61,7 +62,20 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 border-t border-forest/8 pt-6 text-center text-[13px] text-body/50">
+        {/* Newsletter signup */}
+        <div className="mt-10 border-t border-forest/8 pt-8">
+          <div className="mx-auto max-w-md">
+            <h2 className="mb-2 text-[13px] font-bold uppercase tracking-wider text-forest">
+              Nyhetsbrev
+            </h2>
+            <p className="mb-3 text-[14px] text-body/70">
+              Fa nyheter om produkter, opplevelser og norsk natur rett i innboksen.
+            </p>
+            <NewsletterSignup />
+          </div>
+        </div>
+
+        <div className="mt-8 border-t border-forest/8 pt-6 text-center text-[13px] text-body/50">
           &copy; {new Date().getFullYear()} Roots &amp; Culture. Alle rettigheter reservert.
         </div>
       </div>

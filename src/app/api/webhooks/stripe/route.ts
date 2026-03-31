@@ -9,6 +9,7 @@ import {
   bookingConfirmationEmail,
   mixedConfirmationEmail,
 } from '@/lib/email/templates'
+import { syncPaymentContact } from '@/lib/email/contacts'
 import type { OrderItem, ShippingAddress } from '@/types'
 
 export const dynamic = 'force-dynamic'
@@ -302,6 +303,18 @@ export async function POST(req: Request) {
           console.error('Email sending error:', emailErr)
           // Don't fail the webhook for email errors
         }
+      }
+
+      // Sync contact to Resend segments (non-blocking)
+      try {
+        await syncPaymentContact({
+          email: customerEmail,
+          name: shippingAddress?.fullName || '',
+          hasProducts: orderItems.length > 0,
+          hasBookings: bookingResults.length > 0,
+        })
+      } catch {
+        // Contact sync failure should never break the webhook
       }
     }
   } catch (err) {

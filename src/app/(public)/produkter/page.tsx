@@ -43,7 +43,7 @@ export default async function ProdukterPage({ searchParams }: PageProps) {
     : await getProducts()
 
   return (
-    <>
+    <div className="pt-20">
       <Suspense fallback={null}>
         <CategoryTabs
           categories={categories}
@@ -70,6 +70,6 @@ export default async function ProdukterPage({ searchParams }: PageProps) {
           />
         )}
       </div>
-    </>
+    </div>
   )
 }

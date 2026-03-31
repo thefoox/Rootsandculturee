@@ -45,7 +45,7 @@ export default async function ProduktDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-12 md:px-8">
+    <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-24 md:px-8">
       <Breadcrumbs items={[{ label: 'Produkter', href: '/produkter' }, { label: product.name }]} />
       <article className="mt-4 flex flex-col gap-8 lg:flex-row lg:gap-12">
         <div className="lg:w-[60%]">

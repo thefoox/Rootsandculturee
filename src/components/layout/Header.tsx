@@ -38,7 +38,7 @@ export function Header() {
   return (
     <>
       <header
-        className="sticky top-0 z-50 flex h-16 items-center bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] px-4 lg:px-8"
+        className="absolute top-0 left-0 right-0 z-50 flex h-20 items-center px-6 lg:px-8"
       >
         {/* Logo -- left */}
         <Link
@@ -48,14 +48,11 @@ export function Header() {
           <Image
             src="/logo_black.png"
             alt="Roots & Culture"
-            width={40}
-            height={40}
-            className="h-10 w-10"
+            width={48}
+            height={48}
+            className="h-12 w-12 brightness-0 invert"
             priority
           />
-          <span className="hidden font-heading text-xl font-bold text-forest sm:inline">
-            Roots &amp; Culture
-          </span>
         </Link>
 
         {/* Desktop nav -- centered, hidden on mobile */}
@@ -68,7 +65,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setCartOpen(true)}
-            className="relative flex h-11 w-11 items-center justify-center rounded text-forest hover:opacity-85"
+            className="relative flex h-11 w-11 items-center justify-center rounded text-cream hover:opacity-85"
             aria-label={cartLabel}
           >
             <ShoppingBag className="h-5 w-5" aria-hidden="true" />
@@ -77,7 +74,7 @@ export function Header() {
 
           <button
             type="button"
-            className="rounded-md px-3 py-1.5 text-[15px] font-medium text-forest hover:bg-forest/8 motion-safe:transition-colors motion-safe:duration-150"
+            className="rounded-full bg-forest px-4 py-2 text-[14px] font-medium text-cream motion-safe:transition-colors motion-safe:duration-150 hover:bg-forest/80"
             onClick={() => setAuthOpen(true)}
             aria-label="Logg inn"
           >
@@ -93,7 +90,7 @@ export function Header() {
             className="relative flex h-11 w-11 items-center justify-center"
             aria-label={cartLabel}
           >
-            <ShoppingBag className="h-5 w-5 text-forest" aria-hidden="true" />
+            <ShoppingBag className="h-5 w-5 text-cream" aria-hidden="true" />
             <CartBadge />
           </button>
 
@@ -104,7 +101,7 @@ export function Header() {
             aria-label="Apne meny"
             aria-expanded={mobileOpen}
           >
-            <Menu className="h-6 w-6 text-forest" aria-hidden="true" />
+            <Menu className="h-6 w-6 text-cream" aria-hidden="true" />
           </button>
         </div>
       </header>

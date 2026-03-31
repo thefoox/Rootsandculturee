@@ -78,7 +78,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[900px] px-4 pt-12 pb-16">
+    <div className="mx-auto max-w-[900px] px-4 pt-24 pb-16">
       <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
         Kasse
       </h1>

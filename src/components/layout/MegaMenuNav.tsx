@@ -72,7 +72,7 @@ export function MegaMenuNav() {
             {hasChildren ? (
               <button
                 type="button"
-                className="flex items-center gap-1 px-3 py-2 text-[15px] text-forest hover:underline"
+                className="flex items-center gap-1 px-3 py-2 text-[15px] text-cream hover:underline"
                 role="menuitem"
                 aria-haspopup="true"
                 aria-expanded={isOpen}
@@ -103,7 +103,7 @@ export function MegaMenuNav() {
             ) : (
               <Link
                 href={item.href}
-                className="block px-3 py-2 text-[15px] text-forest hover:underline"
+                className="block px-3 py-2 text-[15px] text-cream hover:underline"
                 role="menuitem"
               >
                 {item.label}

@@ -3,6 +3,7 @@
 import { adminAuth } from '@/lib/firebase/admin'
 import { adminDb } from '@/lib/firebase/admin'
 import { createSession, deleteSession } from '@/lib/session'
+import { subscribeNewsletter } from '@/lib/email/contacts'
 import type { AuthResult } from '@/types'
 
 export async function loginAction(idToken: string): Promise<AuthResult> {
@@ -30,7 +31,8 @@ export async function loginAction(idToken: string): Promise<AuthResult> {
 export async function registerAction(
   idToken: string,
   displayName: string,
-  address: string
+  address: string,
+  newsletterConsent?: boolean
 ): Promise<AuthResult> {
   try {
     if (!adminAuth || !adminDb) {
@@ -54,6 +56,14 @@ export async function registerAction(
       email: decoded.email || '',
       role: 'customer',
     })
+
+    if (newsletterConsent && decoded.email) {
+      try {
+        await subscribeNewsletter(decoded.email)
+      } catch {
+        // Newsletter signup failure should not block registration
+      }
+    }
 
     return { success: true }
   } catch {

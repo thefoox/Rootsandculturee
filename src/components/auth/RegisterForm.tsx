@@ -19,6 +19,7 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [address, setAddress] = useState('')
+  const [newsletterConsent, setNewsletterConsent] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -44,7 +45,7 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
       const { idToken } = await signUp(email, password, name)
 
       // Step 2: Server Action creates user doc + session
-      const result = await registerAction(idToken, name, address)
+      const result = await registerAction(idToken, name, address, newsletterConsent)
       if (!result.success) {
         setFormError(result.error || 'Noe gikk galt.')
         setLoading(false)
@@ -122,11 +123,21 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
         />
       </div>
 
+      <label className="mt-4 flex items-start gap-2 text-[13px] text-body">
+        <input
+          type="checkbox"
+          checked={newsletterConsent}
+          onChange={(e) => setNewsletterConsent(e.target.checked)}
+          className="mt-0.5 h-4 w-4 rounded border-forest/20"
+        />
+        Ja, send meg nyheter og tilbud pa e-post
+      </label>
+
       <Button
         type="submit"
         variant="primary"
         loading={loading}
-        className="mt-6 w-full"
+        className="mt-4 w-full"
       >
         Opprett konto
       </Button>

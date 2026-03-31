@@ -53,7 +53,7 @@ export default async function ArtikkelDetailPage({ params }: PageProps) {
           heightClass="h-[250px] md:h-[450px]"
         />
       )}
-      <article className="mx-auto max-w-[720px] px-4 pb-16 pt-12 md:px-8">
+      <article className="mx-auto max-w-[720px] px-4 pb-16 pt-24 md:px-8">
         <Breadcrumbs items={[{ label: 'Blogg', href: '/blogg' }, { label: article.title }]} />
         <h1 className="mt-4 pb-4 font-heading text-[28px] font-bold text-forest">
           {article.title}

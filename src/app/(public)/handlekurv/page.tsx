@@ -17,7 +17,7 @@ export default function HandlekurvPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-[1200px] px-4 pt-12 pb-16">
+      <div className="mx-auto max-w-[1200px] px-4 pt-24 pb-16">
         <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
           <ShoppingBag className="h-12 w-12 text-rust" aria-hidden="true" />
           <h1 className="mt-4 font-heading text-[20px] font-bold text-forest">
@@ -35,7 +35,7 @@ export default function HandlekurvPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 pt-12 pb-16">
+    <div className="mx-auto max-w-[1200px] px-4 pt-24 pb-16">
       <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
         Handlekurv
       </h1>

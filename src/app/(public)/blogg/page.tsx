@@ -22,8 +22,8 @@ export default async function BloggPage() {
   const articles = await getArticles()
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 pb-16 md:px-8 md:pb-24">
-      <div className="pb-8 pt-12">
+    <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-20 md:px-8 md:pb-24">
+      <div className="pb-8 pt-6">
         <Breadcrumbs items={[{ label: 'Blogg' }]} />
         <h1 className="mt-4 font-heading text-[28px] font-bold text-forest">
           Blogg

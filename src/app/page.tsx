@@ -33,7 +33,7 @@ export default async function Home() {
   return (
     <>
       {/* ============ HERO ============ */}
-      <section className="relative flex min-h-[85vh] items-end">
+      <section className="relative flex min-h-screen items-center">
         <Image
           src="/bilder-brukt-paa-sidene/forside/retreat-22-desktop.webp"
           alt=""
@@ -42,28 +42,31 @@ export default async function Home() {
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/25" />
+        {/* Diagonal gradient: dark bottom-left to transparent top-right */}
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to top right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.05) 100%)' }}
+        />
 
-        <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-20 md:px-8 md:pb-28">
-          <h1 className="max-w-2xl font-heading text-[40px] font-bold leading-[1.1] text-cream md:text-[56px]">
-            {heroTitle}
+        <div className="relative mx-auto w-full max-w-[1200px] px-6 pt-28 md:px-8">
+          <h1 className="max-w-3xl font-heading text-[44px] font-bold leading-[1.08] text-cream md:text-[64px]">
+            Velkommen til<br />Roots &amp; Culture
           </h1>
-          <p className="mt-5 max-w-lg font-body text-[17px] leading-relaxed text-cream/85 md:text-[18px]">
+          <p className="mt-6 max-w-lg font-body text-[17px] leading-relaxed text-cream/90 md:text-[19px]">
             {heroIngress}
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/opplevelser"
-              className="inline-flex items-center gap-2 rounded-md bg-cream px-6 py-3 font-body text-[15px] font-medium text-forest motion-safe:transition-all motion-safe:duration-150 hover:bg-white"
+              className="inline-flex items-center gap-2 rounded-full bg-forest px-7 py-3.5 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-forest/85"
             >
-              Se opplevelser
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Se tilgjengelige opplevelser
             </Link>
             <Link
               href="/produkter"
-              className="inline-flex items-center gap-2 rounded-md border-2 border-cream/60 px-6 py-3 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:border-cream hover:bg-cream/10"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-cream/70 px-7 py-3.5 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-cream/10 hover:border-cream"
             >
-              Utforsk produkter
+              Besøk butikk
             </Link>
           </div>
         </div>
