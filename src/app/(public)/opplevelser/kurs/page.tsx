@@ -37,6 +37,7 @@ export default async function KursPage() {
           className="object-cover"
           sizes="100vw"
         />
+        <div className="absolute inset-0 bg-black/25" />
         
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-14 md:px-8 md:pb-20">
           <h1 className="max-w-xl font-heading text-[36px] font-bold leading-[1.1] text-cream md:text-[48px]">

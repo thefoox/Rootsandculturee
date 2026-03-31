@@ -42,7 +42,7 @@ export default async function Home() {
           priority
           sizes="100vw"
         />
-        
+        <div className="absolute inset-0 bg-black/25" />
 
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-20 md:px-8 md:pb-28">
           <h1 className="max-w-2xl font-heading text-[40px] font-bold leading-[1.1] text-cream md:text-[56px]">
@@ -299,6 +299,7 @@ export default async function Home() {
           className="object-cover"
           sizes="100vw"
         />
+        <div className="absolute inset-0 bg-black/25" />
         
         <div className="relative mx-auto max-w-[700px] px-6 text-center md:px-8">
           <h2 className="font-heading text-[32px] font-bold text-cream md:text-[40px]">

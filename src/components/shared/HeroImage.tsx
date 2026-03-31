@@ -23,6 +23,7 @@ export function HeroImage({
         className="object-cover"
         sizes="100vw"
       />
+      <div className="absolute inset-0 bg-black/25" />
       {title && (
         <div className="absolute inset-0">
           <div className="absolute bottom-0 left-0 right-0 p-8">

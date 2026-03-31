@@ -63,6 +63,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             className="object-cover"
             sizes="100vw"
           />
+        <div className="absolute inset-0 bg-black/25" />
           
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
             <div className="mx-auto max-w-[1200px] px-4 md:px-8">
