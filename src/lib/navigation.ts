@@ -25,6 +25,7 @@ export const mainNavItems: NavItem[] = [
     label: 'Opplevelser',
     href: '/opplevelser',
     children: [
+      { label: 'Alle opplevelser', href: '/opplevelser', description: 'Se alle naturopplevelser', icon: 'mountain' },
       { label: 'Naturretreater', href: '/opplevelser/retreat', description: 'Ro og fordypning i naturen', icon: 'mountain' },
       { label: 'Kurs', href: '/opplevelser/kurs', description: 'Laer tradisjoner og handverk', icon: 'book-open' },
       { label: 'Matopplevelser', href: '/opplevelser/matopplevelse', description: 'Smak norsk matkultur', icon: 'utensils' },
