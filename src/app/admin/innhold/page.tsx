@@ -1,117 +1,54 @@
-'use client'
-
-import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { FileText, Home, Users, Mail, Mountain, TreePine, BookOpen, ShoppingBag, Pencil } from 'lucide-react'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
-import { ContentBlockEditor } from '@/components/admin/ContentBlockEditor'
-import { Button } from '@/components/ui/Button'
-import { FormError } from '@/components/ui/FormError'
-import { fetchSiteContent, updateSiteContent } from '@/actions/site-content'
-import { toast } from 'sonner'
+
+const pages = [
+  { id: 'forside', title: 'Forside', description: 'Hero, produkter, opplevelser, blogg, CTA', icon: Home },
+  { id: 'om-oss', title: 'Om oss', description: 'Historie, team, verdier, galleri', icon: Users },
+  { id: 'kontakt', title: 'Kontakt', description: 'Kontaktinfo, FAQ', icon: Mail },
+  { id: 'opplevelser', title: 'Opplevelser', description: 'Landingsside, intro, FAQ', icon: Mountain },
+  { id: 'retreat', title: 'Naturretreater', description: 'Hero og beskrivelse', icon: TreePine },
+  { id: 'kurs', title: 'Kurs', description: 'Hero og beskrivelse', icon: BookOpen },
+  { id: 'matopplevelse', title: 'Matopplevelser', description: 'Hero og beskrivelse', icon: FileText },
+  { id: 'produkter', title: 'Produkter', description: 'Overskrift og undertekst', icon: ShoppingBag },
+  { id: 'blogg', title: 'Blogg', description: 'Overskrift og undertekst', icon: Pencil },
+]
 
 export default function SiteContentPage() {
-  const [heroTitle, setHeroTitle] = useState('')
-  const [heroIngress, setHeroIngress] = useState('')
-  const [aboutText, setAboutText] = useState('')
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isSaving, setIsSaving] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetchSiteContent().then((content) => {
-      if (content) {
-        setHeroTitle(content.heroTitle)
-        setHeroIngress(content.heroIngress)
-        setAboutText(content.aboutText)
-      }
-      setLoading(false)
-    })
-  }, [])
-
-  const handleSave = async () => {
-    setIsSaving(true)
-    setErrors({})
-
-    const formData = new FormData()
-    formData.set('heroTitle', heroTitle)
-    formData.set('heroIngress', heroIngress)
-    formData.set('aboutText', aboutText)
-
-    const result = await updateSiteContent(formData)
-    setIsSaving(false)
-
-    if (result.success) {
-      toast.success('Innhold oppdatert.')
-    } else if (result.errors) {
-      setErrors(result.errors)
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex min-h-[200px] items-center justify-center text-body">
-        Laster...
-      </div>
-    )
-  }
-
   return (
-    <div className="mx-auto max-w-[720px]">
+    <div className="mx-auto max-w-[900px]">
       <AdminBreadcrumb
         items={[
           { label: 'Admin', href: '/admin' },
           { label: 'Sideinnhold' },
         ]}
       />
-      <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-2 font-heading text-[28px] font-bold text-forest">
         Sideinnhold
       </h1>
+      <p className="mb-8 text-[15px] text-body">
+        Rediger tekst, bilder og seksjoner på alle sider.
+      </p>
 
-      {errors._form && (
-        <FormError id="form-error" message={errors._form} className="mb-4" />
-      )}
-
-      <div className="space-y-6">
-        <ContentBlockEditor
-          label="Hero-tittel"
-          value={heroTitle}
-          onChange={setHeroTitle}
-          id="heroTitle"
-        />
-        {errors.heroTitle && (
-          <FormError id="heroTitle-error" message={errors.heroTitle} />
-        )}
-
-        <ContentBlockEditor
-          label="Hero-ingress"
-          value={heroIngress}
-          onChange={setHeroIngress}
-          multiline
-          id="heroIngress"
-        />
-        {errors.heroIngress && (
-          <FormError id="heroIngress-error" message={errors.heroIngress} />
-        )}
-
-        <ContentBlockEditor
-          label="Om oss-tekst"
-          value={aboutText}
-          onChange={setAboutText}
-          multiline
-          id="aboutText"
-        />
-        {errors.aboutText && (
-          <FormError id="aboutText-error" message={errors.aboutText} />
-        )}
-
-        <div className="pt-4">
-          <Button
-            variant="primary"
-            onClick={handleSave}
-            loading={isSaving}
-          >
-            {isSaving ? 'Lagrer...' : 'Lagre endringer'}
-          </Button>
-        </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {pages.map((page) => {
+          const Icon = page.icon
+          return (
+            <Link
+              key={page.id}
+              href={`/admin/innhold/${page.id}`}
+              className="group flex items-start gap-4 rounded-xl border border-forest/10 bg-cream p-5 motion-safe:transition-all motion-safe:duration-150 hover:shadow-md hover:border-forest/20"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-forest/8">
+                <Icon className="h-5 w-5 text-forest" aria-hidden="true" />
+              </div>
+              <div>
+                <h2 className="font-heading text-[17px] font-bold text-forest">{page.title}</h2>
+                <p className="mt-0.5 text-[13px] text-body/70">{page.description}</p>
+              </div>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )

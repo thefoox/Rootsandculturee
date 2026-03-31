@@ -5,16 +5,16 @@ import { getProducts } from '@/lib/data/products'
 import { getExperiences } from '@/lib/data/experiences'
 import { getExperienceDates } from '@/lib/data/experiences'
 import { getArticles } from '@/lib/data/articles'
-import { getSiteContent } from '@/lib/data/site-content'
+import { getPageContent, getSection } from '@/lib/data/page-content'
 import { formatPrice, formatDate } from '@/lib/format'
 import { BlogCard } from '@/components/blog/BlogCard'
 
 export default async function Home() {
-  const [products, experiences, articles, siteContent] = await Promise.all([
+  const [products, experiences, articles, page] = await Promise.all([
     getProducts(),
     getExperiences(),
     getArticles(),
-    getSiteContent(),
+    getPageContent('forside'),
   ])
 
   const experiencesWithDates = await Promise.all(
@@ -24,19 +24,20 @@ export default async function Home() {
     })
   )
 
-  const heroTitle = siteContent?.heroTitle ?? 'Opplev ekte norsk natur og kultur'
-  const heroIngress =
-    siteContent?.heroIngress ??
-    'Vi bringer deg nærmere naturen gjennom autentiske produkter og unike opplevelser forankret i norsk kulturarv.'
-  const aboutText = siteContent?.aboutText ?? ''
+  const hero = getSection(page, 'hero')
+  const oppHeading = getSection(page, 'opplevelser-heading')
+  const prodHeading = getSection(page, 'produkter-heading')
+  const omOss = getSection(page, 'om-oss')
+  const bloggHeading = getSection(page, 'blogg-heading')
+  const ctaBanner = getSection(page, 'cta-banner')
 
   return (
     <>
       {/* ============ HERO ============ */}
       <section className="relative flex min-h-screen items-center">
         <Image
-          src="/bilder-brukt-paa-sidene/forside/retreat-22-desktop.webp"
-          alt=""
+          src={hero?.image?.url || '/bilder-brukt-paa-sidene/forside/retreat-22-desktop.webp'}
+          alt={hero?.image?.alt || ''}
           fill
           className="object-cover"
           priority
@@ -49,11 +50,11 @@ export default async function Home() {
         />
 
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pt-28 md:px-8">
-          <h1 className="max-w-3xl font-heading text-[44px] font-bold leading-[1.08] text-cream md:text-[64px]">
-            Velkommen til<br />Roots &amp; Culture
+          <h1 className="max-w-3xl font-heading text-[44px] font-bold leading-[1.08] text-cream md:text-[64px] whitespace-pre-line">
+            {hero?.heading || 'Velkommen til\nRoots & Culture'}
           </h1>
           <p className="mt-6 max-w-lg font-body text-[17px] leading-relaxed text-cream/90 md:text-[19px]">
-            {heroIngress}
+            {hero?.subheading || 'Gjennom våre tjenester arbeider vi for å øke bevissthet om natur, tradisjon og kultur.'}
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
@@ -78,10 +79,10 @@ export default async function Home() {
           <div className="flex items-end justify-between">
             <div>
               <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
-                Opplevelser
+                {oppHeading?.heading || 'Opplevelser'}
               </h2>
               <p className="mt-2 max-w-md font-body text-[15px] text-body">
-                Naturretreater, kurs og matopplevelser som bringer deg nærmere norsk natur og kulturarv
+                {oppHeading?.subheading || 'Naturretreater, kurs og matopplevelser som bringer deg nærmere norsk natur og kulturarv'}
               </p>
             </div>
             <Link
@@ -157,10 +158,10 @@ export default async function Home() {
           <div className="flex items-end justify-between">
             <div>
               <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
-                Produkter
+                {prodHeading?.heading || 'Produkter'}
               </h2>
               <p className="mt-2 max-w-md font-body text-[15px] text-body">
-                Håndplukkede naturprodukter fra norske produsenter
+                {prodHeading?.subheading || 'Håndplukkede naturprodukter fra norske produsenter'}
               </p>
             </div>
             <Link
@@ -228,8 +229,8 @@ export default async function Home() {
           <div className="grid items-center gap-10 py-20 md:grid-cols-2 md:gap-16 md:py-28">
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
               <Image
-                src="/bilder-brukt-paa-sidene/om-oss/retreat-07-desktop.webp"
-                alt="Naturopplevelse i norsk skog"
+                src={omOss?.image?.url || '/bilder-brukt-paa-sidene/om-oss/retreat-07-desktop.webp'}
+                alt={omOss?.image?.alt || 'Naturopplevelse i norsk skog'}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -237,14 +238,20 @@ export default async function Home() {
             </div>
             <div>
               <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
-                Forankret i norsk natur
+                {omOss?.heading || 'Forankret i norsk natur'}
               </h2>
-              <p className="mt-5 font-body text-[15px] leading-relaxed text-body">
-                {aboutText || 'Roots & Culture er en norsk nettbutikk som formidler håndplukkede naturprodukter og unike opplevelser fra hele Norge. Vi samarbeider med lokale produsenter, bønder og guider som deler vår lidenskap for norsk natur og kulturarv.'}
-              </p>
-              <p className="mt-4 font-body text-[15px] leading-relaxed text-body">
-                Vårt mål er å gjøre det enkelt for deg å oppleve det beste Norge har å by på — enten det er gjennom en kopp urte-te fra fjellet eller et retreat ved fjorden.
-              </p>
+              {omOss?.body ? (
+                <div className="mt-5 font-body text-[15px] leading-relaxed text-body" dangerouslySetInnerHTML={{ __html: omOss.body }} />
+              ) : (
+                <>
+                  <p className="mt-5 font-body text-[15px] leading-relaxed text-body">
+                    Roots & Culture er en norsk nettbutikk som formidler håndplukkede naturprodukter og unike opplevelser fra hele Norge.
+                  </p>
+                  <p className="mt-4 font-body text-[15px] leading-relaxed text-body">
+                    Vårt mål er å gjøre det enkelt for deg å oppleve det beste Norge har å by på.
+                  </p>
+                </>
+              )}
               <Link
                 href="/om-oss"
                 className="mt-8 inline-flex items-center gap-2 rounded-md bg-forest px-6 py-3 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-forest/90"
@@ -263,10 +270,10 @@ export default async function Home() {
           <div className="flex items-end justify-between">
             <div>
               <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
-                Fra bloggen
+                {bloggHeading?.heading || 'Fra bloggen'}
               </h2>
               <p className="mt-2 max-w-md font-body text-[15px] text-body">
-                Historier om natur, kultur og tradisjoner
+                {bloggHeading?.subheading || 'Historier om natur, kultur og tradisjoner'}
               </p>
             </div>
             <Link
@@ -297,8 +304,8 @@ export default async function Home() {
       {/* ============ CTA BANNER ============ */}
       <section className="relative py-24 md:py-32">
         <Image
-          src="/bilder-brukt-paa-sidene/forside/retreat-20-desktop.webp"
-          alt=""
+          src={ctaBanner?.image?.url || '/bilder-brukt-paa-sidene/forside/retreat-20-desktop.webp'}
+          alt={ctaBanner?.image?.alt || ''}
           fill
           className="object-cover"
           sizes="100vw"
@@ -307,10 +314,10 @@ export default async function Home() {
 
         <div className="relative mx-auto max-w-[700px] px-6 text-center md:px-8">
           <h2 className="font-heading text-[32px] font-bold text-cream md:text-[40px]">
-            Klar for en opplevelse?
+            {ctaBanner?.heading || 'Klar for en opplevelse?'}
           </h2>
           <p className="mx-auto mt-4 max-w-lg font-body text-[17px] leading-relaxed text-cream/85">
-            Utforsk våre unike naturopplevelser og finn din neste eventyr i norsk natur.
+            {ctaBanner?.subheading || 'Utforsk våre unike naturopplevelser og finn din neste eventyr i norsk natur.'}
           </p>
           <Link
             href="/opplevelser"

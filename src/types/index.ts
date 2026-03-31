@@ -96,13 +96,45 @@ export interface Article {
   publishedAt: Date | null
 }
 
-// Phase 2: Site content
+// Phase 2: Site content (legacy — kept for backward compat)
 
 export interface SiteContent {
   id: string
   heroTitle: string
   heroIngress: string
   aboutText: string
+  updatedAt: Date
+}
+
+// CMS Page Content
+
+export type SectionType = 'hero' | 'text-image' | 'text' | 'values' | 'team' | 'faq' | 'cta' | 'gallery' | 'contact-info'
+
+export interface SectionItem {
+  title: string
+  description: string
+  image?: ProductImage
+  icon?: string
+  href?: string
+}
+
+export interface PageSection {
+  id: string
+  type: SectionType
+  heading?: string
+  subheading?: string
+  body?: string
+  image?: ProductImage
+  items?: SectionItem[]
+  ctaText?: string
+  ctaLink?: string
+  order: number
+}
+
+export interface PageContent {
+  id: string
+  title: string
+  sections: PageSection[]
   updatedAt: Date
 }
 
