@@ -36,90 +36,86 @@ export function Header() {
     : 'Handlekurv, tom'
 
   return (
-    <header
-      className="sticky top-0 z-50 flex h-16 items-center bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] px-4 lg:px-8"
-    >
-      {/* Logo -- left */}
-      <Link
-        href="/"
-        className="mr-auto flex items-center gap-2"
+    <>
+      <header
+        className="sticky top-0 z-50 flex h-16 items-center bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] px-4 lg:px-8"
       >
-        <Image
-          src="/logo_black.png"
-          alt="Roots & Culture"
-          width={40}
-          height={40}
-          className="h-10 w-10"
-          priority
-        />
-        <span className="hidden font-heading text-xl font-bold text-forest sm:inline">
-          Roots &amp; Culture
-        </span>
-      </Link>
-
-      {/* Desktop nav -- centered, hidden on mobile */}
-      <nav className="hidden lg:flex" aria-label="Hovednavigasjon">
-        <MegaMenuNav />
-      </nav>
-
-      {/* Right section: cart icon + auth trigger (desktop) */}
-      <div className="ml-auto hidden items-center gap-2 lg:flex">
-        {/* Cart button -- opens drawer */}
-        <button
-          type="button"
-          onClick={() => setCartOpen(true)}
-          className="relative flex h-11 w-11 items-center justify-center rounded text-forest hover:opacity-85"
-          aria-label={cartLabel}
+        {/* Logo -- left */}
+        <Link
+          href="/"
+          className="mr-auto flex items-center gap-2"
         >
-          <ShoppingBag className="h-5 w-5" aria-hidden="true" />
-          <CartBadge />
-        </button>
+          <Image
+            src="/logo_black.png"
+            alt="Roots & Culture"
+            width={40}
+            height={40}
+            className="h-10 w-10"
+            priority
+          />
+          <span className="hidden font-heading text-xl font-bold text-forest sm:inline">
+            Roots &amp; Culture
+          </span>
+        </Link>
 
-        {/* Auth trigger -- opens AuthModal */}
-        <button
-          type="button"
-          className="rounded-md px-3 py-1.5 text-[15px] font-medium text-forest hover:bg-forest/8 motion-safe:transition-colors motion-safe:duration-150"
-          onClick={() => setAuthOpen(true)}
-          aria-label="Logg inn"
-        >
-          Logg inn
-        </button>
-      </div>
+        {/* Desktop nav -- centered, hidden on mobile */}
+        <nav className="hidden lg:flex" aria-label="Hovednavigasjon">
+          <MegaMenuNav />
+        </nav>
 
-      {/* Mobile: cart icon + hamburger (visible below lg) */}
-      <div className="ml-auto flex items-center gap-1 lg:hidden">
-        {/* Cart button -- opens drawer (mobile) */}
-        <button
-          type="button"
-          onClick={() => setCartOpen(true)}
-          className="relative flex h-11 w-11 items-center justify-center"
-          aria-label={cartLabel}
-        >
-          <ShoppingBag className="h-5 w-5 text-forest" aria-hidden="true" />
-          <CartBadge />
-        </button>
+        {/* Right section: cart icon + auth trigger (desktop) */}
+        <div className="ml-auto hidden items-center gap-2 lg:flex">
+          <button
+            type="button"
+            onClick={() => setCartOpen(true)}
+            className="relative flex h-11 w-11 items-center justify-center rounded text-forest hover:opacity-85"
+            aria-label={cartLabel}
+          >
+            <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+            <CartBadge />
+          </button>
 
-        {/* Hamburger */}
-        <button
-          type="button"
-          className="flex h-11 w-11 items-center justify-center"
-          onClick={() => setMobileOpen(true)}
-          aria-label="Apne meny"
-          aria-expanded={mobileOpen}
-        >
-          <Menu className="h-6 w-6 text-forest" aria-hidden="true" />
-        </button>
-      </div>
+          <button
+            type="button"
+            className="rounded-md px-3 py-1.5 text-[15px] font-medium text-forest hover:bg-forest/8 motion-safe:transition-colors motion-safe:duration-150"
+            onClick={() => setAuthOpen(true)}
+            aria-label="Logg inn"
+          >
+            Logg inn
+          </button>
+        </div>
 
-      {/* Mobile nav overlay */}
+        {/* Mobile: cart icon + hamburger (visible below lg) */}
+        <div className="ml-auto flex items-center gap-1 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setCartOpen(true)}
+            className="relative flex h-11 w-11 items-center justify-center"
+            aria-label={cartLabel}
+          >
+            <ShoppingBag className="h-5 w-5 text-forest" aria-hidden="true" />
+            <CartBadge />
+          </button>
+
+          <button
+            type="button"
+            className="flex h-11 w-11 items-center justify-center"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Apne meny"
+            aria-expanded={mobileOpen}
+          >
+            <Menu className="h-6 w-6 text-forest" aria-hidden="true" />
+          </button>
+        </div>
+      </header>
+
+      {/* Overlays rendered OUTSIDE header to avoid backdrop-blur containing block */}
       {mobileOpen && (
         <MobileNav onClose={() => setMobileOpen(false)} onLoginClick={handleAuthOpen} />
       )}
 
-      {/* Cart drawer */}
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
 
-      {/* Auth modal */}
       <AuthModal
         isOpen={authOpen}
         onClose={handleAuthClose}
@@ -144,6 +140,6 @@ export function Header() {
           />
         )}
       </AuthModal>
-    </header>
+    </>
   )
 }
