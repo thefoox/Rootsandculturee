@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { Wine, Coffee, Leaf, Mountain, BookOpen, UtensilsCrossed } from 'lucide-react'
-import { mainNavItems } from '@/lib/navigation'
+import { mainNavItems, type NavItem } from '@/lib/navigation'
 
 // Map icon string identifiers to lucide-react components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -15,7 +15,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   utensils: UtensilsCrossed,
 }
 
-export function MegaMenuNav({ transparent = true }: { transparent?: boolean }) {
+export function MegaMenuNav({ transparent = true, items }: { transparent?: boolean; items?: NavItem[] }) {
+  const navItems = items || mainNavItems
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const navRef = useRef<HTMLUListElement>(null)
   const dropdownRefs = useRef<(HTMLAnchorElement | null)[]>([])
@@ -57,7 +58,7 @@ export function MegaMenuNav({ transparent = true }: { transparent?: boolean }) {
 
   return (
     <ul ref={navRef} className="flex items-center gap-1" role="menubar">
-      {mainNavItems.map((item, index) => {
+      {navItems.map((item, index) => {
         const hasChildren = item.children && item.children.length > 0
         const isOpen = openIndex === index
 

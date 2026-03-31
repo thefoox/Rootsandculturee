@@ -9,7 +9,6 @@ export async function GET(
 ) {
   const { pageId } = await params
 
-  // Use mock data if Firebase not configured
   if (!adminDb) {
     const mock = mockPageContent.get(pageId)
     return NextResponse.json(mock || null)
@@ -17,7 +16,6 @@ export async function GET(
 
   const doc = await adminDb.collection('pageContent').doc(pageId).get()
   if (!doc.exists) {
-    // Fall back to mock
     const mock = mockPageContent.get(pageId)
     return NextResponse.json(mock || null)
   }
@@ -26,6 +24,10 @@ export async function GET(
   const content: PageContent = {
     id: doc.id,
     title: data.title || '',
+    slug: data.slug || doc.id,
+    isPublished: data.isPublished ?? true,
+    showInNavigation: data.showInNavigation ?? false,
+    navigationOrder: data.navigationOrder ?? 0,
     sections: data.sections || [],
     updatedAt: data.updatedAt?.toDate() ?? new Date(),
   }
@@ -37,18 +39,21 @@ export async function PUT(
   { params }: { params: Promise<{ pageId: string }> }
 ) {
   const { pageId } = await params
+  const body = await request.json()
 
   if (!adminDb) {
-    // In dev without Firebase, just return success (mock mode)
     return NextResponse.json({ success: true, mock: true })
   }
 
-  const body = await request.json()
-  const { sections } = body
+  const { title, slug, isPublished, showInNavigation, navigationOrder, sections } = body
 
   await adminDb.collection('pageContent').doc(pageId).set(
     {
-      title: mockPageContent.get(pageId)?.title || pageId,
+      title,
+      slug,
+      isPublished,
+      showInNavigation,
+      navigationOrder,
       sections,
       updatedAt: new Date(),
     },
