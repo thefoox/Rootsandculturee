@@ -3,14 +3,16 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { X } from 'lucide-react'
-import { mainNavItems } from '@/lib/navigation'
+import { mainNavItems, type NavItem } from '@/lib/navigation'
 
 interface MobileNavProps {
   onClose: () => void
   onLoginClick?: () => void
+  items?: NavItem[]
 }
 
-export function MobileNav({ onClose, onLoginClick }: MobileNavProps) {
+export function MobileNav({ onClose, onLoginClick, items }: MobileNavProps) {
+  const navItems = items || mainNavItems
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const navRef = useRef<HTMLDivElement>(null)
 
@@ -82,7 +84,7 @@ export function MobileNav({ onClose, onLoginClick }: MobileNavProps) {
       {/* Navigation links */}
       <nav className="flex-1 px-8 pt-4" aria-label="Mobilnavigasjon">
         <ul className="space-y-2">
-          {mainNavItems.map((item) => (
+          {navItems.map((item) => (
             <li key={item.href}>
               <Link
                 href={item.href}

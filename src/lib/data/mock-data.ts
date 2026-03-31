@@ -476,12 +476,16 @@ export const mockSiteContent: SiteContent = {
 const forside: PageContent = {
   id: 'forside',
   title: 'Forside',
+  slug: '/',
+  isPublished: true,
+  showInNavigation: false,
+  navigationOrder: 0,
   sections: [
     { id: 'hero', type: 'hero', heading: 'Velkommen til\nRoots & Culture', subheading: 'Gjennom våre tjenester arbeider vi for å øke bevissthet om natur, tradisjon og kultur.', image: { url: '/bilder-brukt-paa-sidene/forside/retreat-22-desktop.webp', alt: 'Vandring i norsk skog' }, ctaText: 'Se tilgjengelige opplevelser', ctaLink: '/opplevelser', order: 0 },
-    { id: 'opplevelser-heading', type: 'text', heading: 'Opplevelser', subheading: 'Naturretreater, kurs og matopplevelser som bringer deg nærmere norsk natur og kulturarv', order: 1 },
-    { id: 'produkter-heading', type: 'text', heading: 'Produkter', subheading: 'Håndplukkede naturprodukter fra norske produsenter', order: 2 },
+    { id: 'opplevelser-grid', type: 'experiences-grid', heading: 'Opplevelser', subheading: 'Naturretreater, kurs og matopplevelser som bringer deg nærmere norsk natur og kulturarv', order: 1 },
+    { id: 'produkter-grid', type: 'products-grid', heading: 'Produkter', subheading: 'Håndplukkede naturprodukter fra norske produsenter', order: 2 },
     { id: 'om-oss', type: 'text-image', heading: 'Forankret i norsk natur', body: '<p>Roots & Culture er en norsk nettbutikk som formidler håndplukkede naturprodukter og unike opplevelser fra hele Norge. Vi samarbeider med lokale produsenter, bønder og guider som deler vår lidenskap for norsk natur og kulturarv.</p><p>Vårt mål er å gjøre det enkelt for deg å oppleve det beste Norge har å by på — enten det er gjennom en kopp urte-te fra fjellet eller et retreat ved fjorden.</p>', image: { url: '/bilder-brukt-paa-sidene/om-oss/retreat-07-desktop.webp', alt: 'Naturopplevelse i norsk skog' }, ctaText: 'Les mer om oss', ctaLink: '/om-oss', order: 3 },
-    { id: 'blogg-heading', type: 'text', heading: 'Fra bloggen', subheading: 'Historier om natur, kultur og tradisjoner', order: 4 },
+    { id: 'artikler-grid', type: 'articles-grid', heading: 'Fra bloggen', subheading: 'Historier om natur, kultur og tradisjoner', order: 4 },
     { id: 'cta-banner', type: 'cta', heading: 'Klar for en opplevelse?', subheading: 'Utforsk våre unike naturopplevelser og finn din neste eventyr i norsk natur.', image: { url: '/bilder-brukt-paa-sidene/forside/retreat-20-desktop.webp', alt: 'Retreat i naturen' }, ctaText: 'Se opplevelser', ctaLink: '/opplevelser', order: 5 },
   ],
   updatedAt: new Date('2025-09-01'),
@@ -490,6 +494,10 @@ const forside: PageContent = {
 const omOss: PageContent = {
   id: 'om-oss',
   title: 'Om oss',
+  slug: 'om-oss',
+  isPublished: true,
+  showInNavigation: true,
+  navigationOrder: 30,
   sections: [
     { id: 'hero', type: 'hero', heading: 'Om Roots & Culture', subheading: 'Forankret i norsk natur og kulturarv', image: { url: '/bilder-brukt-paa-sidene/om-oss/hero-section-desktop.webp', alt: 'Roots & Culture' }, order: 0 },
     { id: 'historie', type: 'text-image', heading: 'Vår historie', body: '<p>Roots & Culture ble startet med en enkel idé: å gjøre det lettere for folk å oppleve det beste av norsk natur og kulturarv. Vi tror at ekte opplevelser skapes når mennesker møter naturen med åpne sanser og nysgjerrighet.</p><p>Fra starten har vi samarbeidet med lokale produsenter, bønder og naturguider som deler vår lidenskap. Sammen skaper vi opplevelser og produkter som er forankret i norske tradisjoner, men med et moderne uttrykk.</p><p>Enten du søker ro i skogen, vil lære om ville urter, eller drømmer om mat laget over bål — vi har noe for deg.</p>', image: { url: '/bilder-brukt-paa-sidene/om-oss/retreat-07-desktop.webp', alt: 'Vandring i norsk natur' }, order: 1 },
@@ -504,6 +512,10 @@ const omOss: PageContent = {
 const kontakt: PageContent = {
   id: 'kontakt',
   title: 'Kontakt',
+  slug: 'kontakt',
+  isPublished: true,
+  showInNavigation: true,
+  navigationOrder: 40,
   sections: [
     { id: 'hero', type: 'hero', heading: 'Kontakt oss', subheading: 'Vi hører gjerne fra deg', image: { url: '/bilder-brukt-paa-sidene/kontakt/retreat-20-desktop.webp', alt: 'Kontakt Roots & Culture' }, order: 0 },
     { id: 'kontakt-info', type: 'contact-info', heading: 'Kontaktinformasjon', items: [{ title: 'E-post', description: 'post@rootsculture.no', icon: 'mail' }, { title: 'Instagram', description: '@rootsculture', icon: 'at-sign' }, { title: 'Adresse', description: 'Oslo, Norge', icon: 'map-pin' }, { title: 'Svartid', description: 'Vi svarer innen 24 timer', icon: 'clock' }], image: { url: '/bilder-brukt-paa-sidene/kontakt/retreat-18-desktop.webp', alt: 'Natur' }, order: 1 },
@@ -515,6 +527,10 @@ const kontakt: PageContent = {
 const opplevelser: PageContent = {
   id: 'opplevelser',
   title: 'Opplevelser',
+  slug: 'opplevelser',
+  isPublished: true,
+  showInNavigation: true,
+  navigationOrder: 10,
   sections: [
     { id: 'hero', type: 'hero', heading: 'Opplevelser i norsk natur', subheading: 'Naturretreater, kurs og matopplevelser som bringer deg nærmere naturen', image: { url: '/bilder-brukt-paa-sidene/opplevelser-hovedside/retreat-20-desktop.webp', alt: 'Opplevelser i naturen' }, order: 0 },
     { id: 'intro', type: 'text-image', heading: 'Naturopplevelser som berører', body: '<p>Hos Roots & Culture handler opplevelser om mer enn bare aktiviteter. Det handler om å stoppe opp, puste dypt, og kjenne forbindelsen til naturen rundt deg.</p><p>Hver opplevelse er nøye kuratert av erfarne guider som deler vår lidenskap for norsk natur og kulturarv.</p>', image: { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp', alt: 'Naturopplevelse' }, ctaText: 'Se tilgjengelige opplevelser', ctaLink: '#opplevelser', order: 1 },
@@ -526,6 +542,10 @@ const opplevelser: PageContent = {
 const retreat: PageContent = {
   id: 'retreat',
   title: 'Naturretreater',
+  slug: 'retreat',
+  isPublished: true,
+  showInNavigation: false,
+  navigationOrder: 0,
   sections: [
     { id: 'hero', type: 'hero', heading: 'Naturretreater', subheading: 'Koble av fra hverdagen med guidede retreater i norsk natur. Skogsbad, meditasjon og ro.', image: { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-20-desktop.webp', alt: 'Naturretreat' }, order: 0 },
     { id: 'info', type: 'text-image', heading: 'Om våre retreater', body: '<p>Våre naturretreater gir deg muligheten til å koble helt av fra hverdagen. Med erfarne guider tar vi deg med inn i norsk natur — fra stille skogsbad i Nordmarka til villmarksretreater ved Sognefjorden.</p><p>Alle retreater inkluderer overnatting, måltider med lokale råvarer, og guidede aktiviteter tilpasset ditt nivå. Du trenger ingen forkunnskaper — bare et ønske om ro og natur.</p>', image: { url: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-12-desktop.webp', alt: 'Retreat i naturen' }, order: 1 },
@@ -536,6 +556,10 @@ const retreat: PageContent = {
 const kurs: PageContent = {
   id: 'kurs',
   title: 'Kurs',
+  slug: 'kurs',
+  isPublished: true,
+  showInNavigation: false,
+  navigationOrder: 0,
   sections: [
     { id: 'hero', type: 'hero', heading: 'Kurs', subheading: 'Lær å sanke, lage mat og opplev norsk natur på nært hold med erfarne guider.', image: { url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-01-desktop.webp', alt: 'Kurs i naturen' }, order: 0 },
     { id: 'info', type: 'text-image', heading: 'Om våre kurs', body: '<p>Våre kurs gir deg praktisk kunnskap om norsk natur og tradisjoner. Med erfarne guider og botanikere lærer du å identifisere ville urter, tilberede mat fra naturen, og forstå økosystemene rundt deg.</p><p>Kursene er tilpasset alle nivåer — fra nybegynnere til de som vil fordype seg. Alt utstyr og materialer er inkludert.</p>', image: { url: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-05-desktop.webp', alt: 'Urtesamling' }, order: 1 },
@@ -546,6 +570,10 @@ const kurs: PageContent = {
 const matopplevelse: PageContent = {
   id: 'matopplevelse',
   title: 'Matopplevelser',
+  slug: 'matopplevelse',
+  isPublished: true,
+  showInNavigation: false,
+  navigationOrder: 0,
   sections: [
     { id: 'hero', type: 'hero', heading: 'Matopplevelser', subheading: 'Smak på norske tradisjoner med matlagingskurs og lokale råvarer fra gård og natur.', image: { url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-06-desktop.webp', alt: 'Matopplevelse' }, order: 0 },
     { id: 'info', type: 'text-image', heading: 'Om våre matopplevelser', body: '<p>Våre matopplevelser tar deg med til tradisjonelle norske gårder der du lærer å lage klassiske retter med lokale råvarer. Fra flatbrød på takke til moderne desserter med ville bær.</p><p>Alt fra råvarer til oppskrifthefte er inkludert. Du trenger ingen forkunnskaper — bare en appetitt for norsk matkultur.</p>', image: { url: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-03-desktop.webp', alt: 'Matlaging' }, order: 1 },
@@ -556,6 +584,10 @@ const matopplevelse: PageContent = {
 const produkterPage: PageContent = {
   id: 'produkter',
   title: 'Produkter',
+  slug: 'produkter',
+  isPublished: true,
+  showInNavigation: true,
+  navigationOrder: 20,
   sections: [
     { id: 'heading', type: 'text', heading: 'Produkter', subheading: 'Utforsk vårt håndplukkede utvalg av autentiske norske produkter.', order: 0 },
   ],
@@ -565,6 +597,10 @@ const produkterPage: PageContent = {
 const bloggPage: PageContent = {
   id: 'blogg',
   title: 'Blogg',
+  slug: 'blogg',
+  isPublished: true,
+  showInNavigation: true,
+  navigationOrder: 25,
   sections: [
     { id: 'heading', type: 'text', heading: 'Blogg', subheading: 'Artikler om norsk natur, kultur og tradisjoner.', order: 0 },
   ],

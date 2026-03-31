@@ -110,7 +110,7 @@ export interface SiteContent {
 
 // CMS Page Content
 
-export type SectionType = 'hero' | 'text-image' | 'text' | 'values' | 'team' | 'faq' | 'cta' | 'gallery' | 'contact-info'
+export type SectionType = 'hero' | 'text-image' | 'text' | 'values' | 'team' | 'faq' | 'cta' | 'gallery' | 'contact-info' | 'experiences-grid' | 'articles-grid' | 'products-grid'
 
 export interface SectionItem {
   title: string
@@ -136,6 +136,10 @@ export interface PageSection {
 export interface PageContent {
   id: string
   title: string
+  slug: string
+  isPublished: boolean
+  showInNavigation: boolean
+  navigationOrder: number
   sections: PageSection[]
   updatedAt: Date
 }

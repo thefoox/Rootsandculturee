@@ -7,6 +7,8 @@ import Image from 'next/image'
 import { Menu, ShoppingBag, User, LogOut } from 'lucide-react'
 import { MegaMenuNav } from './MegaMenuNav'
 import { MobileNav } from './MobileNav'
+import { buildNavItems, mainNavItems, type NavItem } from '@/lib/navigation'
+import type { PageContent } from '@/types'
 import { AuthModal } from '@/components/auth/AuthModal'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { RegisterForm } from '@/components/auth/RegisterForm'
@@ -22,6 +24,7 @@ export function Header() {
   const [cartOpen, setCartOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [navItems, setNavItems] = useState<NavItem[]>(mainNavItems)
   const { itemCount } = useCart()
   const pathname = usePathname()
 
@@ -34,6 +37,18 @@ export function Header() {
   useEffect(() => {
     // Check if session cookie exists (set by mock-login or real auth)
     setIsLoggedIn(document.cookie.includes('__session'))
+  }, [])
+
+  // Fetch dynamic navigation from CMS
+  useEffect(() => {
+    fetch('/api/navigation')
+      .then((r) => r.json())
+      .then((pages: PageContent[]) => {
+        setNavItems(buildNavItems(pages))
+      })
+      .catch(() => {
+        // Keep static fallback on error
+      })
   }, [])
 
   function handleLogout() {
@@ -82,7 +97,7 @@ export function Header() {
 
         {/* Desktop nav -- centered, hidden on mobile */}
         <nav className="hidden lg:flex" aria-label="Hovednavigasjon">
-          <MegaMenuNav transparent={isTransparent} />
+          <MegaMenuNav transparent={isTransparent} items={navItems} />
         </nav>
 
         {/* Right section: cart icon + auth trigger (desktop) */}
@@ -172,7 +187,7 @@ export function Header() {
 
       {/* Overlays rendered OUTSIDE header to avoid backdrop-blur containing block */}
       {mobileOpen && (
-        <MobileNav onClose={() => setMobileOpen(false)} onLoginClick={handleAuthOpen} />
+        <MobileNav onClose={() => setMobileOpen(false)} onLoginClick={handleAuthOpen} items={navItems} />
       )}
 
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />

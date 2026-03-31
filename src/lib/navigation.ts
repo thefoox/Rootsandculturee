@@ -1,3 +1,5 @@
+import type { PageContent } from '@/types'
+
 export interface NavItem {
   label: string
   href: string
@@ -11,7 +13,8 @@ export interface NavCategory {
   icon?: string
 }
 
-export const mainNavItems: NavItem[] = [
+// Fixed mega-menu items that have subcategories (dedicated routes)
+const fixedNavItems: NavItem[] = [
   {
     label: 'Produkter',
     href: '/produkter',
@@ -31,6 +34,35 @@ export const mainNavItems: NavItem[] = [
       { label: 'Matopplevelser', href: '/opplevelser/matopplevelse', description: 'Smak norsk matkultur', icon: 'utensils' },
     ],
   },
+]
+
+// Fixed slug -> dedicated route mapping (these don't use the [slug] catch-all)
+const dedicatedRoutes: Record<string, string> = {
+  produkter: '/produkter',
+  opplevelser: '/opplevelser',
+  blogg: '/blogg',
+}
+
+export function buildNavItems(navPages: PageContent[]): NavItem[] {
+  // Start with fixed mega-menu items
+  const items: NavItem[] = [...fixedNavItems]
+
+  // Add CMS pages that aren't already covered by fixed items
+  const fixedSlugs = new Set(['produkter', 'opplevelser'])
+
+  for (const page of navPages) {
+    if (fixedSlugs.has(page.slug)) continue
+
+    const href = dedicatedRoutes[page.slug] || `/${page.slug}`
+    items.push({ label: page.title, href })
+  }
+
+  return items
+}
+
+// Static fallback (used when nav pages haven't loaded yet)
+export const mainNavItems: NavItem[] = [
+  ...fixedNavItems,
   { label: 'Blogg', href: '/blogg' },
   { label: 'Om oss', href: '/om-oss' },
   { label: 'Kontakt', href: '/kontakt' },
