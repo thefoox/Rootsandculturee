@@ -47,6 +47,7 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: 'Produkter', href: '/produkter' },
       { label: 'Opplevelser', href: '/opplevelser' },
+      { label: 'Gavekort', href: '/gavekort' },
       { label: 'Blogg', href: '/blogg' },
       { label: 'Om oss', href: '/om-oss' },
     ],

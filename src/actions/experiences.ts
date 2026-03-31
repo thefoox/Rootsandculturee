@@ -41,6 +41,8 @@ function mapExperienceDate(
     availableSeats: data.availableSeats || data.maxSeats,
     isActive: data.isActive ?? true,
     priceOverride: data.priceOverride ?? null,
+    earlyBirdPrice: data.earlyBirdPrice ?? null,
+    earlyBirdDeadline: data.earlyBirdDeadline?.toDate() ?? null,
   }
 }
 
@@ -131,6 +133,8 @@ export async function createExperience(formData: FormData) {
   if (dates && dates.length > 0) {
     const batch = adminDb.batch()
     for (const dateSlot of dates) {
+      const ebPrice = dateSlot.earlyBirdPrice ? Math.round(Number(dateSlot.earlyBirdPrice) * 100) : null
+      const ebDeadline = dateSlot.earlyBirdDeadline ? Timestamp.fromDate(new Date(dateSlot.earlyBirdDeadline)) : null
       const dateDocRef = docRef.collection('dates').doc()
       batch.set(dateDocRef, {
         date: Timestamp.fromDate(new Date(dateSlot.date)),
@@ -139,6 +143,8 @@ export async function createExperience(formData: FormData) {
         availableSeats: dateSlot.maxSeats,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: ebPrice,
+        earlyBirdDeadline: ebDeadline,
       })
     }
     await batch.commit()
@@ -220,6 +226,8 @@ export async function updateExperience(id: string, formData: FormData) {
     existingDates.docs.forEach((doc) => batch.delete(doc.ref))
 
     for (const dateSlot of dates) {
+      const ebPrice = dateSlot.earlyBirdPrice ? Math.round(Number(dateSlot.earlyBirdPrice) * 100) : null
+      const ebDeadline = dateSlot.earlyBirdDeadline ? Timestamp.fromDate(new Date(dateSlot.earlyBirdDeadline)) : null
       const dateDocRef = adminDb
         .collection('experiences')
         .doc(id)
@@ -232,6 +240,8 @@ export async function updateExperience(id: string, formData: FormData) {
         availableSeats: dateSlot.maxSeats,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: ebPrice,
+        earlyBirdDeadline: ebDeadline,
       })
     }
     await batch.commit()

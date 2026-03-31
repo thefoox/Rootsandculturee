@@ -40,6 +40,8 @@ export function DateCardPicker({ experienceId, dates, experience }: DateCardPick
         availableSeats: data.availableSeats ?? selectedDate.availableSeats,
         isActive: data.isActive ?? selectedDate.isActive,
         priceOverride: data.priceOverride ?? null,
+        earlyBirdPrice: data.earlyBirdPrice ?? null,
+        earlyBirdDeadline: data.earlyBirdDeadline?.toDate() ?? null,
       }
 
       // Update selected date with live data

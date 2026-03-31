@@ -19,6 +19,10 @@ function formatDateParts(date: Date) {
 
 export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps) {
   const isSoldOut = experienceDate.availableSeats <= 0 || !experienceDate.isActive
+  const isEarlybirdActive =
+    experienceDate.earlyBirdPrice != null &&
+    experienceDate.earlyBirdDeadline != null &&
+    experienceDate.earlyBirdDeadline > new Date()
   const { weekday, day, month, longDate } = formatDateParts(experienceDate.date)
 
   const ariaLabel = isSoldOut
@@ -69,6 +73,17 @@ export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps
       >
         {month}
       </span>
+      {isEarlybirdActive && !isSoldOut && (
+        <span
+          className={cn(
+            'font-body text-[10px] font-medium leading-none',
+            isSelected ? 'text-cream' : 'text-rust'
+          )}
+          aria-label="Earlybird-pris tilgjengelig"
+        >
+          EB
+        </span>
+      )}
       {isSoldOut && (
         <span className="font-body text-label font-normal text-[#C0392B]">
           Utsolgt

@@ -3,7 +3,7 @@
 import { useCart } from '@/components/cart/CartProvider'
 import { Button } from '@/components/ui/Button'
 import { SpotsRemaining } from './SpotsRemaining'
-import { formatPrice } from '@/lib/format'
+import { formatPrice, formatDate } from '@/lib/format'
 import { toast } from 'sonner'
 import type { Experience, ExperienceDate } from '@/types'
 
@@ -20,7 +20,14 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
     weekday: 'long',
   }).format(selectedDate.date)
 
-  const price = selectedDate.priceOverride ?? experience.basePrice
+  const normalPrice = selectedDate.priceOverride ?? experience.basePrice
+
+  const isEarlybirdActive =
+    selectedDate.earlyBirdPrice != null &&
+    selectedDate.earlyBirdDeadline != null &&
+    selectedDate.earlyBirdDeadline > new Date()
+
+  const price = isEarlybirdActive ? selectedDate.earlyBirdPrice! : normalPrice
   const isFull = selectedDate.availableSeats <= 0
 
   function handleAddToCart() {
@@ -52,9 +59,27 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
         />
       </div>
 
-      <p className="mt-2 font-body text-body font-medium text-forest">
-        {formatPrice(price)}
-      </p>
+      <div className="mt-2">
+        {isEarlybirdActive ? (
+          <>
+            <div className="flex items-baseline gap-2">
+              <span className="font-body text-body font-medium text-forest">
+                {formatPrice(price)}
+              </span>
+              <span className="font-body text-body font-normal text-body/60 line-through">
+                {formatPrice(normalPrice)}
+              </span>
+            </div>
+            <span className="mt-1 inline-block rounded-full bg-rust/10 px-2 py-0.5 font-body text-label font-medium text-rust">
+              Earlybird — gyldig til {formatDate(selectedDate.earlyBirdDeadline!)}
+            </span>
+          </>
+        ) : (
+          <p className="font-body text-body font-medium text-forest">
+            {formatPrice(price)}
+          </p>
+        )}
+      </div>
 
       {isFull ? (
         <div

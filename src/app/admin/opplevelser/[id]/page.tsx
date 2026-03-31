@@ -42,7 +42,7 @@ export default function EditExperiencePage() {
   const [location, setLocation] = useState('')
   const [durationText, setDurationText] = useState('')
   const [images, setImages] = useState<ProductImage[]>([])
-  const [dates, setDates] = useState<{ date: string; maxSeats: number }[]>([])
+  const [dates, setDates] = useState<{ date: string; maxSeats: number; earlyBirdPrice: string; earlyBirdDeadline: string }[]>([])
   const [basePrice, setBasePrice] = useState('')
   const [whatIsIncluded, setWhatIsIncluded] = useState('')
   const [cancellationPolicy, setCancellationPolicy] = useState('')
@@ -77,6 +77,8 @@ export default function EditExperiencePage() {
           existingDates.map((d) => ({
             date: d.date.toISOString().split('T')[0],
             maxSeats: d.maxSeats,
+            earlyBirdPrice: d.earlyBirdPrice ? String(d.earlyBirdPrice / 100) : '',
+            earlyBirdDeadline: d.earlyBirdDeadline ? d.earlyBirdDeadline.toISOString().split('T')[0] : '',
           }))
         )
         setLoading(false)

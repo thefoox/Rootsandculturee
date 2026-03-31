@@ -36,6 +36,8 @@ function mapExperienceDate(doc: FirebaseFirestore.DocumentSnapshot): ExperienceD
     availableSeats: data.availableSeats,
     isActive: data.isActive,
     priceOverride: data.priceOverride ?? null,
+    earlyBirdPrice: data.earlyBirdPrice ?? null,
+    earlyBirdDeadline: data.earlyBirdDeadline?.toDate() ?? null,
   }
 }
 

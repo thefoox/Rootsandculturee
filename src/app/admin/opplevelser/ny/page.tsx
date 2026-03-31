@@ -35,7 +35,7 @@ export default function NewExperiencePage() {
   const [location, setLocation] = useState('')
   const [durationText, setDurationText] = useState('')
   const [images, setImages] = useState<ProductImage[]>([])
-  const [dates, setDates] = useState<{ date: string; maxSeats: number }[]>([])
+  const [dates, setDates] = useState<{ date: string; maxSeats: number; earlyBirdPrice: string; earlyBirdDeadline: string }[]>([])
   const [basePrice, setBasePrice] = useState('')
   const [whatIsIncluded, setWhatIsIncluded] = useState('')
   const [cancellationPolicy, setCancellationPolicy] = useState('')

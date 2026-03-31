@@ -44,6 +44,8 @@ export const experienceSchema = z.object({
           .number()
           .int()
           .positive('Plasser ma vaere et positivt tall.'),
+        earlyBirdPrice: z.string().optional(),
+        earlyBirdDeadline: z.string().optional(),
       })
     )
     .optional(),

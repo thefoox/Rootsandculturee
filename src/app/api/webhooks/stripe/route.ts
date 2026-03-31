@@ -8,8 +8,10 @@ import {
   orderConfirmationEmail,
   bookingConfirmationEmail,
   mixedConfirmationEmail,
+  giftCardEmail,
 } from '@/lib/email/templates'
 import { syncPaymentContact } from '@/lib/email/contacts'
+import { createGiftCard, redeemGiftCard } from '@/lib/data/gift-cards'
 import type { OrderItem, ShippingAddress } from '@/types'
 
 export const dynamic = 'force-dynamic'
@@ -30,6 +32,11 @@ interface BookingMetaItem {
   experienceDateId: string
   experienceDate: string
   experienceName: string
+}
+
+interface GiftCardMetaItem {
+  amount: number
+  name: string
 }
 
 export async function POST(req: Request) {
@@ -93,6 +100,7 @@ export async function POST(req: Request) {
 
       let orderItems: ProductMetaItem[] = []
       let bookingItems: BookingMetaItem[] = []
+      let giftCardItems: GiftCardMetaItem[] = []
 
       try {
         orderItems = JSON.parse(metadata.orderItems || '[]')
@@ -100,6 +108,12 @@ export async function POST(req: Request) {
       try {
         bookingItems = JSON.parse(metadata.bookingItems || '[]')
       } catch { /* empty */ }
+      try {
+        giftCardItems = JSON.parse(metadata.giftCardItems || '[]')
+      } catch { /* empty */ }
+
+      const giftCardCodeUsed = metadata.giftCardCode || ''
+      const giftCardDeduction = parseInt(metadata.giftCardDeduction || '0', 10)
 
       const shippingAddress: ShippingAddress | null = metadata.shippingAddress
         ? JSON.parse(metadata.shippingAddress)
@@ -227,6 +241,57 @@ export async function POST(req: Request) {
             whatToBring,
           })
         })
+      }
+
+      // Process gift card purchases — create GiftCard documents and email recipients
+      const createdGiftCards: Array<{ code: string; amount: number; recipientEmail: string; recipientName: string }> = []
+      for (const item of giftCardItems) {
+        // Gift card metadata is stored in the PaymentIntent; recipient info comes from there
+        // For now, create the gift card with purchaser as recipient (webhook gets recipient from stored metadata)
+        const gc = await createGiftCard({
+          amount: item.amount,
+          purchasedBy: customerId,
+          purchaserEmail: customerEmail,
+          recipientName: metadata.giftCardRecipientName || '',
+          recipientEmail: metadata.giftCardRecipientEmail || customerEmail,
+          message: metadata.giftCardMessage || '',
+        })
+        if (gc) {
+          createdGiftCards.push({
+            code: gc.code,
+            amount: gc.amount,
+            recipientEmail: gc.recipientEmail,
+            recipientName: gc.recipientName,
+          })
+        }
+      }
+
+      // Redeem gift card if one was used for this payment
+      if (giftCardCodeUsed && giftCardDeduction > 0) {
+        await redeemGiftCard(giftCardCodeUsed, giftCardDeduction)
+      }
+
+      // Send gift card emails to recipients
+      if (resend && createdGiftCards.length > 0) {
+        try {
+          for (const gc of createdGiftCards) {
+            const emailData = giftCardEmail({
+              code: gc.code,
+              amount: gc.amount,
+              recipientName: gc.recipientName,
+              senderEmail: customerEmail,
+              message: metadata.giftCardMessage || '',
+            })
+            await resend.emails.send({
+              from: FROM_EMAIL,
+              to: gc.recipientEmail || customerEmail,
+              subject: emailData.subject,
+              text: emailData.text,
+            })
+          }
+        } catch (gcEmailErr) {
+          console.error('Gift card email error:', gcEmailErr)
+        }
       }
 
       // Send confirmation emails via Resend (D-18, D-20)

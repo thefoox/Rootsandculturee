@@ -10,6 +10,7 @@ import {
   ShoppingCart,
   CalendarCheck,
   Users,
+  Gift,
   ArrowLeft,
   LogOut,
   X,
@@ -27,6 +28,7 @@ const contentNavItems = [
 const orderNavItems = [
   { href: '/admin/ordrer', label: 'Ordrer', icon: ShoppingCart },
   { href: '/admin/bookinger', label: 'Bookinger', icon: CalendarCheck },
+  { href: '/admin/gavekort', label: 'Gavekort', icon: Gift },
   { href: '/admin/kunder', label: 'Kunder', icon: Users },
 ]
 

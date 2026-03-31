@@ -23,6 +23,9 @@ export async function POST(req: Request) {
     if ('error' in result) {
       return NextResponse.json({ error: result.error }, { status: 400 })
     }
+    if ('coveredByGiftCard' in result) {
+      return NextResponse.json({ coveredByGiftCard: true })
+    }
 
     return NextResponse.json({ clientSecret: result.clientSecret })
   } catch (err) {

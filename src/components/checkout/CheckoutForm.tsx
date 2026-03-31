@@ -30,12 +30,14 @@ interface CheckoutFormProps {
   items: CartItem[]
   userEmail?: string | null
   onPaymentSuccess: (paymentIntentId: string) => void
+  giftCardCode?: string | null
 }
 
 export function CheckoutForm({
   items,
   userEmail,
   onPaymentSuccess,
+  giftCardCode,
 }: CheckoutFormProps) {
   const stripe = useStripe()
   const elements = useElements()
@@ -84,7 +86,7 @@ export function CheckoutForm({
 
     try {
       // Create PaymentIntent on server
-      const result = await createPaymentIntent(formData, items)
+      const result = await createPaymentIntent(formData, items, giftCardCode)
 
       if ('error' in result) {
         setPaymentError(result.error)

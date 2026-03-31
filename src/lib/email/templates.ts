@@ -91,6 +91,38 @@ Roots & Culture
   }
 }
 
+interface GiftCardEmailData {
+  code: string
+  amount: number
+  recipientName: string
+  senderEmail: string
+  message: string
+}
+
+export function giftCardEmail(data: GiftCardEmailData) {
+  const greeting = data.recipientName ? `Hei ${data.recipientName}!` : 'Hei!'
+  const messageBlock = data.message
+    ? `\nPersonlig hilsen:\n"${data.message}"\n`
+    : ''
+
+  return {
+    subject: 'Du har fatt et gavekort fra Roots & Culture!',
+    text: `${greeting}
+
+Noen har gitt deg et gavekort hos Roots & Culture.
+
+Gavekort-kode: ${data.code}
+Verdi: ${formatPrice(data.amount)}
+${messageBlock}
+Bruk koden i kassen pa rootsculture.no for a handle produkter eller booke opplevelser.
+Gavekortet er gyldig i 12 maneder.
+
+Med vennlig hilsen,
+Roots & Culture
+`,
+  }
+}
+
 export function mixedConfirmationEmail(
   orderData: OrderEmailData,
   bookings: BookingEmailData[]

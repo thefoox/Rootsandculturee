@@ -75,6 +75,8 @@ export interface ExperienceDate {
   availableSeats: number
   isActive: boolean
   priceOverride: number | null
+  earlyBirdPrice: number | null       // Ore, null = no earlybird
+  earlyBirdDeadline: Date | null      // Deadline date, null = no earlybird
 }
 
 // Phase 2: Article types
@@ -138,8 +140,27 @@ export interface PageContent {
   updatedAt: Date
 }
 
+// Gift card types
+export type GiftCardStatus = 'active' | 'used' | 'expired'
+
+export interface GiftCard {
+  id: string
+  code: string                    // RC-XXXX-XXXX (unique)
+  amount: number                  // Original amount in ore
+  remainingBalance: number        // Remaining balance in ore
+  purchasedBy: string | null      // Firebase UID or null (guest)
+  purchaserEmail: string
+  recipientName: string
+  recipientEmail: string
+  message: string
+  status: GiftCardStatus
+  createdAt: Date
+  usedAt: Date | null
+  expiresAt: Date                 // 12 months after purchase
+}
+
 // Phase 3: Cart types
-export type CartItemType = 'product' | 'experience'
+export type CartItemType = 'product' | 'experience' | 'giftcard'
 
 export interface CartItem {
   id: string              // product ID or experience ID

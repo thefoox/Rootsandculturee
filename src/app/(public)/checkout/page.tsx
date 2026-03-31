@@ -7,6 +7,7 @@ import { OrderSummaryPanel } from '@/components/cart/OrderSummaryPanel'
 import { CheckoutForm } from '@/components/checkout/CheckoutForm'
 import { StripeElementsWrapper } from '@/components/checkout/StripeElementsWrapper'
 import { ConfirmationModal } from '@/components/checkout/ConfirmationModal'
+import { GiftCardInput } from '@/components/checkout/GiftCardInput'
 import { createPaymentIntent } from '@/actions/checkout'
 import { formatPrice } from '@/lib/format'
 
@@ -20,10 +21,13 @@ export default function CheckoutPage() {
   const [customerEmail, setCustomerEmail] = useState('')
   const [initError, setInitError] = useState('')
   const [summaryOpen, setSummaryOpen] = useState(false)
+  const [giftCardCode, setGiftCardCode] = useState<string | null>(null)
+  const [giftCardBalance, setGiftCardBalance] = useState<number | null>(null)
 
   const hasProducts = items.some((i) => i.type === 'product')
   const shippingCost = hasProducts ? FLAT_RATE_SHIPPING : 0
-  const total = subtotal + shippingCost
+  const giftCardDeduction = giftCardBalance ? Math.min(giftCardBalance, subtotal + shippingCost) : 0
+  const total = subtotal + shippingCost - giftCardDeduction
 
   // Redirect to cart if empty
   useEffect(() => {
@@ -48,7 +52,7 @@ export default function CheckoutPage() {
         )
         if ('clientSecret' in result) {
           setClientSecret(result.clientSecret)
-        } else {
+        } else if ('error' in result) {
           setInitError(result.error)
         }
       } catch {
@@ -92,11 +96,28 @@ export default function CheckoutPage() {
       <div className="flex flex-col gap-12 lg:flex-row">
         {/* Checkout form -- left column */}
         <div className="flex-1 lg:w-[60%]">
+          {/* Gift card redemption */}
+          <div className="mb-6">
+            <GiftCardInput
+              onApply={(code, balance) => {
+                setGiftCardCode(code)
+                setGiftCardBalance(balance)
+              }}
+              onRemove={() => {
+                setGiftCardCode(null)
+                setGiftCardBalance(null)
+              }}
+              appliedCode={giftCardCode}
+              appliedBalance={giftCardDeduction > 0 ? giftCardDeduction : null}
+            />
+          </div>
+
           {clientSecret ? (
             <StripeElementsWrapper clientSecret={clientSecret}>
               <CheckoutForm
                 items={items}
                 onPaymentSuccess={handlePaymentSuccess}
+                giftCardCode={giftCardCode}
               />
             </StripeElementsWrapper>
           ) : (

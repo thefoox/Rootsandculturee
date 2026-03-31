@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { stripe } from '@/lib/stripe/server'
 import { adminDb } from '@/lib/firebase/admin'
 import { verifySession } from '@/lib/dal'
+import { validateGiftCard } from '@/lib/data/gift-cards'
 import type { CartItem } from '@/types'
 
 const shippingSchema = z.object({
@@ -34,8 +35,9 @@ const DEFAULT_SHIPPING_COST = 9900 // 99 NOK in ore
 
 export async function createPaymentIntent(
   formData: CheckoutFormData,
-  cartItems: CartItem[]
-): Promise<{ clientSecret: string } | { error: string }> {
+  cartItems: CartItem[],
+  giftCardCode?: string | null
+): Promise<{ clientSecret: string } | { error: string } | { coveredByGiftCard: true; giftCardCode: string; totalDeducted: number }> {
   if (!stripe) {
     return { error: 'Betalingssystemet er ikke konfigurert. Kontakt oss.' }
   }
@@ -51,6 +53,7 @@ export async function createPaymentIntent(
   // Determine if cart has products (needs shipping)
   const hasProducts = cartItems.some((item) => item.type === 'product')
   const hasExperiences = cartItems.some((item) => item.type === 'experience')
+  const hasGiftCards = cartItems.some((item) => item.type === 'giftcard')
 
   // Validate form data
   const schema = hasProducts ? shippingSchema : contactOnlySchema
@@ -68,6 +71,7 @@ export async function createPaymentIntent(
   // Re-validate cart items against Firestore
   const productItems: CartItem[] = []
   const experienceItems: CartItem[] = []
+  const giftCardItems: CartItem[] = []
 
   for (const item of cartItems) {
     if (item.type === 'product') {
@@ -84,6 +88,13 @@ export async function createPaymentIntent(
       }
       // Use verified Firestore price (prevents price manipulation)
       productItems.push({ ...item, price: product.price })
+    } else if (item.type === 'giftcard') {
+      // Gift card purchases: trust client price (validated min/max)
+      const amountNOK = item.price / 100
+      if (amountNOK < 100 || amountNOK > 10000) {
+        return { error: 'Ugyldig gavekort-belop.' }
+      }
+      giftCardItems.push(item)
     } else {
       // Experience booking
       if (!item.experienceDateId) {
@@ -106,18 +117,42 @@ export async function createPaymentIntent(
       if (!dateData?.isActive || dateData.availableSeats < item.quantity) {
         return { error: `Ingen ledige plasser for "${item.name}" pa valgt dato.` }
       }
-      // Use verified Firestore price
-      const verifiedPrice = dateData.priceOverride ?? expDoc.data()?.basePrice ?? item.price
+      // Use verified Firestore price (earlybird or priceOverride or basePrice)
+      const now = new Date()
+      let verifiedPrice = dateData.priceOverride ?? expDoc.data()?.basePrice ?? item.price
+      if (dateData.earlyBirdPrice && dateData.earlyBirdDeadline && dateData.earlyBirdDeadline.toDate() > now) {
+        verifiedPrice = dateData.earlyBirdPrice
+      }
       experienceItems.push({ ...item, price: verifiedPrice })
     }
   }
 
-  const allItems = [...productItems, ...experienceItems]
+  const allItems = [...productItems, ...experienceItems, ...giftCardItems]
 
   // Calculate total
   const subtotal = allItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const shippingCost = hasProducts ? DEFAULT_SHIPPING_COST : 0
-  const total = subtotal + shippingCost
+  let total = subtotal + shippingCost
+
+  // Apply gift card deduction
+  let giftCardDeduction = 0
+  if (giftCardCode) {
+    const gcResult = await validateGiftCard(giftCardCode)
+    if (!gcResult.valid) {
+      return { error: gcResult.error }
+    }
+    giftCardDeduction = Math.min(gcResult.balance, total)
+    total = total - giftCardDeduction
+
+    // If gift card covers the full amount, no Stripe payment needed
+    if (total <= 0) {
+      return {
+        coveredByGiftCard: true,
+        giftCardCode,
+        totalDeducted: giftCardDeduction,
+      }
+    }
+  }
 
   if (total <= 0) {
     return { error: 'Ugyldig totalbelop.' }
@@ -138,7 +173,7 @@ export async function createPaymentIntent(
       amount: total,
       currency: 'nok',
       metadata: {
-        type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : 'booking',
+        type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : hasGiftCards ? 'giftcard' : 'booking',
         orderItems: JSON.stringify(
           productItems.map((i) => ({
             productId: i.id,
@@ -161,11 +196,22 @@ export async function createPaymentIntent(
             slug: i.slug,
           }))
         ),
+        giftCardItems: JSON.stringify(
+          giftCardItems.map((i) => ({
+            amount: i.price,
+            name: i.name,
+          }))
+        ),
+        giftCardRecipientName: giftCardItems[0]?.experienceName || '',
+        giftCardRecipientEmail: giftCardItems[0]?.experienceDate || '',
+        giftCardMessage: giftCardItems[0]?.experienceDateId || '',
         customerEmail,
         customerId: customerId || '',
         shippingAddress,
         shippingCost: String(shippingCost),
         subtotal: String(subtotal),
+        giftCardCode: giftCardCode || '',
+        giftCardDeduction: String(giftCardDeduction),
       },
       receipt_email: customerEmail,
     })

@@ -264,6 +264,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 5,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: null,
+        earlyBirdDeadline: null,
       },
       {
         id: 'ed-1b',
@@ -273,6 +275,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 9,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: 89900, // 899 NOK (normal 1299)
+        earlyBirdDeadline: futureDate(30),
       },
       {
         id: 'ed-1c',
@@ -282,6 +286,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 12,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: 89900,
+        earlyBirdDeadline: futureDate(56),
       },
     ],
   ],
@@ -296,6 +302,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 2,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: null,
+        earlyBirdDeadline: null,
       },
       {
         id: 'ed-2b',
@@ -305,6 +313,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 7,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: null,
+        earlyBirdDeadline: null,
       },
     ],
   ],
@@ -319,6 +329,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 2,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: null,
+        earlyBirdDeadline: null,
       },
       {
         id: 'ed-3b',
@@ -328,6 +340,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 6,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: 49900, // 499 NOK earlybird for matopplevelse
+        earlyBirdDeadline: futureDate(20),
       },
       {
         id: 'ed-3c',
@@ -337,6 +351,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 10,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: 49900,
+        earlyBirdDeadline: futureDate(42),
       },
     ],
   ],
@@ -351,6 +367,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 2,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: null,
+        earlyBirdDeadline: null,
       },
       {
         id: 'ed-4b',
@@ -360,6 +378,8 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         availableSeats: 5,
         isActive: true,
         priceOverride: null,
+        earlyBirdPrice: null,
+        earlyBirdDeadline: null,
       },
     ],
   ],
