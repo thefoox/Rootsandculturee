@@ -55,7 +55,7 @@ export default function OmOssPage() {
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-forest/50" />
+        
         <div className="relative z-10 mx-auto max-w-[1200px] px-4 py-20 text-center md:px-8">
           <h1 className="font-heading text-[32px] font-bold leading-tight text-cream md:text-[42px]">
             Om Roots &amp; Culture
