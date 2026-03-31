@@ -40,7 +40,7 @@ export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps
         // Default state
         !isSelected && !isSoldOut && 'border-forest/15 bg-card motion-safe:hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]',
         // Selected state
-        isSelected && !isSoldOut && 'border-2 border-ember bg-ember',
+        isSelected && !isSoldOut && 'border-2 border-ember bg-forest',
         // Sold out state
         isSoldOut && 'cursor-not-allowed opacity-50 border-forest/15 bg-card',
       )}

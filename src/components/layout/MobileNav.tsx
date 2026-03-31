@@ -115,7 +115,7 @@ export function MobileNav({ onClose, onLoginClick }: MobileNavProps) {
       <div className="px-8 pb-8">
         <button
           type="button"
-          className="w-full rounded-md bg-ember py-3 text-center font-body text-[15px] font-medium text-cream"
+          className="w-full rounded-md bg-forest py-3 text-center font-body text-[15px] font-medium text-cream"
           onClick={onLoginClick || onClose}
         >
           Logg inn

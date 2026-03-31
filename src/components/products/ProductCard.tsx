@@ -24,7 +24,7 @@ export function ProductCard({ product }: ProductCardProps) {
       className="group block overflow-hidden rounded-xl border border-forest/8 bg-cream shadow-sm motion-safe:transition-all motion-safe:duration-150 hover:shadow-xl hover:-translate-y-1"
     >
       {/* Ember accent strip */}
-      <div className="h-[3px] bg-ember" />
+      <div className="h-[3px] bg-forest" />
 
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         {mainImage ? (

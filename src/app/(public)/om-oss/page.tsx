@@ -151,7 +151,7 @@ export default function OmOssPage() {
                 key={value.title}
                 className="rounded-xl bg-card p-8 text-center"
               >
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-ember/10">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-forest/10">
                   <value.icon
                     className="h-7 w-7 text-ember"
                     aria-hidden="true"
@@ -202,7 +202,7 @@ export default function OmOssPage() {
           </p>
           <Link
             href="/opplevelser"
-            className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-ember px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
+            className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
           >
             Se opplevelser
           </Link>

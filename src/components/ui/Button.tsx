@@ -12,7 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-ember text-cream hover:opacity-85 active:scale-[0.98]',
+  primary: 'bg-forest text-cream hover:bg-forest/90 active:scale-[0.98]',
   secondary: 'border-2 border-forest text-forest hover:opacity-85 active:scale-[0.98]',
   ghost: 'text-forest hover:opacity-85 active:scale-[0.98]',
 }

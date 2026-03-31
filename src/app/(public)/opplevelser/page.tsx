@@ -128,7 +128,7 @@ export default async function OpplevelserPage() {
           </p>
           <a
             href="#opplevelser"
-            className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-ember px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
+            className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
           >
             Se tilgjengelige opplevelser
           </a>
@@ -162,7 +162,7 @@ export default async function OpplevelserPage() {
             </div>
             <Link
               href="/opplevelser?kategori=retreat"
-              className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-md bg-ember px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
+              className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
             >
               Utforsk retreater
             </Link>
@@ -229,7 +229,7 @@ export default async function OpplevelserPage() {
                   className="flex items-start gap-3 text-[15px] leading-relaxed text-bark"
                 >
                   <span
-                    className="mt-1.5 block h-2 w-2 shrink-0 rounded-full bg-ember"
+                    className="mt-1.5 block h-2 w-2 shrink-0 rounded-full bg-forest"
                     aria-hidden="true"
                   />
                   {item}
@@ -238,7 +238,7 @@ export default async function OpplevelserPage() {
             </ul>
             <a
               href="#opplevelser"
-              className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-ember px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
+              className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
             >
               Se kommende opplevelser
             </a>

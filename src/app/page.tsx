@@ -56,7 +56,7 @@ export default async function Home() {
           </p>
           <Link
             href="/produkter"
-            className="mt-10 inline-block rounded-lg bg-ember px-8 py-3 font-body text-[15px] font-medium text-cream motion-safe:transition-colors motion-safe:duration-100 hover:bg-ember/90"
+            className="mt-10 inline-block rounded-lg bg-forest px-8 py-3 font-body text-[15px] font-medium text-cream motion-safe:transition-colors motion-safe:duration-100 hover:bg-forest/90"
           >
             Utforsk produkter
           </Link>

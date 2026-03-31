@@ -129,7 +129,7 @@ export function ImageUpload({
             aria-label="Laster opp bilder"
           >
             <div
-              className="h-full bg-ember transition-all"
+              className="h-full bg-forest transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
