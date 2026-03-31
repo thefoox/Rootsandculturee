@@ -88,7 +88,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 04-01-PLAN.md — Customer dashboard with tabs, order/booking history, profile editing
+- [x] 04-01-PLAN.md — Customer dashboard with tabs, order/booking history, profile editing
 
 **UI hint**: yes
 

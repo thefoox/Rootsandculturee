@@ -59,10 +59,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Kundeprofil (CUST)
 
-- [ ] **CUST-01**: Kundedashboard (/konto) med oversikt
-- [ ] **CUST-02**: Ordrehistorikk med status per ordre
-- [ ] **CUST-03**: Bookinghistorikk med kommende og tidligere bookinger
-- [ ] **CUST-04**: Profilredigering (navn, e-post, adresse)
+- [x] **CUST-01**: Kundedashboard (/konto) med oversikt
+- [x] **CUST-02**: Ordrehistorikk med status per ordre
+- [x] **CUST-03**: Bookinghistorikk med kommende og tidligere bookinger
+- [x] **CUST-04**: Profilredigering (navn, e-post, adresse)
 
 ### Tilgjengelighet (WCAG)
 
@@ -155,10 +155,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BOOK-08 | Phase 3 | Complete |
 | ADMN-05 | Phase 3 | Complete |
 | ADMN-06 | Phase 3 | Complete |
-| CUST-01 | Phase 4 | Pending |
-| CUST-02 | Phase 4 | Pending |
-| CUST-03 | Phase 4 | Pending |
-| CUST-04 | Phase 4 | Pending |
+| CUST-01 | Phase 4 | Complete |
+| CUST-02 | Phase 4 | Complete |
+| CUST-03 | Phase 4 | Complete |
+| CUST-04 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 42 total
