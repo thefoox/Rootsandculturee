@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
-import { ImageUpload } from '@/components/admin/ImageUpload'
+import { CmsImageUpload } from '@/components/admin/CmsImageUpload'
 import { toast } from 'sonner'
 import { ChevronDown, ChevronUp, GripVertical } from 'lucide-react'
 import type { PageSection, SectionItem, ProductImage } from '@/types'
@@ -175,30 +175,10 @@ export default function EditPageContentPage() {
 
                   {/* Image */}
                   {(section.type === 'hero' || section.type === 'text-image' || section.type === 'cta' || section.type === 'contact-info') && (
-                    <div>
-                      <label className="mb-1 block text-[13px] font-medium text-forest">Bilde</label>
-                      {section.image?.url && (
-                        <div className="mb-3 overflow-hidden rounded-lg border border-forest/10">
-                          <img
-                            src={section.image.url}
-                            alt={section.image.alt || ''}
-                            className="h-48 w-full object-cover"
-                          />
-                        </div>
-                      )}
-                      <Input
-                        label="Bilde-URL"
-                        value={section.image?.url || ''}
-                        onChange={(e) => updateSection(section.id, { image: { url: e.target.value, alt: section.image?.alt || '' } })}
-                      />
-                      <div className="mt-2">
-                        <Input
-                          label="Alt-tekst"
-                          value={section.image?.alt || ''}
-                          onChange={(e) => updateSection(section.id, { image: { url: section.image?.url || '', alt: e.target.value } })}
-                        />
-                      </div>
-                    </div>
+                    <CmsImageUpload
+                      image={section.image}
+                      onChange={(img) => updateSection(section.id, { image: img })}
+                    />
                   )}
 
                   {/* CTA */}
@@ -242,22 +222,11 @@ export default function EditPageContentPage() {
                               />
                             </div>
                             {item.image && (
-                              <div>
-                                {item.image.url && (
-                                  <div className="mb-2 overflow-hidden rounded-lg border border-forest/10">
-                                    <img
-                                      src={item.image.url}
-                                      alt={item.image.alt || ''}
-                                      className="h-32 w-full object-cover"
-                                    />
-                                  </div>
-                                )}
-                                <Input
-                                  label="Bilde-URL"
-                                  value={item.image.url}
-                                  onChange={(e) => updateSectionItem(section.id, i, { image: { url: e.target.value, alt: item.image?.alt || '' } })}
-                                />
-                              </div>
+                              <CmsImageUpload
+                                image={item.image}
+                                onChange={(img) => updateSectionItem(section.id, i, { image: img })}
+                                label="Bilde"
+                              />
                             )}
                             {item.icon !== undefined && (
                               <Input

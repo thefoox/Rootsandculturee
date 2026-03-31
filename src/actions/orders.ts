@@ -1,8 +1,9 @@
 'use server'
 
 import { adminDb } from '@/lib/firebase/admin'
+import { verifySession } from '@/lib/dal'
 import { unstable_cache, revalidateTag } from 'next/cache'
-import type { Order, OrderStatus } from '@/types'
+import type { Order, OrderStatus, ShippingAddress, OrderNote } from '@/types'
 
 function docToOrder(id: string, data: Record<string, unknown>): Order {
   return {
@@ -95,4 +96,110 @@ export async function createOrder(
 
   revalidateTag('orders', 'max')
   return docRef.id
+}
+
+export async function updateOrderShipping(
+  orderId: string,
+  shipping: ShippingAddress
+): Promise<{ success: boolean; error?: string }> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') {
+    return { success: false, error: 'Ingen tilgang.' }
+  }
+  if (!adminDb) return { success: false, error: 'Database ikke tilgjengelig.' }
+
+  try {
+    await adminDb.collection('orders').doc(orderId).update({ shipping })
+    revalidateTag('orders', 'max')
+    return { success: true }
+  } catch {
+    return { success: false, error: 'Kunne ikke oppdatere leveringsadresse.' }
+  }
+}
+
+export async function addOrderNote(
+  orderId: string,
+  text: string
+): Promise<{ success: boolean; error?: string }> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') {
+    return { success: false, error: 'Ingen tilgang.' }
+  }
+  if (!adminDb) return { success: false, error: 'Database ikke tilgjengelig.' }
+  if (!text.trim()) return { success: false, error: 'Notatet kan ikke vaere tomt.' }
+
+  try {
+    await adminDb
+      .collection('orders')
+      .doc(orderId)
+      .collection('notes')
+      .add({
+        text: text.trim(),
+        createdBy: session.email,
+        createdAt: new Date(),
+      })
+    return { success: true }
+  } catch {
+    return { success: false, error: 'Kunne ikke legge til notat.' }
+  }
+}
+
+export async function getOrderNotes(orderId: string): Promise<OrderNote[]> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') return []
+  if (!adminDb) return []
+
+  const snapshot = await adminDb
+    .collection('orders')
+    .doc(orderId)
+    .collection('notes')
+    .orderBy('createdAt', 'desc')
+    .limit(50)
+    .get()
+
+  return snapshot.docs.map((doc) => {
+    const data = doc.data()
+    return {
+      id: doc.id,
+      text: (data.text as string) || '',
+      createdBy: (data.createdBy as string) || '',
+      createdAt: data.createdAt
+        ? new Date((data.createdAt as { _seconds: number })._seconds * 1000)
+        : new Date(),
+    }
+  })
+}
+
+export async function getOrderStats(): Promise<{
+  orderCount: number
+  totalRevenue: number
+  averageOrder: number
+  bookingCount: number
+  customerCount: number
+}> {
+  if (!adminDb) {
+    return { orderCount: 0, totalRevenue: 0, averageOrder: 0, bookingCount: 0, customerCount: 0 }
+  }
+
+  const [ordersSnap, bookingsSnap, usersSnap] = await Promise.all([
+    adminDb.collection('orders').get(),
+    adminDb.collection('bookings').count().get(),
+    adminDb.collection('users').count().get(),
+  ])
+
+  let totalRevenue = 0
+  for (const doc of ordersSnap.docs) {
+    totalRevenue += (doc.data().total as number) || 0
+  }
+
+  const orderCount = ordersSnap.size
+  const averageOrder = orderCount > 0 ? Math.round(totalRevenue / orderCount) : 0
+
+  return {
+    orderCount,
+    totalRevenue,
+    averageOrder,
+    bookingCount: bookingsSnap.data().count,
+    customerCount: usersSnap.data().count,
+  }
 }

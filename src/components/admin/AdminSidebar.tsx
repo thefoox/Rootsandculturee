@@ -9,6 +9,7 @@ import {
   Layout,
   ShoppingCart,
   CalendarCheck,
+  Users,
   ArrowLeft,
   LogOut,
   X,
@@ -26,6 +27,7 @@ const contentNavItems = [
 const orderNavItems = [
   { href: '/admin/ordrer', label: 'Ordrer', icon: ShoppingCart },
   { href: '/admin/bookinger', label: 'Bookinger', icon: CalendarCheck },
+  { href: '/admin/kunder', label: 'Kunder', icon: Users },
 ]
 
 interface AdminSidebarProps {
@@ -91,8 +93,8 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
         </ul>
 
         <div className="px-4 pb-2 pt-6">
-          <span className="text-[13px] uppercase tracking-wider text-forest">
-            Ordre
+          <span className="text-[13px] uppercase tracking-wider text-rust">
+            Ordre & Kunder
           </span>
         </div>
         <ul className="flex flex-col">
