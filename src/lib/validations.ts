@@ -32,7 +32,6 @@ export const experienceSchema = z.object({
   basePrice: z.number().int().positive(),
   location: z.string().min(1, 'Dette feltet er pakrevd.'),
   durationText: z.string().min(1, 'Dette feltet er pakrevd.'),
-  difficulty: z.enum(['lett', 'moderat', 'krevende']),
   whatIsIncluded: z.string(),
   cancellationPolicy: z.string(),
   whatToBring: z.string(),

@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getExperienceBySlug, getExperiences, getExperienceDates } from '@/lib/data/experiences'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
-import { DifficultyBadge } from '@/components/experiences/DifficultyBadge'
 import { DateCardPicker } from '@/components/experiences/DateCardPicker'
 import { formatPrice } from '@/lib/format'
 import { experienceJsonLd } from '@/lib/json-ld'
@@ -105,7 +104,6 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             <span className="font-heading text-h3 font-bold text-forest">
               {formatPrice(experience.basePrice)}
             </span>
-            <DifficultyBadge difficulty={experience.difficulty} />
             <span className="flex items-center gap-1.5 font-body text-body">
               <Clock className="h-4 w-4" aria-hidden="true" />
               {experience.durationText}

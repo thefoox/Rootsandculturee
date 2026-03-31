@@ -46,8 +46,6 @@ export interface Product {
 // Phase 2: Experience types
 
 export type ExperienceCategory = 'retreat' | 'kurs' | 'matopplevelse'
-export type Difficulty = 'lett' | 'moderat' | 'krevende'
-
 export interface Experience {
   id: string
   slug: string
@@ -58,7 +56,6 @@ export interface Experience {
   basePrice: number // NOK in ore
   location: string
   durationText: string
-  difficulty: Difficulty
   whatIsIncluded: string[]
   cancellationPolicy: string
   whatToBring: string

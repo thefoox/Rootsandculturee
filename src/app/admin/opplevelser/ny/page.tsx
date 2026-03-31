@@ -11,7 +11,7 @@ import { FormError } from '@/components/ui/FormError'
 import { generateSlug } from '@/lib/validations'
 import { createExperience } from '@/actions/experiences'
 import { toast } from 'sonner'
-import type { ProductImage, ExperienceCategory, Difficulty } from '@/types'
+import type { ProductImage, ExperienceCategory } from '@/types'
 
 const categoryOptions: { value: ExperienceCategory; label: string }[] = [
   { value: 'retreat', label: 'Retreat' },
@@ -19,11 +19,6 @@ const categoryOptions: { value: ExperienceCategory; label: string }[] = [
   { value: 'matopplevelse', label: 'Matopplevelse' },
 ]
 
-const difficultyOptions: { value: Difficulty; label: string }[] = [
-  { value: 'lett', label: 'Lett' },
-  { value: 'moderat', label: 'Moderat' },
-  { value: 'krevende', label: 'Krevende' },
-]
 
 export default function NewExperiencePage() {
   const router = useRouter()
@@ -31,7 +26,6 @@ export default function NewExperiencePage() {
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState<ExperienceCategory>('retreat')
-  const [difficulty, setDifficulty] = useState<Difficulty>('lett')
   const [location, setLocation] = useState('')
   const [durationText, setDurationText] = useState('')
   const [images, setImages] = useState<ProductImage[]>([])
@@ -59,7 +53,6 @@ export default function NewExperiencePage() {
     formData.set('slug', slug)
     formData.set('description', description)
     formData.set('category', category)
-    formData.set('difficulty', difficulty)
     formData.set('location', location)
     formData.set('durationText', durationText)
     formData.set('images', JSON.stringify(images))
@@ -137,29 +130,6 @@ export default function NewExperiencePage() {
                 />
               )}
             </div>
-            <fieldset>
-              <legend className="mb-2 text-label font-normal tracking-wide text-forest">
-                Vanskelighetsgrad
-              </legend>
-              <div className="flex gap-6">
-                {difficultyOptions.map((opt) => (
-                  <label
-                    key={opt.value}
-                    className="flex min-h-[44px] items-center gap-2 text-body text-forest"
-                  >
-                    <input
-                      type="radio"
-                      name="difficulty"
-                      value={opt.value}
-                      checked={difficulty === opt.value}
-                      onChange={() => setDifficulty(opt.value)}
-                      className="h-4 w-4 accent-forest"
-                    />
-                    {opt.label}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
             <Input
               label="Sted"
               value={location}

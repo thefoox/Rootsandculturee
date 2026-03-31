@@ -1,60 +1,52 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // --- Helper functions ---
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-    function isAdmin() {
-      return isAuthenticated() && request.auth.token.admin == true;
-    }
-    function isOwner(userId) {
-      return isAuthenticated() && request.auth.uid == userId;
-    }
-
-    // --- Products: public read (published only), admin write ---
     match /products/{productId} {
       allow read: if resource.data.publishedAt != null;
-      allow write: if isAdmin();
+      allow write: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // --- Experiences: public read (published only), admin write ---
     match /experiences/{experienceId} {
       allow read: if resource.data.publishedAt != null;
-      allow write: if isAdmin();
+      allow write: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
 
-      // Dates subcollection: public read (availability), admin write
-      // Atomic seat updates happen server-side via Admin SDK
       match /dates/{dateId} {
         allow read: if true;
-        allow write: if isAdmin();
+        allow write: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
       }
     }
 
-    // --- Orders: owner read, no client write (Admin SDK only) ---
-    match /orders/{orderId} {
-      allow read: if isOwner(resource.data.customerId) || isAdmin();
-      allow write: if false;
+    match /articles/{articleId} {
+      allow read: if resource.data.publishedAt != null || (resource.data.status == 'published');
+      allow write: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // --- Bookings: owner read, no client write (Admin SDK only) ---
-    match /bookings/{bookingId} {
-      allow read: if isOwner(resource.data.customerId) || isAdmin();
-      allow write: if false;
+    match /siteContent/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // --- Users: own profile CRUD, admin full access ---
     match /users/{userId} {
-      allow read, update: if isOwner(userId);
-      allow create: if isOwner(userId);
-      allow read, write: if isAdmin();
+      allow read, update: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
     }
 
-    // --- Blog: public read (published only), admin write ---
-    match /blog/{articleId} {
-      allow read: if resource.data.status == 'published';
-      allow write: if isAdmin();
+    match /orders/{orderId} {
+      allow read: if request.auth != null && (
+        resource.data.customerId == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow write: if false;
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if request.auth != null && (
+        resource.data.customerId == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow write: if false;
     }
   }
 }

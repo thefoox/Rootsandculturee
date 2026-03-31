@@ -150,7 +150,7 @@ export const mockExperiences: Experience[] = [
     basePrice: 349900,
     location: 'Nordmarka, Oslo',
     durationText: '2 dager',
-    difficulty: 'lett',
+
     whatIsIncluded: [
       'Overnatting i skogshytte',
       'Alle måltider med lokale råvarer',
@@ -175,7 +175,7 @@ export const mockExperiences: Experience[] = [
     basePrice: 149900,
     location: 'Jotunheimen',
     durationText: '1 dag',
-    difficulty: 'moderat',
+
     whatIsIncluded: [
       'Guidet urtesamling',
       'Lunsj laget av sanket mat',
@@ -199,7 +199,7 @@ export const mockExperiences: Experience[] = [
     basePrice: 189900,
     location: 'Voss, Vestland',
     durationText: '1 dag',
-    difficulty: 'lett',
+
     whatIsIncluded: [
       'Matlagingskurs med kokk',
       'Alle råvarer',
@@ -224,7 +224,7 @@ export const mockExperiences: Experience[] = [
     basePrice: 599900,
     location: 'Sognefjorden, Vestland',
     durationText: '3 dager',
-    difficulty: 'moderat',
+
     whatIsIncluded: [
       'Overnatting i lavvo',
       'Alle måltider (bålmat)',
