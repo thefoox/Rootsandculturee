@@ -45,10 +45,10 @@ export function DataTable<T extends { id: string }>({
           className="h-12 w-12 text-forest"
           aria-hidden="true"
         />
-        <h3 className="mt-4 font-heading text-[20px] font-bold text-forest">
+        <h3 className="mt-4 font-heading text-h4 font-bold text-forest">
           {emptyState.heading}
         </h3>
-        <p className="mt-2 text-[15px] text-body">{emptyState.body}</p>
+        <p className="mt-2 text-body">{emptyState.body}</p>
         <Link href={emptyState.ctaHref} className="mt-4">
           <Button variant="primary">{emptyState.ctaLabel}</Button>
         </Link>
@@ -66,7 +66,7 @@ export function DataTable<T extends { id: string }>({
               <th
                 key={i}
                 scope="col"
-                className="px-4 text-[13px] font-normal uppercase tracking-wide text-forest"
+                className="px-4 text-label font-normal uppercase tracking-wide text-forest"
                 style={{
                   width: col.width,
                   textAlign: col.align || 'left',
@@ -78,7 +78,7 @@ export function DataTable<T extends { id: string }>({
             {(editHref || onDelete) && (
               <th
                 scope="col"
-                className="w-[120px] px-4 text-[13px] font-normal uppercase tracking-wide text-forest"
+                className="w-[120px] px-4 text-label font-normal uppercase tracking-wide text-forest"
               >
                 Handlinger
               </th>
@@ -101,7 +101,7 @@ export function DataTable<T extends { id: string }>({
                   return (
                     <td
                       key={i}
-                      className="px-4 py-2 text-[15px] text-forest"
+                      className="px-4 py-2 text-body text-forest"
                       style={{
                         width: col.width,
                         textAlign: col.align || 'left',

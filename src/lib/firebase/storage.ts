@@ -23,6 +23,10 @@ export async function uploadImage(
     throw new Error('Filen er for stor. Maks 5 MB per bilde.')
   }
 
+  if (!storage) {
+    throw new Error('Firebase Storage er ikke konfigurert.')
+  }
+
   const storageRef = ref(storage, path)
   const uploadTask = uploadBytesResumable(storageRef, file)
 
@@ -49,6 +53,9 @@ export async function uploadImage(
 }
 
 export async function deleteImage(path: string): Promise<void> {
+  if (!storage) {
+    throw new Error('Firebase Storage er ikke konfigurert.')
+  }
   const { deleteObject, ref: storageRefFn } = await import('firebase/storage')
   return deleteObject(storageRefFn(storage, path))
 }

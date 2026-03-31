@@ -86,7 +86,7 @@ export default function BookingsListPage() {
       header: 'Kode',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] tracking-[0.04em] text-body">
+        <span className="font-body text-label tracking-[0.04em] text-body">
           {row.confirmationCode}
         </span>
       ),
@@ -94,7 +94,7 @@ export default function BookingsListPage() {
     {
       header: 'Opplevelse',
       accessor: (row) => (
-        <span className="font-body text-[15px] text-forest">
+        <span className="font-body text-body text-forest">
           {row.experienceName}
         </span>
       ),
@@ -103,7 +103,7 @@ export default function BookingsListPage() {
       header: 'Dato',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">
+        <span className="font-body text-label text-body">
           {formatDateMedium(row.date instanceof Date ? row.date : new Date(row.date))}
         </span>
       ),
@@ -112,7 +112,7 @@ export default function BookingsListPage() {
       header: 'Kunde',
       width: '160px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">
+        <span className="font-body text-label text-body">
           {row.customerEmail}
         </span>
       ),
@@ -149,7 +149,7 @@ export default function BookingsListPage() {
           { label: 'Bookinger' },
         ]}
       />
-      <h1 className="mb-6 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-6 font-heading text-h2 font-bold text-forest">
         Bookinger
       </h1>
 

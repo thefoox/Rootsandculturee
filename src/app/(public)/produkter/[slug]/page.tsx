@@ -52,11 +52,11 @@ export default async function ProduktDetailPage({ params }: PageProps) {
           <ProductGallery images={product.images} />
         </div>
         <div className="lg:w-[40%]">
-          <h1 className="font-heading text-[28px] font-bold text-forest">
+          <h1 className="font-heading text-h2 font-bold text-forest">
             {product.name}
           </h1>
-          <PriceBadge priceInOre={product.price} className="mt-4 block text-[20px]" />
-          <p className="mt-6 font-body text-[15px] leading-[1.5] text-forest">
+          <PriceBadge priceInOre={product.price} className="mt-4 block text-h4" />
+          <p className="mt-6 font-body text-body leading-[1.5] text-forest">
             {product.description}
           </p>
           <div className="mt-8">

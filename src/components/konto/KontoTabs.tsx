@@ -31,7 +31,7 @@ export function KontoTabs() {
               key={tab.href}
               href={tab.href}
               className={cn(
-                'min-h-[44px] flex items-center px-4 py-3 font-body text-[15px] whitespace-nowrap transition-colors duration-100',
+                'min-h-[44px] flex items-center px-4 py-3 font-body text-body whitespace-nowrap transition-colors duration-100',
                 active
                   ? 'border-b-2 border-forest text-forest font-medium'
                   : 'text-body hover:text-forest'

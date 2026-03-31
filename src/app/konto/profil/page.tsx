@@ -14,7 +14,7 @@ export default async function ProfilPage() {
 
   return (
     <div>
-      <h2 className="font-heading text-[20px] font-bold text-forest mb-6">
+      <h2 className="font-heading text-h4 font-bold text-forest mb-6">
         Profilinnstillinger
       </h2>
 

@@ -40,10 +40,10 @@ export default async function KursPage() {
         <div className="absolute inset-0 bg-black/25" />
         
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-14 md:px-8 md:pb-20">
-          <h1 className="max-w-xl font-heading text-[36px] font-bold leading-[1.1] text-cream md:text-[48px]">
+          <h1 className="max-w-xl font-heading text-h1 font-bold leading-[1.1] text-cream ">
             Kurs
           </h1>
-          <p className="mt-3 max-w-lg text-[16px] leading-relaxed text-cream/85">
+          <p className="mt-3 max-w-lg text-body leading-relaxed text-cream/85">
             Lær å sanke, lage mat og opplev norsk natur på nært hold med erfarne guider.
           </p>
         </div>
@@ -56,8 +56,8 @@ export default async function KursPage() {
 
         <section className="grid gap-10 py-12 md:grid-cols-5 md:items-start md:gap-16 md:py-16">
           <div className="md:col-span-3">
-            <h2 className="font-heading text-[24px] font-bold text-forest">Om våre kurs</h2>
-            <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-body">
+            <h2 className="font-heading text-h3 font-bold text-forest">Om våre kurs</h2>
+            <div className="mt-4 space-y-3 text-body leading-relaxed text-body">
               <p>Våre kurs gir deg praktisk kunnskap om norsk natur og tradisjoner. Med erfarne guider og botanikere lærer du å identifisere ville urter, tilberede mat fra naturen, og forstå økosystemene rundt deg.</p>
               <p>Kursene er tilpasset alle nivåer — fra nybegynnere til de som vil fordype seg. Alt utstyr og materialer er inkludert.</p>
             </div>
@@ -74,7 +74,7 @@ export default async function KursPage() {
         </section>
 
         <section className="border-t border-forest/10 py-12 md:py-16">
-          <h2 className="font-heading text-[24px] font-bold text-forest">Tilgjengelige kurs</h2>
+          <h2 className="font-heading text-h3 font-bold text-forest">Tilgjengelige kurs</h2>
           <div className="mt-8">
             {kursWithDates.length > 0 ? (
               <ExperienceList experiences={kursWithDates} />

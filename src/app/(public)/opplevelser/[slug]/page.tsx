@@ -67,10 +67,10 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
           
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
             <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-              <h1 className="font-heading text-[32px] md:text-[42px] font-bold text-cream leading-tight">
+              <h1 className="font-heading text-h1  font-bold text-cream leading-tight">
                 {experience.name}
               </h1>
-              <div className="mt-3 flex flex-wrap items-center gap-4 text-cream/90 font-body text-[14px]">
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-cream/90 font-body text-body">
                 <span className="flex items-center gap-1.5">
                   <MapPin className="h-4 w-4" aria-hidden="true" />
                   {experience.location}
@@ -97,15 +97,15 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             />
           </div>
           <div className="flex flex-wrap items-center gap-6 py-5">
-            <span className="font-heading text-[24px] font-bold text-forest">
+            <span className="font-heading text-h3 font-bold text-forest">
               {formatPrice(experience.basePrice)}
             </span>
             <DifficultyBadge difficulty={experience.difficulty} />
-            <span className="flex items-center gap-1.5 font-body text-[14px] text-body">
+            <span className="flex items-center gap-1.5 font-body text-body">
               <Clock className="h-4 w-4" aria-hidden="true" />
               {experience.durationText}
             </span>
-            <span className="flex items-center gap-1.5 font-body text-[14px] text-body">
+            <span className="flex items-center gap-1.5 font-body text-body">
               <MapPin className="h-4 w-4" aria-hidden="true" />
               {experience.location}
             </span>
@@ -121,10 +121,10 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             <div className="lg:w-[65%]">
               {/* Description */}
               <section>
-                <h2 className="font-heading text-[22px] font-bold text-forest">
+                <h2 className="font-heading text-h3 font-bold text-forest">
                   Om opplevelsen
                 </h2>
-                <p className="mt-4 font-body text-[15px] leading-[1.7] text-forest">
+                <p className="mt-4 font-body text-body leading-[1.7] text-forest">
                   {experience.description}
                 </p>
               </section>
@@ -132,7 +132,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               {/* What is included */}
               {experience.whatIsIncluded.length > 0 && (
                 <section className="mt-10">
-                  <h2 className="font-heading text-[20px] font-bold text-forest">
+                  <h2 className="font-heading text-h4 font-bold text-forest">
                     Hva er inkludert
                   </h2>
                   <ul className="mt-4 space-y-2.5">
@@ -142,7 +142,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
                           className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-badge-easy"
                           aria-hidden="true"
                         />
-                        <span className="font-body text-[15px] text-forest">
+                        <span className="font-body text-body text-forest">
                           {item}
                         </span>
                       </li>
@@ -154,11 +154,11 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               {/* What to bring */}
               {experience.whatToBring && (
                 <section className="mt-10">
-                  <h2 className="flex items-center gap-2 font-heading text-[20px] font-bold text-forest">
+                  <h2 className="flex items-center gap-2 font-heading text-h4 font-bold text-forest">
                     <Backpack className="h-5 w-5 text-body" aria-hidden="true" />
                     Hva du bor ta med
                   </h2>
-                  <p className="mt-4 font-body text-[15px] leading-[1.7] text-forest">
+                  <p className="mt-4 font-body text-body leading-[1.7] text-forest">
                     {experience.whatToBring}
                   </p>
                 </section>
@@ -167,11 +167,11 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               {/* Cancellation policy */}
               {experience.cancellationPolicy && (
                 <section className="mt-10">
-                  <h2 className="flex items-center gap-2 font-heading text-[20px] font-bold text-forest">
+                  <h2 className="flex items-center gap-2 font-heading text-h4 font-bold text-forest">
                     <ShieldCheck className="h-5 w-5 text-body" aria-hidden="true" />
                     Kanselleringsvilkar
                   </h2>
-                  <p className="mt-4 font-body text-[15px] leading-[1.7] text-forest">
+                  <p className="mt-4 font-body text-body leading-[1.7] text-forest">
                     {experience.cancellationPolicy}
                   </p>
                 </section>
@@ -182,7 +182,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             <div className="lg:w-[35%]">
               <div className="lg:sticky lg:top-8">
                 <div className="rounded-xl border border-forest/8 bg-card p-6">
-                  <h2 className="font-heading text-[18px] font-bold text-forest">
+                  <h2 className="font-heading text-lg font-bold text-forest">
                     Bestill opplevelse
                   </h2>
                   <DateCardPicker
@@ -204,7 +204,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
       {galleryImages.length > 0 && (
         <div className="bg-card">
           <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-8 md:py-16">
-            <h2 className="font-heading text-[22px] font-bold text-forest">
+            <h2 className="font-heading text-h3 font-bold text-forest">
               Bilder
             </h2>
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -230,16 +230,16 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
       {/* ── Location Section ── */}
       <div className="bg-cream">
         <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-8 md:py-16">
-          <h2 className="font-heading text-[22px] font-bold text-forest">
+          <h2 className="font-heading text-h3 font-bold text-forest">
             Sted
           </h2>
           <div className="mt-4 flex items-start gap-3">
             <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-forest" aria-hidden="true" />
             <div>
-              <p className="font-body text-[16px] font-medium text-forest">
+              <p className="font-body text-body font-medium text-forest">
                 {experience.location}
               </p>
-              <p className="mt-2 font-body text-[15px] leading-[1.7] text-body">
+              <p className="mt-2 font-body text-body leading-[1.7] text-body">
                 Opplevelsen finner sted i {experience.location}. Detaljert
                 veibeskrivelse og oppmotested sendes per e-post etter
                 bekreftet booking.

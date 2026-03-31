@@ -10,7 +10,7 @@ export function NewsletterSignup() {
 
   if (state.success) {
     return (
-      <div aria-live="polite" className="text-[14px] text-forest/80">
+      <div aria-live="polite" className="text-body text-forest/80">
         {state.message}
       </div>
     )
@@ -29,18 +29,18 @@ export function NewsletterSignup() {
           placeholder="din@epost.no"
           required
           autoComplete="email"
-          className="min-h-[44px] flex-1 rounded-md border border-forest/20 bg-card px-3 py-2 text-[15px] text-forest placeholder:text-body/60 focus:border-forest focus:outline-none"
+          className="min-h-[44px] flex-1 rounded-md border border-forest/20 bg-card px-3 py-2 text-body text-forest placeholder:text-body/60 focus:border-forest focus:outline-none"
         />
         <button
           type="submit"
           disabled={pending}
-          className="min-h-[44px] rounded-md bg-forest px-4 py-2 text-[15px] font-medium text-cream transition-colors hover:bg-forest/90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-[44px] rounded-md bg-forest px-4 py-2 text-body font-medium text-cream transition-colors hover:bg-forest/90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {pending ? 'Sender...' : 'Meld pa'}
         </button>
       </div>
       {state.error && (
-        <p role="alert" aria-live="polite" className="text-[13px] text-destructive">
+        <p role="alert" aria-live="polite" className="text-label text-destructive">
           {state.error}
         </p>
       )}

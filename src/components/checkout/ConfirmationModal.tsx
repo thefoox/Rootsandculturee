@@ -136,7 +136,7 @@ export function ConfirmationModal({
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-forest" aria-hidden="true" />
-              <p className="mt-4 text-[15px] text-forest" aria-live="polite">
+              <p className="mt-4 text-body text-forest" aria-live="polite">
                 Bekrefter betaling...
               </p>
             </div>
@@ -151,7 +151,7 @@ export function ConfirmationModal({
                 <h2
                   ref={headingRef}
                   id="confirmation-heading"
-                  className="mt-2 font-heading text-[20px] font-bold text-success"
+                  className="mt-2 font-heading text-h4 font-bold text-success"
                   tabIndex={-1}
                 >
                   {headingText}
@@ -162,15 +162,15 @@ export function ConfirmationModal({
               {hasOrder && order && (
                 <div className="mb-6 space-y-3">
                   <div>
-                    <span className="text-[13px] text-body">Ordrenummer:</span>
-                    <code className="ml-2 rounded bg-card px-2 py-1 text-[15px] tracking-wider">
+                    <span className="text-label text-body">Ordrenummer:</span>
+                    <code className="ml-2 rounded bg-card px-2 py-1 text-body tracking-wider">
                       {order.id}
                     </code>
                   </div>
 
                   <div className="space-y-1">
                     {order.items.map((item, i) => (
-                      <div key={i} className="flex justify-between text-[15px] text-forest">
+                      <div key={i} className="flex justify-between text-body text-forest">
                         <span>{item.name} x{item.quantity}</span>
                         <span className="text-forest">{formatPrice(item.price * item.quantity)}</span>
                       </div>
@@ -178,7 +178,7 @@ export function ConfirmationModal({
                   </div>
 
                   {order.shipping && (
-                    <div className="text-[13px] text-body">
+                    <div className="text-label text-body">
                       <p>Leveres til:</p>
                       <p>{order.shipping.fullName}</p>
                       <p>{order.shipping.address}</p>
@@ -186,7 +186,7 @@ export function ConfirmationModal({
                     </div>
                   )}
 
-                  <div className="flex justify-between border-t border-forest/12 pt-3 text-[15px] text-forest">
+                  <div className="flex justify-between border-t border-forest/12 pt-3 text-body text-forest">
                     <span>Totalt betalt</span>
                     <span className="text-forest">{formatPrice(order.total)}</span>
                   </div>
@@ -198,16 +198,16 @@ export function ConfirmationModal({
                 bookings.map((booking, i) => (
                   <div key={i} className="mb-6 space-y-3">
                     <div>
-                      <span className="text-[13px] text-body">Bekreftelseskode:</span>
-                      <code className="ml-2 rounded bg-card px-2 py-1 text-[15px] tracking-wider">
+                      <span className="text-label text-body">Bekreftelseskode:</span>
+                      <code className="ml-2 rounded bg-card px-2 py-1 text-body tracking-wider">
                         {booking.confirmationCode}
                       </code>
                     </div>
-                    <p className="text-[15px] text-forest">{booking.experienceName}</p>
-                    <p className="text-[13px] text-body">
+                    <p className="text-body text-forest">{booking.experienceName}</p>
+                    <p className="text-label text-body">
                       Dato: {formatDate(new Date(booking.date))}
                     </p>
-                    <p className="text-[15px] text-forest">
+                    <p className="text-body text-forest">
                       {formatPrice(booking.total)}
                     </p>
                     {booking.whatToBring && (
@@ -217,7 +217,7 @@ export function ConfirmationModal({
                 ))}
 
               {/* Email notice */}
-              <div className="mb-6 flex items-center gap-2 text-[13px] text-body">
+              <div className="mb-6 flex items-center gap-2 text-label text-body">
                 <MailOpen className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
                 <span>En bekreftelse er sendt til {customerEmail}.</span>
               </div>

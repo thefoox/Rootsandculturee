@@ -144,7 +144,7 @@ export default function OrderDetailPage() {
             { label: 'Laster...' },
           ]}
         />
-        <p className="font-body text-[15px] text-body">Laster ordre...</p>
+        <p className="font-body text-body">Laster ordre...</p>
       </div>
     )
   }
@@ -162,7 +162,7 @@ export default function OrderDetailPage() {
       />
 
       <div className="mb-8 flex items-start justify-between">
-        <h1 className="font-heading text-[28px] font-bold text-forest">
+        <h1 className="font-heading text-h2 font-bold text-forest">
           Ordre {shortId}
         </h1>
         <div className="flex gap-2">
@@ -175,14 +175,14 @@ export default function OrderDetailPage() {
 
       {/* Bestillingsoversikt */}
       <section className="mb-8 rounded-lg border border-forest/12 bg-card p-6">
-        <h2 className="font-heading text-[20px] font-bold text-forest">
+        <h2 className="font-heading text-h4 font-bold text-forest">
           Bestillingsoversikt
         </h2>
         <ul className="mt-4 space-y-3">
           {order.items.map((item, i) => (
             <li
               key={i}
-              className="flex items-center justify-between font-body text-[15px]"
+              className="flex items-center justify-between font-body text-body"
             >
               <span className="text-forest">
                 {item.name} x {item.quantity}
@@ -194,17 +194,17 @@ export default function OrderDetailPage() {
           ))}
         </ul>
         <div className="mt-4 border-t border-forest/12 pt-4">
-          <div className="flex justify-between font-body text-[15px]">
+          <div className="flex justify-between font-body text-body">
             <span className="text-body">Subtotal</span>
             <span className="text-forest">{formatPrice(order.subtotal)}</span>
           </div>
-          <div className="mt-1 flex justify-between font-body text-[15px]">
+          <div className="mt-1 flex justify-between font-body text-body">
             <span className="text-body">Frakt</span>
             <span className="text-forest">
               {formatPrice(order.shippingCost)}
             </span>
           </div>
-          <div className="mt-2 flex justify-between font-body text-[15px] font-medium">
+          <div className="mt-2 flex justify-between font-body text-body font-medium">
             <span className="text-forest">Totalt</span>
             <span className="text-forest">{formatPrice(order.total)}</span>
           </div>
@@ -214,7 +214,7 @@ export default function OrderDetailPage() {
       {/* Kundeinfo med redigerbar leveringsadresse */}
       <section className="mb-8 rounded-lg border border-forest/12 bg-card p-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-heading text-[20px] font-bold text-forest">
+          <h2 className="font-heading text-h4 font-bold text-forest">
             Kundeinfo
           </h2>
           {order.shipping && !editingShipping && (
@@ -228,7 +228,7 @@ export default function OrderDetailPage() {
             </Button>
           )}
         </div>
-        <div className="mt-4 space-y-2 font-body text-[15px] text-forest">
+        <div className="mt-4 space-y-2 font-body text-body text-forest">
           <p>
             <span className="text-body">E-post: </span>
             {order.customerEmail}
@@ -239,7 +239,7 @@ export default function OrderDetailPage() {
               <div>
                 <label
                   htmlFor="ship-name"
-                  className="block text-[13px] font-medium text-forest"
+                  className="block text-label font-medium text-forest"
                 >
                   Navn
                 </label>
@@ -250,13 +250,13 @@ export default function OrderDetailPage() {
                   onChange={(e) =>
                     setShippingForm({ ...shippingForm, fullName: e.target.value })
                   }
-                  className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+                  className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
                 />
               </div>
               <div>
                 <label
                   htmlFor="ship-address"
-                  className="block text-[13px] font-medium text-forest"
+                  className="block text-label font-medium text-forest"
                 >
                   Adresse
                 </label>
@@ -267,14 +267,14 @@ export default function OrderDetailPage() {
                   onChange={(e) =>
                     setShippingForm({ ...shippingForm, address: e.target.value })
                   }
-                  className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+                  className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label
                     htmlFor="ship-postal"
-                    className="block text-[13px] font-medium text-forest"
+                    className="block text-label font-medium text-forest"
                   >
                     Postnummer
                   </label>
@@ -288,13 +288,13 @@ export default function OrderDetailPage() {
                         postalCode: e.target.value,
                       })
                     }
-                    className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+                    className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="ship-city"
-                    className="block text-[13px] font-medium text-forest"
+                    className="block text-label font-medium text-forest"
                   >
                     Sted
                   </label>
@@ -305,7 +305,7 @@ export default function OrderDetailPage() {
                     onChange={(e) =>
                       setShippingForm({ ...shippingForm, city: e.target.value })
                     }
-                    className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+                    className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
                   />
                 </div>
               </div>
@@ -353,10 +353,10 @@ export default function OrderDetailPage() {
 
       {/* Betaling & Refusjon */}
       <section className="mb-8 rounded-lg border border-forest/12 bg-card p-6">
-        <h2 className="font-heading text-[20px] font-bold text-forest">
+        <h2 className="font-heading text-h4 font-bold text-forest">
           Betaling
         </h2>
-        <div className="mt-4 space-y-2 font-body text-[15px]">
+        <div className="mt-4 space-y-2 font-body text-body">
           <p>
             <span className="text-body">Totalt betalt: </span>
             <span className="text-forest">{formatPrice(order.total)}</span>
@@ -372,7 +372,7 @@ export default function OrderDetailPage() {
           {order.stripePaymentIntentId && (
             <p>
               <span className="text-body">Stripe Payment Intent: </span>
-              <span className="font-body text-[13px] text-body">
+              <span className="font-body text-label text-body">
                 {order.stripePaymentIntentId}
               </span>
             </p>
@@ -408,14 +408,14 @@ export default function OrderDetailPage() {
         {/* Refund history */}
         {refunds.length > 0 && (
           <div className="mt-4 border-t border-forest/12 pt-4">
-            <h3 className="font-body text-[13px] font-medium uppercase tracking-wider text-body">
+            <h3 className="font-body text-label font-medium uppercase tracking-wider text-body">
               Refusjonshistorikk
             </h3>
             <ul className="mt-2 space-y-2">
               {refunds.map((r) => (
                 <li
                   key={r.id}
-                  className="flex items-center justify-between font-body text-[13px]"
+                  className="flex items-center justify-between font-body text-label"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-[#C0392B]">
@@ -433,7 +433,7 @@ export default function OrderDetailPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[11px] ${
+                      className={`rounded-full px-2 py-0.5 text-label ${
                         r.status === 'succeeded'
                           ? 'bg-[#DCFCE7] text-[#166534]'
                           : 'bg-[#FEF3C7] text-[#92400E]'
@@ -454,17 +454,17 @@ export default function OrderDetailPage() {
 
       {/* Status */}
       <section className="mb-8 rounded-lg border border-forest/12 bg-card p-6">
-        <h2 className="font-heading text-[20px] font-bold text-forest">
+        <h2 className="font-heading text-h4 font-bold text-forest">
           Status
         </h2>
         <div className="mt-4 flex items-center gap-3">
-          <span className="font-body text-[13px] text-body">Gjeldende:</span>
+          <span className="font-body text-label text-body">Gjeldende:</span>
           <OrderStatusBadge status={order.status} />
         </div>
         <div className="mt-4">
           <label
             htmlFor="order-status"
-            className="block font-body text-[15px] font-medium text-forest"
+            className="block font-body text-body font-medium text-forest"
           >
             Ordrestatus
           </label>
@@ -472,7 +472,7 @@ export default function OrderDetailPage() {
             id="order-status"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value as OrderStatus)}
-            className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+            className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
           >
             {statusOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -494,7 +494,7 @@ export default function OrderDetailPage() {
 
       {/* Notater */}
       <section className="rounded-lg border border-forest/12 bg-card p-6">
-        <h2 className="font-heading text-[20px] font-bold text-forest">
+        <h2 className="font-heading text-h4 font-bold text-forest">
           Interne notater
         </h2>
 
@@ -508,7 +508,7 @@ export default function OrderDetailPage() {
             value={newNote}
             onChange={(e) => setNewNote(e.target.value)}
             placeholder="Skriv et internt notat..."
-            className="block w-full resize-y rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+            className="block w-full resize-y rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
           />
           <div className="mt-2">
             <Button
@@ -526,10 +526,10 @@ export default function OrderDetailPage() {
           <ul className="mt-4 space-y-3 border-t border-forest/12 pt-4">
             {notes.map((note) => (
               <li key={note.id} className="rounded-md bg-cream p-3">
-                <p className="font-body text-[15px] text-forest whitespace-pre-wrap">
+                <p className="font-body text-body text-forest whitespace-pre-wrap">
                   {note.text}
                 </p>
-                <p className="mt-1 font-body text-[11px] text-body">
+                <p className="mt-1 font-body text-label text-body">
                   {note.createdBy} —{' '}
                   {formatDateMedium(
                     note.createdAt instanceof Date

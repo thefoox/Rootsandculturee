@@ -133,7 +133,7 @@ export default function EditExperiencePage() {
           { label: `Rediger: ${name}` },
         ]}
       />
-      <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-8 font-heading text-h2 font-bold text-forest">
         Rediger opplevelse
       </h1>
 
@@ -143,7 +143,7 @@ export default function EditExperiencePage() {
 
       <div className="space-y-6">
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Grunnleggende info
           </h2>
           <div className="space-y-4">
@@ -165,7 +165,7 @@ export default function EditExperiencePage() {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="description"
-                className="text-[13px] font-normal tracking-wide text-forest"
+                className="text-label font-normal tracking-wide text-forest"
               >
                 Beskrivelse
               </label>
@@ -174,18 +174,18 @@ export default function EditExperiencePage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-body text-forest placeholder:text-body/60 focus:border-forest"
               />
             </div>
             <fieldset>
-              <legend className="mb-2 text-[13px] font-normal tracking-wide text-forest">
+              <legend className="mb-2 text-label font-normal tracking-wide text-forest">
                 Vanskelighetsgrad
               </legend>
               <div className="flex gap-6">
                 {difficultyOptions.map((opt) => (
                   <label
                     key={opt.value}
-                    className="flex min-h-[44px] items-center gap-2 text-[15px] text-forest"
+                    className="flex min-h-[44px] items-center gap-2 text-body text-forest"
                   >
                     <input
                       type="radio"
@@ -214,14 +214,14 @@ export default function EditExperiencePage() {
               placeholder="f.eks. 3 timer, 2 dager"
             />
             <fieldset>
-              <legend className="mb-2 text-[13px] font-normal tracking-wide text-forest">
+              <legend className="mb-2 text-label font-normal tracking-wide text-forest">
                 Kategori
               </legend>
               <div className="flex gap-6">
                 {categoryOptions.map((opt) => (
                   <label
                     key={opt.value}
-                    className="flex min-h-[44px] items-center gap-2 text-[15px] text-forest"
+                    className="flex min-h-[44px] items-center gap-2 text-body text-forest"
                   >
                     <input
                       type="radio"
@@ -242,7 +242,7 @@ export default function EditExperiencePage() {
         <hr className="border-forest/12" />
 
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Bilder
           </h2>
           <ImageUpload images={images} onChange={setImages} />
@@ -251,7 +251,7 @@ export default function EditExperiencePage() {
         <hr className="border-forest/12" />
 
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Datoer og plasser
           </h2>
           <DateSlotsEditor dates={dates} onChange={setDates} />
@@ -260,14 +260,14 @@ export default function EditExperiencePage() {
         <hr className="border-forest/12" />
 
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Innhold
           </h2>
           <div className="space-y-4">
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="whatIsIncluded"
-                className="text-[13px] font-normal tracking-wide text-forest"
+                className="text-label font-normal tracking-wide text-forest"
               >
                 Hva er inkludert (en per linje)
               </label>
@@ -276,13 +276,13 @@ export default function EditExperiencePage() {
                 value={whatIsIncluded}
                 onChange={(e) => setWhatIsIncluded(e.target.value)}
                 rows={4}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-body text-forest placeholder:text-body/60 focus:border-forest"
               />
             </div>
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="cancellationPolicy"
-                className="text-[13px] font-normal tracking-wide text-forest"
+                className="text-label font-normal tracking-wide text-forest"
               >
                 Kanselleringsvilkar
               </label>
@@ -291,13 +291,13 @@ export default function EditExperiencePage() {
                 value={cancellationPolicy}
                 onChange={(e) => setCancellationPolicy(e.target.value)}
                 rows={3}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-body text-forest placeholder:text-body/60 focus:border-forest"
               />
             </div>
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="whatToBring"
-                className="text-[13px] font-normal tracking-wide text-forest"
+                className="text-label font-normal tracking-wide text-forest"
               >
                 Hva du ma ta med
               </label>
@@ -306,7 +306,7 @@ export default function EditExperiencePage() {
                 value={whatToBring}
                 onChange={(e) => setWhatToBring(e.target.value)}
                 rows={3}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-body text-forest placeholder:text-body/60 focus:border-forest"
               />
             </div>
           </div>
@@ -315,7 +315,7 @@ export default function EditExperiencePage() {
         <hr className="border-forest/12" />
 
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Pris
           </h2>
           <Input

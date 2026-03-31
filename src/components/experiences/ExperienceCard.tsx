@@ -36,11 +36,11 @@ export function ExperienceCard({ experience, nextDate }: ExperienceCardProps) {
         )}
       </div>
       <div className="flex flex-col justify-center p-6">
-        <h3 className="font-heading text-[20px] font-bold leading-[1.25] text-forest">
+        <h3 className="font-heading text-h4 font-bold leading-[1.25] text-forest">
           {experience.name}
         </h3>
         {nextDate && (
-          <p className="mt-2 flex items-center gap-1 font-body text-[13px] text-body">
+          <p className="mt-2 flex items-center gap-1 font-body text-label text-body">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />
             {formatDate(nextDate.date)}
           </p>

@@ -16,7 +16,7 @@ export function BookingChecklist({ items }: BookingChecklistProps) {
 
   return (
     <div>
-      <h3 className="mb-3 font-heading text-[20px] font-bold text-forest">
+      <h3 className="mb-3 font-heading text-h4 font-bold text-forest">
         Husk a ta med:
       </h3>
       <ul className="space-y-2">
@@ -26,7 +26,7 @@ export function BookingChecklist({ items }: BookingChecklistProps) {
               className="mt-0.5 h-4 w-4 flex-shrink-0 text-forest"
               aria-hidden="true"
             />
-            <span className="text-[15px] text-forest">{item}</span>
+            <span className="text-body text-forest">{item}</span>
           </li>
         ))}
       </ul>

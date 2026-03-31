@@ -55,11 +55,11 @@ export default async function ArtikkelDetailPage({ params }: PageProps) {
       )}
       <article className="mx-auto max-w-[720px] px-4 pb-16 pt-24 md:px-8">
         <Breadcrumbs items={[{ label: 'Blogg', href: '/blogg' }, { label: article.title }]} />
-        <h1 className="mt-4 pb-4 font-heading text-[28px] font-bold text-forest">
+        <h1 className="mt-4 pb-4 font-heading text-h2 font-bold text-forest">
           {article.title}
         </h1>
         {article.publishedAt && (
-          <p className="pb-8 font-body text-[13px] text-body">
+          <p className="pb-8 font-body text-label text-body">
             Publisert {formatDate(article.publishedAt)}
           </p>
         )}

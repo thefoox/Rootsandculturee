@@ -75,7 +75,7 @@ export function Header() {
 
           <button
             type="button"
-            className="rounded-full bg-forest px-4 py-2 text-[14px] font-medium text-cream motion-safe:transition-colors motion-safe:duration-150 hover:bg-forest/80"
+            className="rounded-full bg-forest px-4 py-2 text-body font-medium text-cream motion-safe:transition-colors motion-safe:duration-150 hover:bg-forest/80"
             onClick={() => setAuthOpen(true)}
             aria-label="Logg inn"
           >

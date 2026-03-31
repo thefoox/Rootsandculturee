@@ -40,14 +40,14 @@ export function BlogCard({ article, className }: BlogCardProps) {
         )}
       </div>
       <div className="p-4">
-        <h3 className="line-clamp-2 font-heading text-[20px] font-bold leading-[1.25] text-forest">
+        <h3 className="line-clamp-2 font-heading text-h4 font-bold leading-[1.25] text-forest">
           {article.title}
         </h3>
-        <p className="mt-2 line-clamp-3 font-body text-[15px] text-body">
+        <p className="mt-2 line-clamp-3 font-body text-body">
           {article.excerpt}
         </p>
         {publishedDate && (
-          <p className="mt-2 font-body text-[13px] text-body">
+          <p className="mt-2 font-body text-label text-body">
             {publishedDate}
           </p>
         )}

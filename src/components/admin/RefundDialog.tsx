@@ -104,12 +104,12 @@ export function RefundDialog({
       >
         <h2
           id="refund-dialog-title"
-          className="font-heading text-[20px] font-bold text-forest"
+          className="font-heading text-h4 font-bold text-forest"
         >
           Refunder betaling
         </h2>
 
-        <div className="mt-4 space-y-3 font-body text-[15px]">
+        <div className="mt-4 space-y-3 font-body text-body">
           <p className="text-body">
             Ordretotal: <span className="font-medium text-forest">{formatPrice(orderTotal)}</span>
           </p>
@@ -125,11 +125,11 @@ export function RefundDialog({
 
         <div className="mt-4">
           <fieldset>
-            <legend className="font-body text-[13px] font-medium text-forest">
+            <legend className="font-body text-label font-medium text-forest">
               Type refusjon
             </legend>
             <div className="mt-2 flex gap-4">
-              <label className="flex items-center gap-2 font-body text-[15px] text-forest">
+              <label className="flex items-center gap-2 font-body text-body text-forest">
                 <input
                   type="radio"
                   name="refund-mode"
@@ -139,7 +139,7 @@ export function RefundDialog({
                 />
                 Full ({formatPrice(remaining)})
               </label>
-              <label className="flex items-center gap-2 font-body text-[15px] text-forest">
+              <label className="flex items-center gap-2 font-body text-body text-forest">
                 <input
                   type="radio"
                   name="refund-mode"
@@ -157,7 +157,7 @@ export function RefundDialog({
           <div className="mt-4">
             <label
               htmlFor="refund-amount"
-              className="block font-body text-[13px] font-medium text-forest"
+              className="block font-body text-label font-medium text-forest"
             >
               Belop (NOK)
             </label>
@@ -170,7 +170,7 @@ export function RefundDialog({
               value={partialAmount}
               onChange={(e) => setPartialAmount(e.target.value)}
               placeholder={`Maks ${(remaining / 100).toFixed(0)}`}
-              className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+              className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
             />
           </div>
         )}
@@ -178,7 +178,7 @@ export function RefundDialog({
         <div className="mt-4">
           <label
             htmlFor="refund-reason"
-            className="block font-body text-[13px] font-medium text-forest"
+            className="block font-body text-label font-medium text-forest"
           >
             Arsak
           </label>
@@ -186,7 +186,7 @@ export function RefundDialog({
             id="refund-reason"
             value={reason}
             onChange={(e) => setReason(e.target.value as RefundReason)}
-            className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+            className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
           >
             {reasonOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>

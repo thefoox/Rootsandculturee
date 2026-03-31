@@ -74,7 +74,7 @@ export function SendEmailModal({
       >
         <h2
           id="email-dialog-title"
-          className="font-heading text-[20px] font-bold text-forest"
+          className="font-heading text-h4 font-bold text-forest"
         >
           Send e-post
         </h2>
@@ -83,7 +83,7 @@ export function SendEmailModal({
           <div>
             <label
               htmlFor="email-to"
-              className="block font-body text-[13px] font-medium text-forest"
+              className="block font-body text-label font-medium text-forest"
             >
               Mottaker
             </label>
@@ -92,14 +92,14 @@ export function SendEmailModal({
               type="email"
               value={recipientEmail}
               readOnly
-              className="mt-1 block w-full rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-body"
+              className="mt-1 block w-full rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-body"
             />
           </div>
 
           <div>
             <label
               htmlFor="email-subject"
-              className="block font-body text-[13px] font-medium text-forest"
+              className="block font-body text-label font-medium text-forest"
             >
               Emne
             </label>
@@ -110,14 +110,14 @@ export function SendEmailModal({
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder="Angaende din bestilling..."
-              className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+              className="mt-1 block w-full rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
             />
           </div>
 
           <div>
             <label
               htmlFor="email-message"
-              className="block font-body text-[13px] font-medium text-forest"
+              className="block font-body text-label font-medium text-forest"
             >
               Melding
             </label>
@@ -127,7 +127,7 @@ export function SendEmailModal({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Skriv meldingen din her..."
-              className="mt-1 block w-full resize-y rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+              className="mt-1 block w-full resize-y rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
             />
           </div>
         </div>

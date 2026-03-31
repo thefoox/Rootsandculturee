@@ -41,7 +41,7 @@ export function BookingFilterRow({
       <div>
         <label
           htmlFor="filter-experience"
-          className="block font-body text-[13px] text-body"
+          className="block font-body text-label text-body"
         >
           Filtrer etter opplevelse:
         </label>
@@ -52,7 +52,7 @@ export function BookingFilterRow({
             onExperienceChange(e.target.value)
             onDateChange('')
           }}
-          className="mt-1 block min-w-[200px] rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+          className="mt-1 block min-w-[200px] rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
         >
           <option value="">Alle opplevelser</option>
           {experiences.map((exp) => (
@@ -67,7 +67,7 @@ export function BookingFilterRow({
         <div>
           <label
             htmlFor="filter-date"
-            className="block font-body text-[13px] text-body"
+            className="block font-body text-label text-body"
           >
             Filtrer etter dato:
           </label>
@@ -75,7 +75,7 @@ export function BookingFilterRow({
             id="filter-date"
             value={selectedDateId}
             onChange={(e) => onDateChange(e.target.value)}
-            className="mt-1 block min-w-[200px] rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-[15px] text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
+            className="mt-1 block min-w-[200px] rounded-md border border-forest/20 bg-cream px-3 py-2 font-body text-body text-forest focus:border-forest focus:outline-none focus:ring-1 focus:ring-forest"
           >
             <option value="">Alle datoer</option>
             {filteredDates.map((d) => {

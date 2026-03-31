@@ -88,7 +88,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-[900px]">
-      <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-8 font-heading text-h2 font-bold text-forest">
         Admin Dashboard
       </h1>
 
@@ -104,11 +104,11 @@ export default async function AdminDashboard() {
             >
               <div className="flex items-center gap-2">
                 <Icon className="h-5 w-5 text-rust" aria-hidden="true" />
-                <span className="font-body text-[13px] text-body">
+                <span className="font-body text-label text-body">
                   {stat.label}
                 </span>
               </div>
-              <span className="font-heading text-[20px] font-bold text-forest">
+              <span className="font-heading text-h4 font-bold text-forest">
                 {stat.value}
               </span>
             </Link>
@@ -121,18 +121,18 @@ export default async function AdminDashboard() {
         {/* Siste ordrer */}
         <section className="rounded-lg border border-forest/12 bg-card p-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading text-[20px] font-bold text-forest">
+            <h2 className="font-heading text-h4 font-bold text-forest">
               Siste ordrer
             </h2>
             <Link
               href="/admin/ordrer"
-              className="font-body text-[13px] text-rust hover:underline"
+              className="font-body text-label text-rust hover:underline"
             >
               Se alle
             </Link>
           </div>
           {last5Orders.length === 0 ? (
-            <p className="mt-4 font-body text-[15px] text-body">
+            <p className="mt-4 font-body text-body">
               Ingen ordrer enda.
             </p>
           ) : (
@@ -144,16 +144,16 @@ export default async function AdminDashboard() {
                     className="flex items-center justify-between rounded-md px-2 py-2 hover:bg-cream"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="font-body text-[13px] text-body">
+                      <span className="font-body text-label text-body">
                         #{order.id.slice(0, 8)}
                       </span>
-                      <span className="font-body text-[13px] text-forest">
+                      <span className="font-body text-label text-forest">
                         {order.customerEmail}
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
                       <OrderStatusBadge status={order.status} />
-                      <span className="font-body text-[15px] font-medium text-rust">
+                      <span className="font-body text-body font-medium text-rust">
                         {formatPrice(order.total)}
                       </span>
                     </div>
@@ -167,18 +167,18 @@ export default async function AdminDashboard() {
         {/* Siste bookinger */}
         <section className="rounded-lg border border-forest/12 bg-card p-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading text-[20px] font-bold text-forest">
+            <h2 className="font-heading text-h4 font-bold text-forest">
               Siste bookinger
             </h2>
             <Link
               href="/admin/bookinger"
-              className="font-body text-[13px] text-rust hover:underline"
+              className="font-body text-label text-rust hover:underline"
             >
               Se alle
             </Link>
           </div>
           {last5Bookings.length === 0 ? (
-            <p className="mt-4 font-body text-[15px] text-body">
+            <p className="mt-4 font-body text-body">
               Ingen bookinger enda.
             </p>
           ) : (
@@ -189,10 +189,10 @@ export default async function AdminDashboard() {
                   className="flex items-center justify-between rounded-md px-2 py-2"
                 >
                   <div>
-                    <span className="font-body text-[15px] text-forest">
+                    <span className="font-body text-body text-forest">
                       {booking.experienceName}
                     </span>
-                    <span className="ml-2 font-body text-[13px] text-body">
+                    <span className="ml-2 font-body text-label text-body">
                       {formatDateMedium(
                         booking.date instanceof Date
                           ? booking.date
@@ -202,7 +202,7 @@ export default async function AdminDashboard() {
                   </div>
                   <div className="flex items-center gap-3">
                     <BookingStatusBadge status={booking.status} />
-                    <span className="font-body text-[13px] text-body">
+                    <span className="font-body text-label text-body">
                       {booking.customerEmail}
                     </span>
                   </div>
@@ -214,7 +214,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Innhold */}
-      <h2 className="mb-4 mt-8 font-heading text-[20px] font-bold text-forest">
+      <h2 className="mb-4 mt-8 font-heading text-h4 font-bold text-forest">
         Innhold
       </h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -228,9 +228,9 @@ export default async function AdminDashboard() {
             >
               <Icon className="h-7 w-7 text-rust" aria-hidden="true" />
               <div>
-                <p className="text-[13px] text-body">{stat.label}</p>
+                <p className="text-label text-body">{stat.label}</p>
                 {stat.count !== null && (
-                  <p className="font-heading text-[20px] font-bold text-forest">
+                  <p className="font-heading text-h4 font-bold text-forest">
                     {stat.count}
                   </p>
                 )}

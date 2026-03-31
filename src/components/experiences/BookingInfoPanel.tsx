@@ -41,7 +41,7 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
 
   return (
     <div className="mt-6 rounded-lg border border-forest/12 bg-card p-4">
-      <p className="font-body text-[15px] font-medium text-forest capitalize">
+      <p className="font-body text-body font-medium text-forest capitalize">
         {formattedDate}
       </p>
 
@@ -52,7 +52,7 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
         />
       </div>
 
-      <p className="mt-2 font-body text-[15px] font-medium text-forest">
+      <p className="mt-2 font-body text-body font-medium text-forest">
         {formatPrice(price)}
       </p>
 
@@ -61,7 +61,7 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
           role="alert"
           className="mt-4 rounded-lg border border-[#C0392B]/20 bg-[#FEE2E2] p-4"
         >
-          <p className="font-body text-[15px] font-normal text-[#C0392B]">
+          <p className="font-body text-body font-normal text-[#C0392B]">
             Alle plasser er fylt. Velg en annen dato eller sjekk tilbake senere.
           </p>
         </div>

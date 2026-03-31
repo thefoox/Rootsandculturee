@@ -27,15 +27,15 @@ export function OrderCard({ order }: OrderCardProps) {
     >
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
-          <p className="font-body text-[15px] text-forest font-medium">
+          <p className="font-body text-body text-forest font-medium">
             {dateFormatter.format(order.createdAt)}
           </p>
-          <p className="font-body text-[13px] text-body mt-0.5">
+          <p className="font-body text-label text-body mt-0.5">
             {itemCount} {itemCount === 1 ? 'vare' : 'varer'}
           </p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <span className="font-body text-[15px] text-forest font-medium">
+          <span className="font-body text-body text-forest font-medium">
             {priceFormatter.format(order.total / 100)}
           </span>
           <OrderStatusBadge status={order.status} />

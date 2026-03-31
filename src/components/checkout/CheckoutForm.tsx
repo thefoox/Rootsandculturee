@@ -133,7 +133,7 @@ export function CheckoutForm({
     <form onSubmit={handleSubmit} noValidate>
       {/* Section 1: Contact info */}
       <section className="mb-8">
-        <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+        <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
           Kontaktinformasjon
         </h2>
         <div className="space-y-4">
@@ -152,7 +152,7 @@ export function CheckoutForm({
       {/* Section 2: Shipping address (only for products) */}
       {needsShipping && (
         <section className="mb-8">
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Leveringsadresse
           </h2>
           <div className="space-y-4">
@@ -195,12 +195,12 @@ export function CheckoutForm({
 
       {/* Section 3: Payment */}
       <section className="mb-8">
-        <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+        <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
           Betaling
         </h2>
         <div className="mb-4 flex items-center gap-2">
           <LockKeyhole className="h-4 w-4 text-body" aria-hidden="true" />
-          <span className="text-[13px] text-body">Sikret med Stripe</span>
+          <span className="text-label text-body">Sikret med Stripe</span>
         </div>
         <div
           className="rounded-lg border border-forest/20 bg-card p-6"

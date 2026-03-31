@@ -97,7 +97,7 @@ export function MobileNav({ onClose, onLoginClick }: MobileNavProps) {
                     <li key={child.href}>
                       <Link
                         href={child.href}
-                        className="block py-2 text-[15px] text-cream/70 hover:text-cream"
+                        className="block py-2 text-body text-cream/70 hover:text-cream"
                         onClick={onClose}
                       >
                         {child.label}
@@ -115,7 +115,7 @@ export function MobileNav({ onClose, onLoginClick }: MobileNavProps) {
       <div className="px-8 pb-8">
         <button
           type="button"
-          className="w-full rounded-md bg-forest py-3 text-center font-body text-[15px] font-medium text-cream"
+          className="w-full rounded-md bg-forest py-3 text-center font-body text-body font-medium text-cream"
           onClick={onLoginClick || onClose}
         >
           Logg inn

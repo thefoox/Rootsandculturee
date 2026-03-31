@@ -17,7 +17,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className="flex flex-col gap-1">
         <label
           htmlFor={inputId}
-          className="text-[13px] font-normal tracking-wide text-forest"
+          className="text-label font-normal tracking-wide text-forest"
         >
           {label}
         </label>
@@ -25,7 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            'min-h-[44px] rounded-md border bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60',
+            'min-h-[44px] rounded-md border bg-card px-3 py-2 font-body text-body text-forest placeholder:text-body/60',
             'transition-colors duration-100',
             error
               ? 'border-destructive'
@@ -40,7 +40,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <p
             id={errorId}
             role="alert"
-            className="flex items-center gap-1 text-[13px] text-destructive"
+            className="flex items-center gap-1 text-label text-destructive"
           >
             {error}
           </p>

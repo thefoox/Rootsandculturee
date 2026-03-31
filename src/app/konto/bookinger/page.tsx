@@ -24,7 +24,7 @@ export default async function BookingerPage() {
     <div>
       {/* Upcoming bookings */}
       <section className="mb-10">
-        <h2 className="font-heading text-[20px] font-bold text-forest mb-6">
+        <h2 className="font-heading text-h4 font-bold text-forest mb-6">
           Kommende bookinger
         </h2>
         {upcoming.length > 0 ? (
@@ -44,7 +44,7 @@ export default async function BookingerPage() {
 
       {/* Past bookings */}
       <section>
-        <h2 className="font-heading text-[20px] font-bold text-forest mb-6">
+        <h2 className="font-heading text-h4 font-bold text-forest mb-6">
           Tidligere bookinger
         </h2>
         {past.length > 0 ? (

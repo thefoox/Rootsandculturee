@@ -85,7 +85,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       >
         {/* Header */}
         <div className="flex h-16 items-center justify-between border-b border-forest/12 px-4">
-          <h2 className="font-heading text-[20px] font-bold text-forest">
+          <h2 className="font-heading text-h4 font-bold text-forest">
             Handlekurv
           </h2>
           <button
@@ -104,10 +104,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           {items.length === 0 ? (
             <div className="flex min-h-[200px] flex-col items-center justify-center text-center">
               <ShoppingBag className="h-12 w-12 text-forest" aria-hidden="true" />
-              <p className="mt-4 font-heading text-[20px] font-bold text-forest">
+              <p className="mt-4 font-heading text-h4 font-bold text-forest">
                 Handlekurven er tom
               </p>
-              <p className="mt-2 text-[15px] text-body">
+              <p className="mt-2 text-body">
                 Du har ikke lagt til noe enda.
               </p>
             </div>

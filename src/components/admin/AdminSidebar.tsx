@@ -46,7 +46,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
       )}
     >
       <div className="flex items-center justify-between px-4 pb-4 pt-6">
-        <span className="font-body text-[13px] text-cream">
+        <span className="font-body text-label text-cream">
           Roots &amp; Culture Admin
         </span>
         {mobile && (
@@ -62,7 +62,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
 
       <nav aria-label="Admin-navigasjon" className="flex-1">
         <div className="px-4 pb-2 pt-6">
-          <span className="text-[13px] uppercase tracking-wider text-forest">
+          <span className="text-label uppercase tracking-wider text-forest">
             Innhold
           </span>
         </div>
@@ -77,7 +77,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    'flex h-[44px] items-center gap-4 px-4 text-[15px] text-cream',
+                    'flex h-[44px] items-center gap-4 px-4 text-body text-cream',
                     'hover:bg-[rgba(254,252,243,0.08)]',
                     isActive &&
                       'border-l-[3px] border-forest bg-[rgba(254,252,243,0.08)]'
@@ -93,7 +93,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
         </ul>
 
         <div className="px-4 pb-2 pt-6">
-          <span className="text-[13px] uppercase tracking-wider text-rust">
+          <span className="text-label uppercase tracking-wider text-rust">
             Ordre & Kunder
           </span>
         </div>
@@ -108,7 +108,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    'flex h-[44px] items-center gap-4 px-4 text-[15px] text-cream',
+                    'flex h-[44px] items-center gap-4 px-4 text-body text-cream',
                     'hover:bg-[rgba(254,252,243,0.08)]',
                     isActive &&
                       'border-l-[3px] border-forest bg-[rgba(254,252,243,0.08)]'
@@ -127,14 +127,14 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
       <div className="border-t border-cream/10 px-4 py-4">
         <Link
           href="/"
-          className="flex h-[44px] items-center gap-4 text-[15px] text-cream hover:bg-[rgba(254,252,243,0.08)]"
+          className="flex h-[44px] items-center gap-4 text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
         >
           <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
           Tilbake til nettbutikk
         </Link>
         <button
           onClick={() => logoutAction()}
-          className="flex h-[44px] w-full items-center gap-4 text-[15px] text-cream hover:bg-[rgba(254,252,243,0.08)]"
+          className="flex h-[44px] w-full items-center gap-4 text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
         >
           <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
           Logg ut

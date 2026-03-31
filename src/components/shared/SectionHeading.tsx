@@ -15,13 +15,13 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <div className={cn(centered && 'text-center', className)}>
-      <h2 className="font-heading text-[28px] font-bold text-forest">
+      <h2 className="font-heading text-h2 font-bold text-forest">
         {title}
       </h2>
       {subtitle && (
         <p
           className={cn(
-            'mt-3 max-w-2xl text-[15px] leading-relaxed text-body',
+            'mt-3 max-w-2xl text-body leading-relaxed text-body',
             centered && 'mx-auto'
           )}
         >

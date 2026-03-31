@@ -71,7 +71,7 @@ export default function NewProductPage() {
           { label: 'Ny' },
         ]}
       />
-      <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-8 font-heading text-h2 font-bold text-forest">
         Nytt produkt
       </h1>
 
@@ -82,7 +82,7 @@ export default function NewProductPage() {
       <div className="space-y-6">
         {/* Grunnleggende info */}
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Grunnleggende info
           </h2>
           <div className="space-y-4">
@@ -101,7 +101,7 @@ export default function NewProductPage() {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="description"
-                className="text-[13px] font-normal tracking-wide text-forest"
+                className="text-label font-normal tracking-wide text-forest"
               >
                 Beskrivelse
               </label>
@@ -110,7 +110,7 @@ export default function NewProductPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
+                className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-body text-forest placeholder:text-body/60 focus:border-forest"
               />
               {errors.description && (
                 <FormError
@@ -126,7 +126,7 @@ export default function NewProductPage() {
 
         {/* Bilder */}
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Bilder
           </h2>
           <ImageUpload images={images} onChange={setImages} />
@@ -143,7 +143,7 @@ export default function NewProductPage() {
 
         {/* Pris og lager */}
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Pris og lager
           </h2>
           <div className="grid grid-cols-2 gap-4">
@@ -170,7 +170,7 @@ export default function NewProductPage() {
 
         {/* Kategori */}
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Kategori
           </h2>
           <fieldset>
@@ -179,7 +179,7 @@ export default function NewProductPage() {
               {categories.map((cat) => (
                 <label
                   key={cat.value}
-                  className="flex min-h-[44px] items-center gap-3 text-[15px] text-forest"
+                  className="flex min-h-[44px] items-center gap-3 text-body text-forest"
                 >
                   <input
                     type="radio"

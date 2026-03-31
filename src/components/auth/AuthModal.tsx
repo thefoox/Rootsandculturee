@@ -104,7 +104,7 @@ export function AuthModal({ isOpen, onClose, title, children }: AuthModalProps) 
         {/* Title */}
         <h2
           id="auth-modal-title"
-          className="mb-6 font-heading text-[28px] font-bold text-forest"
+          className="mb-6 font-heading text-h2 font-bold text-forest"
         >
           {title}
         </h2>

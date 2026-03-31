@@ -19,7 +19,7 @@ const styles: Record<Difficulty, string> = {
 export function DifficultyBadge({ difficulty }: DifficultyBadgeProps) {
   return (
     <span
-      className={`inline-block rounded-full px-2 py-1 font-body text-[13px] ${styles[difficulty]}`}
+      className={`inline-block rounded-full px-2 py-1 font-body text-label ${styles[difficulty]}`}
     >
       {labels[difficulty]}
     </span>

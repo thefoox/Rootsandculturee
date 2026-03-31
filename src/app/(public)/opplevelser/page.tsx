@@ -72,10 +72,10 @@ export default async function OpplevelserPage() {
         <div className="absolute inset-0 bg-black/25" />
         
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-16 md:px-8 md:pb-24">
-          <h1 className="max-w-2xl font-heading text-[36px] font-bold leading-[1.1] text-cream md:text-[48px]">
+          <h1 className="max-w-2xl font-heading text-h1 font-bold leading-[1.1] text-cream ">
             Opplevelser i norsk natur
           </h1>
-          <p className="mt-4 max-w-lg text-[17px] leading-relaxed text-cream/85">
+          <p className="mt-4 max-w-lg text-lg leading-relaxed text-cream/85">
             Naturretreater, kurs og matopplevelser som bringer deg nærmere naturen
           </p>
         </div>
@@ -99,16 +99,16 @@ export default async function OpplevelserPage() {
             />
           </div>
           <div className="md:col-span-2">
-            <h2 className="font-heading text-[28px] font-bold text-forest md:text-[32px]">
+            <h2 className="font-heading text-h2 font-bold text-forest ">
               Naturopplevelser som berører
             </h2>
-            <div className="mt-5 space-y-4 text-[15px] leading-relaxed text-body">
+            <div className="mt-5 space-y-4 text-body leading-relaxed text-body">
               <p>Hos Roots & Culture handler opplevelser om mer enn bare aktiviteter. Det handler om å stoppe opp, puste dypt, og kjenne forbindelsen til naturen rundt deg.</p>
               <p>Hver opplevelse er nøye kuratert av erfarne guider som deler vår lidenskap for norsk natur og kulturarv.</p>
             </div>
             <a
               href="#opplevelser"
-              className="mt-6 inline-flex items-center gap-2 rounded-md bg-forest px-5 py-2.5 text-[15px] font-medium text-cream hover:bg-forest/90"
+              className="mt-6 inline-flex items-center gap-2 rounded-md bg-forest px-5 py-2.5 text-body font-medium text-cream hover:bg-forest/90"
             >
               Se tilgjengelige opplevelser
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -120,7 +120,7 @@ export default async function OpplevelserPage() {
       {/* Kategorier */}
       <section className="bg-card py-16 md:py-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8">
-          <h2 className="text-center font-heading text-[28px] font-bold text-forest md:text-[32px]">
+          <h2 className="text-center font-heading text-h2 font-bold text-forest ">
             Utforsk våre kategorier
           </h2>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
@@ -140,8 +140,8 @@ export default async function OpplevelserPage() {
                   />
                 </div>
                 <div className="p-5">
-                  <h3 className="font-heading text-[20px] font-bold text-forest">{cat.title}</h3>
-                  <p className="mt-1 text-[14px] leading-relaxed text-body">{cat.description}</p>
+                  <h3 className="font-heading text-h4 font-bold text-forest">{cat.title}</h3>
+                  <p className="mt-1 text-body leading-relaxed text-body">{cat.description}</p>
                 </div>
               </Link>
             ))}
@@ -152,10 +152,10 @@ export default async function OpplevelserPage() {
       {/* Kommende opplevelser */}
       <section id="opplevelser" className="bg-cream py-16 md:py-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8">
-          <h2 className="text-center font-heading text-[28px] font-bold text-forest md:text-[32px]">
+          <h2 className="text-center font-heading text-h2 font-bold text-forest ">
             Kommende opplevelser
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-center text-[15px] text-body">
+          <p className="mx-auto mt-2 max-w-md text-center text-body">
             Book din neste naturopplevelse
           </p>
           <div className="mt-10">
@@ -173,8 +173,8 @@ export default async function OpplevelserPage() {
         <section className="bg-card py-16 md:py-24">
           <div className="mx-auto max-w-[1200px] px-6 md:px-8">
             <div className="flex items-end justify-between">
-              <h2 className="font-heading text-[28px] font-bold text-forest">Fra bloggen</h2>
-              <Link href="/blogg" className="hidden items-center gap-1 text-[15px] font-medium text-forest hover:underline md:inline-flex">
+              <h2 className="font-heading text-h2 font-bold text-forest">Fra bloggen</h2>
+              <Link href="/blogg" className="hidden items-center gap-1 text-body font-medium text-forest hover:underline md:inline-flex">
                 Les alle <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
@@ -190,15 +190,15 @@ export default async function OpplevelserPage() {
       {/* FAQ */}
       <section className="bg-cream py-16 md:py-24">
         <div className="mx-auto max-w-[800px] px-6 md:px-8">
-          <h2 className="text-center font-heading text-[28px] font-bold text-forest">Vanlige spørsmål</h2>
+          <h2 className="text-center font-heading text-h2 font-bold text-forest">Vanlige spørsmål</h2>
           <div className="mt-8 divide-y divide-forest/10">
             {faqItems.map((item) => (
               <details key={item.question} className="group py-4">
-                <summary className="flex cursor-pointer items-center justify-between text-[15px] font-medium text-forest [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer items-center justify-between text-body font-medium text-forest [&::-webkit-details-marker]:hidden">
                   {item.question}
                   <span className="ml-4 shrink-0 motion-safe:transition-transform motion-safe:duration-150 group-open:rotate-45" aria-hidden="true">+</span>
                 </summary>
-                <p className="mt-3 text-[15px] leading-relaxed text-body">{item.answer}</p>
+                <p className="mt-3 text-body leading-relaxed text-body">{item.answer}</p>
               </details>
             ))}
           </div>

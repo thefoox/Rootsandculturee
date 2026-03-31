@@ -42,7 +42,7 @@ export default function CustomerDetailPage() {
             { label: 'Laster...' },
           ]}
         />
-        <p className="font-body text-[15px] text-body">Laster kunde...</p>
+        <p className="font-body text-body">Laster kunde...</p>
       </div>
     )
   }
@@ -58,7 +58,7 @@ export default function CustomerDetailPage() {
       />
 
       <div className="mb-8 flex items-start justify-between">
-        <h1 className="font-heading text-[28px] font-bold text-forest">
+        <h1 className="font-heading text-h2 font-bold text-forest">
           {customer.displayName || customer.email}
         </h1>
         <Button variant="secondary" onClick={() => setShowEmail(true)}>
@@ -69,10 +69,10 @@ export default function CustomerDetailPage() {
 
       {/* Kundeinformasjon */}
       <section className="mb-8 rounded-lg border border-forest/12 bg-card p-6">
-        <h2 className="font-heading text-[20px] font-bold text-forest">
+        <h2 className="font-heading text-h4 font-bold text-forest">
           Kundeinformasjon
         </h2>
-        <div className="mt-4 space-y-2 font-body text-[15px]">
+        <div className="mt-4 space-y-2 font-body text-body">
           <p>
             <span className="text-body">E-post: </span>
             <span className="text-forest">{customer.email}</span>
@@ -94,20 +94,20 @@ export default function CustomerDetailPage() {
         {/* Sammendrag */}
         <div className="mt-4 grid grid-cols-3 gap-4 border-t border-forest/12 pt-4">
           <div>
-            <p className="font-body text-[13px] text-body">Ordrer</p>
-            <p className="font-heading text-[20px] font-bold text-forest">
+            <p className="font-body text-label text-body">Ordrer</p>
+            <p className="font-heading text-h4 font-bold text-forest">
               {customer.orderCount}
             </p>
           </div>
           <div>
-            <p className="font-body text-[13px] text-body">Bookinger</p>
-            <p className="font-heading text-[20px] font-bold text-forest">
+            <p className="font-body text-label text-body">Bookinger</p>
+            <p className="font-heading text-h4 font-bold text-forest">
               {customer.bookingCount}
             </p>
           </div>
           <div>
-            <p className="font-body text-[13px] text-body">Total brukt</p>
-            <p className="font-heading text-[20px] font-bold text-rust">
+            <p className="font-body text-label text-body">Total brukt</p>
+            <p className="font-heading text-h4 font-bold text-rust">
               {formatPrice(customer.totalSpent)}
             </p>
           </div>
@@ -116,11 +116,11 @@ export default function CustomerDetailPage() {
 
       {/* Ordrehistorikk */}
       <section className="mb-8 rounded-lg border border-forest/12 bg-card p-6">
-        <h2 className="font-heading text-[20px] font-bold text-forest">
+        <h2 className="font-heading text-h4 font-bold text-forest">
           Ordrehistorikk
         </h2>
         {orders.length === 0 ? (
-          <p className="mt-4 font-body text-[15px] text-body">
+          <p className="mt-4 font-body text-body">
             Ingen ordrer.
           </p>
         ) : (
@@ -129,16 +129,16 @@ export default function CustomerDetailPage() {
               <caption className="sr-only">Ordrer for kunde</caption>
               <thead>
                 <tr className="h-[44px] border-b border-forest/12">
-                  <th className="px-3 text-left text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-left text-label font-normal uppercase tracking-wide text-forest">
                     Ordrenr.
                   </th>
-                  <th className="px-3 text-left text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-left text-label font-normal uppercase tracking-wide text-forest">
                     Dato
                   </th>
-                  <th className="px-3 text-right text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-right text-label font-normal uppercase tracking-wide text-forest">
                     Total
                   </th>
-                  <th className="px-3 text-left text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-left text-label font-normal uppercase tracking-wide text-forest">
                     Status
                   </th>
                   <th className="w-[60px] px-3" />
@@ -150,17 +150,17 @@ export default function CustomerDetailPage() {
                     key={order.id}
                     className="border-b border-forest/8 hover:bg-cream"
                   >
-                    <td className="px-3 py-2 font-body text-[13px] text-body">
+                    <td className="px-3 py-2 font-body text-label text-body">
                       #{order.id.slice(0, 8)}
                     </td>
-                    <td className="px-3 py-2 font-body text-[13px] text-body">
+                    <td className="px-3 py-2 font-body text-label text-body">
                       {formatDateMedium(
                         order.createdAt instanceof Date
                           ? order.createdAt
                           : new Date(order.createdAt)
                       )}
                     </td>
-                    <td className="px-3 py-2 text-right font-body text-[15px] text-rust">
+                    <td className="px-3 py-2 text-right font-body text-body text-rust">
                       {formatPrice(order.total)}
                     </td>
                     <td className="px-3 py-2">
@@ -187,11 +187,11 @@ export default function CustomerDetailPage() {
 
       {/* Bookinghistorikk */}
       <section className="rounded-lg border border-forest/12 bg-card p-6">
-        <h2 className="font-heading text-[20px] font-bold text-forest">
+        <h2 className="font-heading text-h4 font-bold text-forest">
           Bookinghistorikk
         </h2>
         {bookings.length === 0 ? (
-          <p className="mt-4 font-body text-[15px] text-body">
+          <p className="mt-4 font-body text-body">
             Ingen bookinger.
           </p>
         ) : (
@@ -200,19 +200,19 @@ export default function CustomerDetailPage() {
               <caption className="sr-only">Bookinger for kunde</caption>
               <thead>
                 <tr className="h-[44px] border-b border-forest/12">
-                  <th className="px-3 text-left text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-left text-label font-normal uppercase tracking-wide text-forest">
                     Kode
                   </th>
-                  <th className="px-3 text-left text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-left text-label font-normal uppercase tracking-wide text-forest">
                     Opplevelse
                   </th>
-                  <th className="px-3 text-left text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-left text-label font-normal uppercase tracking-wide text-forest">
                     Dato
                   </th>
-                  <th className="px-3 text-right text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-right text-label font-normal uppercase tracking-wide text-forest">
                     Total
                   </th>
-                  <th className="px-3 text-left text-[13px] font-normal uppercase tracking-wide text-forest">
+                  <th className="px-3 text-left text-label font-normal uppercase tracking-wide text-forest">
                     Status
                   </th>
                 </tr>
@@ -223,20 +223,20 @@ export default function CustomerDetailPage() {
                     key={booking.id}
                     className="border-b border-forest/8 hover:bg-cream"
                   >
-                    <td className="px-3 py-2 font-body text-[13px] tracking-[0.04em] text-body">
+                    <td className="px-3 py-2 font-body text-label tracking-[0.04em] text-body">
                       {booking.confirmationCode}
                     </td>
-                    <td className="px-3 py-2 font-body text-[15px] text-forest">
+                    <td className="px-3 py-2 font-body text-body text-forest">
                       {booking.experienceName}
                     </td>
-                    <td className="px-3 py-2 font-body text-[13px] text-body">
+                    <td className="px-3 py-2 font-body text-label text-body">
                       {formatDateMedium(
                         booking.date instanceof Date
                           ? booking.date
                           : new Date(booking.date)
                       )}
                     </td>
-                    <td className="px-3 py-2 text-right font-body text-[15px] text-rust">
+                    <td className="px-3 py-2 text-right font-body text-body text-rust">
                       {formatPrice(booking.total)}
                     </td>
                     <td className="px-3 py-2">

@@ -12,7 +12,7 @@ interface AdminBreadcrumbProps {
 export function AdminBreadcrumb({ items }: AdminBreadcrumbProps) {
   return (
     <nav aria-label="Brodsmulesti" className="mb-4">
-      <ol className="flex flex-wrap items-center gap-1 text-[13px]">
+      <ol className="flex flex-wrap items-center gap-1 text-label">
         {items.map((item, index) => {
           const isLast = index === items.length - 1
           return (

@@ -123,7 +123,7 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
         />
       </div>
 
-      <label className="mt-4 flex items-start gap-2 text-[13px] text-body">
+      <label className="mt-4 flex items-start gap-2 text-label text-body">
         <input
           type="checkbox"
           checked={newsletterConsent}
@@ -142,7 +142,7 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
         Opprett konto
       </Button>
 
-      <p className="mt-4 text-center text-[13px] text-body">
+      <p className="mt-4 text-center text-label text-body">
         Har du konto?{' '}
         <button
           type="button"

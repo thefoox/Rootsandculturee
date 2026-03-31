@@ -25,10 +25,10 @@ export default async function BloggPage() {
     <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-20 md:px-8 md:pb-24">
       <div className="pb-8 pt-6">
         <Breadcrumbs items={[{ label: 'Blogg' }]} />
-        <h1 className="mt-4 font-heading text-[28px] font-bold text-forest">
+        <h1 className="mt-4 font-heading text-h2 font-bold text-forest">
           Blogg
         </h1>
-        <p className="mt-2 text-[15px] text-body">
+        <p className="mt-2 text-body">
           Artikler om norsk natur, kultur og tradisjoner.
         </p>
       </div>

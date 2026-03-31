@@ -51,7 +51,7 @@ export function PasswordChangeForm() {
 
     if (!validate()) return
 
-    const user = auth.currentUser
+    const user = auth?.currentUser
     if (!user || !user.email) {
       setErrors({ general: 'Du er ikke logget inn. Last inn siden pa nytt.' })
       return
@@ -87,7 +87,7 @@ export function PasswordChangeForm() {
 
   return (
     <div>
-      <h3 className="font-heading text-[17px] font-bold text-forest mb-4">
+      <h3 className="font-heading text-lg font-bold text-forest mb-4">
         Endre passord
       </h3>
 

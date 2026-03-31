@@ -16,7 +16,7 @@ export function AdminTopBar({ onMenuClick }: AdminTopBarProps) {
       >
         <Menu className="h-6 w-6" aria-hidden="true" />
       </button>
-      <span className="flex-1 text-center font-body text-[15px] text-cream">
+      <span className="flex-1 text-center font-body text-body text-cream">
         Admin
       </span>
       <div className="w-[44px]" aria-hidden="true" />

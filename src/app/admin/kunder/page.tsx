@@ -24,7 +24,7 @@ export default function CustomersListPage() {
     {
       header: 'Navn',
       accessor: (row) => (
-        <span className="font-body text-[15px] text-forest">
+        <span className="font-body text-body text-forest">
           {row.displayName || '—'}
         </span>
       ),
@@ -32,7 +32,7 @@ export default function CustomersListPage() {
     {
       header: 'E-post',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">{row.email}</span>
+        <span className="font-body text-label text-body">{row.email}</span>
       ),
     },
     {
@@ -40,7 +40,7 @@ export default function CustomersListPage() {
       width: '80px',
       align: 'center',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">
+        <span className="font-body text-label text-body">
           {row.orderCount}
         </span>
       ),
@@ -50,7 +50,7 @@ export default function CustomersListPage() {
       width: '90px',
       align: 'center',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">
+        <span className="font-body text-label text-body">
           {row.bookingCount}
         </span>
       ),
@@ -60,7 +60,7 @@ export default function CustomersListPage() {
       width: '120px',
       align: 'right',
       accessor: (row) => (
-        <span className="font-body text-[15px] text-rust">
+        <span className="font-body text-body text-rust">
           {formatPrice(row.totalSpent)}
         </span>
       ),
@@ -69,7 +69,7 @@ export default function CustomersListPage() {
       header: 'Registrert',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">
+        <span className="font-body text-label text-body">
           {formatDateMedium(row.createdAt)}
         </span>
       ),
@@ -109,7 +109,7 @@ export default function CustomersListPage() {
           { label: 'Kunder' },
         ]}
       />
-      <h1 className="mb-6 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-6 font-heading text-h2 font-bold text-forest">
         Kunder
       </h1>
 

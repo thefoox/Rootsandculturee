@@ -47,7 +47,7 @@ export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps
     >
       <span
         className={cn(
-          'font-body text-[13px] font-normal',
+          'font-body text-label font-normal',
           isSelected && !isSoldOut ? 'text-cream' : 'text-body'
         )}
       >
@@ -55,7 +55,7 @@ export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps
       </span>
       <span
         className={cn(
-          'font-body text-[15px] font-normal',
+          'font-body text-body font-normal',
           isSelected && !isSoldOut ? 'text-cream' : 'text-forest'
         )}
       >
@@ -63,14 +63,14 @@ export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps
       </span>
       <span
         className={cn(
-          'font-body text-[13px] font-normal',
+          'font-body text-label font-normal',
           isSelected && !isSoldOut ? 'text-cream' : 'text-body'
         )}
       >
         {month}
       </span>
       {isSoldOut && (
-        <span className="font-body text-[13px] font-normal text-[#C0392B]">
+        <span className="font-body text-label font-normal text-[#C0392B]">
           Utsolgt
         </span>
       )}

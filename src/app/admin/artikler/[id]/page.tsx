@@ -121,7 +121,7 @@ export default function EditArticlePage() {
           { label: `Rediger: ${title}` },
         ]}
       />
-      <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-8 font-heading text-h2 font-bold text-forest">
         Rediger artikkel
       </h1>
 
@@ -131,7 +131,7 @@ export default function EditArticlePage() {
 
       <div className="space-y-6">
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Grunnleggende info
           </h2>
           <div className="space-y-4">
@@ -156,7 +156,7 @@ export default function EditArticlePage() {
         <hr className="border-forest/12" />
 
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Fremhevet bilde
           </h2>
           <ImageUpload
@@ -183,7 +183,7 @@ export default function EditArticlePage() {
         <hr className="border-forest/12" />
 
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Innhold
           </h2>
           <TiptapEditor content={body} onChange={setBody} />
@@ -199,7 +199,7 @@ export default function EditArticlePage() {
         <hr className="border-forest/12" />
 
         <section>
-          <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             SEO
           </h2>
           <div className="space-y-4">
@@ -210,7 +210,7 @@ export default function EditArticlePage() {
                 onChange={(e) => setMetaTitle(e.target.value)}
                 maxLength={70}
               />
-              <p className="mt-1 text-[13px] text-body">
+              <p className="mt-1 text-label text-body">
                 {metaTitle.length} / 70 tegn
               </p>
             </div>
@@ -218,7 +218,7 @@ export default function EditArticlePage() {
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="metaDescription"
-                  className="text-[13px] font-normal tracking-wide text-forest"
+                  className="text-label font-normal tracking-wide text-forest"
                 >
                   Meta beskrivelse
                 </label>
@@ -228,10 +228,10 @@ export default function EditArticlePage() {
                   onChange={(e) => setMetaDescription(e.target.value)}
                   maxLength={160}
                   rows={3}
-                  className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-[15px] text-forest placeholder:text-body/60 focus:border-forest"
+                  className="min-h-[44px] rounded-md border border-forest/20 bg-card px-3 py-2 font-body text-body text-forest placeholder:text-body/60 focus:border-forest"
                 />
               </div>
-              <p className="mt-1 text-[13px] text-body">
+              <p className="mt-1 text-label text-body">
                 {metaDescription.length} / 160 tegn
               </p>
             </div>

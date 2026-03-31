@@ -23,10 +23,10 @@ export default function SiteContentPage() {
           { label: 'Sideinnhold' },
         ]}
       />
-      <h1 className="mb-2 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-2 font-heading text-h2 font-bold text-forest">
         Sideinnhold
       </h1>
-      <p className="mb-8 text-[15px] text-body">
+      <p className="mb-8 text-body">
         Rediger tekst, bilder og seksjoner på alle sider.
       </p>
 
@@ -43,8 +43,8 @@ export default function SiteContentPage() {
                 <Icon className="h-5 w-5 text-forest" aria-hidden="true" />
               </div>
               <div>
-                <h2 className="font-heading text-[17px] font-bold text-forest">{page.title}</h2>
-                <p className="mt-0.5 text-[13px] text-body/70">{page.description}</p>
+                <h2 className="font-heading text-lg font-bold text-forest">{page.title}</h2>
+                <p className="mt-0.5 text-label text-body/70">{page.description}</p>
               </div>
             </Link>
           )

@@ -50,22 +50,22 @@ export default async function Home() {
         />
 
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pt-28 md:px-8">
-          <h1 className="max-w-3xl font-heading text-[44px] font-bold leading-[1.08] text-cream md:text-[64px] whitespace-pre-line">
+          <h1 className="max-w-3xl font-heading text-h1 font-bold leading-[1.08] text-cream whitespace-pre-line">
             {hero?.heading || 'Velkommen til\nRoots & Culture'}
           </h1>
-          <p className="mt-6 max-w-lg font-body text-[17px] leading-relaxed text-cream/90 md:text-[19px]">
+          <p className="mt-6 max-w-lg font-body text-lg leading-relaxed text-cream/90 ">
             {hero?.subheading || 'Gjennom våre tjenester arbeider vi for å øke bevissthet om natur, tradisjon og kultur.'}
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/opplevelser"
-              className="inline-flex items-center gap-2 rounded-full bg-forest px-7 py-3.5 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-forest/85"
+              className="inline-flex items-center gap-2 rounded-full bg-forest px-7 py-3.5 font-body text-body font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-forest/85"
             >
               Se tilgjengelige opplevelser
             </Link>
             <Link
               href="/produkter"
-              className="inline-flex items-center gap-2 rounded-full border-2 border-cream/70 px-7 py-3.5 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-cream/10 hover:border-cream"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-cream/70 px-7 py-3.5 font-body text-body font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-cream/10 hover:border-cream"
             >
               Besøk butikk
             </Link>
@@ -78,16 +78,16 @@ export default async function Home() {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8">
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
+              <h2 className="font-heading text-h1 font-bold text-forest ">
                 {oppHeading?.heading || 'Opplevelser'}
               </h2>
-              <p className="mt-2 max-w-md font-body text-[15px] text-body">
+              <p className="mt-2 max-w-md font-body text-body">
                 {oppHeading?.subheading || 'Naturretreater, kurs og matopplevelser som bringer deg nærmere norsk natur og kulturarv'}
               </p>
             </div>
             <Link
               href="/opplevelser"
-              className="hidden font-body text-[15px] font-medium text-forest hover:underline md:inline-flex md:items-center md:gap-1"
+              className="hidden font-body text-body font-medium text-forest hover:underline md:inline-flex md:items-center md:gap-1"
             >
               Se alle <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
@@ -117,10 +117,10 @@ export default async function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   </div>
                   <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                    <h3 className="font-heading text-[22px] font-bold leading-tight text-cream md:text-[24px]">
+                    <h3 className="font-heading text-h3 font-bold leading-tight text-cream ">
                       {experience.name}
                     </h3>
-                    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-cream/80">
+                    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-label text-cream/80">
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
                         {experience.location}
@@ -132,7 +132,7 @@ export default async function Home() {
                         </span>
                       )}
                     </div>
-                    <p className="mt-3 font-body text-[17px] font-bold text-cream">
+                    <p className="mt-3 font-body text-lg font-bold text-cream">
                       fra {formatPrice(experience.basePrice)}
                     </p>
                   </div>
@@ -144,7 +144,7 @@ export default async function Home() {
           <div className="mt-6 text-center md:hidden">
             <Link
               href="/opplevelser"
-              className="inline-flex items-center gap-1 font-body text-[15px] font-medium text-forest hover:underline"
+              className="inline-flex items-center gap-1 font-body text-body font-medium text-forest hover:underline"
             >
               Se alle opplevelser <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
@@ -157,16 +157,16 @@ export default async function Home() {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8">
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
+              <h2 className="font-heading text-h1 font-bold text-forest ">
                 {prodHeading?.heading || 'Produkter'}
               </h2>
-              <p className="mt-2 max-w-md font-body text-[15px] text-body">
+              <p className="mt-2 max-w-md font-body text-body">
                 {prodHeading?.subheading || 'Håndplukkede naturprodukter fra norske produsenter'}
               </p>
             </div>
             <Link
               href="/produkter"
-              className="hidden font-body text-[15px] font-medium text-forest hover:underline md:inline-flex md:items-center md:gap-1"
+              className="hidden font-body text-body font-medium text-forest hover:underline md:inline-flex md:items-center md:gap-1"
             >
               Se alle <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
@@ -197,13 +197,13 @@ export default async function Home() {
                     )}
                   </div>
                   <div className="p-4">
-                    <p className="text-[11px] uppercase tracking-wider text-body/60">
+                    <p className="text-label uppercase tracking-wider text-body/60">
                       {product.category === 'drikke' ? 'Drikke' : product.category === 'kaffe-te' ? 'Kaffe & Te' : 'Naturprodukter'}
                     </p>
-                    <h3 className="mt-1 font-heading text-[17px] font-bold leading-tight text-forest">
+                    <h3 className="mt-1 font-heading text-lg font-bold leading-tight text-forest">
                       {product.name}
                     </h3>
-                    <p className="mt-2 font-body text-[15px] font-bold text-forest">
+                    <p className="mt-2 font-body text-body font-bold text-forest">
                       {formatPrice(product.price)}
                     </p>
                   </div>
@@ -215,7 +215,7 @@ export default async function Home() {
           <div className="mt-6 text-center md:hidden">
             <Link
               href="/produkter"
-              className="inline-flex items-center gap-1 font-body text-[15px] font-medium text-forest hover:underline"
+              className="inline-flex items-center gap-1 font-body text-body font-medium text-forest hover:underline"
             >
               Se alle produkter <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
@@ -237,24 +237,24 @@ export default async function Home() {
               />
             </div>
             <div>
-              <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
+              <h2 className="font-heading text-h1 font-bold text-forest ">
                 {omOss?.heading || 'Forankret i norsk natur'}
               </h2>
               {omOss?.body ? (
-                <div className="mt-5 font-body text-[15px] leading-relaxed text-body" dangerouslySetInnerHTML={{ __html: omOss.body }} />
+                <div className="mt-5 font-body text-body leading-relaxed text-body" dangerouslySetInnerHTML={{ __html: omOss.body }} />
               ) : (
                 <>
-                  <p className="mt-5 font-body text-[15px] leading-relaxed text-body">
+                  <p className="mt-5 font-body text-body leading-relaxed text-body">
                     Roots & Culture er en norsk nettbutikk som formidler håndplukkede naturprodukter og unike opplevelser fra hele Norge.
                   </p>
-                  <p className="mt-4 font-body text-[15px] leading-relaxed text-body">
+                  <p className="mt-4 font-body text-body leading-relaxed text-body">
                     Vårt mål er å gjøre det enkelt for deg å oppleve det beste Norge har å by på.
                   </p>
                 </>
               )}
               <Link
                 href="/om-oss"
-                className="mt-8 inline-flex items-center gap-2 rounded-md bg-forest px-6 py-3 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-forest/90"
+                className="mt-8 inline-flex items-center gap-2 rounded-md bg-forest px-6 py-3 font-body text-body font-medium text-cream motion-safe:transition-all motion-safe:duration-150 hover:bg-forest/90"
               >
                 Les mer om oss
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -269,16 +269,16 @@ export default async function Home() {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8">
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="font-heading text-[32px] font-bold text-forest md:text-[36px]">
+              <h2 className="font-heading text-h1 font-bold text-forest ">
                 {bloggHeading?.heading || 'Fra bloggen'}
               </h2>
-              <p className="mt-2 max-w-md font-body text-[15px] text-body">
+              <p className="mt-2 max-w-md font-body text-body">
                 {bloggHeading?.subheading || 'Historier om natur, kultur og tradisjoner'}
               </p>
             </div>
             <Link
               href="/blogg"
-              className="hidden font-body text-[15px] font-medium text-forest hover:underline md:inline-flex md:items-center md:gap-1"
+              className="hidden font-body text-body font-medium text-forest hover:underline md:inline-flex md:items-center md:gap-1"
             >
               Les alle <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
@@ -293,7 +293,7 @@ export default async function Home() {
           <div className="mt-6 text-center md:hidden">
             <Link
               href="/blogg"
-              className="inline-flex items-center gap-1 font-body text-[15px] font-medium text-forest hover:underline"
+              className="inline-flex items-center gap-1 font-body text-body font-medium text-forest hover:underline"
             >
               Les alle artikler <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
@@ -313,15 +313,15 @@ export default async function Home() {
         <div className="absolute inset-0 bg-black/45" />
 
         <div className="relative mx-auto max-w-[700px] px-6 text-center md:px-8">
-          <h2 className="font-heading text-[32px] font-bold text-cream md:text-[40px]">
+          <h2 className="font-heading text-h1 font-bold text-cream ">
             {ctaBanner?.heading || 'Klar for en opplevelse?'}
           </h2>
-          <p className="mx-auto mt-4 max-w-lg font-body text-[17px] leading-relaxed text-cream/85">
+          <p className="mx-auto mt-4 max-w-lg font-body text-lg leading-relaxed text-cream/85">
             {ctaBanner?.subheading || 'Utforsk våre unike naturopplevelser og finn din neste eventyr i norsk natur.'}
           </p>
           <Link
             href="/opplevelser"
-            className="mt-8 inline-flex items-center gap-2 rounded-md bg-cream px-8 py-3.5 font-body text-[15px] font-medium text-forest motion-safe:transition-all motion-safe:duration-150 hover:bg-white"
+            className="mt-8 inline-flex items-center gap-2 rounded-md bg-cream px-8 py-3.5 font-body text-body font-medium text-forest motion-safe:transition-all motion-safe:duration-150 hover:bg-white"
           >
             Se opplevelser
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

@@ -47,12 +47,12 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
   if (success) {
     return (
       <div>
-        <p className="mb-4 text-[15px] text-forest">
+        <p className="mb-4 text-body text-forest">
           Vi har sendt en tilbakestillingslenke til {email}. Sjekk innboksen din.
         </p>
         <button
           type="button"
-          className="text-[13px] text-forest hover:underline"
+          className="text-label text-forest hover:underline"
           onClick={onSwitchToLogin}
         >
           Tilbake til innlogging
@@ -63,7 +63,7 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <p className="mb-4 text-[15px] text-body">
+      <p className="mb-4 text-body">
         Oppgi e-postadressen din, sa sender vi deg en lenke for a tilbakestille passordet.
       </p>
 
@@ -92,7 +92,7 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
         Send tilbakestillingslenke
       </Button>
 
-      <p className="mt-4 text-center text-[13px] text-body">
+      <p className="mt-4 text-center text-label text-body">
         <button
           type="button"
           className="text-forest hover:underline"

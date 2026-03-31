@@ -28,7 +28,7 @@ export function HeroImage({
         <div className="absolute inset-0">
           <div className="absolute bottom-0 left-0 right-0 p-8">
             <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-              <h1 className="font-heading text-[28px] font-bold text-cream">
+              <h1 className="font-heading text-h2 font-bold text-cream">
                 {title}
               </h1>
             </div>

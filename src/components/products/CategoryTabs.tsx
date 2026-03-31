@@ -73,7 +73,7 @@ export function CategoryTabs({ categories, activeCategory }: CategoryTabsProps) 
               tabIndex={isActive ? 0 : -1}
               onClick={() => handleSelect(tab.value)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className={`min-h-[44px] whitespace-nowrap font-body text-[15px] text-forest ${
+              className={`min-h-[44px] whitespace-nowrap font-body text-body text-forest ${
                 isActive
                   ? 'border-b-2 border-forest font-medium'
                   : 'border-b-2 border-transparent'

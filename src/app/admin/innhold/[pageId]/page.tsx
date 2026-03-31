@@ -104,8 +104,8 @@ export default function EditPageContentPage() {
           { label: pageTitle },
         ]}
       />
-      <h1 className="mb-2 font-heading text-[28px] font-bold text-forest">{pageTitle}</h1>
-      <p className="mb-8 text-[14px] text-body/70">{sections.length} seksjoner</p>
+      <h1 className="mb-2 font-heading text-h2 font-bold text-forest">{pageTitle}</h1>
+      <p className="mb-8 text-body/70">{sections.length} seksjoner</p>
 
       <div className="space-y-3">
         {sections.sort((a, b) => a.order - b.order).map((section) => {
@@ -123,10 +123,10 @@ export default function EditPageContentPage() {
               >
                 <GripVertical className="h-4 w-4 shrink-0 text-body/40" aria-hidden="true" />
                 <div className="flex-1">
-                  <span className="text-[11px] uppercase tracking-wider text-body/50">
+                  <span className="text-label uppercase tracking-wider text-body/50">
                     {SECTION_TYPE_LABELS[section.type] || section.type}
                   </span>
-                  <p className="font-medium text-forest text-[15px]">
+                  <p className="font-medium text-forest text-body">
                     {section.heading || section.id}
                   </p>
                 </div>
@@ -152,9 +152,9 @@ export default function EditPageContentPage() {
                   {/* Subheading */}
                   {(section.type === 'hero' || section.type === 'text' || section.type === 'cta') && (
                     <div>
-                      <label className="mb-1 block text-[13px] font-medium text-forest">Undertekst</label>
+                      <label className="mb-1 block text-label font-medium text-forest">Undertekst</label>
                       <textarea
-                        className="w-full rounded-md border border-forest/15 bg-card px-3 py-2 text-[15px] text-forest min-h-[80px]"
+                        className="w-full rounded-md border border-forest/15 bg-card px-3 py-2 text-body text-forest min-h-[80px]"
                         value={section.subheading || ''}
                         onChange={(e) => updateSection(section.id, { subheading: e.target.value })}
                       />
@@ -164,9 +164,9 @@ export default function EditPageContentPage() {
                   {/* Body (rich text) */}
                   {(section.type === 'text-image' || section.type === 'text') && section.body !== undefined && (
                     <div>
-                      <label className="mb-1 block text-[13px] font-medium text-forest">Brødtekst (HTML)</label>
+                      <label className="mb-1 block text-label font-medium text-forest">Brødtekst (HTML)</label>
                       <textarea
-                        className="w-full rounded-md border border-forest/15 bg-card px-3 py-2 text-[15px] text-forest min-h-[120px] font-mono text-[13px]"
+                        className="w-full rounded-md border border-forest/15 bg-card px-3 py-2 text-body text-forest min-h-[120px] font-mono text-label"
                         value={section.body || ''}
                         onChange={(e) => updateSection(section.id, { body: e.target.value })}
                       />
@@ -200,7 +200,7 @@ export default function EditPageContentPage() {
                   {/* Items (FAQ, values, team, contact-info, gallery) */}
                   {section.items && section.items.length > 0 && (
                     <div>
-                      <label className="mb-2 block text-[13px] font-medium text-forest">
+                      <label className="mb-2 block text-label font-medium text-forest">
                         Elementer ({section.items.length})
                       </label>
                       <div className="space-y-3">
@@ -212,11 +212,11 @@ export default function EditPageContentPage() {
                               onChange={(e) => updateSectionItem(section.id, i, { title: e.target.value })}
                             />
                             <div>
-                              <label className="mb-1 block text-[13px] font-medium text-forest">
+                              <label className="mb-1 block text-label font-medium text-forest">
                                 {section.type === 'faq' ? 'Svar' : 'Beskrivelse'}
                               </label>
                               <textarea
-                                className="w-full rounded-md border border-forest/15 bg-cream px-3 py-2 text-[14px] text-forest min-h-[60px]"
+                                className="w-full rounded-md border border-forest/15 bg-cream px-3 py-2 text-body text-forest min-h-[60px]"
                                 value={item.description}
                                 onChange={(e) => updateSectionItem(section.id, i, { description: e.target.value })}
                               />

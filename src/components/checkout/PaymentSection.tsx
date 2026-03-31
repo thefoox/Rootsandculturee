@@ -11,13 +11,13 @@ interface PaymentSectionProps {
 export function PaymentSection({ error }: PaymentSectionProps) {
   return (
     <section>
-      <h2 className="mb-4 font-heading text-[20px] font-bold text-forest">
+      <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
         Betaling
       </h2>
 
       <div className="mb-4 flex items-center gap-2">
         <LockKeyhole className="h-4 w-4 text-body" aria-hidden="true" />
-        <span className="text-[13px] text-body">Sikret med Stripe</span>
+        <span className="text-label text-body">Sikret med Stripe</span>
       </div>
 
       <div

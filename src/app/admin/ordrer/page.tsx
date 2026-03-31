@@ -24,7 +24,7 @@ export default function OrdersListPage() {
       header: 'Ordrenr.',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">
+        <span className="font-body text-label text-body">
           {row.id.slice(0, 8)}
         </span>
       ),
@@ -32,7 +32,7 @@ export default function OrdersListPage() {
     {
       header: 'Kunde',
       accessor: (row) => (
-        <span className="font-body text-[15px] text-forest">
+        <span className="font-body text-body text-forest">
           {row.customerEmail}
         </span>
       ),
@@ -42,7 +42,7 @@ export default function OrdersListPage() {
       width: '80px',
       align: 'center',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">
+        <span className="font-body text-label text-body">
           {row.items.length}
         </span>
       ),
@@ -52,7 +52,7 @@ export default function OrdersListPage() {
       width: '100px',
       align: 'right',
       accessor: (row) => (
-        <span className="font-body text-[15px] text-forest">
+        <span className="font-body text-body text-forest">
           {formatPrice(row.total)}
         </span>
       ),
@@ -66,7 +66,7 @@ export default function OrdersListPage() {
       header: 'Dato',
       width: '120px',
       accessor: (row) => (
-        <span className="font-body text-[13px] text-body">
+        <span className="font-body text-label text-body">
           {formatDateMedium(row.createdAt instanceof Date ? row.createdAt : new Date(row.createdAt))}
         </span>
       ),
@@ -97,7 +97,7 @@ export default function OrdersListPage() {
             { label: 'Ordrer' },
           ]}
         />
-        <h1 className="mb-6 font-heading text-[28px] font-bold text-forest">
+        <h1 className="mb-6 font-heading text-h2 font-bold text-forest">
           Ordrer
         </h1>
         <EmptyState
@@ -117,7 +117,7 @@ export default function OrdersListPage() {
           { label: 'Ordrer' },
         ]}
       />
-      <h1 className="mb-6 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-6 font-heading text-h2 font-bold text-forest">
         Ordrer
       </h1>
 

@@ -20,10 +20,10 @@ export default function HandlekurvPage() {
       <div className="mx-auto max-w-[1200px] px-4 pt-24 pb-16">
         <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
           <ShoppingBag className="h-12 w-12 text-forest" aria-hidden="true" />
-          <h1 className="mt-4 font-heading text-[20px] font-bold text-forest">
+          <h1 className="mt-4 font-heading text-h4 font-bold text-forest">
             Handlekurven er tom
           </h1>
-          <p className="mt-2 text-[15px] text-body">
+          <p className="mt-2 text-body">
             Du har ikke lagt til noe enda.
           </p>
           <Link href="/produkter" className="mt-6">
@@ -36,7 +36,7 @@ export default function HandlekurvPage() {
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 pt-24 pb-16">
-      <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-8 font-heading text-h2 font-bold text-forest">
         Handlekurv
       </h1>
 
@@ -58,7 +58,7 @@ export default function HandlekurvPage() {
 
           <Link
             href="/produkter"
-            className="mt-6 inline-flex items-center gap-2 text-[15px] text-forest hover:opacity-85"
+            className="mt-6 inline-flex items-center gap-2 text-body text-forest hover:opacity-85"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Fortsett a handle

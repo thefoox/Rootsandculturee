@@ -26,20 +26,20 @@ export default async function KontoPage() {
 
   return (
     <div>
-      <p className="font-body text-[17px] text-forest mb-8">
+      <p className="font-body text-lg text-forest mb-8">
         {displayName ? `Hei, ${displayName}!` : 'Hei!'}
       </p>
 
       {/* Recent orders */}
       <section className="mb-10">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-heading text-[20px] font-bold text-forest">
+          <h2 className="font-heading text-h4 font-bold text-forest">
             Siste ordrer
           </h2>
           {orders.length > 0 && (
             <Link
               href="/konto/ordrer"
-              className="font-body text-[13px] text-forest hover:underline"
+              className="font-body text-label text-forest hover:underline"
             >
               Se alle ordrer
             </Link>
@@ -59,13 +59,13 @@ export default async function KontoPage() {
       {/* Recent bookings */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-heading text-[20px] font-bold text-forest">
+          <h2 className="font-heading text-h4 font-bold text-forest">
             Siste bookinger
           </h2>
           {bookings.length > 0 && (
             <Link
               href="/konto/bookinger"
-              className="font-body text-[13px] text-forest hover:underline"
+              className="font-body text-label text-forest hover:underline"
             >
               Se alle bookinger
             </Link>

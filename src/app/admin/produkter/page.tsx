@@ -64,7 +64,7 @@ export default function ProductsListPage() {
       header: 'Kategori',
       width: '140px',
       accessor: (row) => (
-        <span className="rounded-full border border-forest/20 bg-card px-2 py-1 text-[13px] text-body">
+        <span className="rounded-full border border-forest/20 bg-card px-2 py-1 text-label text-body">
           {categoryLabels[row.category] || row.category}
         </span>
       ),
@@ -98,7 +98,7 @@ export default function ProductsListPage() {
         ]}
       />
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-heading text-[28px] font-bold text-forest">
+        <h1 className="font-heading text-h2 font-bold text-forest">
           Produkter
         </h1>
         <Link href="/admin/produkter/ny">

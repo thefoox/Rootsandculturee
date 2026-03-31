@@ -37,7 +37,7 @@ export function CartItem({ item }: CartItemProps) {
         </div>
       ) : (
         <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded bg-card text-body/40">
-          <span className="text-[13px]">Bilde</span>
+          <span className="text-label">Bilde</span>
         </div>
       )}
 
@@ -45,15 +45,15 @@ export function CartItem({ item }: CartItemProps) {
       <div className="flex flex-1 flex-col justify-between">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
-            <p className="font-body text-[15px] font-normal leading-snug text-forest line-clamp-2">
+            <p className="font-body text-body font-normal leading-snug text-forest line-clamp-2">
               {item.name}
             </p>
             {isExperience && item.experienceDate && (
-              <p className="mt-1 text-[13px] text-body">
+              <p className="mt-1 text-label text-body">
                 Opplevelse &mdash; {formatDate(new Date(item.experienceDate))}
               </p>
             )}
-            <p className="mt-1 text-[13px] text-body">
+            <p className="mt-1 text-label text-body">
               {formatPrice(item.price)}
             </p>
           </div>
@@ -83,7 +83,7 @@ export function CartItem({ item }: CartItemProps) {
               >
                 <Minus className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
-              <span className="flex w-8 items-center justify-center font-body text-[15px] text-forest">
+              <span className="flex w-8 items-center justify-center font-body text-body text-forest">
                 {item.quantity}
               </span>
               <button
@@ -96,11 +96,11 @@ export function CartItem({ item }: CartItemProps) {
               </button>
             </div>
           ) : (
-            <span className="text-[13px] text-body">1 plass</span>
+            <span className="text-label text-body">1 plass</span>
           )}
 
           {/* Item total */}
-          <span className="font-body text-[15px] text-forest">
+          <span className="font-body text-body text-forest">
             {formatPrice(itemTotal)}
           </span>
         </div>

@@ -19,11 +19,11 @@ export function Footer() {
                 height={32}
                 className="h-8 w-8"
               />
-              <span className="font-heading text-[17px] font-bold text-forest">
+              <span className="font-heading text-lg font-bold text-forest">
                 Roots &amp; Culture
               </span>
             </Link>
-            <p className="mt-3 text-[13px] leading-relaxed text-body/70">
+            <p className="mt-3 text-label leading-relaxed text-body/70">
               Autentiske norske naturprodukter og opplevelser.
             </p>
           </div>
@@ -31,7 +31,7 @@ export function Footer() {
           {/* Nav columns */}
           {footerColumns.map((column) => (
             <div key={column.title}>
-              <h2 className="mb-3 text-[13px] font-bold uppercase tracking-wider text-forest">
+              <h2 className="mb-3 text-label font-bold uppercase tracking-wider text-forest">
                 {column.title}
               </h2>
               <ul className="space-y-2">
@@ -42,7 +42,7 @@ export function Footer() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[14px] text-body/70 hover:text-forest hover:underline"
+                        className="text-body/70 hover:text-forest hover:underline"
                         aria-label={`${link.label} (apner i nytt vindu)`}
                       >
                         {link.label}
@@ -50,7 +50,7 @@ export function Footer() {
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-[14px] text-body/70 hover:text-forest hover:underline"
+                        className="text-body/70 hover:text-forest hover:underline"
                       >
                         {link.label}
                       </Link>
@@ -65,17 +65,17 @@ export function Footer() {
         {/* Newsletter signup */}
         <div className="mt-10 border-t border-forest/8 pt-8">
           <div className="mx-auto max-w-md">
-            <h2 className="mb-2 text-[13px] font-bold uppercase tracking-wider text-forest">
+            <h2 className="mb-2 text-label font-bold uppercase tracking-wider text-forest">
               Nyhetsbrev
             </h2>
-            <p className="mb-3 text-[14px] text-body/70">
+            <p className="mb-3 text-body/70">
               Fa nyheter om produkter, opplevelser og norsk natur rett i innboksen.
             </p>
             <NewsletterSignup />
           </div>
         </div>
 
-        <div className="mt-8 border-t border-forest/8 pt-6 text-center text-[13px] text-body/50">
+        <div className="mt-8 border-t border-forest/8 pt-6 text-center text-label text-body/50">
           &copy; {new Date().getFullYear()} Roots &amp; Culture. Alle rettigheter reservert.
         </div>
       </div>

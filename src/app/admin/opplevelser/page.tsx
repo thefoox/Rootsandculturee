@@ -79,7 +79,7 @@ export default function ExperiencesListPage() {
         ]}
       />
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-heading text-[28px] font-bold text-forest">
+        <h1 className="font-heading text-h2 font-bold text-forest">
           Opplevelser
         </h1>
         <Link href="/admin/opplevelser/ny">

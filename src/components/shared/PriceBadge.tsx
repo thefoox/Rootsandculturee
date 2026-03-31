@@ -8,7 +8,7 @@ interface PriceBadgeProps {
 
 export function PriceBadge({ priceInOre, className }: PriceBadgeProps) {
   return (
-    <span className={cn('text-[15px] text-forest font-body', className)}>
+    <span className={cn('text-body text-forest font-body', className)}>
       {formatPrice(priceInOre)}
     </span>
   )

@@ -58,10 +58,10 @@ export default function OmOssPage() {
         <div className="absolute inset-0 bg-black/25" />
         
         <div className="relative z-10 mx-auto max-w-[1200px] px-4 py-20 text-center md:px-8">
-          <h1 className="font-heading text-[32px] font-bold leading-tight text-cream md:text-[42px]">
+          <h1 className="font-heading text-h1 font-bold leading-tight text-cream ">
             Om Roots &amp; Culture
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-cream/90">
+          <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-cream/90">
             Forankret i norsk natur og kulturarv
           </p>
         </div>
@@ -81,7 +81,7 @@ export default function OmOssPage() {
           </div>
           <div>
             <SectionHeading title="Vår historie" />
-            <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-body">
+            <div className="mt-6 space-y-4 text-body leading-relaxed text-body">
               <p>
                 Roots &amp; Culture ble født ut av en enkel overbevisning: at
                 forbindelsen mellom mennesker og norsk natur er noe av det mest
@@ -121,11 +121,11 @@ export default function OmOssPage() {
                 sizes="192px"
               />
             </div>
-            <h3 className="mt-6 font-heading text-[22px] font-bold text-forest">
+            <h3 className="mt-6 font-heading text-h3 font-bold text-forest">
               Jacob
             </h3>
-            <p className="mt-1 text-[15px] font-medium text-forest">Grunnlegger</p>
-            <p className="mt-4 text-[15px] leading-relaxed text-body">
+            <p className="mt-1 text-body font-medium text-forest">Grunnlegger</p>
+            <p className="mt-4 text-body leading-relaxed text-body">
               Med en dyp lidenskap for norsk natur og kulturarv startet Jacob
               Roots &amp; Culture for å dele de opplevelsene som har formet ham.
               Han tror at naturen har en unik evne til å samle mennesker, og at
@@ -152,10 +152,10 @@ export default function OmOssPage() {
                     aria-hidden="true"
                   />
                 </div>
-                <h3 className="mt-5 font-heading text-[20px] font-bold text-forest">
+                <h3 className="mt-5 font-heading text-h4 font-bold text-forest">
                   {value.title}
                 </h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-body">
+                <p className="mt-3 text-body leading-relaxed text-body">
                   {value.text}
                 </p>
               </div>
@@ -189,15 +189,15 @@ export default function OmOssPage() {
       {/* ── CTA Section ── */}
       <section className="bg-cream section-padding">
         <div className="mx-auto max-w-[1200px] px-4 text-center md:px-8">
-          <h2 className="font-heading text-[28px] font-bold text-forest">
+          <h2 className="font-heading text-h2 font-bold text-forest">
             Klar for en opplevelse?
           </h2>
-          <p className="mx-auto mt-3 max-w-lg text-[15px] leading-relaxed text-body">
+          <p className="mx-auto mt-3 max-w-lg text-body leading-relaxed text-body">
             Utforsk våre unike naturopplevelser og finn din neste eventyr.
           </p>
           <Link
             href="/opplevelser"
-            className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-[15px] font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
+            className="mt-8 inline-flex min-h-[44px] items-center justify-center rounded-md bg-forest px-6 py-2 font-body text-body font-medium text-cream motion-safe:transition-all motion-safe:duration-100 hover:opacity-85 active:scale-[0.98]"
           >
             Se opplevelser
           </Link>

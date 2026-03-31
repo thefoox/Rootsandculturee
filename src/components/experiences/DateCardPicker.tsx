@@ -25,7 +25,7 @@ export function DateCardPicker({ experienceId, dates, experience }: DateCardPick
 
   // Real-time listener for the selected date's availability
   useEffect(() => {
-    if (!selectedDate) return
+    if (!selectedDate || !db) return
 
     const dateRef = doc(db, 'experiences', experienceId, 'dates', selectedDate.id)
     const unsubscribe = onSnapshot(dateRef, (snapshot) => {
@@ -63,10 +63,10 @@ export function DateCardPicker({ experienceId, dates, experience }: DateCardPick
   if (futureDates.length === 0) {
     return (
       <section className="mt-8">
-        <h2 className="font-heading text-[20px] font-bold text-forest">
+        <h2 className="font-heading text-h4 font-bold text-forest">
           Velg dato
         </h2>
-        <p className="mt-4 font-body text-[15px] text-body">
+        <p className="mt-4 font-body text-body">
           Ingen tilgjengelige datoer for oyeblikket.
         </p>
       </section>
@@ -83,7 +83,7 @@ export function DateCardPicker({ experienceId, dates, experience }: DateCardPick
     <section className="mt-8">
       <h2
         id={headingId}
-        className="font-heading text-[20px] font-bold text-forest"
+        className="font-heading text-h4 font-bold text-forest"
       >
         Velg dato
       </h2>

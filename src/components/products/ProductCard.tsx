@@ -43,13 +43,13 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
       <div className="p-4">
-        <span className="text-[11px] uppercase tracking-wider text-body/70">
+        <span className="text-label uppercase tracking-wider text-body/70">
           {categoryLabel}
         </span>
-        <h3 className="mt-1 line-clamp-2 font-heading text-[18px] font-bold leading-[1.25] text-forest">
+        <h3 className="mt-1 line-clamp-2 font-heading text-lg font-bold leading-[1.25] text-forest">
           {product.name}
         </h3>
-        <span className="mt-1 block font-body text-[15px] font-bold text-forest">
+        <span className="mt-1 block font-body text-body font-bold text-forest">
           {formatPrice(product.price)}
         </span>
       </div>

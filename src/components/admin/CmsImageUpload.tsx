@@ -50,7 +50,7 @@ export function CmsImageUpload({ image, onChange, label = 'Bilde' }: CmsImageUpl
 
   return (
     <div>
-      <label className="mb-1 block text-[13px] font-medium text-forest">{label}</label>
+      <label className="mb-1 block text-label font-medium text-forest">{label}</label>
 
       {/* Preview */}
       {image?.url && (
@@ -78,11 +78,11 @@ export function CmsImageUpload({ image, onChange, label = 'Bilde' }: CmsImageUpl
         onClick={() => fileInputRef.current?.click()}
       >
         {uploading ? (
-          <p className="text-[14px] text-body">Laster opp...</p>
+          <p className="text-body">Laster opp...</p>
         ) : (
           <>
             <UploadCloud className="h-6 w-6 text-forest/50" aria-hidden="true" />
-            <p className="mt-1.5 text-[13px] text-body/60">
+            <p className="mt-1.5 text-label text-body/60">
               Slipp bilde her eller klikk for å velge
             </p>
           </>
@@ -109,7 +109,7 @@ export function CmsImageUpload({ image, onChange, label = 'Bilde' }: CmsImageUpl
             placeholder="Alt-tekst (beskriv bildet)"
             value={image.alt || ''}
             onChange={(e) => onChange({ url: image.url, alt: e.target.value })}
-            className="w-full rounded-md border border-forest/15 bg-card px-3 py-2 text-[14px] text-forest placeholder:text-body/40"
+            className="w-full rounded-md border border-forest/15 bg-card px-3 py-2 text-body text-forest placeholder:text-body/40"
           />
         </div>
       )}

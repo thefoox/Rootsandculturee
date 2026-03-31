@@ -79,12 +79,12 @@ export default function CheckoutPage() {
 
   return (
     <div className="mx-auto max-w-[900px] px-4 pt-24 pb-16">
-      <h1 className="mb-8 font-heading text-[28px] font-bold text-forest">
+      <h1 className="mb-8 font-heading text-h2 font-bold text-forest">
         Kasse
       </h1>
 
       {initError && (
-        <div className="mb-6 rounded-lg bg-destructive/10 p-4 text-[15px] text-destructive">
+        <div className="mb-6 rounded-lg bg-destructive/10 p-4 text-body text-destructive">
           {initError}
         </div>
       )}
@@ -102,7 +102,7 @@ export default function CheckoutPage() {
           ) : (
             !initError && (
               <div className="flex items-center justify-center py-12">
-                <p className="text-[15px] text-body">Laster betalingsskjema...</p>
+                <p className="text-body">Laster betalingsskjema...</p>
               </div>
             )
           )}
@@ -116,7 +116,7 @@ export default function CheckoutPage() {
             open={summaryOpen}
             onToggle={(e) => setSummaryOpen((e.target as HTMLDetailsElement).open)}
           >
-            <summary className="cursor-pointer rounded-lg border border-forest/12 bg-card px-4 py-3 text-[15px] text-forest">
+            <summary className="cursor-pointer rounded-lg border border-forest/12 bg-card px-4 py-3 text-body text-forest">
               Vis ordresammendrag ({formatPrice(total)})
             </summary>
             <div className="mt-3">
@@ -134,7 +134,7 @@ export default function CheckoutPage() {
                         ? `${item.id}:${item.experienceDateId}`
                         : item.id
                     }
-                    className="flex justify-between text-[13px] text-forest"
+                    className="flex justify-between text-label text-forest"
                   >
                     <span>
                       {item.name}
@@ -165,7 +165,7 @@ export default function CheckoutPage() {
                       ? `${item.id}:${item.experienceDateId}`
                       : item.id
                   }
-                  className="flex justify-between text-[13px] text-forest"
+                  className="flex justify-between text-label text-forest"
                 >
                   <span>
                     {item.name}

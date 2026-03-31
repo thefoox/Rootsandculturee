@@ -86,10 +86,10 @@ export default function KontaktPage() {
         <div className="absolute inset-0 bg-black/25" />
         
         <div className="relative z-10 mx-auto max-w-[1200px] px-4 py-20 text-center md:px-8">
-          <h1 className="font-heading text-[32px] font-bold leading-tight text-cream md:text-[42px]">
+          <h1 className="font-heading text-h1 font-bold leading-tight text-cream ">
             Kontakt oss
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-cream/90">
+          <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-cream/90">
             Vi hører gjerne fra deg
           </p>
         </div>
@@ -111,13 +111,13 @@ export default function KontaktPage() {
                     />
                   </div>
                   <div>
-                    <p className="text-[13px] font-medium tracking-wide text-forest">
+                    <p className="text-label font-medium tracking-wide text-forest">
                       {item.label}
                     </p>
                     {item.href ? (
                       <a
                         href={item.href}
-                        className="text-[15px] text-body underline-offset-2 motion-safe:transition-colors motion-safe:duration-100 hover:text-forest hover:underline"
+                        className="text-body underline-offset-2 motion-safe:transition-colors motion-safe:duration-100 hover:text-forest hover:underline"
                         {...(item.href.startsWith('http')
                           ? { target: '_blank', rel: 'noopener noreferrer' }
                           : {})}
@@ -125,7 +125,7 @@ export default function KontaktPage() {
                         {item.value}
                       </a>
                     ) : (
-                      <p className="text-[15px] text-body">{item.value}</p>
+                      <p className="text-body">{item.value}</p>
                     )}
                   </div>
                 </div>
@@ -167,7 +167,7 @@ export default function KontaktPage() {
                 key={item.question}
                 className="group rounded-xl bg-cream"
               >
-                <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-[15px] font-medium text-forest marker:content-none [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-body font-medium text-forest marker:content-none [&::-webkit-details-marker]:hidden">
                   <span>{item.question}</span>
                   <span
                     className="ml-4 shrink-0 text-body motion-safe:transition-transform motion-safe:duration-150 group-open:rotate-45"
@@ -176,7 +176,7 @@ export default function KontaktPage() {
                     +
                   </span>
                 </summary>
-                <div className="px-6 pb-5 text-[15px] leading-relaxed text-body">
+                <div className="px-6 pb-5 text-body leading-relaxed text-body">
                   {item.answer}
                 </div>
               </details>

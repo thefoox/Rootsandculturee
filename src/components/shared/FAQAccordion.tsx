@@ -16,7 +16,7 @@ export function FAQAccordion({ items, heading }: FAQAccordionProps) {
   return (
     <div>
       {heading && (
-        <h2 className="mb-6 font-heading text-[28px] font-bold text-forest">
+        <h2 className="mb-6 font-heading text-h2 font-bold text-forest">
           {heading}
         </h2>
       )}
@@ -26,7 +26,7 @@ export function FAQAccordion({ items, heading }: FAQAccordionProps) {
             key={index}
             className="group border-b border-forest/10"
           >
-            <summary className="flex cursor-pointer items-center justify-between py-4 font-heading text-[17px] font-bold text-forest [&::-webkit-details-marker]:hidden [&::marker]:hidden list-none">
+            <summary className="flex cursor-pointer items-center justify-between py-4 font-heading text-lg font-bold text-forest [&::-webkit-details-marker]:hidden [&::marker]:hidden list-none">
               <span>{item.question}</span>
               <ChevronDown
                 className="h-5 w-5 shrink-0 text-forest/60 motion-safe:transition-transform motion-safe:duration-200 group-open:rotate-180"
@@ -35,7 +35,7 @@ export function FAQAccordion({ items, heading }: FAQAccordionProps) {
             </summary>
             <div className="grid grid-rows-[0fr] motion-safe:transition-[grid-template-rows] motion-safe:duration-200 group-open:grid-rows-[1fr]">
               <div className="overflow-hidden">
-                <p className="pb-2 pt-2 text-[15px] leading-relaxed text-body">
+                <p className="pb-2 pt-2 text-body leading-relaxed text-body">
                   {item.answer}
                 </p>
               </div>

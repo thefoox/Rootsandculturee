@@ -15,7 +15,7 @@ export function BookingStatusBadge({ status }: BookingStatusBadgeProps) {
 
   return (
     <span
-      className={`inline-flex rounded-full px-2 py-1 font-body text-[13px] font-normal ${config.className}`}
+      className={`inline-flex rounded-full px-2 py-1 font-body text-label font-normal ${config.className}`}
     >
       {config.label}
     </span>
