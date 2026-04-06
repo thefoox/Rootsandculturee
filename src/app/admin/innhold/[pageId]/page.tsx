@@ -40,6 +40,7 @@ const SECTION_TYPE_LABELS: Record<SectionType, string> = {
   'experiences-grid': 'Opplevelser (auto)',
   'articles-grid': 'Artikler (auto)',
   'products-grid': 'Produkter (auto)',
+  'trust-bar': 'Tillitsbar',
 }
 
 const ALL_SECTION_TYPES = Object.keys(SECTION_TYPE_LABELS) as SectionType[]
