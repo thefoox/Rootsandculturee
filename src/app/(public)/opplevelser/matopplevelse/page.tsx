@@ -85,7 +85,7 @@ export default async function MatopplevelsePage() {
             {matWithDates.length > 0 ? (
               <ExperienceList experiences={matWithDates} />
             ) : (
-              <EmptyState icon={Compass} heading="Ingen matopplevelser" body="Vi har ingen matopplevelser tilgjengelig akkurat nå." />
+              <EmptyState icon={Compass} heading="Kommer snart" body="Vi planlegger nye matopplevelser med norske tradisjonsretter. Følg med!" ctaLabel="Se alle opplevelser" ctaHref="/opplevelser" />
             )}
           </div>
         </section>

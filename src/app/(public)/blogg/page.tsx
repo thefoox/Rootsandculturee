@@ -37,8 +37,10 @@ export default async function BloggPage() {
       ) : (
         <EmptyState
           icon={BookOpen}
-          heading="Ingen artikler"
-          body="Vi har ingen publiserte artikler ennå. Kom tilbake snart!"
+          heading="Kommer snart"
+          body="Vi jobber med å skrive artikler om norsk natur og kultur. Følg med!"
+          ctaLabel="Utforsk opplevelser"
+          ctaHref="/opplevelser"
         />
       )}
     </div>

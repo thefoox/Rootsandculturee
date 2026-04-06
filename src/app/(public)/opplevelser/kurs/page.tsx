@@ -85,7 +85,7 @@ export default async function KursPage() {
             {kursWithDates.length > 0 ? (
               <ExperienceList experiences={kursWithDates} />
             ) : (
-              <EmptyState icon={Compass} heading="Ingen kurs" body="Vi har ingen kurs tilgjengelig akkurat nå." />
+              <EmptyState icon={Compass} heading="Kommer snart" body="Vi planlegger nye kurs i norsk natur og tradisjoner. Følg med!" ctaLabel="Se alle opplevelser" ctaHref="/opplevelser" />
             )}
           </div>
         </section>
