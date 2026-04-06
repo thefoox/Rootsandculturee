@@ -68,7 +68,13 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
             sizes="100vw"
           />
         <div className="absolute inset-0 bg-black/25" />
-          
+          <div
+            className="absolute inset-x-0 top-0 h-32"
+            style={{
+              background: 'linear-gradient(to bottom, rgba(0,0,0,0.45), transparent)',
+            }}
+          />
+
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
             <div className="mx-auto max-w-[1200px] px-4 md:px-8">
               <h1 className="font-heading text-h1  font-bold text-cream leading-tight">

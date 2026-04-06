@@ -38,7 +38,13 @@ export default async function MatopplevelsePage() {
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-black/25" />
-        
+        <div
+          className="absolute inset-x-0 top-0 h-32"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.45), transparent)',
+          }}
+        />
+
         <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-14 md:px-8 md:pb-20">
           <h1 className="max-w-xl font-heading text-h1 font-bold leading-[1.1] text-cream ">
             Matopplevelser

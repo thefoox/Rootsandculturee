@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { ChevronDown } from 'lucide-react'
 import type { PageSection } from '@/types'
 
 export function HeroSection({ section }: { section: PageSection }) {
@@ -20,6 +21,12 @@ export function HeroSection({ section }: { section: PageSection }) {
         style={{
           background:
             'linear-gradient(to top right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.1) 100%)',
+        }}
+      />
+      <div
+        className="absolute inset-x-0 top-0 h-32"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.45), transparent)',
         }}
       />
 
@@ -44,6 +51,9 @@ export function HeroSection({ section }: { section: PageSection }) {
             </Link>
           </div>
         )}
+      </div>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 motion-safe:animate-bounce" aria-hidden="true">
+        <ChevronDown className="h-6 w-6 text-cream/70" />
       </div>
     </section>
   )
