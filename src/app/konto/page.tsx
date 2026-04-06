@@ -52,7 +52,7 @@ export default async function KontoPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen ordrer enna." />
+          <EmptyState message="Du har ingen ordrer ennå." />
         )}
       </section>
 
@@ -78,7 +78,7 @@ export default async function KontoPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen bookinger enna." />
+          <EmptyState message="Du har ingen bookinger ennå." />
         )}
       </section>
     </div>

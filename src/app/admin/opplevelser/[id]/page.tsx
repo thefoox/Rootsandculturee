@@ -255,7 +255,7 @@ export default function EditExperiencePage() {
                 htmlFor="cancellationPolicy"
                 className="text-label font-normal tracking-wide text-forest"
               >
-                Kanselleringsvilkar
+                Kanselleringsvilkår
               </label>
               <textarea
                 id="cancellationPolicy"

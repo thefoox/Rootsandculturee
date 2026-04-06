@@ -25,7 +25,6 @@ import { Button } from '@/components/ui/Button'
 import { CmsImageUpload } from '@/components/admin/CmsImageUpload'
 import { TiptapEditor } from '@/components/admin/TiptapEditor'
 import { toast } from 'sonner'
-import { ChevronDown, ChevronUp, GripVertical, Trash2, Plus } from 'lucide-react'
 import type { PageSection, PageContent, SectionItem, SectionType } from '@/types'
 
 const SECTION_TYPE_LABELS: Record<SectionType, string> = {
@@ -114,7 +113,7 @@ function SortableSection({
           {...attributes}
           {...listeners}
         >
-          <GripVertical className="h-5 w-5" aria-hidden="true" />
+          <span className="text-base" aria-hidden="true">⋮⋮</span>
         </button>
         <button
           type="button"
@@ -129,11 +128,9 @@ function SortableSection({
               {section.heading || section.id}
             </p>
           </div>
-          {isOpen ? (
-            <ChevronUp className="h-4 w-4 text-body/50" aria-hidden="true" />
-          ) : (
-            <ChevronDown className="h-4 w-4 text-body/50" aria-hidden="true" />
-          )}
+          <span className="text-body/50" aria-hidden="true">
+            {isOpen ? '▲' : '▼'}
+          </span>
         </button>
         <button
           type="button"
@@ -141,7 +138,7 @@ function SortableSection({
           className="p-2 text-body/40 hover:text-red-600"
           aria-label="Slett seksjon"
         >
-          <Trash2 className="h-4 w-4" aria-hidden="true" />
+          Slett
         </button>
       </div>
 
@@ -220,7 +217,7 @@ function SortableSection({
                         className="p-1 text-body/40 hover:text-red-600"
                         aria-label="Fjern element"
                       >
-                        <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                        Slett
                       </button>
                     </div>
                     {section.type !== 'gallery' && (
@@ -271,7 +268,7 @@ function SortableSection({
                 onClick={onAddItem}
                 className="mt-3 inline-flex items-center gap-1 rounded-lg border border-dashed border-forest/20 px-3 py-2 text-sm text-forest hover:bg-card"
               >
-                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                <span aria-hidden="true">+</span>
                 Legg til element
               </button>
             </div>
@@ -486,7 +483,7 @@ export default function EditPageContentPage() {
             onClick={() => setShowAddDropdown(!showAddDropdown)}
             className="inline-flex items-center gap-1.5 rounded-lg bg-forest px-3 py-2 text-sm font-medium text-cream hover:bg-forest/90"
           >
-            <Plus className="h-4 w-4" aria-hidden="true" />
+            <span aria-hidden="true">+</span>
             Legg til seksjon
           </button>
           {showAddDropdown && (

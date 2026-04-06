@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import type { ReactNode, ElementType } from 'react'
 
@@ -11,7 +10,7 @@ export interface Column<T> {
 }
 
 interface EmptyStateConfig {
-  icon: ElementType
+  icon: ElementType | string
   heading: string
   body: string
   ctaLabel: string
@@ -41,10 +40,14 @@ export function DataTable<T extends { id: string }>({
     const Icon = emptyState.icon
     return (
       <div className="flex min-h-[200px] flex-col items-center justify-center rounded-lg border border-forest/12 bg-cream p-8">
-        <Icon
-          className="h-12 w-12 text-forest"
-          aria-hidden="true"
-        />
+        {typeof Icon === 'string' ? (
+          <span className="text-4xl text-forest" aria-hidden="true">{Icon}</span>
+        ) : (
+          <Icon
+            className="h-12 w-12 text-forest"
+            aria-hidden="true"
+          />
+        )}
         <h3 className="mt-4 font-heading text-h4 font-bold text-forest">
           {emptyState.heading}
         </h3>
@@ -118,26 +121,20 @@ export function DataTable<T extends { id: string }>({
                         <Link href={editHref(row)}>
                           <Button
                             variant="ghost"
-                            className="h-9 w-9 p-0"
+                            className="h-auto px-2 py-1 text-label"
                             aria-label={`Rediger ${name}`}
                           >
-                            <Pencil
-                              className="h-4 w-4"
-                              aria-hidden="true"
-                            />
+                            Rediger
                           </Button>
                         </Link>
                       )}
                       {onDelete && (
                         <button
                           onClick={() => onDelete(row)}
-                          className="flex h-9 w-9 items-center justify-center rounded-md text-forest hover:text-destructive"
+                          className="rounded-md px-2 py-1 text-label text-forest hover:text-destructive"
                           aria-label={`Slett ${name}`}
                         >
-                          <Trash2
-                            className="h-4 w-4"
-                            aria-hidden="true"
-                          />
+                          Slett
                         </button>
                       )}
                     </div>

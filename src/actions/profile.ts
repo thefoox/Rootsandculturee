@@ -7,17 +7,17 @@ import { adminDb } from '@/lib/firebase/admin'
 const profileSchema = z.object({
   displayName: z
     .string()
-    .min(2, 'Navnet ma vaere minst 2 tegn.'),
+    .min(2, 'Navnet må være minst 2 tegn.'),
   address: z.string().optional().default(''),
 })
 
 const passwordSchema = z
   .object({
-    currentPassword: z.string().min(1, 'Gammelt passord er paakrevd.'),
+    currentPassword: z.string().min(1, 'Gammelt passord er påkrevd.'),
     newPassword: z
       .string()
-      .min(8, 'Nytt passord ma vaere minst 8 tegn.'),
-    confirmPassword: z.string().min(1, 'Bekreft passord er paakrevd.'),
+      .min(8, 'Nytt passord må være minst 8 tegn.'),
+    confirmPassword: z.string().min(1, 'Bekreft passord er påkrevd.'),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Passordene samsvarer ikke.',
@@ -55,7 +55,7 @@ export async function updateProfileAction(
     })
     return { success: true }
   } catch {
-    return { success: false, error: 'Kunne ikke oppdatere profilen. Prov igjen.' }
+    return { success: false, error: 'Kunne ikke oppdatere profilen. Prøv igjen.' }
   }
 }
 

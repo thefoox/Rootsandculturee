@@ -36,7 +36,7 @@ export function NewsletterSignup() {
           disabled={pending}
           className="min-h-[44px] rounded-md bg-forest px-4 py-2 text-body font-medium text-cream transition-colors hover:bg-forest/90 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {pending ? 'Sender...' : 'Meld pa'}
+          {pending ? 'Sender...' : 'Meld på'}
         </button>
       </div>
       {state.error && (

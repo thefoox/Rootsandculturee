@@ -38,7 +38,7 @@ export default async function BloggPage() {
         <EmptyState
           icon={BookOpen}
           heading="Ingen artikler"
-          body="Vi har ingen publiserte artikler enna. Kom tilbake snart!"
+          body="Vi har ingen publiserte artikler ennå. Kom tilbake snart!"
         />
       )}
     </div>

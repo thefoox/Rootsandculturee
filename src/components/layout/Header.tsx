@@ -13,6 +13,7 @@ import { AuthModal } from '@/components/auth/AuthModal'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { RegisterForm } from '@/components/auth/RegisterForm'
 import { PasswordResetForm } from '@/components/auth/PasswordResetForm'
+import { logoutAction } from '@/actions/auth'
 import { CartBadge } from '@/components/cart/CartBadge'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import { useCart } from '@/components/cart/CartProvider'
@@ -35,8 +36,10 @@ export function Header() {
   const isTransparent = heroPages.includes(pathname) || (pathname.startsWith('/opplevelser/') && pathname.split('/').length === 3)
 
   useEffect(() => {
-    // Check if session cookie exists (set by mock-login or real auth)
-    setIsLoggedIn(document.cookie.includes('__session'))
+    fetch('/api/auth/session')
+      .then((r) => r.json())
+      .then((data) => setIsLoggedIn(data.authenticated))
+      .catch(() => setIsLoggedIn(false))
   }, [])
 
   // Fetch dynamic navigation from CMS
@@ -51,8 +54,8 @@ export function Header() {
       })
   }, [])
 
-  function handleLogout() {
-    document.cookie = '__session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+  async function handleLogout() {
+    await logoutAction()
     setIsLoggedIn(false)
     setProfileOpen(false)
     window.location.href = '/'
@@ -61,6 +64,12 @@ export function Header() {
   function handleAuthClose() {
     setAuthOpen(false)
     setAuthView('login')
+  }
+
+  function handleLoginSuccess() {
+    setAuthOpen(false)
+    setAuthView('login')
+    setIsLoggedIn(true)
   }
 
   function handleAuthOpen() {
@@ -176,7 +185,7 @@ export function Header() {
             type="button"
             className="flex h-11 w-11 items-center justify-center"
             onClick={() => setMobileOpen(true)}
-            aria-label="Apne meny"
+            aria-label="Åpne meny"
             aria-expanded={mobileOpen}
           >
             <Menu className={`h-6 w-6 ${isTransparent ? 'text-cream' : 'text-forest'}`} aria-hidden="true" />
@@ -201,13 +210,13 @@ export function Header() {
           <LoginForm
             onSwitchToRegister={() => setAuthView('register')}
             onSwitchToReset={() => setAuthView('reset')}
-            onSuccess={handleAuthClose}
+            onSuccess={handleLoginSuccess}
           />
         )}
         {authView === 'register' && (
           <RegisterForm
             onSwitchToLogin={() => setAuthView('login')}
-            onSuccess={handleAuthClose}
+            onSuccess={handleLoginSuccess}
           />
         )}
         {authView === 'reset' && (

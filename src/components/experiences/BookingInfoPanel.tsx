@@ -39,6 +39,8 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
       quantity: 1,
       image: experience.images[0] ?? null,
       slug: experience.slug,
+      variantId: null,
+      variantLabel: null,
       experienceDateId: selectedDate.id,
       experienceDate: selectedDate.date.toISOString(),
       experienceName: experience.name,

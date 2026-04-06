@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
-import { signIn } from '@/lib/firebase/auth'
-import { loginAction } from '@/actions/auth'
+import { signIn, signInWithGoogle } from '@/lib/firebase/auth'
+import { loginAction, googleLoginAction } from '@/actions/auth'
 
 interface LoginFormProps {
   onSwitchToRegister: () => void
@@ -21,6 +21,7 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {}
@@ -58,13 +59,41 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
       if (firebaseError.code === 'auth/invalid-credential' || firebaseError.code === 'auth/user-not-found' || firebaseError.code === 'auth/wrong-password') {
         setFormError('Feil e-post eller passord. Prover du igjen?')
       } else if (firebaseError.code === 'auth/too-many-requests') {
-        setFormError('For mange forsok. Vent litt og prov igjen.')
+        setFormError('For mange forsøk. Vent litt og prøv igjen.')
       } else if (firebaseError.code === 'auth/invalid-email') {
         setErrors({ email: 'Oppgi en gyldig e-postadresse.' })
       } else {
-        setFormError('Noe gikk galt. Sjekk internettforbindelsen og prover pa nytt.')
+        setFormError('Noe gikk galt. Sjekk internettforbindelsen og prøver på nytt.')
       }
       setLoading(false)
+    }
+  }
+
+  async function handleGoogleLogin() {
+    setFormError('')
+    setGoogleLoading(true)
+
+    try {
+      const { idToken } = await signInWithGoogle()
+      const result = await googleLoginAction(idToken)
+      if (!result.success) {
+        setFormError(result.error || 'Noe gikk galt.')
+        setGoogleLoading(false)
+        return
+      }
+
+      router.refresh()
+      onSuccess()
+    } catch (err: unknown) {
+      const firebaseError = err as { code?: string }
+      if (firebaseError.code === 'auth/popup-closed-by-user') {
+        // Bruker lukket popup — ingen feilmelding
+      } else if (firebaseError.code === 'auth/account-exists-with-different-credential') {
+        setFormError('Denne e-postadressen er allerede registrert med en annen innloggingsmetode.')
+      } else {
+        setFormError('Innlogging med Google feilet. Prøv igjen.')
+      }
+      setGoogleLoading(false)
     }
   }
 
@@ -73,6 +102,32 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
       {formError && (
         <FormError id="login-form-error" message={formError} className="mb-4" />
       )}
+
+      <button
+        type="button"
+        onClick={handleGoogleLogin}
+        disabled={googleLoading || loading}
+        className="flex w-full items-center justify-center gap-2 rounded-md border border-forest/20 bg-white px-4 py-2 font-body text-body font-medium text-forest transition-all duration-100 min-h-[44px] hover:bg-cream disabled:opacity-40 disabled:cursor-not-allowed"
+        aria-busy={googleLoading || undefined}
+      >
+        {googleLoading ? (
+          <>
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-forest/20 border-t-forest" aria-hidden="true" />
+            <span>Laster...</span>
+          </>
+        ) : (
+          <>
+            <span className="text-lg font-bold leading-none" aria-hidden="true">G</span>
+            <span>Logg inn med Google</span>
+          </>
+        )}
+      </button>
+
+      <div className="flex items-center gap-3 my-6">
+        <div className="h-px flex-1 bg-forest/12" />
+        <span className="text-label text-body">eller</span>
+        <div className="h-px flex-1 bg-forest/12" />
+      </div>
 
       <div className="space-y-4">
         <Input

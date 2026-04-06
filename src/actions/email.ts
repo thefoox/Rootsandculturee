@@ -7,8 +7,8 @@ import { adminDb } from '@/lib/firebase/admin'
 
 const emailSchema = z.object({
   to: z.string().email('Ugyldig e-postadresse.'),
-  subject: z.string().min(1, 'Emne er pakrevd.').max(200, 'Emnet er for langt.'),
-  message: z.string().min(1, 'Melding er pakrevd.').max(5000, 'Meldingen er for lang.'),
+  subject: z.string().min(1, 'Emne er påkrevd.').max(200, 'Emnet er for langt.'),
+  message: z.string().min(1, 'Melding er påkrevd.').max(5000, 'Meldingen er for lang.'),
 })
 
 export async function sendAdminEmail(
@@ -53,6 +53,6 @@ export async function sendAdminEmail(
     return { success: true }
   } catch (err) {
     console.error('Admin email error:', err)
-    return { success: false, error: 'Kunne ikke sende e-post. Prov igjen.' }
+    return { success: false, error: 'Kunne ikke sende e-post. Prøv igjen.' }
   }
 }

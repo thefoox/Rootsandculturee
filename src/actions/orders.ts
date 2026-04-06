@@ -1,6 +1,7 @@
 'use server'
 
 import { adminDb } from '@/lib/firebase/admin'
+import { stripe } from '@/lib/stripe/server'
 import { verifySession } from '@/lib/dal'
 import { unstable_cache, revalidateTag } from 'next/cache'
 import type { Order, OrderStatus, ShippingAddress, OrderNote } from '@/types'
@@ -126,7 +127,7 @@ export async function addOrderNote(
     return { success: false, error: 'Ingen tilgang.' }
   }
   if (!adminDb) return { success: false, error: 'Database ikke tilgjengelig.' }
-  if (!text.trim()) return { success: false, error: 'Notatet kan ikke vaere tomt.' }
+  if (!text.trim()) return { success: false, error: 'Notatet kan ikke være tomt.' }
 
   try {
     await adminDb
@@ -170,6 +171,79 @@ export async function getOrderNotes(orderId: string): Promise<OrderNote[]> {
   })
 }
 
+async function getFirestoreOrderStats(): Promise<{
+  orderCount: number
+  totalRevenue: number
+  averageOrder: number
+}> {
+  if (!adminDb) {
+    return { orderCount: 0, totalRevenue: 0, averageOrder: 0 }
+  }
+
+  const ordersSnap = await adminDb.collection('orders').get()
+
+  let totalRevenue = 0
+  for (const doc of ordersSnap.docs) {
+    totalRevenue += (doc.data().total as number) || 0
+  }
+
+  const orderCount = ordersSnap.size
+  const averageOrder = orderCount > 0 ? Math.round(totalRevenue / orderCount) : 0
+
+  return { orderCount, totalRevenue, averageOrder }
+}
+
+async function getStripeOrderStats(): Promise<{
+  orderCount: number
+  totalRevenue: number
+  averageOrder: number
+} | null> {
+  if (!stripe) {
+    console.warn('[Dashboard] Stripe not configured — STRIPE_SECRET_KEY missing')
+    return null
+  }
+
+  try {
+    const paymentIntents = await stripe.paymentIntents.list({ limit: 100 })
+    const succeeded = paymentIntents.data.filter((pi) => pi.status === 'succeeded')
+
+    const totalRevenue = succeeded.reduce((sum, pi) => sum + pi.amount, 0)
+    const orderCount = succeeded.length
+    const averageOrder = orderCount > 0 ? Math.round(totalRevenue / orderCount) : 0
+
+    return { orderCount, totalRevenue, averageOrder }
+  } catch (err) {
+    console.error('[Dashboard] Stripe API error:', err)
+    return null
+  }
+}
+
+export async function getRecentStripePayments(): Promise<{
+  id: string
+  amount: number
+  status: string
+  created: Date
+  customerEmail: string
+}[]> {
+  if (!stripe) return []
+
+  try {
+    const paymentIntents = await stripe.paymentIntents.list({ limit: 10 })
+    const succeeded = paymentIntents.data.filter((pi) => pi.status === 'succeeded')
+
+    return succeeded.slice(0, 5).map((pi) => ({
+      id: pi.id,
+      amount: pi.amount,
+      status: pi.status,
+      created: new Date(pi.created * 1000),
+      customerEmail: (pi.metadata?.customerEmail as string) || pi.receipt_email || '—',
+    }))
+  } catch (err) {
+    console.error('[Dashboard] Stripe recent payments error:', err)
+    return []
+  }
+}
+
 export async function getOrderStats(): Promise<{
   orderCount: number
   totalRevenue: number
@@ -181,19 +255,15 @@ export async function getOrderStats(): Promise<{
     return { orderCount: 0, totalRevenue: 0, averageOrder: 0, bookingCount: 0, customerCount: 0 }
   }
 
-  const [ordersSnap, bookingsSnap, usersSnap] = await Promise.all([
-    adminDb.collection('orders').get(),
+  const [stripeStats, bookingsSnap, usersSnap] = await Promise.all([
+    getStripeOrderStats(),
     adminDb.collection('bookings').count().get(),
     adminDb.collection('users').count().get(),
   ])
 
-  let totalRevenue = 0
-  for (const doc of ordersSnap.docs) {
-    totalRevenue += (doc.data().total as number) || 0
-  }
-
-  const orderCount = ordersSnap.size
-  const averageOrder = orderCount > 0 ? Math.round(totalRevenue / orderCount) : 0
+  // Use Stripe data for revenue/orders if available, fall back to Firestore
+  const { orderCount, totalRevenue, averageOrder } = stripeStats
+    ?? await getFirestoreOrderStats()
 
   return {
     orderCount,

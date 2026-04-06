@@ -16,7 +16,7 @@ export function OrderSummaryPanel({
   subtotal,
   shippingCost,
   showCta = true,
-  ctaText = 'Ga til betaling',
+  ctaText = 'Gå til betaling',
   ctaHref = '/checkout',
 }: OrderSummaryPanelProps) {
   const total = subtotal + shippingCost

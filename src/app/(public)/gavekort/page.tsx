@@ -42,16 +42,16 @@ export default function GavekortPage() {
     const newErrors: Record<string, string> = {}
 
     if (effectiveAmount <= 0) {
-      newErrors.amount = 'Velg et belop.'
+      newErrors.amount = 'Velg et beløp.'
     } else if (isCustom && (effectiveAmount < MIN_CUSTOM || effectiveAmount > MAX_CUSTOM)) {
-      newErrors.amount = `Belop ma vaere mellom ${MIN_CUSTOM} og ${MAX_CUSTOM} kr.`
+      newErrors.amount = `Beløp må være mellom ${MIN_CUSTOM} og ${MAX_CUSTOM} kr.`
     }
 
     if (!recipientName.trim()) {
-      newErrors.recipientName = 'Mottakers navn er pakrevd.'
+      newErrors.recipientName = 'Mottakers navn er påkrevd.'
     }
     if (!recipientEmail.trim()) {
-      newErrors.recipientEmail = 'Mottakers e-post er pakrevd.'
+      newErrors.recipientEmail = 'Mottakers e-post er påkrevd.'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail)) {
       newErrors.recipientEmail = 'Ugyldig e-postadresse.'
     }
@@ -71,6 +71,8 @@ export default function GavekortPage() {
       quantity: 1,
       image: null,
       slug: 'gavekort',
+      variantId: null,
+      variantLabel: null,
       // Store recipient info in existing nullable fields for giftcard items
       experienceDateId: message || null,       // greeting message
       experienceDate: recipientEmail || null,   // recipient email
@@ -91,20 +93,20 @@ export default function GavekortPage() {
         <div className="mb-8 flex items-center gap-3">
           <Gift className="h-8 w-8 text-forest" aria-hidden="true" />
           <h1 className="font-heading text-h2 font-bold text-forest">
-            Kjop gavekort
+            Kjøp gavekort
           </h1>
         </div>
 
         <p className="mb-8 font-body text-body leading-[1.7] text-forest">
           Gi bort en naturopplevelse eller et produkt fra Roots & Culture.
-          Mottakeren far en unik kode som kan brukes i nettbutikken.
-          Gavekortet er gyldig i 12 maneder.
+          Mottakeren får en unik kode som kan brukes i nettbutikken.
+          Gavekortet er gyldig i 12 måneder.
         </p>
 
         {/* Amount selection */}
         <section className="mb-8">
           <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
-            Velg belop
+            Velg beløp
           </h2>
           <div className="flex flex-wrap gap-3">
             {PRESET_AMOUNTS.map((amount) => (
@@ -141,7 +143,7 @@ export default function GavekortPage() {
           {isCustom && (
             <div className="mt-4 max-w-[200px]">
               <Input
-                label={`Belop (${MIN_CUSTOM}–${MAX_CUSTOM} kr)`}
+                label={`Beløp (${MIN_CUSTOM}–${MAX_CUSTOM} kr)`}
                 type="number"
                 min={MIN_CUSTOM}
                 max={MAX_CUSTOM}

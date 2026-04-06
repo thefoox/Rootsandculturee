@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Plus, Mountain } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { DataTable, type Column } from '@/components/admin/DataTable'
@@ -31,7 +30,7 @@ export default function ExperiencesListPage() {
       )
       toast.success(`${deleteTarget.name} er slettet.`)
     } else {
-      toast.error('Kunne ikke slette. Prover pa nytt.')
+      toast.error('Kunne ikke slette. Prøver på nytt.')
     }
     setIsDeleting(false)
     setDeleteTarget(null)
@@ -49,8 +48,8 @@ export default function ExperiencesListPage() {
             className="h-12 w-12 rounded object-cover"
           />
         ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded bg-card text-body">
-            <Mountain className="h-5 w-5" aria-hidden="true" />
+          <div className="flex h-12 w-12 items-center justify-center rounded bg-card text-body text-label">
+            Bilde
           </div>
         ),
     },
@@ -84,8 +83,7 @@ export default function ExperiencesListPage() {
         </h1>
         <Link href="/admin/opplevelser/ny">
           <Button variant="primary">
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            Legg til opplevelse
+            + Legg til opplevelse
           </Button>
         </Link>
       </div>
@@ -98,9 +96,9 @@ export default function ExperiencesListPage() {
         getItemName={(item) => item.name}
         caption="Liste over opplevelser"
         emptyState={{
-          icon: Mountain,
-          heading: 'Ingen opplevelser enna',
-          body: 'Kom i gang ved a legge til din forste opplevelse.',
+          icon: '',
+          heading: 'Ingen opplevelser ennå',
+          body: 'Kom i gang ved å legge til din første opplevelse.',
           ctaLabel: 'Legg til opplevelse',
           ctaHref: '/admin/opplevelser/ny',
         }}

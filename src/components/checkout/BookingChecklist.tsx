@@ -17,7 +17,7 @@ export function BookingChecklist({ items }: BookingChecklistProps) {
   return (
     <div>
       <h3 className="mb-3 font-heading text-h4 font-bold text-forest">
-        Husk a ta med:
+        Husk å ta med:
       </h3>
       <ul className="space-y-2">
         {checklistItems.map((item, index) => (

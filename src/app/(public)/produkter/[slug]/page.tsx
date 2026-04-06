@@ -5,6 +5,7 @@ import { ProductGallery } from '@/components/products/ProductGallery'
 import { PriceBadge } from '@/components/shared/PriceBadge'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { AddToCartButton } from '@/components/products/AddToCartButton'
+import { VariantSelector } from '@/components/products/VariantSelector'
 import { productJsonLd } from '@/lib/json-ld'
 
 export const revalidate = 3600
@@ -62,11 +63,15 @@ export default async function ProduktDetailPage({ params }: PageProps) {
             {product.name}
           </h1>
           <PriceBadge priceInOre={product.price} className="mt-4 block text-h4" />
-          <p className="mt-6 font-body text-body leading-[1.5] text-forest">
+          <p className="mt-6 font-body text-body leading-[1.5] text-forest whitespace-pre-line">
             {product.description}
           </p>
           <div className="mt-8">
-            <AddToCartButton product={{ id: product.id, slug: product.slug, name: product.name, price: product.price, images: product.images }} />
+            {product.variants.length > 0 ? (
+              <VariantSelector product={{ id: product.id, slug: product.slug, name: product.name, price: product.price, images: product.images, variants: product.variants }} />
+            ) : (
+              <AddToCartButton product={{ id: product.id, slug: product.slug, name: product.name, price: product.price, images: product.images }} />
+            )}
           </div>
         </div>
       </article>

@@ -56,7 +56,7 @@ export default function CheckoutPage() {
           setInitError(result.error)
         }
       } catch {
-        setInitError('Kunne ikke starte betalingen. Prov igjen.')
+        setInitError('Kunne ikke starte betalingen. Prøv igjen.')
       }
     }
 

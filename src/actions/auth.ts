@@ -67,7 +67,50 @@ export async function registerAction(
 
     return { success: true }
   } catch {
-    return { success: false, error: 'Noe gikk galt. Sjekk internettforbindelsen og prov pa nytt.' }
+    return { success: false, error: 'Noe gikk galt. Sjekk internettforbindelsen og prøv på nytt.' }
+  }
+}
+
+export async function googleLoginAction(idToken: string): Promise<AuthResult> {
+  try {
+    if (!adminAuth || !adminDb) {
+      return { success: false, error: 'Server er ikke konfigurert. Kontakt administrator.' }
+    }
+    const decoded = await adminAuth.verifyIdToken(idToken)
+
+    // Check if user doc exists in Firestore
+    const userDoc = await adminDb.collection('users').doc(decoded.uid).get()
+
+    if (!userDoc.exists) {
+      // First-time Google login: create user document
+      await adminDb.collection('users').doc(decoded.uid).set({
+        uid: decoded.uid,
+        email: decoded.email || '',
+        displayName: decoded.name || '',
+        address: '',
+        role: 'customer',
+        createdAt: new Date(),
+        lastLoginAt: new Date(),
+      })
+    } else {
+      // Returning user: update lastLoginAt
+      await adminDb.collection('users').doc(decoded.uid).update({
+        lastLoginAt: new Date(),
+      })
+    }
+
+    // Get user role from custom claims
+    const role = decoded.admin === true ? 'admin' : 'customer'
+
+    await createSession({
+      uid: decoded.uid,
+      email: decoded.email || '',
+      role,
+    })
+
+    return { success: true }
+  } catch {
+    return { success: false, error: 'Innlogging med Google feilet. Prøv igjen.' }
   }
 }
 

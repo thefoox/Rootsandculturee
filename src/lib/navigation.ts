@@ -20,7 +20,7 @@ const fixedNavItems: NavItem[] = [
     href: '/produkter',
     children: [
       { label: 'Drikke', href: '/produkter?kategori=drikke', description: 'Tradisjonelle norske drikker', icon: 'wine' },
-      { label: 'Kaffe og te', href: '/produkter?kategori=kaffe-te', description: 'Handplukket kaffe og urtete', icon: 'coffee' },
+      { label: 'Kaffe og te', href: '/produkter?kategori=kaffe-te', description: 'Håndplukket kaffe og urtete', icon: 'coffee' },
       { label: 'Naturprodukter', href: '/produkter?kategori=naturprodukter', description: 'Ekte fra norsk natur', icon: 'leaf' },
     ],
   },
@@ -30,7 +30,7 @@ const fixedNavItems: NavItem[] = [
     children: [
       { label: 'Alle opplevelser', href: '/opplevelser', description: 'Se alle naturopplevelser', icon: 'mountain' },
       { label: 'Naturretreater', href: '/opplevelser/retreat', description: 'Ro og fordypning i naturen', icon: 'mountain' },
-      { label: 'Kurs', href: '/opplevelser/kurs', description: 'Laer tradisjoner og handverk', icon: 'book-open' },
+      { label: 'Kurs', href: '/opplevelser/kurs', description: 'Lær tradisjoner og håndverk', icon: 'book-open' },
       { label: 'Matopplevelser', href: '/opplevelser/matopplevelse', description: 'Smak norsk matkultur', icon: 'utensils' },
     ],
   },
@@ -88,14 +88,14 @@ export const footerColumns: FooterColumn[] = [
     title: 'Kundeservice',
     links: [
       { label: 'Kontakt oss', href: '/kontakt' },
-      { label: 'Vanlige sporsmal', href: '/kontakt#faq' },
+      { label: 'Vanlige spørsmål', href: '/kontakt#faq' },
       { label: 'Frakt og retur', href: '/kontakt#frakt' },
       { label: 'Personvern', href: '/personvern' },
-      { label: 'Vilkar', href: '/vilkar' },
+      { label: 'Vilkår', href: '/vilkar' },
     ],
   },
   {
-    title: 'Folg oss',
+    title: 'Følg oss',
     links: [
       { label: 'Instagram', href: 'https://instagram.com/rootsculture', external: true },
       { label: 'Facebook', href: 'https://facebook.com/rootsculture', external: true },

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { CalendarCheck, Eye, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { DataTable, type Column } from '@/components/admin/DataTable'
@@ -75,7 +74,7 @@ export default function BookingsListPage() {
       )
       toast.success('Booking kansellert.')
     } else {
-      toast.error(result.error || 'Kunne ikke kansellere. Prov igjen.')
+      toast.error(result.error || 'Kunne ikke kansellere. Prøv igjen.')
     }
     setIsCancelling(false)
     setCancelTarget(null)
@@ -130,10 +129,10 @@ export default function BookingsListPage() {
           {row.status !== 'cancelled' && (
             <button
               onClick={() => setCancelTarget(row)}
-              className="flex h-9 w-9 items-center justify-center rounded-md text-body hover:text-[#C0392B]"
+              className="rounded-md px-2 py-1 text-label text-body hover:text-[#C0392B]"
               aria-label={`Kanseller booking ${row.confirmationCode}`}
             >
-              <XCircle className="h-4 w-4" aria-hidden="true" />
+              Kanseller
             </button>
           )}
         </div>
@@ -168,7 +167,7 @@ export default function BookingsListPage() {
 
       {filteredBookings.length === 0 ? (
         <EmptyState
-          icon={CalendarCheck}
+          icon=""
           heading="Ingen bookinger enda"
           body="Bookinger vises her etter at kunder har reservert plasser."
         />
@@ -178,7 +177,7 @@ export default function BookingsListPage() {
           data={filteredBookings}
           caption="Liste over bookinger"
           emptyState={{
-            icon: CalendarCheck,
+            icon: '',
             heading: 'Ingen bookinger enda',
             body: 'Bookinger vises her etter at kunder har reservert plasser.',
             ctaLabel: '',

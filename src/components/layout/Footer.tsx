@@ -43,7 +43,7 @@ export function Footer() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-body/70 hover:text-forest hover:underline"
-                        aria-label={`${link.label} (apner i nytt vindu)`}
+                        aria-label={`${link.label} (åpner i nytt vindu)`}
                       >
                         {link.label}
                       </a>
@@ -69,7 +69,7 @@ export function Footer() {
               Nyhetsbrev
             </h2>
             <p className="mb-3 text-body/70">
-              Fa nyheter om produkter, opplevelser og norsk natur rett i innboksen.
+              Få nyheter om produkter, opplevelser og norsk natur rett i innboksen.
             </p>
             <NewsletterSignup />
           </div>

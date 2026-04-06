@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error('create-payment-intent error:', err)
     return NextResponse.json(
-      { error: 'Noe gikk galt. Prov igjen.' },
+      { error: 'Noe gikk galt. Prøv igjen.' },
       { status: 500 }
     )
   }

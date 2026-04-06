@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 
-// SESSION_SECRET validated at runtime via src/lib/env.ts validateEnv()
-const secretKey = process.env.SESSION_SECRET || 'dev-secret-for-mock-login-only'
+const secretKey = process.env.SESSION_SECRET
+if (!secretKey) {
+  throw new Error('SESSION_SECRET environment variable is required.')
+}
 const encodedKey = new TextEncoder().encode(secretKey)
 const COOKIE_NAME = '__session'
 

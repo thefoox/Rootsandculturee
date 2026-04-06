@@ -1,7 +1,5 @@
 'use client'
 
-import { Menu } from 'lucide-react'
-
 interface AdminTopBarProps {
   onMenuClick: () => void
 }
@@ -12,9 +10,9 @@ export function AdminTopBar({ onMenuClick }: AdminTopBarProps) {
       <button
         onClick={onMenuClick}
         className="flex h-[44px] w-[44px] items-center justify-center text-cream"
-        aria-label="Apne admin-meny"
+        aria-label="Åpne admin-meny"
       >
-        <Menu className="h-6 w-6" aria-hidden="true" />
+        <span className="text-xl" aria-hidden="true">☰</span>
       </button>
       <span className="flex-1 text-center font-body text-body text-cream">
         Admin

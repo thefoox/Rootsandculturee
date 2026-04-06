@@ -32,12 +32,12 @@ export async function subscribeAction(
     await subscribeNewsletter(parsed.data.email)
     return {
       success: true,
-      message: 'Takk! Du er na pameldt nyhetsbrevet vart.',
+      message: 'Takk! Du er nå påmeldt nyhetsbrevet vårt.',
     }
   } catch {
     return {
       success: false,
-      error: 'Noe gikk galt. Prov igjen senere.',
+      error: 'Noe gikk galt. Prøv igjen senere.',
     }
   }
 }

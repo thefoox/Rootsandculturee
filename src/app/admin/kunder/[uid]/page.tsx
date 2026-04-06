@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { Mail, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge'
@@ -62,7 +61,6 @@ export default function CustomerDetailPage() {
           {customer.displayName || customer.email}
         </h1>
         <Button variant="secondary" onClick={() => setShowEmail(true)}>
-          <Mail className="h-4 w-4" aria-hidden="true" />
           Send e-post
         </Button>
       </div>
@@ -170,10 +168,10 @@ export default function CustomerDetailPage() {
                       <Link href={`/admin/ordrer/${order.id}`}>
                         <Button
                           variant="ghost"
-                          className="h-9 w-9 p-0"
+                          className="h-auto px-2 py-1 text-label"
                           aria-label={`Se ordre ${order.id.slice(0, 8)}`}
                         >
-                          <Eye className="h-4 w-4" aria-hidden="true" />
+                          Vis
                         </Button>
                       </Link>
                     </td>

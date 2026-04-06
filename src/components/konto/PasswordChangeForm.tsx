@@ -30,13 +30,13 @@ export function PasswordChangeForm() {
     const newErrors: FormErrors = {}
 
     if (!currentPassword) {
-      newErrors.currentPassword = 'Gammelt passord er paakrevd.'
+      newErrors.currentPassword = 'Gammelt passord er påkrevd.'
     }
     if (!newPassword || newPassword.length < 8) {
-      newErrors.newPassword = 'Nytt passord ma vaere minst 8 tegn.'
+      newErrors.newPassword = 'Nytt passord må være minst 8 tegn.'
     }
     if (!confirmPassword) {
-      newErrors.confirmPassword = 'Bekreft passord er paakrevd.'
+      newErrors.confirmPassword = 'Bekreft passord er påkrevd.'
     } else if (newPassword !== confirmPassword) {
       newErrors.confirmPassword = 'Passordene samsvarer ikke.'
     }
@@ -53,7 +53,7 @@ export function PasswordChangeForm() {
 
     const user = auth?.currentUser
     if (!user || !user.email) {
-      setErrors({ general: 'Du er ikke logget inn. Last inn siden pa nytt.' })
+      setErrors({ general: 'Du er ikke logget inn. Last inn siden på nytt.' })
       return
     }
 
@@ -74,11 +74,11 @@ export function PasswordChangeForm() {
         firebaseError.code === 'auth/wrong-password' ||
         firebaseError.code === 'auth/invalid-credential'
       ) {
-        setErrors({ currentPassword: 'Feil passord. Prov igjen.' })
+        setErrors({ currentPassword: 'Feil passord. Prøv igjen.' })
       } else if (firebaseError.code === 'auth/weak-password') {
         setErrors({ newPassword: 'Passordet er for svakt (minst 8 tegn).' })
       } else {
-        setErrors({ general: 'Noe gikk galt. Prov igjen.' })
+        setErrors({ general: 'Noe gikk galt. Prøv igjen.' })
       }
     } finally {
       setIsLoading(false)

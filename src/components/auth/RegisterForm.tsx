@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
-import { signUp } from '@/lib/firebase/auth'
-import { registerAction } from '@/actions/auth'
+import { signUp, signInWithGoogle } from '@/lib/firebase/auth'
+import { registerAction, googleLoginAction } from '@/actions/auth'
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void
@@ -23,6 +23,7 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {}
@@ -64,9 +65,37 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
       } else if (firebaseError.code === 'auth/invalid-email') {
         setErrors({ email: 'Oppgi en gyldig e-postadresse.' })
       } else {
-        setFormError('Noe gikk galt. Sjekk internettforbindelsen og prover pa nytt.')
+        setFormError('Noe gikk galt. Sjekk internettforbindelsen og prøver på nytt.')
       }
       setLoading(false)
+    }
+  }
+
+  async function handleGoogleSignUp() {
+    setFormError('')
+    setGoogleLoading(true)
+
+    try {
+      const { idToken } = await signInWithGoogle()
+      const result = await googleLoginAction(idToken)
+      if (!result.success) {
+        setFormError(result.error || 'Noe gikk galt.')
+        setGoogleLoading(false)
+        return
+      }
+
+      router.refresh()
+      onSuccess()
+    } catch (err: unknown) {
+      const firebaseError = err as { code?: string }
+      if (firebaseError.code === 'auth/popup-closed-by-user') {
+        // Bruker lukket popup — ingen feilmelding
+      } else if (firebaseError.code === 'auth/account-exists-with-different-credential') {
+        setFormError('Denne e-postadressen er allerede registrert med en annen innloggingsmetode.')
+      } else {
+        setFormError('Registrering med Google feilet. Prøv igjen.')
+      }
+      setGoogleLoading(false)
     }
   }
 
@@ -75,6 +104,32 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
       {formError && (
         <FormError id="register-form-error" message={formError} className="mb-4" />
       )}
+
+      <button
+        type="button"
+        onClick={handleGoogleSignUp}
+        disabled={googleLoading || loading}
+        className="flex w-full items-center justify-center gap-2 rounded-md border border-forest/20 bg-white px-4 py-2 font-body text-body font-medium text-forest transition-all duration-100 min-h-[44px] hover:bg-cream disabled:opacity-40 disabled:cursor-not-allowed"
+        aria-busy={googleLoading || undefined}
+      >
+        {googleLoading ? (
+          <>
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-forest/20 border-t-forest" aria-hidden="true" />
+            <span>Laster...</span>
+          </>
+        ) : (
+          <>
+            <span className="text-lg font-bold leading-none" aria-hidden="true">G</span>
+            <span>Registrer med Google</span>
+          </>
+        )}
+      </button>
+
+      <div className="flex items-center gap-3 my-6">
+        <div className="h-px flex-1 bg-forest/12" />
+        <span className="text-label text-body">eller</span>
+        <div className="h-px flex-1 bg-forest/12" />
+      </div>
 
       <div className="space-y-4">
         <Input

@@ -4,6 +4,8 @@ import {
   signOut as firebaseSignOut,
   sendPasswordResetEmail,
   updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth'
 import { auth } from './client'
 
@@ -12,6 +14,19 @@ export async function signIn(email: string, password: string) {
   const credential = await signInWithEmailAndPassword(auth, email, password)
   const idToken = await credential.user.getIdToken()
   return { idToken, uid: credential.user.uid }
+}
+
+export async function signInWithGoogle() {
+  if (!auth) throw new Error('Firebase er ikke konfigurert. Legg til miljøvariabler.')
+  const provider = new GoogleAuthProvider()
+  const credential = await signInWithPopup(auth, provider)
+  const idToken = await credential.user.getIdToken()
+  return {
+    idToken,
+    uid: credential.user.uid,
+    email: credential.user.email,
+    displayName: credential.user.displayName,
+  }
 }
 
 export async function signUp(

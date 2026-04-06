@@ -38,7 +38,7 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
       } else if (firebaseError.code === 'auth/invalid-email') {
         setEmailError('Oppgi en gyldig e-postadresse.')
       } else {
-        setFormError('Noe gikk galt. Sjekk internettforbindelsen og prover pa nytt.')
+        setFormError('Noe gikk galt. Sjekk internettforbindelsen og prøver på nytt.')
       }
       setLoading(false)
     }

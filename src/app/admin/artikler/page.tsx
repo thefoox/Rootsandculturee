@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Plus, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { DataTable, type Column } from '@/components/admin/DataTable'
@@ -30,7 +29,7 @@ export default function ArticlesListPage() {
       setArticles((prev) => prev.filter((a) => a.id !== deleteTarget.id))
       toast.success(`${deleteTarget.title} er slettet.`)
     } else {
-      toast.error('Kunne ikke slette. Prover pa nytt.')
+      toast.error('Kunne ikke slette. Prøver på nytt.')
     }
     setIsDeleting(false)
     setDeleteTarget(null)
@@ -48,8 +47,8 @@ export default function ArticlesListPage() {
             className="h-12 w-12 rounded object-cover"
           />
         ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded bg-card text-body">
-            <FileText className="h-5 w-5" aria-hidden="true" />
+          <div className="flex h-12 w-12 items-center justify-center rounded bg-card text-body text-label">
+            Bilde
           </div>
         ),
     },
@@ -84,8 +83,7 @@ export default function ArticlesListPage() {
         </h1>
         <Link href="/admin/artikler/ny">
           <Button variant="primary">
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            Ny artikkel
+            + Ny artikkel
           </Button>
         </Link>
       </div>
@@ -98,9 +96,9 @@ export default function ArticlesListPage() {
         getItemName={(item) => item.title}
         caption="Liste over artikler"
         emptyState={{
-          icon: FileText,
-          heading: 'Ingen artikler enna',
-          body: 'Kom i gang ved a skrive din forste artikkel.',
+          icon: '',
+          heading: 'Ingen artikler ennå',
+          body: 'Kom i gang ved å skrive din første artikkel.',
           ctaLabel: 'Ny artikkel',
           ctaHref: '/admin/artikler/ny',
         }}

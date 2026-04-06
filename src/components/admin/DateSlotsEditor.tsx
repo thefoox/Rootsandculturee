@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, ChevronRight, Plus, Trash2 } from 'lucide-react'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 
@@ -97,7 +96,7 @@ export function DateSlotsEditor({ dates, onChange }: DateSlotsEditorProps) {
                 className="mb-1 flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-md text-forest hover:text-destructive"
                 aria-label={`Fjern dato ${index + 1}`}
               >
-                <Trash2 className="h-4 w-4" aria-hidden="true" />
+                <span aria-hidden="true">Slett</span>
               </button>
             </div>
 
@@ -109,9 +108,9 @@ export function DateSlotsEditor({ dates, onChange }: DateSlotsEditorProps) {
               aria-controls={`date-slot-earlybird-${index}`}
             >
               {isExpanded ? (
-                <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+                <span aria-hidden="true">▼</span>
               ) : (
-                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <span aria-hidden="true">▶</span>
               )}
               Earlybird-innstillinger
               {hasEarlyBird && !isExpanded && (
@@ -150,7 +149,7 @@ export function DateSlotsEditor({ dates, onChange }: DateSlotsEditorProps) {
         )
       })}
       <Button variant="secondary" onClick={handleAdd} type="button">
-        <Plus className="h-4 w-4" aria-hidden="true" />
+        <span aria-hidden="true">+</span>
         Legg til dato
       </Button>
     </div>

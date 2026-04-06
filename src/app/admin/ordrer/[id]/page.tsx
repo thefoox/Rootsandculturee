@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { Mail, Pencil, Check, X, RotateCcw } from 'lucide-react'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge'
 import { Button } from '@/components/ui/Button'
@@ -83,7 +82,7 @@ export default function OrderDetailPage() {
       setOrder({ ...order, status: selectedStatus })
       toast.success('Ordrestatus oppdatert.')
     } catch {
-      toast.error('Kunne ikke oppdatere status. Prov igjen.')
+      toast.error('Kunne ikke oppdatere status. Prøv igjen.')
     }
     setIsUpdating(false)
   }
@@ -167,7 +166,6 @@ export default function OrderDetailPage() {
         </h1>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => setShowEmail(true)}>
-            <Mail className="h-4 w-4" aria-hidden="true" />
             Send e-post
           </Button>
         </div>
@@ -220,11 +218,11 @@ export default function OrderDetailPage() {
           {order.shipping && !editingShipping && (
             <Button
               variant="ghost"
-              className="h-9 w-9 p-0"
+              className="h-auto px-2 py-1 text-label"
               onClick={() => setEditingShipping(true)}
               aria-label="Rediger leveringsadresse"
             >
-              <Pencil className="h-4 w-4" aria-hidden="true" />
+              Rediger
             </Button>
           )}
         </div>
@@ -315,7 +313,6 @@ export default function OrderDetailPage() {
                   onClick={handleSaveShipping}
                   loading={isSavingShipping}
                 >
-                  <Check className="h-4 w-4" aria-hidden="true" />
                   Lagre
                 </Button>
                 <Button
@@ -325,7 +322,6 @@ export default function OrderDetailPage() {
                     if (order.shipping) setShippingForm(order.shipping)
                   }}
                 >
-                  <X className="h-4 w-4" aria-hidden="true" />
                   Avbryt
                 </Button>
               </div>
@@ -399,7 +395,6 @@ export default function OrderDetailPage() {
               className="border-[#C0392B] text-[#C0392B] hover:bg-[#C0392B]/5"
               onClick={() => setShowRefund(true)}
             >
-              <RotateCcw className="h-4 w-4" aria-hidden="true" />
               Refunder
             </Button>
           </div>

@@ -1,0 +1,55 @@
+<h2>CMS-arkitektur: Hvilken tilnærming?</h2>
+<p class="subtitle">Begge gir deg drag-and-drop, nye seksjoner og nye sider. Forskjellen er i renderingen.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Dynamisk seksjon-renderer (Anbefalt)</h3>
+      <p>En generisk <code>&lt;SectionRenderer&gt;</code>-komponent som tar inn en PageSection og rendrer riktig type automatisk. Alle sider bruker samme renderer — ingen hardkodet HTML per side.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Fordeler</h4>
+          <ul>
+            <li>Nye sider fungerer umiddelbart — ingen kodeendringer</li>
+            <li>Endringer i en seksjonstype reflekteres overalt</li>
+            <li>Enklere å vedlikeholde</li>
+            <li>Nye seksjonstyper legges til ett sted</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Ulemper</h4>
+          <ul>
+            <li>Forsiden mister litt av sin spesialbehandling (produkter/opplevelser-grids)</li>
+            <li>Krever refaktorering av eksisterende sider</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Hybrid: Dynamisk for nye sider, behold eksisterende</h3>
+      <p>Behold de nåværende hardkodede sidene som de er. Dynamisk renderer brukes kun for nye CMS-sider opprettet i admin. En catch-all route <code>/[slug]</code> rendrer nye sider.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Fordeler</h4>
+          <ul>
+            <li>Ingen endring av eksisterende sider (mindre risiko)</li>
+            <li>Forsiden beholder spesiallogikk for produkter/opplevelser</li>
+            <li>Raskere å implementere</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Ulemper</h4>
+          <ul>
+            <li>To forskjellige renderingsmodeller å vedlikeholde</li>
+            <li>Redigering av eksisterende sider reflekteres ikke visuelt uten manuell kobling</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

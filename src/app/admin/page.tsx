@@ -1,25 +1,15 @@
 import Link from 'next/link'
-import {
-  Package,
-  Mountain,
-  FileText,
-  Layout,
-  ShoppingCart,
-  CalendarCheck,
-  Users,
-  TrendingUp,
-} from 'lucide-react'
 import { getAllProducts } from '@/actions/products'
 import { getAllExperiences } from '@/actions/experiences'
 import { getAllArticles } from '@/actions/articles'
-import { getOrderStats, getOrders } from '@/actions/orders'
+import { getOrderStats, getOrders, getRecentStripePayments } from '@/actions/orders'
 import { getBookingsFiltered } from '@/actions/bookings'
 import { formatPrice, formatDateMedium } from '@/lib/format'
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge'
 import { BookingStatusBadge } from '@/components/admin/BookingStatusBadge'
 
 export default async function AdminDashboard() {
-  const [products, experiences, articles, stats, recentOrders, recentBookings] =
+  const [products, experiences, articles, stats, recentOrders, recentBookings, stripePayments] =
     await Promise.all([
       getAllProducts(),
       getAllExperiences(),
@@ -27,6 +17,7 @@ export default async function AdminDashboard() {
       getOrderStats(),
       getOrders(),
       getBookingsFiltered(),
+      getRecentStripePayments(),
     ])
 
   const last5Orders = recentOrders.slice(0, 5)
@@ -37,25 +28,21 @@ export default async function AdminDashboard() {
       label: 'Omsetning',
       value: formatPrice(stats.totalRevenue),
       href: '/admin/ordrer',
-      icon: TrendingUp,
     },
     {
       label: 'Ordrer',
       value: String(stats.orderCount),
       href: '/admin/ordrer',
-      icon: ShoppingCart,
     },
     {
       label: 'Bookinger',
       value: String(stats.bookingCount),
       href: '/admin/bookinger',
-      icon: CalendarCheck,
     },
     {
       label: 'Kunder',
       value: String(stats.customerCount),
       href: '/admin/kunder',
-      icon: Users,
     },
   ]
 
@@ -64,25 +51,21 @@ export default async function AdminDashboard() {
       label: 'Produkter',
       count: products.length,
       href: '/admin/produkter',
-      icon: Package,
     },
     {
       label: 'Opplevelser',
       count: experiences.length,
       href: '/admin/opplevelser',
-      icon: Mountain,
     },
     {
       label: 'Artikler',
       count: articles.length,
       href: '/admin/artikler',
-      icon: FileText,
     },
     {
       label: 'Sideinnhold',
       count: null,
       href: '/admin/innhold',
-      icon: Layout,
     },
   ]
 
@@ -94,26 +77,20 @@ export default async function AdminDashboard() {
 
       {/* Oversikt */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {overviewStats.map((stat) => {
-          const Icon = stat.icon
-          return (
-            <Link
-              key={stat.href + stat.label}
-              href={stat.href}
-              className="flex flex-col gap-2 rounded-lg border border-forest/12 bg-card p-5 hover:shadow-md"
-            >
-              <div className="flex items-center gap-2">
-                <Icon className="h-5 w-5 text-rust" aria-hidden="true" />
-                <span className="font-body text-label text-body">
-                  {stat.label}
-                </span>
-              </div>
-              <span className="font-heading text-h4 font-bold text-forest">
-                {stat.value}
-              </span>
-            </Link>
-          )
-        })}
+        {overviewStats.map((stat) => (
+          <Link
+            key={stat.href + stat.label}
+            href={stat.href}
+            className="flex flex-col gap-2 rounded-lg border border-forest/12 bg-card p-5 hover:shadow-md"
+          >
+            <span className="font-body text-label text-body">
+              {stat.label}
+            </span>
+            <span className="font-heading text-h4 font-bold text-forest">
+              {stat.value}
+            </span>
+          </Link>
+        ))}
       </div>
 
       {/* Siste ordrer og bookinger */}
@@ -131,11 +108,7 @@ export default async function AdminDashboard() {
               Se alle
             </Link>
           </div>
-          {last5Orders.length === 0 ? (
-            <p className="mt-4 font-body text-body">
-              Ingen ordrer enda.
-            </p>
-          ) : (
+          {last5Orders.length > 0 ? (
             <ul className="mt-4 space-y-3">
               {last5Orders.map((order) => (
                 <li key={order.id}>
@@ -161,6 +134,36 @@ export default async function AdminDashboard() {
                 </li>
               ))}
             </ul>
+          ) : stripePayments.length > 0 ? (
+            <ul className="mt-4 space-y-3">
+              {stripePayments.map((payment) => (
+                <li
+                  key={payment.id}
+                  className="flex items-center justify-between rounded-md px-2 py-2"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-body text-label text-body">
+                      #{payment.id.slice(-8)}
+                    </span>
+                    <span className="font-body text-label text-forest">
+                      {payment.customerEmail}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="rounded-full bg-[#DCFCE7] px-2 py-0.5 text-label text-[#166534]">
+                      Betalt
+                    </span>
+                    <span className="font-body text-body font-medium text-rust">
+                      {formatPrice(payment.amount)}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-4 font-body text-body">
+              Ingen ordrer enda.
+            </p>
           )}
         </section>
 
@@ -218,26 +221,22 @@ export default async function AdminDashboard() {
         Innhold
       </h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {contentStats.map((stat) => {
-          const Icon = stat.icon
-          return (
-            <Link
-              key={stat.href}
-              href={stat.href}
-              className="flex items-center gap-4 rounded-lg border border-forest/12 bg-card p-5 hover:shadow-md"
-            >
-              <Icon className="h-7 w-7 text-rust" aria-hidden="true" />
-              <div>
-                <p className="text-label text-body">{stat.label}</p>
-                {stat.count !== null && (
-                  <p className="font-heading text-h4 font-bold text-forest">
-                    {stat.count}
-                  </p>
-                )}
-              </div>
-            </Link>
-          )
-        })}
+        {contentStats.map((stat) => (
+          <Link
+            key={stat.href}
+            href={stat.href}
+            className="flex flex-col gap-2 rounded-lg border border-forest/12 bg-card p-5 hover:shadow-md"
+          >
+            <span className="font-body text-label text-body">
+              {stat.label}
+            </span>
+            {stat.count !== null && (
+              <span className="font-heading text-h4 font-bold text-forest">
+                {stat.count}
+              </span>
+            )}
+          </Link>
+        ))}
       </div>
     </div>
   )

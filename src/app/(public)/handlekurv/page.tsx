@@ -61,7 +61,7 @@ export default function HandlekurvPage() {
             className="mt-6 inline-flex items-center gap-2 text-body text-forest hover:opacity-85"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Fortsett a handle
+            Fortsett å handle
           </Link>
         </div>
 
@@ -70,7 +70,7 @@ export default function HandlekurvPage() {
           <OrderSummaryPanel
             subtotal={subtotal}
             shippingCost={shippingCost}
-            ctaText="Ga til betaling"
+            ctaText="Gå til betaling"
             ctaHref="/checkout"
           />
         </div>

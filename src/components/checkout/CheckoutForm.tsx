@@ -16,10 +16,10 @@ import type { CartItem } from '@/types'
 
 const shippingSchema = z.object({
   email: z.string().email('Ugyldig e-postadresse.'),
-  fullName: z.string().min(1, 'Fullt navn er pakrevd.'),
-  address: z.string().min(1, 'Adresse er pakrevd.'),
-  postalCode: z.string().regex(/^[0-9]{4}$/, 'Postnummer ma vaere 4 siffer.'),
-  city: z.string().min(1, 'Sted er pakrevd.'),
+  fullName: z.string().min(1, 'Fullt navn er påkrevd.'),
+  address: z.string().min(1, 'Adresse er påkrevd.'),
+  postalCode: z.string().regex(/^[0-9]{4}$/, 'Postnummer må være 4 siffer.'),
+  city: z.string().min(1, 'Sted er påkrevd.'),
 })
 
 const contactOnlySchema = z.object({
@@ -106,17 +106,17 @@ export function CheckoutForm({
       if (stripeError) {
         // Map Stripe error codes to Norwegian messages
         const errorMessages: Record<string, string> = {
-          card_declined: 'Kortet ble avvist. Prov et annet kort.',
-          insufficient_funds: 'Ikke nok dekning pa kortet.',
-          expired_card: 'Kortet har utlopt.',
+          card_declined: 'Kortet ble avvist. Prøv et annet kort.',
+          insufficient_funds: 'Ikke nok dekning på kortet.',
+          expired_card: 'Kortet har utløpt.',
           incorrect_cvc: 'Feil CVC-kode.',
-          processing_error: 'Det oppsto en feil. Prov igjen.',
+          processing_error: 'Det oppstod en feil. Prøv igjen.',
           incorrect_number: 'Ugyldig kortnummer.',
         }
         setPaymentError(
           errorMessages[stripeError.code || ''] ||
             stripeError.message ||
-            'Noe gikk galt med betalingen. Prov igjen.'
+            'Noe gikk galt med betalingen. Prøv igjen.'
         )
         setLoading(false)
         return
@@ -126,7 +126,7 @@ export function CheckoutForm({
         onPaymentSuccess(paymentIntent.id)
       }
     } catch {
-      setPaymentError('En uventet feil oppsto. Prov igjen.')
+      setPaymentError('En uventet feil oppstod. Prøv igjen.')
       setLoading(false)
     }
   }

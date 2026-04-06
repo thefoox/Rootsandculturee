@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Users, Eye, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { DataTable, type Column } from '@/components/admin/DataTable'
@@ -78,23 +77,23 @@ export default function CustomersListPage() {
       header: 'Handlinger',
       width: '100px',
       accessor: (row) => (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Link href={`/admin/kunder/${row.uid}`}>
             <Button
               variant="ghost"
-              className="h-9 w-9 p-0"
+              className="h-auto px-2 py-1 text-label"
               aria-label={`Se kunde ${row.displayName || row.email}`}
             >
-              <Eye className="h-4 w-4" aria-hidden="true" />
+              Vis
             </Button>
           </Link>
           <Button
             variant="ghost"
-            className="h-9 w-9 p-0"
+            className="h-auto px-2 py-1 text-label"
             onClick={() => setEmailTarget(row.email)}
             aria-label={`Send e-post til ${row.email}`}
           >
-            <Mail className="h-4 w-4" aria-hidden="true" />
+            E-post
           </Button>
         </div>
       ),
@@ -115,7 +114,7 @@ export default function CustomersListPage() {
 
       {customers.length === 0 ? (
         <EmptyState
-          icon={Users}
+          icon=""
           heading="Ingen kunder enda"
           body="Kunder vises her etter at de har opprettet en konto."
         />
@@ -125,7 +124,7 @@ export default function CustomersListPage() {
           data={customers.map((c) => ({ ...c, id: c.uid }))}
           caption="Liste over kunder"
           emptyState={{
-            icon: Users,
+            icon: '',
             heading: 'Ingen kunder enda',
             body: 'Kunder vises her etter at de har opprettet en konto.',
             ctaLabel: '',

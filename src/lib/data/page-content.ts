@@ -32,7 +32,7 @@ function mapPageContent(doc: FirebaseFirestore.DocumentSnapshot): PageContent {
 const _getPageContent = unstable_cache(
   async (pageId: string): Promise<PageContent | null> => {
     const doc = await adminDb!.collection('pageContent').doc(pageId).get()
-    if (!doc.exists) return null
+    if (!doc.exists) return mockPageContent.get(pageId) ?? null
     return mapPageContent(doc)
   },
   ['page-content'],
@@ -48,25 +48,32 @@ export function getSection(page: PageContent | null, sectionId: string): PageSec
   return page?.sections.find((s) => s.id === sectionId)
 }
 
+function getMockNavigationPages(): PageContent[] {
+  return Array.from(mockPageContent.values())
+    .filter((p) => p.showInNavigation)
+    .sort((a, b) => a.navigationOrder - b.navigationOrder)
+}
+
 const _getNavigationPages = unstable_cache(
   async (): Promise<PageContent[]> => {
-    const snapshot = await adminDb!
-      .collection('pageContent')
-      .where('showInNavigation', '==', true)
-      .orderBy('navigationOrder')
-      .get()
-    return snapshot.docs.map(mapPageContent)
+    try {
+      const snapshot = await adminDb!
+        .collection('pageContent')
+        .where('showInNavigation', '==', true)
+        .orderBy('navigationOrder')
+        .get()
+      if (snapshot.empty) return getMockNavigationPages()
+      return snapshot.docs.map(mapPageContent)
+    } catch {
+      return getMockNavigationPages()
+    }
   },
   ['navigation-pages'],
   { revalidate: 3600, tags: ['page-content'] }
 )
 
 export async function getNavigationPages(): Promise<PageContent[]> {
-  if (!adminDb) {
-    return Array.from(mockPageContent.values())
-      .filter((p) => p.showInNavigation)
-      .sort((a, b) => a.navigationOrder - b.navigationOrder)
-  }
+  if (!adminDb) return getMockNavigationPages()
   return _getNavigationPages()
 }
 
@@ -77,7 +84,9 @@ const _getPageContentBySlug = unstable_cache(
       .where('slug', '==', slug)
       .limit(1)
       .get()
-    if (snapshot.empty) return null
+    if (snapshot.empty) {
+      return Array.from(mockPageContent.values()).find((p) => p.slug === slug) ?? null
+    }
     return mapPageContent(snapshot.docs[0])
   },
   ['page-content-by-slug'],

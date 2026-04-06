@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
-import { UploadCloud, X } from 'lucide-react'
-import { uploadImage } from '@/lib/firebase/storage'
 import { Input } from '@/components/ui/Input'
 import { toast } from 'sonner'
 import type { ProductImage } from '@/types'
@@ -32,13 +30,16 @@ export function ImageUpload({
       }
 
       setUploading(true)
-      for (const file of fileArray) {
+      for (let i = 0; i < fileArray.length; i++) {
+        const file = fileArray[i]
         try {
-          const path = `images/${Date.now()}-${file.name}`
-          const url = await uploadImage(file, path, (p) => {
-            setProgress(p.percent)
-          })
-          const newImage: ProductImage = { url, alt: '' }
+          setProgress(Math.round(((i + 0.5) / fileArray.length) * 100))
+          const formData = new FormData()
+          formData.append('file', file)
+          const res = await fetch('/api/upload', { method: 'POST', body: formData })
+          const data = await res.json()
+          if (!res.ok) throw new Error(data.error || 'Opplasting feilet.')
+          const newImage: ProductImage = { url: data.url, alt: '' }
           onChange([...images, newImage])
           images = [...images, newImage]
           toast.success('Bilde lastet opp.')
@@ -96,7 +97,9 @@ export function ImageUpload({
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
       >
-        <UploadCloud className="h-8 w-8 text-forest" aria-hidden="true" />
+        <p className="text-body font-medium text-forest">
+          Last opp bilde
+        </p>
         <p className="mt-2 text-body">
           Slipp bilder her eller klikk for a velge
         </p>
@@ -152,7 +155,7 @@ export function ImageUpload({
                   className="absolute right-1 top-1 hidden h-7 w-7 items-center justify-center rounded-full bg-forest/60 text-cream group-hover:flex"
                   aria-label={`Fjern bilde ${index + 1}`}
                 >
-                  <X className="h-4 w-4" aria-hidden="true" />
+                  <span aria-hidden="true">✕</span>
                 </button>
               </div>
               <Input

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
-import { UploadCloud, X } from 'lucide-react'
 import { toast } from 'sonner'
 import type { ProductImage } from '@/types'
 
@@ -62,7 +61,7 @@ export function CmsImageUpload({ image, onChange, label = 'Bilde' }: CmsImageUpl
             className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-forest/70 text-cream hover:bg-forest"
             aria-label="Fjern bilde"
           >
-            <X className="h-4 w-4" aria-hidden="true" />
+            <span aria-hidden="true">✕</span>
           </button>
         </div>
       )}
@@ -81,7 +80,9 @@ export function CmsImageUpload({ image, onChange, label = 'Bilde' }: CmsImageUpl
           <p className="text-body">Laster opp...</p>
         ) : (
           <>
-            <UploadCloud className="h-6 w-6 text-forest/50" aria-hidden="true" />
+            <p className="text-body font-medium text-forest/50" aria-hidden="true">
+              Last opp bilde
+            </p>
             <p className="mt-1.5 text-label text-body/60">
               Slipp bilde her eller klikk for å velge
             </p>

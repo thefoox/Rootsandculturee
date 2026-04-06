@@ -19,6 +19,13 @@ function mapProduct(doc: FirebaseFirestore.DocumentSnapshot): Product {
     images: data.images || [],
     inStock: data.inStock,
     stockCount: data.stockCount,
+    variants: (data.variants || []).map((v: { id: string; label: string; price: number; inStock: boolean; stockCount: number }) => ({
+      id: v.id,
+      label: v.label,
+      price: v.price,
+      inStock: v.inStock,
+      stockCount: v.stockCount,
+    })),
     createdAt: data.createdAt?.toDate() ?? new Date(),
     updatedAt: data.updatedAt?.toDate() ?? new Date(),
     publishedAt: data.publishedAt?.toDate() ?? null,

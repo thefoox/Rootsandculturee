@@ -159,7 +159,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
                 <section className="mt-10">
                   <h2 className="flex items-center gap-2 font-heading text-h4 font-bold text-forest">
                     <Backpack className="h-5 w-5 text-body" aria-hidden="true" />
-                    Hva du bor ta med
+                    Hva du bør ta med
                   </h2>
                   <p className="mt-4 font-body text-body leading-[1.7] text-forest">
                     {experience.whatToBring}
@@ -172,7 +172,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
                 <section className="mt-10">
                   <h2 className="flex items-center gap-2 font-heading text-h4 font-bold text-forest">
                     <ShieldCheck className="h-5 w-5 text-body" aria-hidden="true" />
-                    Kanselleringsvilkar
+                    Kanselleringsvilkår
                   </h2>
                   <p className="mt-4 font-body text-body leading-[1.7] text-forest">
                     {experience.cancellationPolicy}
@@ -244,7 +244,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               </p>
               <p className="mt-2 font-body text-body leading-[1.7] text-body">
                 Opplevelsen finner sted i {experience.location}. Detaljert
-                veibeskrivelse og oppmotested sendes per e-post etter
+                veibeskrivelse og oppmøtested sendes per e-post etter
                 bekreftet booking.
               </p>
             </div>

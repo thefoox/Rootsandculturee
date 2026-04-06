@@ -69,7 +69,7 @@ export function DateCardPicker({ experienceId, dates, experience }: DateCardPick
           Velg dato
         </h2>
         <p className="mt-4 font-body text-body">
-          Ingen tilgjengelige datoer for oyeblikket.
+          Ingen tilgjengelige datoer for øyeblikket.
         </p>
       </section>
     )

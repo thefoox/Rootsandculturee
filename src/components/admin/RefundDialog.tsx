@@ -63,11 +63,11 @@ export function RefundDialog({
     if (mode === 'partial') {
       const parsed = Math.round(parseFloat(partialAmount) * 100) // NOK to ore
       if (isNaN(parsed) || parsed <= 0) {
-        toast.error('Ugyldig belop. Skriv inn et positivt tall.')
+        toast.error('Ugyldig beløp. Skriv inn et positivt tall.')
         return
       }
       if (parsed > remaining) {
-        toast.error(`Belopet kan ikke overstige ${formatPrice(remaining)}.`)
+        toast.error(`Beløpet kan ikke overstige ${formatPrice(remaining)}.`)
         return
       }
       amountToRefund = parsed
@@ -78,11 +78,11 @@ export function RefundDialog({
     setIsProcessing(false)
 
     if (result.success) {
-      toast.success('Refusjon gjennomfort.')
+      toast.success('Refusjon gjennomført.')
       onRefunded()
       onClose()
     } else {
-      toast.error(result.error || 'Kunne ikke gjennomfore refusjon.')
+      toast.error(result.error || 'Kunne ikke gjennomføre refusjon.')
     }
   }
 
@@ -159,7 +159,7 @@ export function RefundDialog({
               htmlFor="refund-amount"
               className="block font-body text-label font-medium text-forest"
             >
-              Belop (NOK)
+              Beløp (NOK)
             </label>
             <input
               id="refund-amount"

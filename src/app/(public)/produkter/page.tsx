@@ -66,7 +66,7 @@ export default async function ProdukterPage({ searchParams }: PageProps) {
           <EmptyState
             icon={Package}
             heading="Ingen produkter"
-            body="Vi har ingen produkter i denne kategorien enna."
+            body="Vi har ingen produkter i denne kategorien ennå."
           />
         )}
       </div>

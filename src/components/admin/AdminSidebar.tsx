@@ -2,34 +2,21 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  Package,
-  Mountain,
-  FileText,
-  Layout,
-  ShoppingCart,
-  CalendarCheck,
-  Users,
-  Gift,
-  ArrowLeft,
-  LogOut,
-  X,
-} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { logoutAction } from '@/actions/auth'
 
 const contentNavItems = [
-  { href: '/admin/produkter', label: 'Produkter', icon: Package },
-  { href: '/admin/opplevelser', label: 'Opplevelser', icon: Mountain },
-  { href: '/admin/artikler', label: 'Artikler', icon: FileText },
-  { href: '/admin/innhold', label: 'Sideinnhold', icon: Layout },
+  { href: '/admin/produkter', label: 'Produkter' },
+  { href: '/admin/opplevelser', label: 'Opplevelser' },
+  { href: '/admin/artikler', label: 'Artikler' },
+  { href: '/admin/innhold', label: 'Sideinnhold' },
 ]
 
 const orderNavItems = [
-  { href: '/admin/ordrer', label: 'Ordrer', icon: ShoppingCart },
-  { href: '/admin/bookinger', label: 'Bookinger', icon: CalendarCheck },
-  { href: '/admin/gavekort', label: 'Gavekort', icon: Gift },
-  { href: '/admin/kunder', label: 'Kunder', icon: Users },
+  { href: '/admin/ordrer', label: 'Ordrer' },
+  { href: '/admin/bookinger', label: 'Bookinger' },
+  { href: '/admin/gavekort', label: 'Gavekort' },
+  { href: '/admin/kunder', label: 'Kunder' },
 ]
 
 interface AdminSidebarProps {
@@ -57,7 +44,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
             className="flex h-[44px] w-[44px] items-center justify-center text-cream"
             aria-label="Lukk admin-meny"
           >
-            <X className="h-5 w-5" aria-hidden="true" />
+            <span aria-hidden="true">✕</span>
           </button>
         )}
       </div>
@@ -72,21 +59,19 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
           {contentNavItems.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(item.href + '/')
-            const Icon = item.icon
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    'flex h-[44px] items-center gap-4 px-4 text-body text-cream',
+                    'flex h-[44px] items-center px-4 text-body text-cream',
                     'hover:bg-[rgba(254,252,243,0.08)]',
                     isActive &&
                       'border-l-[3px] border-forest bg-[rgba(254,252,243,0.08)]'
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >
-                  <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                   {item.label}
                 </Link>
               </li>
@@ -103,21 +88,19 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
           {orderNavItems.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(item.href + '/')
-            const Icon = item.icon
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    'flex h-[44px] items-center gap-4 px-4 text-body text-cream',
+                    'flex h-[44px] items-center px-4 text-body text-cream',
                     'hover:bg-[rgba(254,252,243,0.08)]',
                     isActive &&
                       'border-l-[3px] border-forest bg-[rgba(254,252,243,0.08)]'
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >
-                  <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                   {item.label}
                 </Link>
               </li>
@@ -129,16 +112,15 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
       <div className="border-t border-cream/10 px-4 py-4">
         <Link
           href="/"
-          className="flex h-[44px] items-center gap-4 text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
+          className="flex h-[44px] items-center gap-2 text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
         >
-          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span aria-hidden="true">←</span>
           Tilbake til nettbutikk
         </Link>
         <button
           onClick={() => logoutAction()}
-          className="flex h-[44px] w-full items-center gap-4 text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
+          className="flex h-[44px] w-full items-center text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
         >
-          <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
           Logg ut
         </button>
       </div>

@@ -28,6 +28,8 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       quantity: 1,
       image: product.images[0] ?? null,
       slug: product.slug,
+      variantId: null,
+      variantLabel: null,
       experienceDateId: null,
       experienceDate: null,
       experienceName: null,

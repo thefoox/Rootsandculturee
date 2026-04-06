@@ -133,7 +133,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <OrderSummaryPanel
               subtotal={subtotal}
               shippingCost={shippingCost}
-              ctaText="Ga til betaling"
+              ctaText="Gå til betaling"
               ctaHref="/checkout"
             />
             <Link href="/handlekurv" onClick={onClose} className="block">

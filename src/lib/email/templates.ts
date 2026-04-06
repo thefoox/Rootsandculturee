@@ -50,7 +50,7 @@ Frakt: ${data.shippingCost > 0 ? formatPrice(data.shippingCost) : 'Gratis'}
 Totalt: ${formatPrice(data.total)}
 ${shippingLines}
 
-Vi sender deg en oppdatering nar bestillingen er sendt.
+Vi sender deg en oppdatering når bestillingen er sendt.
 
 Med vennlig hilsen,
 Roots & Culture
@@ -80,10 +80,10 @@ Antall plasser: ${data.seats}
 Pris per plass: ${formatPrice(data.pricePerSeat)}
 Totalt: ${formatPrice(data.total)}
 
-Husk a ta med:
+Husk å ta med:
 ${whatToBringItems}
 
-Vi gleder oss til a se deg!
+Vi gleder oss til å se deg!
 
 Med vennlig hilsen,
 Roots & Culture
@@ -106,7 +106,7 @@ export function giftCardEmail(data: GiftCardEmailData) {
     : ''
 
   return {
-    subject: 'Du har fatt et gavekort fra Roots & Culture!',
+    subject: 'Du har fått et gavekort fra Roots & Culture!',
     text: `${greeting}
 
 Noen har gitt deg et gavekort hos Roots & Culture.
@@ -114,8 +114,8 @@ Noen har gitt deg et gavekort hos Roots & Culture.
 Gavekort-kode: ${data.code}
 Verdi: ${formatPrice(data.amount)}
 ${messageBlock}
-Bruk koden i kassen pa rootsculture.no for a handle produkter eller booke opplevelser.
-Gavekortet er gyldig i 12 maneder.
+Bruk koden i kassen på rootsculture.no for å handle produkter eller booke opplevelser.
+Gavekortet er gyldig i 12 måneder.
 
 Med vennlig hilsen,
 Roots & Culture

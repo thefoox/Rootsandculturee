@@ -9,10 +9,10 @@ import type { CartItem } from '@/types'
 
 const shippingSchema = z.object({
   email: z.string().email('Ugyldig e-postadresse.'),
-  fullName: z.string().min(1, 'Fullt navn er pakrevd.'),
-  address: z.string().min(1, 'Adresse er pakrevd.'),
-  postalCode: z.string().regex(/^[0-9]{4}$/, 'Postnummer ma vaere 4 siffer.'),
-  city: z.string().min(1, 'Sted er pakrevd.'),
+  fullName: z.string().min(1, 'Fullt navn er påkrevd.'),
+  address: z.string().min(1, 'Adresse er påkrevd.'),
+  postalCode: z.string().regex(/^[0-9]{4}$/, 'Postnummer må være 4 siffer.'),
+  city: z.string().min(1, 'Sted er påkrevd.'),
 })
 
 const contactOnlySchema = z.object({
@@ -55,12 +55,15 @@ export async function createPaymentIntent(
   const hasExperiences = cartItems.some((item) => item.type === 'experience')
   const hasGiftCards = cartItems.some((item) => item.type === 'giftcard')
 
-  // Validate form data
-  const schema = hasProducts ? shippingSchema : contactOnlySchema
-  const validation = schema.safeParse(formData)
-  if (!validation.success) {
-    const firstError = validation.error.issues[0]
-    return { error: firstError.message }
+  // Validate form data (skip full validation for initial PaymentIntent creation)
+  const isInitCall = formData.email === 'placeholder@init.no'
+  if (!isInitCall) {
+    const schema = hasProducts ? shippingSchema : contactOnlySchema
+    const validation = schema.safeParse(formData)
+    if (!validation.success) {
+      const firstError = validation.error.issues[0]
+      return { error: firstError.message }
+    }
   }
 
   // Check session (optional -- guest checkout allowed per D-09)
@@ -84,7 +87,7 @@ export async function createPaymentIntent(
         return { error: `Produktet "${item.name}" er ikke tilgjengelig.` }
       }
       if (product.stockCount < item.quantity) {
-        return { error: `Ikke nok "${item.name}" pa lager. Tilgjengelig: ${product.stockCount}.` }
+        return { error: `Ikke nok "${item.name}" på lager. Tilgjengelig: ${product.stockCount}.` }
       }
       // Use verified Firestore price (prevents price manipulation)
       productItems.push({ ...item, price: product.price })
@@ -92,7 +95,7 @@ export async function createPaymentIntent(
       // Gift card purchases: trust client price (validated min/max)
       const amountNOK = item.price / 100
       if (amountNOK < 100 || amountNOK > 10000) {
-        return { error: 'Ugyldig gavekort-belop.' }
+        return { error: 'Ugyldig gavekort-beløp.' }
       }
       giftCardItems.push(item)
     } else {
@@ -155,7 +158,7 @@ export async function createPaymentIntent(
   }
 
   if (total <= 0) {
-    return { error: 'Ugyldig totalbelop.' }
+    return { error: 'Ugyldig totalbeløp.' }
   }
 
   // Build shipping address for metadata
@@ -217,12 +220,12 @@ export async function createPaymentIntent(
     })
 
     if (!paymentIntent.client_secret) {
-      return { error: 'Kunne ikke opprette betaling. Prov igjen.' }
+      return { error: 'Kunne ikke opprette betaling. Prøv igjen.' }
     }
 
     return { clientSecret: paymentIntent.client_secret }
   } catch (err) {
     console.error('Stripe PaymentIntent creation error:', err)
-    return { error: 'Noe gikk galt med betalingen. Prov igjen.' }
+    return { error: 'Noe gikk galt med betalingen. Prøv igjen.' }
   }
 }

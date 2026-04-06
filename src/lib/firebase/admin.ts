@@ -17,13 +17,18 @@ function getApp() {
     return null
   }
 
-  return initializeApp({
-    credential: cert({
-      projectId,
-      clientEmail,
-      privateKey: privateKey.replace(/\\n/g, '\n'),
-    }),
-  })
+  try {
+    return initializeApp({
+      credential: cert({
+        projectId,
+        clientEmail,
+        privateKey: privateKey.replace(/\\n/g, '\n'),
+      }),
+    })
+  } catch (error) {
+    console.warn('Firebase Admin: Failed to initialize. Data access will return empty results during build.', error)
+    return null
+  }
 }
 
 const app = getApp()

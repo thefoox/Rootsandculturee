@@ -28,16 +28,25 @@ export interface ProductImage {
   alt: string // Mandatory per WCAG-04 / D-19
 }
 
+export interface ProductVariant {
+  id: string
+  label: string          // e.g. "250 ml flaske"
+  price: number          // NOK in ore (integer)
+  inStock: boolean
+  stockCount: number
+}
+
 export interface Product {
   id: string
   slug: string
   name: string
   description: string
-  price: number // NOK in ore (integer)
+  price: number // NOK in ore (integer) — base/default price
   category: ProductCategory
   images: ProductImage[]
   inStock: boolean
   stockCount: number
+  variants: ProductVariant[]
   createdAt: Date
   updatedAt: Date
   publishedAt: Date | null
@@ -171,6 +180,9 @@ export interface CartItem {
   quantity: number         // Always 1 for experiences (per D-11)
   image: ProductImage | null
   slug: string
+  // Variant-specific fields (null for products without variants)
+  variantId: string | null
+  variantLabel: string | null
   // Experience-specific fields (null for products)
   experienceDateId: string | null
   experienceDate: string | null    // ISO string of the date

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ShoppingCart, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { DataTable, type Column } from '@/components/admin/DataTable'
@@ -78,10 +77,10 @@ export default function OrdersListPage() {
         <Link href={`/admin/ordrer/${row.id}`}>
           <Button
             variant="ghost"
-            className="h-9 w-9 p-0"
+            className="h-auto px-2 py-1 text-label"
             aria-label={`Se ordre ${row.id.slice(0, 8)}`}
           >
-            <Eye className="h-4 w-4" aria-hidden="true" />
+            Vis
           </Button>
         </Link>
       ),
@@ -101,9 +100,9 @@ export default function OrdersListPage() {
           Ordrer
         </h1>
         <EmptyState
-          icon={ShoppingCart}
+          icon=""
           heading="Ingen ordrer enda"
-          body="Ordrer vises her etter at kunder har gjennomfort kjop."
+          body="Ordrer vises her etter at kunder har gjennomført kjøp."
         />
       </div>
     )
@@ -126,9 +125,9 @@ export default function OrdersListPage() {
         data={orders}
         caption="Liste over ordrer"
         emptyState={{
-          icon: ShoppingCart,
+          icon: '',
           heading: 'Ingen ordrer enda',
-          body: 'Ordrer vises her etter at kunder har gjennomfort kjop.',
+          body: 'Ordrer vises her etter at kunder har gjennomført kjøp.',
           ctaLabel: '',
           ctaHref: '#',
         }}

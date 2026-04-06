@@ -24,7 +24,7 @@ export default async function OrdrerPage() {
           ))}
         </div>
       ) : (
-        <EmptyState message="Du har ingen ordrer enna." />
+        <EmptyState message="Du har ingen ordrer ennå." />
       )}
     </div>
   )

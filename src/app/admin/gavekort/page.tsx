@@ -65,7 +65,7 @@ export default function AdminGavekortPage() {
       ) : giftCards.length === 0 ? (
         <div className="rounded-lg border border-forest/12 bg-card p-8 text-center">
           <p className="font-body text-body text-body">
-            Ingen gavekort er solgt enna.
+            Ingen gavekort er solgt ennå.
           </p>
         </div>
       ) : (
@@ -74,10 +74,10 @@ export default function AdminGavekortPage() {
             <thead className="bg-card">
               <tr>
                 <th className="px-4 py-3 text-label font-medium text-forest">Kode</th>
-                <th className="px-4 py-3 text-label font-medium text-forest">Belop</th>
+                <th className="px-4 py-3 text-label font-medium text-forest">Beløp</th>
                 <th className="px-4 py-3 text-label font-medium text-forest">Saldo</th>
                 <th className="px-4 py-3 text-label font-medium text-forest">Status</th>
-                <th className="px-4 py-3 text-label font-medium text-forest">Kjopt av</th>
+                <th className="px-4 py-3 text-label font-medium text-forest">Kjøpt av</th>
                 <th className="px-4 py-3 text-label font-medium text-forest">Mottaker</th>
                 <th className="px-4 py-3 text-label font-medium text-forest">Dato</th>
                 <th className="px-4 py-3 text-label font-medium text-forest">Handlinger</th>

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus } from 'lucide-react'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import type { PageContent } from '@/types'
 
@@ -59,8 +58,7 @@ export default function SiteContentPage() {
           onClick={() => setShowModal(true)}
           className="inline-flex items-center gap-2 rounded-lg bg-forest px-4 py-2.5 text-sm font-medium text-cream hover:bg-forest/90"
         >
-          <Plus className="h-4 w-4" aria-hidden="true" />
-          Opprett ny side
+          + Opprett ny side
         </button>
       </div>
 
