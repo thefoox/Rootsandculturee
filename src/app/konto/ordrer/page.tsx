@@ -29,7 +29,7 @@ export default async function OrdrerPage() {
           ))}
         </div>
       ) : (
-        <EmptyState message="Du har ingen ordrer ennå." />
+        <EmptyState message="Du har ingen ordrer ennå." ctaLabel="Utforsk opplevelser" ctaHref="/opplevelser" />
       )}
     </div>
   )

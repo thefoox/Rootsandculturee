@@ -26,8 +26,8 @@ export default function HandlekurvPage() {
           <p className="mt-2 text-body">
             Du har ikke lagt til noe enda.
           </p>
-          <Link href="/produkter" className="mt-6">
-            <Button variant="primary">Se produkter</Button>
+          <Link href="/opplevelser" className="mt-6">
+            <Button variant="primary">Utforsk opplevelser</Button>
           </Link>
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function HandlekurvPage() {
           </ul>
 
           <Link
-            href="/produkter"
+            href="/opplevelser"
             className="mt-6 inline-flex items-center gap-2 text-body text-forest hover:opacity-85"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />

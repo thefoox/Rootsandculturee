@@ -32,6 +32,7 @@ export async function ProductsGridSection({ section }: { section: PageSection })
           </Link>
         </div>
 
+        {products.length > 0 ? (
         <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
           {products.slice(0, 4).map((product) => {
             const mainImage = product.images[0]
@@ -71,6 +72,11 @@ export async function ProductsGridSection({ section }: { section: PageSection })
             )
           })}
         </div>
+        ) : (
+          <p className="mt-10 text-center font-body text-body">
+            Ingen produkter tilgjengelig akkurat nå.
+          </p>
+        )}
 
         <div className="mt-6 text-center md:hidden">
           <Link

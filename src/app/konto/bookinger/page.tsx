@@ -43,7 +43,7 @@ export default async function BookingerPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen kommende bookinger." />
+          <EmptyState message="Du har ingen kommende bookinger." ctaLabel="Utforsk opplevelser" ctaHref="/opplevelser" />
         )}
       </section>
 

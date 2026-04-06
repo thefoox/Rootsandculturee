@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useId } from 'react'
+import Link from 'next/link'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase/client'
 import { DateCard } from './DateCard'
@@ -71,6 +72,12 @@ export function DateCardPicker({ experienceId, dates, experience }: DateCardPick
         <p className="mt-4 font-body text-body">
           Ingen tilgjengelige datoer for øyeblikket.
         </p>
+        <Link
+          href="/kontakt"
+          className="mt-3 inline-flex items-center text-label font-medium text-forest hover:underline"
+        >
+          Kontakt oss for tilgjengelige datoer
+        </Link>
       </section>
     )
   }

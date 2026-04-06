@@ -38,6 +38,7 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
           </Link>
         </div>
 
+        {experiencesWithDates.length > 0 ? (
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {experiencesWithDates.map(({ experience, nextDate }) => {
             const mainImage = experience.images[0]
@@ -85,6 +86,11 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
             )
           })}
         </div>
+        ) : (
+          <p className="mt-10 text-center font-body text-body">
+            Ingen opplevelser tilgjengelig akkurat nå.
+          </p>
+        )}
 
         <div className="mt-6 text-center md:hidden">
           <Link

@@ -57,7 +57,7 @@ export default async function KontoPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen ordrer ennå." />
+          <EmptyState message="Du har ingen ordrer ennå." ctaLabel="Utforsk opplevelser" ctaHref="/opplevelser" />
         )}
       </section>
 
@@ -83,7 +83,7 @@ export default async function KontoPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen bookinger ennå." />
+          <EmptyState message="Du har ingen bookinger ennå." ctaLabel="Utforsk opplevelser" ctaHref="/opplevelser" />
         )}
       </section>
     </div>
