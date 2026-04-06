@@ -148,6 +148,7 @@ export default function GavekortPage() {
                 min={MIN_CUSTOM}
                 max={MAX_CUSTOM}
                 value={customAmount}
+                placeholder="f.eks. 750"
                 onChange={(e) => {
                   setCustomAmount(e.target.value)
                   setErrors((prev) => ({ ...prev, amount: '' }))
@@ -173,6 +174,7 @@ export default function GavekortPage() {
               value={recipientName}
               onChange={(e) => setRecipientName(e.target.value)}
               error={errors.recipientName}
+              required
             />
             <Input
               label="Mottakers e-post"
@@ -180,6 +182,7 @@ export default function GavekortPage() {
               value={recipientEmail}
               onChange={(e) => setRecipientEmail(e.target.value)}
               error={errors.recipientEmail}
+              required
             />
             <div className="flex flex-col gap-1">
               <label

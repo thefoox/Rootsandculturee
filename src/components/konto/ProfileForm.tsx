@@ -36,6 +36,10 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         className="opacity-60 cursor-not-allowed"
       />
 
+      <p className="text-label text-body/60 -mt-2">
+        Kontakt oss for å endre e-postadresse
+      </p>
+
       <Input
         label="Fullt navn"
         name="displayName"
