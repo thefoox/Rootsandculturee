@@ -1,5 +1,10 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+  title: 'Min konto — Roots & Culture',
+}
 import { verifySession } from '@/lib/dal'
 import { getOrdersByUser } from '@/lib/data/orders'
 import { getBookingsByUser } from '@/lib/data/bookings'

@@ -13,12 +13,12 @@ export default async function KontoLayout({
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="font-heading text-h2 font-bold text-forest mb-6">
         Min konto
       </h1>
       <KontoTabs />
       {children}
-    </main>
+    </div>
   )
 }

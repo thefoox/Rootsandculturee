@@ -1,4 +1,9 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+  title: 'Mine bookinger — Roots & Culture',
+}
 import { verifySession } from '@/lib/dal'
 import { getBookingsByUser } from '@/lib/data/bookings'
 import { BookingCard } from '@/components/konto/BookingCard'

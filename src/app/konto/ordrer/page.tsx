@@ -1,4 +1,9 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+  title: 'Mine ordrer — Roots & Culture',
+}
 import { verifySession } from '@/lib/dal'
 import { getOrdersByUser } from '@/lib/data/orders'
 import { OrderCard } from '@/components/konto/OrderCard'
