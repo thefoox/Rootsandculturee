@@ -34,7 +34,20 @@ Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturoppl
 
 ### Active
 
-(Fresh for v1.1 — defined by `/gsd-new-milestone`)
+- [ ] Typografi og designsystem-konsistens pa alle sider
+- [ ] UI-komponenter polish (responsivitet, WCAG, states, feilhandtering)
+- [ ] E-commerce QA — full flyt fungerer korrekt
+- [ ] Bookingsystem QA — sanntid, atomisk, bekreftelseskode
+- [ ] Admin CRUD QA — alle operasjoner fungerer
+- [ ] CMS-system fixes (cache-invalidering, delete, seksjonsforbedringer)
+- [ ] Stripe-konfigurasjon QA
+- [ ] Kundekonto QA
+- [ ] SEO og metadata komplett
+- [ ] Gavekort-system QA
+
+## Current Milestone: v1.1 Polish & Production Readiness
+
+**Goal:** Fiks alle kjente bugs, sorg for designsystem-konsistens, full CMS-funksjonalitet, og verifiser at alle flyter fungerer korrekt.
 
 ### Out of Scope
 
