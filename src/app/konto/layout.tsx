@@ -13,7 +13,7 @@ export default async function KontoLayout({
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 pt-28 pb-8 md:pt-32">
       <h1 className="font-heading text-h2 font-bold text-forest mb-6">
         Min konto
       </h1>

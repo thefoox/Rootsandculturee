@@ -32,7 +32,7 @@ export default async function OrderDetailPage({
   const order = await getOrderById(id)
 
   // Security check: verify order belongs to this user
-  if (!order || order.customerId !== session.uid) {
+  if (!order || (order.customerId !== session.uid && order.customerEmail !== session.email)) {
     notFound()
   }
 
