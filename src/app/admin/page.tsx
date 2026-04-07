@@ -150,7 +150,7 @@ export default async function AdminDashboard() {
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="rounded-full bg-[#DCFCE7] px-2 py-0.5 text-label text-[#166534]">
+                    <span className="rounded-full bg-badge-easy-bg px-2 py-0.5 text-label text-badge-easy">
                       Betalt
                     </span>
                     <span className="font-body text-body font-medium text-rust">
