@@ -74,10 +74,10 @@ Plans:
   5. Alle interaktive elementer (knapper, lenker, kort) har tydelige hover- og active-states
 **Plans**: 4 plans
 Plans:
-- [ ] 09-01-PLAN.md — Fiks hardkodede tekststorrelser og hex-farger; legg til badge-tokens; fiks focus-ring
-- [ ] 09-02-PLAN.md — DataTable mobil scroll-wrapper; CartDrawer hover-state; 5 loading.tsx-filer
-- [ ] 09-03-PLAN.md — konto/EmptyState oppgradering med ikon+heading; admin/ordrer tomt-tilstand + norsk feilmelding
-- [ ] 09-04-PLAN.md — VariantSelector dynamisk pris; CartDrawer audit; visuell checkpoint
+- [x] 09-01-PLAN.md — Fiks hardkodede tekststorrelser og hex-farger; legg til badge-tokens; fiks focus-ring
+- [x] 09-02-PLAN.md — DataTable mobil scroll-wrapper; CartDrawer hover-state; 5 loading.tsx-filer
+- [x] 09-03-PLAN.md — konto/EmptyState oppgradering med ikon+heading; admin/ordrer tomt-tilstand + norsk feilmelding
+- [x] 09-04-PLAN.md — VariantSelector dynamisk pris; CartDrawer audit; visuell checkpoint
 **UI hint**: yes
 
 ### Phase 10: Gavekort, Kundekonto og SEO
