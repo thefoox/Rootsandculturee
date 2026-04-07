@@ -16,6 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Butikkvindu og Admin** - Offentlig produktkatalog, blogg, opplevelseslister og fullt admin-CMS
 - [ ] **Phase 3: Betaling og Booking** - Handlekurv, Stripe-checkout for produkter, fullstendig bookingsystem med atomisk plassreservering
 - [ ] **Phase 4: Kundekonto** - Kundedashboard med ordrehistorikk, bookinghistorikk og profilinnstillinger
+- [ ] **Phase 5: Checkout-bekreftelse wiring** - Fiks bookingbekreftelse pa side og kundens e-post i bekreftelsesmodalen (gap closure)
 
 ## Phase Details
 
@@ -92,6 +93,22 @@ Plans:
 
 **UI hint**: yes
 
+### Phase 5: Checkout-bekreftelse wiring
+**Goal**: Fikse kryss-fase-wiring sa bookingbekreftelse vises korrekt pa siden etter betaling, og kundens e-post vises riktig i bekreftelsesmodalen
+**Depends on**: Phase 3
+**Requirements**: BOOK-05, PROD-06
+**Gap Closure**: Closes gaps from v1.0 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. Etter en booking-kun-bestilling ser kunden bekreftelseskode, opplevelsesnavn og dato pa bekreftelsessiden
+  2. Kundens faktiske e-postadresse vises i bekreftelsesmodalen (ikke fallback-verdi)
+  3. Blandede bestillinger (produkter + opplevelser) viser bade ordredetaljer og bookingdetaljer
+**Plans:** 1 plan
+
+Plans:
+- [ ] 05-01-PLAN.md — Thread customerEmail, add getBookingsByPaymentIntent, wire ConfirmationModal
+
+**UI hint**: no
+
 ## Progress
 
 **Execution Order:**
@@ -103,3 +120,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. Butikkvindu og Admin | 0/2 | Planned | - |
 | 3. Betaling og Booking | 0/2 | Planned | - |
 | 4. Kundekonto | 0/1 | Not started | - |
+| 5. Checkout-bekreftelse wiring | 0/1 | Not started | - |

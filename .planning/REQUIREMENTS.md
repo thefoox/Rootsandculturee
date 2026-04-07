@@ -33,7 +33,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **BOOK-02**: Opplevelsesdetaljside med beskrivelse, bilder, hva som er inkludert, sted og kanselleringsvilkar
 - [x] **BOOK-03**: Dato-/sesjonsvelger som viser tilgjengelige datoer med gjenstaende plasser
 - [x] **BOOK-04**: Booking-checkout via Stripe med atomisk plassreservering (Firestore transaction)
-- [x] **BOOK-05**: Bookingbekreftelse med unik bekreftelseskode pa side og via e-post
+- [ ] **BOOK-05**: Bookingbekreftelse med unik bekreftelseskode pa side og via e-post
 - [x] **BOOK-06**: Kapasitetssperring — bookingen blokkeres nar alle plasser er fylt
 - [x] **BOOK-07**: Vanskelighetsgrad-indikator pa opplevelser (lett, moderat, krevende)
 - [x] **BOOK-08**: "Hva du ma ta med"-sjekkliste pa bookingbekreftelse
@@ -150,7 +150,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROD-07 | Phase 3 | Complete |
 | BOOK-03 | Phase 3 | Complete |
 | BOOK-04 | Phase 3 | Complete |
-| BOOK-05 | Phase 3 | Complete |
+| BOOK-05 | Phase 5 | Pending |
 | BOOK-06 | Phase 3 | Complete |
 | BOOK-08 | Phase 3 | Complete |
 | ADMN-05 | Phase 3 | Complete |
@@ -164,6 +164,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 - v1 requirements: 42 total
 - Mapped to phases: 42
 - Unmapped: 0
+- Pending (gap closure): 1 (BOOK-05 → Phase 5)
 
 ---
 *Requirements defined: 2026-03-30*
