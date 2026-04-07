@@ -8,6 +8,7 @@ function docToBooking(id: string, data: Record<string, unknown>): Booking {
     id,
     confirmationCode: (data.confirmationCode as string) || '',
     stripeSessionId: (data.stripeSessionId as string) || '',
+    stripePaymentIntentId: (data.stripePaymentIntentId as string) || '',
     customerId: (data.customerId as string) || null,
     customerEmail: (data.customerEmail as string) || '',
     customerName: (data.customerName as string) || '',
@@ -95,4 +96,18 @@ export async function getBookingById(bookingId: string): Promise<Booking | null>
   const doc = await adminDb.collection('bookings').doc(bookingId).get()
   if (!doc.exists) return null
   return docToBooking(doc.id, doc.data()!)
+}
+
+export async function getBookingsByPaymentIntent(
+  paymentIntentId: string
+): Promise<Booking[]> {
+  if (!adminDb) return []
+
+  const snapshot = await adminDb
+    .collection('bookings')
+    .where('stripePaymentIntentId', '==', paymentIntentId)
+    .orderBy('createdAt', 'desc')
+    .get()
+
+  return snapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
 }
