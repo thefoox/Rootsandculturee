@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
+import { verifySession } from '@/lib/dal'
 import { mockPageContent } from '@/lib/data/mock-data'
 import type { PageContent } from '@/types'
 
@@ -42,6 +44,7 @@ export async function PUT(
   const body = await request.json()
 
   if (!adminDb) {
+    revalidateTag('page-content', 'max')
     return NextResponse.json({ success: true, mock: true })
   }
 
@@ -60,5 +63,27 @@ export async function PUT(
     { merge: true }
   )
 
+  revalidateTag('page-content', 'max')
+  return NextResponse.json({ success: true })
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ pageId: string }> }
+) {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') {
+    return NextResponse.json({ error: 'Ikke autorisert.' }, { status: 401 })
+  }
+
+  const { pageId } = await params
+
+  if (!adminDb) {
+    revalidateTag('page-content', 'max')
+    return NextResponse.json({ success: true, mock: true })
+  }
+
+  await adminDb.collection('pageContent').doc(pageId).delete()
+  revalidateTag('page-content', 'max')
   return NextResponse.json({ success: true })
 }
