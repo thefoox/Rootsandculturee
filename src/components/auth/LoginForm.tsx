@@ -57,13 +57,14 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
       // Map Firebase error codes to Norwegian messages
       const firebaseError = err as { code?: string }
       if (firebaseError.code === 'auth/invalid-credential' || firebaseError.code === 'auth/user-not-found' || firebaseError.code === 'auth/wrong-password') {
-        setFormError('Feil e-post eller passord. Prover du igjen?')
+        setFormError('Feil e-post eller passord. Prøv igjen.')
       } else if (firebaseError.code === 'auth/too-many-requests') {
         setFormError('For mange forsøk. Vent litt og prøv igjen.')
       } else if (firebaseError.code === 'auth/invalid-email') {
         setErrors({ email: 'Oppgi en gyldig e-postadresse.' })
       } else {
-        setFormError('Noe gikk galt. Sjekk internettforbindelsen og prøver på nytt.')
+        console.error('Login error:', firebaseError.code, err)
+        setFormError('Noe gikk galt. Sjekk internettforbindelsen og prøv på nytt.')
       }
       setLoading(false)
     }
