@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
+import { DeleteConfirmDialog } from '@/components/admin/DeleteConfirmDialog'
+import { toast } from 'sonner'
 import type { PageContent } from '@/types'
 
 export default function SiteContentPage() {
@@ -12,6 +14,8 @@ export default function SiteContentPage() {
   const [newTitle, setNewTitle] = useState('')
   const [newSlug, setNewSlug] = useState('')
   const [creating, setCreating] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<PageContent | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     fetch('/api/page-content')
@@ -30,11 +34,30 @@ export default function SiteContentPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title: newTitle, slug: newSlug }),
     })
+    if (res.status === 409) {
+      toast.error('En side med denne slug-en finnes allerede. Velg en annen slug.')
+      setCreating(false)
+      return
+    }
     const data = await res.json()
     if (data.success || data.id) {
       window.location.href = `/admin/innhold/${data.id}`
     }
     setCreating(false)
+  }
+
+  async function handleDelete() {
+    if (!deleteTarget) return
+    setIsDeleting(true)
+    const res = await fetch(`/api/page-content/${deleteTarget.id}`, { method: 'DELETE' })
+    if (res.ok) {
+      setPages((prev) => prev.filter((p) => p.id !== deleteTarget.id))
+      toast.success(`${deleteTarget.title} er slettet.`)
+    } else {
+      toast.error('Kunne ikke slette siden. Prøv igjen.')
+    }
+    setIsDeleting(false)
+    setDeleteTarget(null)
   }
 
   return (
@@ -73,6 +96,7 @@ export default function SiteContentPage() {
                 <th className="px-5 py-3 text-label font-medium text-forest">Slug</th>
                 <th className="px-5 py-3 text-label font-medium text-forest">Status</th>
                 <th className="px-5 py-3 text-label font-medium text-forest">Sist oppdatert</th>
+                <th className="px-5 py-3 text-label font-medium text-forest">Handlinger</th>
               </tr>
             </thead>
             <tbody>
@@ -103,12 +127,29 @@ export default function SiteContentPage() {
                   <td className="px-5 py-4 text-body text-body/70">
                     {new Date(page.updatedAt).toLocaleDateString('nb-NO')}
                   </td>
+                  <td className="px-5 py-4">
+                    <button
+                      onClick={() => setDeleteTarget(page)}
+                      className="text-label text-body hover:text-destructive"
+                      aria-label={`Slett ${page.title}`}
+                    >
+                      Slett
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
+
+      <DeleteConfirmDialog
+        isOpen={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        itemName={deleteTarget?.title || ''}
+        isDeleting={isDeleting}
+      />
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
