@@ -63,8 +63,9 @@ export default function CheckoutPage() {
     initPayment()
   }, [items, clientSecret])
 
-  function handlePaymentSuccess(piId: string) {
+  function handlePaymentSuccess(piId: string, email: string) {
     setPaymentIntentId(piId)
+    setCustomerEmail(email)
   }
 
   // If payment succeeded, show confirmation modal
