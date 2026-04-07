@@ -57,7 +57,10 @@ Plans:
   3. Opplevelsessiden viser sanntids plasser og blokkerer booking nar alle plasser er fylt
   4. Gjestekjop og innlogget kjop oppretter ordre korrekt i Firestore med riktig bruker-tilknytning
   5. Bekreftelseskode for booking vises bade pa siden og i bekreftelsesposten
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 08-01-PLAN.md — Fix PaymentIntent metadata bug (placeholder email) + logged-in user email pre-fill
+- [ ] 08-02-PLAN.md — Harden ConfirmationModal + cart redirect race fix + end-to-end human verification
 
 ### Phase 9: Typografi og UI-polish
 **Goal**: Alle sider bruker designsystemets tokens konsekvent og alle komponenter fungerer korrekt pa alle skarmstorlelser med riktige interaksjonstilstander
@@ -95,6 +98,6 @@ Plans:
 | 5. Checkout-bekreftelse wiring | v1.0 | 1/1 | Complete | 2026-04-07 |
 | 6. Admin QA og feilsider | v1.0 | 2/2 | Complete | 2026-04-07 |
 | 7. CMS-fikser og Admin CRUD | v1.1 | 0/5 | Not started | - |
-| 8. E-commerce, Stripe og Booking-flyter | v1.1 | 0/? | Not started | - |
+| 8. E-commerce, Stripe og Booking-flyter | v1.1 | 0/2 | Not started | - |
 | 9. Typografi og UI-polish | v1.1 | 0/? | Not started | - |
 | 10. Gavekort, Kundekonto og SEO | v1.1 | 0/? | Not started | - |
