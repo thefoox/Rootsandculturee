@@ -71,6 +71,19 @@ export default function NewExperiencePage() {
       router.push('/admin/opplevelser')
     } else if (result.errors) {
       setErrors(result.errors)
+      if (result.errors._form) {
+        toast.error(result.errors._form)
+      }
+      // Scroll to first visible error after React re-renders
+      requestAnimationFrame(() => {
+        const firstError = document.querySelector('[role="alert"]')
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          if (firstError instanceof HTMLElement && firstError.tabIndex >= 0) {
+            firstError.focus()
+          }
+        }
+      })
     }
   }
 
