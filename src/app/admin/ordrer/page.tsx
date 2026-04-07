@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { ShoppingBag } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { DataTable, type Column } from '@/components/admin/DataTable'
@@ -19,7 +21,10 @@ export default function OrdersListPage() {
     getOrders().then((data) => {
       setOrders(data)
       setLoading(false)
-    }).catch(() => setLoading(false))
+    }).catch(() => {
+      toast.error('Kunne ikke laste ordrer. Prøver igjen.')
+      setLoading(false)
+    })
   }, [])
 
   const columns: Column<Order>[] = [
@@ -121,7 +126,7 @@ export default function OrdersListPage() {
           Ordrer
         </h1>
         <EmptyState
-          icon=""
+          icon={ShoppingBag}
           heading="Ingen ordrer enda"
           body="Ordrer vises her etter at kunder har gjennomført kjøp."
         />
@@ -146,7 +151,7 @@ export default function OrdersListPage() {
         data={orders}
         caption="Liste over ordrer"
         emptyState={{
-          icon: '',
+          icon: ShoppingBag,
           heading: 'Ingen ordrer enda',
           body: 'Ordrer vises her etter at kunder har gjennomført kjøp.',
           ctaLabel: '',

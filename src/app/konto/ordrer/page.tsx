@@ -6,6 +6,7 @@ export const metadata: Metadata = {
 }
 import { verifySession } from '@/lib/dal'
 import { getOrdersByUser } from '@/lib/data/orders'
+import { ShoppingBag } from 'lucide-react'
 import { OrderCard } from '@/components/konto/OrderCard'
 import { EmptyState } from '@/components/konto/EmptyState'
 
@@ -29,7 +30,13 @@ export default async function OrdrerPage() {
           ))}
         </div>
       ) : (
-        <EmptyState message="Du har ingen ordrer ennå." ctaLabel="Utforsk opplevelser" ctaHref="/opplevelser" />
+        <EmptyState
+          icon={ShoppingBag}
+          heading="Ingen ordrer enda"
+          message="Du har ingen ordrer ennå."
+          ctaLabel="Utforsk opplevelser"
+          ctaHref="/opplevelser"
+        />
       )}
     </div>
   )
