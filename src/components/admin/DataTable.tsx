@@ -61,7 +61,8 @@ export function DataTable<T extends { id: string }>({
 
   return (
     <div className="overflow-hidden rounded-lg border border-forest/12 bg-cream">
-      <table className="w-full">
+      <div className="overflow-x-auto">
+      <table className="w-full min-w-[600px]">
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr className="h-[44px] border-b border-forest/12 bg-card">
@@ -145,6 +146,7 @@ export function DataTable<T extends { id: string }>({
           })}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }
