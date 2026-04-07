@@ -109,3 +109,14 @@ Plans:
 | 8. E-commerce, Stripe og Booking-flyter | v1.1 | 0/2 | Not started | - |
 | 9. Typografi og UI-polish | v1.1 | 0/4 | Not started | - |
 | 10. Gavekort, Kundekonto og SEO | v1.1 | 2/2 | Complete    | 2026-04-07 |
+
+### Phase 11: UI-kvalitet og premium design
+
+**Goal**: Hele nettstedet skal se ut som en profesjonell $15k build — premium typografi, spacing, animasjoner, visuell hierarki og merkevare-konsistens pa alle sider
+**Requirements**: TBD (defined by UI-SPEC)
+**Depends on**: Phase 9
+**UI hint**: yes
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 11 to break down)
