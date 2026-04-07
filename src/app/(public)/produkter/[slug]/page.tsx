@@ -62,7 +62,9 @@ export default async function ProduktDetailPage({ params }: PageProps) {
           <h1 className="font-heading text-h2 font-bold text-forest">
             {product.name}
           </h1>
-          <PriceBadge priceInOre={product.price} className="mt-4 block text-h4" />
+          {product.variants.length === 0 && (
+            <PriceBadge priceInOre={product.price} className="mt-4 block text-h4" />
+          )}
           <p className="mt-6 font-body text-body leading-[1.5] text-forest whitespace-pre-line">
             {product.description}
           </p>

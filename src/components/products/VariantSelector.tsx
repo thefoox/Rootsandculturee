@@ -70,6 +70,9 @@ export function VariantSelector({ product }: VariantSelectorProps) {
             </button>
           ))}
         </div>
+        <p className="mt-3 font-body text-h4 font-bold text-forest">
+          {formatPrice(activePrice)}
+        </p>
       </fieldset>
 
       <div className="mt-6">
