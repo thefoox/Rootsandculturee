@@ -6,6 +6,7 @@ export const metadata: Metadata = {
 }
 import { verifySession } from '@/lib/dal'
 import { getBookingsByUser } from '@/lib/data/bookings'
+import { CalendarDays } from 'lucide-react'
 import { BookingCard } from '@/components/konto/BookingCard'
 import { EmptyState } from '@/components/konto/EmptyState'
 
@@ -43,7 +44,13 @@ export default async function BookingerPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen kommende bookinger." ctaLabel="Utforsk opplevelser" ctaHref="/opplevelser" />
+          <EmptyState
+            icon={CalendarDays}
+            heading="Ingen kommende bookinger"
+            message="Du har ingen kommende bookinger."
+            ctaLabel="Utforsk opplevelser"
+            ctaHref="/opplevelser"
+          />
         )}
       </section>
 
@@ -59,7 +66,11 @@ export default async function BookingerPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen tidligere bookinger." />
+          <EmptyState
+            icon={CalendarDays}
+            heading="Ingen tidligere bookinger"
+            message="Du har ingen tidligere bookinger."
+          />
         )}
       </section>
     </div>

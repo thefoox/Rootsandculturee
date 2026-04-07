@@ -9,6 +9,7 @@ import { verifySession } from '@/lib/dal'
 import { getOrdersByUser } from '@/lib/data/orders'
 import { getBookingsByUser } from '@/lib/data/bookings'
 import { getUserProfile } from '@/lib/data/users'
+import { ShoppingBag, CalendarDays } from 'lucide-react'
 import { OrderCard } from '@/components/konto/OrderCard'
 import { BookingCard } from '@/components/konto/BookingCard'
 import { EmptyState } from '@/components/konto/EmptyState'
@@ -57,7 +58,13 @@ export default async function KontoPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen ordrer ennå." ctaLabel="Utforsk opplevelser" ctaHref="/opplevelser" />
+          <EmptyState
+            icon={ShoppingBag}
+            heading="Ingen ordrer enda"
+            message="Du har ingen ordrer ennå."
+            ctaLabel="Utforsk opplevelser"
+            ctaHref="/opplevelser"
+          />
         )}
       </section>
 
@@ -83,7 +90,13 @@ export default async function KontoPage() {
             ))}
           </div>
         ) : (
-          <EmptyState message="Du har ingen bookinger ennå." ctaLabel="Utforsk opplevelser" ctaHref="/opplevelser" />
+          <EmptyState
+            icon={CalendarDays}
+            heading="Ingen bookinger enda"
+            message="Du har ingen bookinger ennå."
+            ctaLabel="Utforsk opplevelser"
+            ctaHref="/opplevelser"
+          />
         )}
       </section>
     </div>
