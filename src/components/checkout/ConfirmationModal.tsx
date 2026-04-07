@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { BookingChecklist } from './BookingChecklist'
 import { formatPrice, formatDate } from '@/lib/format'
 import { getOrderByStripePaymentIntent } from '@/actions/orders'
+import { getBookingsByPaymentIntentAction } from '@/actions/bookings'
 import type { Order } from '@/types'
 
 interface BookingConfirmation {
@@ -35,19 +36,40 @@ export function ConfirmationModal({
   const modalRef = useRef<HTMLDivElement>(null)
   const [order, setOrder] = useState<Order | null>(null)
   const [loading, setLoading] = useState(true)
+  const [polledBookings, setPolledBookings] = useState<BookingConfirmation[]>([])
 
-  // Poll for order until webhook confirms
+  // Poll for order and bookings until webhook confirms
   useEffect(() => {
     let cancelled = false
     let attempts = 0
     const maxAttempts = 30 // 60 seconds max
 
-    async function pollOrder() {
+    async function poll() {
       while (!cancelled && attempts < maxAttempts) {
         try {
-          const result = await getOrderByStripePaymentIntent(paymentIntentId)
-          if (result) {
-            setOrder(result)
+          const [orderResult, bookingResults] = await Promise.all([
+            getOrderByStripePaymentIntent(paymentIntentId),
+            getBookingsByPaymentIntentAction(paymentIntentId),
+          ])
+
+          if (orderResult) {
+            setOrder(orderResult)
+          }
+
+          if (bookingResults.length > 0) {
+            setPolledBookings(
+              bookingResults.map((b) => ({
+                confirmationCode: b.confirmationCode,
+                experienceName: b.experienceName,
+                date: b.date instanceof Date ? b.date.toISOString() : String(b.date),
+                whatToBring: b.whatToBring,
+                total: b.total,
+              }))
+            )
+          }
+
+          // Stop polling when we have at least one result (order or bookings)
+          if (orderResult || bookingResults.length > 0) {
             setLoading(false)
             return
           }
@@ -57,11 +79,11 @@ export function ConfirmationModal({
         attempts++
         await new Promise((r) => setTimeout(r, 2000))
       }
-      // Even if no order found (e.g. booking-only), stop loading
+      // Timeout — stop loading even with no results
       setLoading(false)
     }
 
-    pollOrder()
+    poll()
     return () => { cancelled = true }
   }, [paymentIntentId])
 
@@ -107,7 +129,8 @@ export function ConfirmationModal({
   }
 
   const hasOrder = order !== null
-  const hasBookings = bookings.length > 0
+  const allBookings = polledBookings.length > 0 ? polledBookings : bookings
+  const hasBookings = allBookings.length > 0
 
   let headingText = 'Bestilling bekreftet!'
   if (hasOrder && hasBookings) {
@@ -195,7 +218,7 @@ export function ConfirmationModal({
 
               {/* Booking details */}
               {hasBookings &&
-                bookings.map((booking, i) => (
+                allBookings.map((booking, i) => (
                   <div key={i} className="mb-6 space-y-3">
                     <div>
                       <span className="text-label text-body">Bekreftelseskode:</span>

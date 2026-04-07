@@ -233,6 +233,7 @@ export interface Booking {
   id: string
   confirmationCode: string
   stripeSessionId: string
+  stripePaymentIntentId: string
   customerId: string | null
   customerEmail: string
   customerName: string

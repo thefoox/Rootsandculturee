@@ -32,7 +32,7 @@ const contactOnlySchema = z.object({
 interface CheckoutFormProps {
   items: CartItem[]
   userEmail?: string | null
-  onPaymentSuccess: (paymentIntentId: string) => void
+  onPaymentSuccess: (paymentIntentId: string, email: string) => void
   giftCardCode?: string | null
 }
 
@@ -127,7 +127,7 @@ export function CheckoutForm({
       }
 
       if (paymentIntent && paymentIntent.status === 'succeeded') {
-        onPaymentSuccess(paymentIntent.id)
+        onPaymentSuccess(paymentIntent.id, email)
       }
     } catch {
       setPaymentError('En uventet feil oppstod. Prøv igjen.')

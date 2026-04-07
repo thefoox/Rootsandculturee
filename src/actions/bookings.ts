@@ -3,7 +3,7 @@
 import { adminDb } from '@/lib/firebase/admin'
 import { revalidateTag } from 'next/cache'
 import { verifySession } from '@/lib/dal'
-import { getBookings, getBookingsByExperience, getBookingsByExperienceAndDate } from '@/lib/data/bookings'
+import { getBookings, getBookingsByExperience, getBookingsByExperienceAndDate, getBookingsByPaymentIntent } from '@/lib/data/bookings'
 import type { Booking } from '@/types'
 
 export async function cancelBooking(
@@ -85,4 +85,10 @@ export async function getBookingsFiltered(
     return getBookingsByExperience(experienceId)
   }
   return getBookings()
+}
+
+export async function getBookingsByPaymentIntentAction(
+  paymentIntentId: string
+): Promise<Booking[]> {
+  return getBookingsByPaymentIntent(paymentIntentId)
 }
