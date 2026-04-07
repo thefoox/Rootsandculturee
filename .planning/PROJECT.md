@@ -2,53 +2,59 @@
 
 ## What This Is
 
-Roots & Culture er en norsk nettbutikk som selger naturopplevelser og autentiske produkter knyttet til norsk kulturarv og natur. Kundene kan kjope fysiske produkter (drikke, kaffe/te, naturprodukter), booke opplevelser (naturretreater, kurs, matopplevelser), og lese bloggartikler om natur, kultur og tradisjoner. Alt er pa norsk, med Stripe-betaling og stotte for bade gjestekjop og brukerkonto.
+Roots & Culture er en norsk nettbutikk som selger naturopplevelser og autentiske produkter knyttet til norsk kulturarv og natur. Kundene kan kjope fysiske produkter (drikke, kaffe/te, naturprodukter), booke opplevelser (naturretreater, kurs, matopplevelser), og lese bloggartikler om natur, kultur og tradisjoner. Alt er pa norsk, med Stripe-betaling og stotte for bade gjestekjop og brukerkonto. Gavekort kan kjopes og loses inn i checkout.
 
 ## Core Value
 
 Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturopplevelser i en informativ og tilgjengelig nettbutikk.
 
+## Current State
+
+**Shipped:** v1.0 MVP (2026-04-07)
+**Codebase:** ~19,000 LOC TypeScript, 197 source files
+**Stack:** Next.js 16.2.1, Firebase 12.x, Stripe, Vercel
+**Timeline:** 2026-03-30 → 2026-04-07 (9 days)
+
 ## Requirements
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Produktkatalog med kategorier (drikke, kaffe/te, naturprodukter) — v1.0
+- ✓ Handlekurv og checkout med Stripe-betaling — v1.0
+- ✓ Gjestekjop og konto-kjop — v1.0
+- ✓ Bookingsystem for opplevelser med faste datoer og begrenset antall plasser — v1.0
+- ✓ Blogg med artikler om natur, kultur og tradisjoner — v1.0
+- ✓ Admin CMS for innhold, produkter, opplevelser og artikler — v1.0
+- ✓ Kundeprofil-dashboard med ordrehistorikk og bookinger — v1.0
+- ✓ Brukerautentisering (registrering, innlogging, passord-reset) — v1.0
+- ✓ Universalutforming (WCAG 2.1 AA) — v1.0
+- ✓ Norsk sprak gjennomgaende — v1.0
+- ✓ Responsivt design (mobil, nettbrett, desktop) — v1.0
+- ✓ SEO-optimalisert med SSR/SSG — v1.0
 
 ### Active
 
-- [ ] Produktkatalog med kategorier (drikke, kaffe/te, naturprodukter)
-- [ ] Handlekurv og checkout med Stripe-betaling
-- [ ] Fysisk frakt med fraktkalkulator
-- [ ] Gjestekjop og konto-kjop
-- [ ] Bookingsystem for opplevelser (naturretreater, kurs, matopplevelser)
-- [ ] Faste datoer med begrenset antall plasser for opplevelser
-- [ ] Blogg med artikler om natur, kultur og tradisjoner
-- [ ] Admin CMS for innhold, produkter, opplevelser og artikler
-- [ ] Kundeprofil-dashboard med ordrehistorikk og bookinger
-- [ ] Brukerautentisering (registrering, innlogging, passord-reset)
-- [ ] Universalutforming (WCAG 2.1 AA)
-- [ ] Norsk sprak gjennomgaende
-- [ ] Responsivt design (mobil, nettbrett, desktop)
-- [ ] SEO-optimalisert med SSR/SSG
+(Fresh for v1.1 — defined by `/gsd-new-milestone`)
 
 ### Out of Scope
 
-- Flerspraklig stotte — norsk kun, v1
+- Flerspraklig stotte — norsk kun
 - Mobilapp — web-first, vurderes i v2
-- Abonnements-/medlemsmodell — ikke aktuelt i v1
+- Abonnements-/medlemsmodell — ikke aktuelt
 - Digitale produkter/nedlastinger — kun fysiske varer
 - Live chat/kundesupport-widget — kontaktskjema er tilstrekkelig
-- Egendefinert fraktintegrasjon (Bring/Posten API) — manuell fraktpris i v1
 - Foresporselsbasert booking — kun faste datoer med plasser
 
 ## Context
 
 - **Domene**: Norsk natur og kulturarv — autentisk, jordnaert, tradisjonelt
 - **Malgruppe**: Nordmenn som er interessert i natur, tradisjoner og baerekraftige produkter
-- **Design-retning**: Morkgronn + hostfarger (ikke gul). Informativt, oversiktlig, tilgjengelig. Fokus pa brukeropplevelse og intuitive losninger
-- **Admin**: Dashboard for innholdsredigering, produkthandtering, opplevelsesoppretting og ordrebehandling. Implementeres som /admin-ruter i samme Next.js-app med rollebasert tilgang (enklere arkitektur, delt kodebase)
-- **Booking-modell**: Admin oppretter opplevelser med fast dato og maks antall plasser. Kunder velger dato og booker. Plasser reduseres automatisk
+- **Design-retning**: Morkgronn + hostfarger (ikke gul). Informativt, oversiktlig, tilgjengelig
+- **Admin**: Dashboard for innholdsredigering, produkthandtering, opplevelsesoppretting og ordrebehandling (/admin-ruter, rollebasert tilgang)
+- **Booking-modell**: Admin oppretter opplevelser med fast dato og maks antall plasser. Kunder velger dato og booker. Plasser reduseres atomisk
 - **Produkter**: Fysiske varer som sendes med post
+- **CMS**: Sider med seksjoner (hero, text, text-image, gallery, contact-info, trust-bar, auto-fetch grids)
+- **Gavekort**: Kjop og innlosning i checkout
 
 ## Constraints
 
@@ -64,11 +70,16 @@ Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturoppl
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Next.js App Router | SSR/SSG, lettvektig, Vercel-optimalisert | — Pending |
-| Firebase som backend | Auth, Firestore, Storage — alt-i-ett, rask utvikling | — Pending |
-| Admin i same app (/admin) | Delt kodebase, enklere vedlikehold, rollebasert tilgang | — Pending |
-| Stripe for betaling | Norsk stotte, produkter + bookinger i ett system | — Pending |
-| Faste datoer for booking | Enklere system, admin styrer tilgjengelighet | — Pending |
+| Next.js App Router | SSR/SSG, lettvektig, Vercel-optimalisert | ✓ Good |
+| Firebase som backend | Auth, Firestore, Storage — alt-i-ett | ✓ Good |
+| Admin i same app (/admin) | Delt kodebase, enklere vedlikehold | ✓ Good |
+| Stripe for betaling | Norsk stotte, produkter + bookinger i ett | ✓ Good |
+| Faste datoer for booking | Enklere system, admin styrer tilgjengelighet | ✓ Good |
+| jose for sessions | Edge Runtime-kompatibel, HttpOnly cookies | ✓ Good |
+| Tailwind v4 CSS-native | Ingen tailwind.config.js, @theme tokens | ✓ Good |
+| Firebase Storage for uploads | Erstatter lokal fs (broke pa Vercel) | ✓ Good (Phase 6 fix) |
+| Cart via Context + localStorage | Ikke Zustand/Redux, enklere for v1 | ✓ Good |
+| PaymentIntent-basert checkout | Stripe Elements inline, webhook fulfillment | ✓ Good |
 
 ## Evolution
 
@@ -88,4 +99,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 after initialization*
+*Last updated: 2026-04-07 after v1.0 milestone*
