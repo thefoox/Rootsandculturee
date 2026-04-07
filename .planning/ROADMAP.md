@@ -59,8 +59,8 @@ Plans:
   5. Bekreftelseskode for booking vises bade pa siden og i bekreftelsesposten
 **Plans**: 2 plans
 Plans:
-- [ ] 08-01-PLAN.md — Fix PaymentIntent metadata bug (placeholder email) + logged-in user email pre-fill
-- [ ] 08-02-PLAN.md — Harden ConfirmationModal + cart redirect race fix + end-to-end human verification
+- [x] 08-01-PLAN.md — Fix PaymentIntent metadata bug (placeholder email) + logged-in user email pre-fill
+- [x] 08-02-PLAN.md — Harden ConfirmationModal + cart redirect race fix + end-to-end human verification
 
 ### Phase 9: Typografi og UI-polish
 **Goal**: Alle sider bruker designsystemets tokens konsekvent og alle komponenter fungerer korrekt pa alle skarmstorlelser med riktige interaksjonstilstander
