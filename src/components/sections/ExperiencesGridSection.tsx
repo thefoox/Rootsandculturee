@@ -39,67 +39,68 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
         </div>
 
         {experiencesWithDates.length > 0 ? (
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {experiencesWithDates.map(({ experience, nextDate }) => {
-            const mainImage = experience.images[0]
-            return (
+          <>
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {experiencesWithDates.map(({ experience, nextDate }) => {
+                const mainImage = experience.images[0]
+                return (
+                  <Link
+                    key={experience.id}
+                    href={`/opplevelser/${experience.slug}`}
+                    className="group relative overflow-hidden rounded-2xl"
+                  >
+                    <div className="relative aspect-[3/4]">
+                      {mainImage ? (
+                        <Image
+                          src={mainImage.url}
+                          alt={mainImage.alt}
+                          fill
+                          className="object-cover motion-safe:transition-transform motion-safe:duration-300 group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-card" />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    </div>
+                    <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                      <h3 className="font-heading text-h3 font-bold leading-tight text-cream">
+                        {experience.name}
+                      </h3>
+                      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-label text-cream/80">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+                          {experience.location}
+                        </span>
+                        {nextDate && (
+                          <span className="flex items-center gap-1">
+                            <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
+                            {formatDate(nextDate.date)}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-3 font-body text-lg font-bold text-cream">
+                        fra {formatPrice(experience.basePrice)}
+                      </p>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+            <div className="mt-6 text-center md:hidden">
               <Link
-                key={experience.id}
-                href={`/opplevelser/${experience.slug}`}
-                className="group relative overflow-hidden rounded-2xl"
+                href="/opplevelser"
+                className="inline-flex items-center gap-1 font-body text-body font-medium text-forest hover:underline"
               >
-                <div className="relative aspect-[3/4]">
-                  {mainImage ? (
-                    <Image
-                      src={mainImage.url}
-                      alt={mainImage.alt}
-                      fill
-                      className="object-cover motion-safe:transition-transform motion-safe:duration-300 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-card" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                </div>
-                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                  <h3 className="font-heading text-h3 font-bold leading-tight text-cream">
-                    {experience.name}
-                  </h3>
-                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-label text-cream/80">
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-                      {experience.location}
-                    </span>
-                    {nextDate && (
-                      <span className="flex items-center gap-1">
-                        <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-                        {formatDate(nextDate.date)}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-3 font-body text-lg font-bold text-cream">
-                    fra {formatPrice(experience.basePrice)}
-                  </p>
-                </div>
+                Se alle opplevelser <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-            )
-          })}
-        </div>
+            </div>
+          </>
         ) : (
           <p className="mt-10 text-center font-body text-body">
             Ingen opplevelser tilgjengelig akkurat nå.
           </p>
         )}
-
-        <div className="mt-6 text-center md:hidden">
-          <Link
-            href="/opplevelser"
-            className="inline-flex items-center gap-1 font-body text-body font-medium text-forest hover:underline"
-          >
-            Se alle opplevelser <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        </div>
       </div>
     </section>
   )
