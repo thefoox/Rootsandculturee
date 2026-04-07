@@ -35,3 +35,4 @@ const app = getApp()
 
 export const adminDb = app ? getFirestore(app) : null
 export const adminAuth = app ? getAuth(app) : null
+export const adminApp = app
