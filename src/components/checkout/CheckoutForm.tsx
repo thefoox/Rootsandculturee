@@ -102,6 +102,7 @@ export function CheckoutForm({
 
     try {
       // Update existing PaymentIntent metadata with real customer data
+      const formData = { email, fullName, phone, address, postalCode, city }
       const updateResult = await updatePaymentIntentMetadata(paymentIntentId, formData, items, giftCardCode)
 
       if ('error' in updateResult) {

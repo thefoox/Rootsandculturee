@@ -15,7 +15,7 @@ const FLAT_RATE_SHIPPING = 9900 // 99 NOK in ore
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { items, subtotal } = useCart()
+  const { items, subtotal, mounted } = useCart()
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null)
   const [initPaymentIntentId, setInitPaymentIntentId] = useState<string | null>(null)
@@ -38,16 +38,13 @@ export default function CheckoutPage() {
     })
   }, [])
 
-  // Redirect to cart if empty
+  // Redirect to cart if empty — wait for localStorage hydration via mounted flag
   useEffect(() => {
-    // Wait for cart to load from localStorage
-    const timer = setTimeout(() => {
-      if (items.length === 0 && !paymentIntentId) {
-        router.push('/handlekurv')
-      }
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [items.length, paymentIntentId, router])
+    if (!mounted) return
+    if (items.length === 0 && !paymentIntentId) {
+      router.push('/handlekurv')
+    }
+  }, [mounted, items.length, paymentIntentId, router])
 
   // Create initial PaymentIntent for Stripe Elements
   useEffect(() => {

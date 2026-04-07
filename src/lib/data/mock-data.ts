@@ -332,6 +332,18 @@ export const mockExperienceDates = new Map<string, ExperienceDate[]>([
         earlyBirdPrice: null,
         earlyBirdDeadline: null,
       },
+      {
+        // Sold-out date — for testing BOOK-11 (all seats filled, booking blocked)
+        id: 'ed-2c',
+        date: futureDate(7),
+        maxSeats: 8,
+        bookedSeats: 8,
+        availableSeats: 0,
+        isActive: true,
+        priceOverride: null,
+        earlyBirdPrice: null,
+        earlyBirdDeadline: null,
+      },
     ],
   ],
   [

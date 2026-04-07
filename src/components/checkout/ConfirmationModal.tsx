@@ -65,6 +65,7 @@ export function ConfirmationModal({
                 date: b.date instanceof Date ? b.date.toISOString() : String(b.date),
                 whatToBring: b.whatToBring,
                 total: b.total,
+                isEarlybird: b.isEarlybird ?? false,
               }))
             )
           }

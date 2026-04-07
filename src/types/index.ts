@@ -250,6 +250,7 @@ export interface Booking {
   seats: number
   pricePerSeat: number       // ore, snapshot
   total: number               // ore
+  isEarlybird: boolean        // True if earlybird price was applied
   whatToBring: string
   status: BookingStatus
   createdAt: Date

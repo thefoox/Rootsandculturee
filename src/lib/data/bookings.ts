@@ -22,6 +22,7 @@ function docToBooking(id: string, data: Record<string, unknown>): Booking {
     seats: (data.seats as number) || 1,
     pricePerSeat: (data.pricePerSeat as number) || 0,
     total: (data.total as number) || 0,
+    isEarlybird: (data.isEarlybird as boolean) ?? false,
     whatToBring: (data.whatToBring as string) || '',
     status: (data.status as BookingStatus) || 'pending',
     createdAt: data.createdAt
