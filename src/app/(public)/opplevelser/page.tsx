@@ -13,6 +13,10 @@ import type { Experience, ExperienceDate } from '@/types'
 export const metadata: Metadata = {
   title: 'Opplevelser — Roots & Culture',
   description: 'Naturretreater, kurs og matopplevelser i norsk natur. Book din neste naturopplevelse.',
+  openGraph: {
+    title: 'Opplevelser',
+    description: 'Naturretreater, kurs og matopplevelser i norsk natur. Book din neste naturopplevelse.',
+  },
 }
 
 export const revalidate = 3600
