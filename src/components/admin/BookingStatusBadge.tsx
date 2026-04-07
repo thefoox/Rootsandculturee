@@ -1,9 +1,9 @@
 import type { BookingStatus } from '@/types'
 
 const statusConfig: Record<BookingStatus, { label: string; className: string }> = {
-  pending: { label: 'Venter', className: 'bg-[#FEF3C7] text-[#92400E]' },
-  confirmed: { label: 'Bekreftet', className: 'bg-[#DCFCE7] text-[#166534]' },
-  cancelled: { label: 'Kansellert', className: 'bg-[#FEE2E2] text-[#991B1B]' },
+  pending: { label: 'Venter', className: 'bg-badge-warning-bg text-badge-warning' },
+  confirmed: { label: 'Bekreftet', className: 'bg-badge-easy-bg text-badge-easy' },
+  cancelled: { label: 'Kansellert', className: 'bg-badge-error-bg text-badge-error' },
 }
 
 interface BookingStatusBadgeProps {

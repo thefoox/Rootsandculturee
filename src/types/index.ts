@@ -64,8 +64,8 @@ export interface Experience {
   images: ProductImage[] // Reuses same image+alt structure
   basePrice: number // NOK in ore
   location: string
-  locationLat: number | null
-  locationLng: number | null
+  locationLat?: number
+  locationLng?: number
   durationText: string
   whatIsIncluded: string[]
   cancellationPolicy: string

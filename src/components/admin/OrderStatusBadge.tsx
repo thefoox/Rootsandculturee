@@ -1,12 +1,12 @@
 import type { OrderStatus } from '@/types'
 
 const statusConfig: Record<OrderStatus, { label: string; className: string }> = {
-  pending: { label: 'Venter', className: 'bg-[#FEF3C7] text-[#92400E]' },
-  paid: { label: 'Bekreftet', className: 'bg-[#DCFCE7] text-[#166534]' },
-  confirmed: { label: 'Bekreftet', className: 'bg-[#DCFCE7] text-[#166534]' },
-  shipped: { label: 'Sendt', className: 'bg-[#FEF3C7] text-[#92400E]' },
+  pending: { label: 'Venter', className: 'bg-badge-warning-bg text-badge-warning' },
+  paid: { label: 'Bekreftet', className: 'bg-badge-easy-bg text-badge-easy' },
+  confirmed: { label: 'Bekreftet', className: 'bg-badge-easy-bg text-badge-easy' },
+  shipped: { label: 'Sendt', className: 'bg-badge-warning-bg text-badge-warning' },
   delivered: { label: 'Levert', className: 'border border-forest/20 bg-card text-forest' },
-  cancelled: { label: 'Avbrutt', className: 'bg-[#FEE2E2] text-[#991B1B]' },
+  cancelled: { label: 'Avbrutt', className: 'bg-badge-error-bg text-badge-error' },
 }
 
 interface OrderStatusBadgeProps {

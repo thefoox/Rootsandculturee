@@ -52,6 +52,12 @@
   --color-success: #166534;
   --color-success-bg: #DCFCE7;
   --color-cart-badge: #B84D00;
+
+  /* Badge status colors */
+  --color-badge-warning: #92400E;
+  --color-badge-warning-bg: #FEF3C7;
+  --color-badge-error: #991B1B;
+  --color-badge-error-bg: #FEE2E2;
 }
 
 /* Global base styles */
@@ -63,13 +69,13 @@ body {
 
 /* Focus ring: visible on all interactive elements */
 *:focus-visible {
-  outline: 2px solid #1B4332;
+  outline: 2px solid var(--color-forest);
   outline-offset: 2px;
 }
 
 /* Inverted focus ring for dark surfaces (header, mobile nav, footer) */
 .dark-surface *:focus-visible {
-  outline-color: #FEFCF3;
+  outline-color: var(--color-cream);
 }
 
 /*
@@ -115,7 +121,7 @@ body {
 }
 .article-prose h2 {
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: var(--text-h3);
   font-weight: 700;
   line-height: 1.25;
   margin-top: 32px;
@@ -123,7 +129,7 @@ body {
 }
 .article-prose h3 {
   font-family: var(--font-heading);
-  font-size: 15px;
+  font-size: var(--text-h4);
   font-weight: 700;
   line-height: 1.4;
   margin-top: 24px;
