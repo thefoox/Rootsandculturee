@@ -122,8 +122,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Fix /api/upload to use Firebase Storage, add global-error.tsx
-- [ ] 06-02-PLAN.md — Add scroll-to-first-error on all three admin create-forms
+- [x] 06-01-PLAN.md — Fix /api/upload to use Firebase Storage, add global-error.tsx
+- [x] 06-02-PLAN.md — Add scroll-to-first-error on all three admin create-forms
 
 **UI hint**: no
 
