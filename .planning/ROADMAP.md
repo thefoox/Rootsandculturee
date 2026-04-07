@@ -89,7 +89,10 @@ Plans:
   2. Kundekonto viser siste ordrer, bookinger med bekreftelseskode, og tillater profil- og passordendring
   3. Alle offentlige sider har norsk title, meta description og Open Graph-metadata
   4. Sitemap inkluderer alle offentlige sider, produkter, opplevelser og artikler
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 10-01-PLAN.md — Gavekort metadata wrapper + kundekonto layout og ordredetalj-fikser
+- [ ] 10-02-PLAN.md — SEO metadata for forsiden og opplevelser + JSON-LD for artikler
 **UI hint**: yes
 
 ## Progress
