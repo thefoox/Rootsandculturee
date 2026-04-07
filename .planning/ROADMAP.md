@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: Betaling og Booking** - Handlekurv, Stripe-checkout for produkter, fullstendig bookingsystem med atomisk plassreservering
 - [ ] **Phase 4: Kundekonto** - Kundedashboard med ordrehistorikk, bookinghistorikk og profilinnstillinger
 - [ ] **Phase 5: Checkout-bekreftelse wiring** - Fiks bookingbekreftelse pa side og kundens e-post i bekreftelsesmodalen (gap closure)
-- [ ] **Phase 6: Admin QA og feilsider** - Fiks admin CRUD-bugs (produktopprettelse), legg til error.tsx, scroll-to-error pa skjemaer, tomme tilstander
+- [ ] **Phase 6: Admin QA og feilsider** - Fiks admin CRUD-bugs (produktopprettelse), legg til error.tsx, scroll-to-error pa skjemaer
 
 ## Phase Details
 
@@ -119,7 +119,6 @@ Plans:
   2. Admin kan opprette, redigere og slette opplevelser, artikler og sideinnhold uten feil
   3. Ugyldige skjemainnsendinger scroller til forste feil og viser en tydelig feilmelding
   4. Runtime-feil viser en branded feilside pa norsk (ikke standard Next.js-feil)
-  5. Admin-listesider med 0 elementer viser en tom tilstandsmelding
 **Plans:** 2 plans
 
 Plans:
