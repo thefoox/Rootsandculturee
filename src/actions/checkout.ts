@@ -243,3 +243,192 @@ export async function createPaymentIntent(
     return { error: 'Noe gikk galt med betalingen. Prøv igjen.' }
   }
 }
+
+export async function getCheckoutUser(): Promise<{ email: string | null }> {
+  const session = await verifySession()
+  return { email: session?.email ?? null }
+}
+
+export async function updatePaymentIntentMetadata(
+  paymentIntentId: string,
+  formData: CheckoutFormData,
+  cartItems: CartItem[],
+  giftCardCode?: string | null
+): Promise<{ success: true } | { error: string }> {
+  if (!stripe) {
+    return { error: 'Betalingssystemet er ikke konfigurert. Kontakt oss.' }
+  }
+
+  if (!adminDb) {
+    return { error: 'Systemet er ikke tilgjengelig. Prøv igjen senere.' }
+  }
+
+  if (!cartItems || cartItems.length === 0) {
+    return { error: 'Handlekurven er tom.' }
+  }
+
+  // Determine cart composition
+  const hasProducts = cartItems.some((item) => item.type === 'product')
+  const hasExperiences = cartItems.some((item) => item.type === 'experience')
+  const hasGiftCards = cartItems.some((item) => item.type === 'giftcard')
+
+  // Always validate formData with the appropriate schema
+  const schema = hasProducts ? shippingSchema : contactOnlySchema
+  const validation = schema.safeParse(formData)
+  if (!validation.success) {
+    const firstError = validation.error.issues[0]
+    return { error: firstError.message }
+  }
+
+  // Check session (optional — guest checkout allowed)
+  const session = await verifySession()
+  const customerId = session?.uid ?? null
+  const customerEmail = formData.email
+
+  // Re-validate all cart items against Firestore
+  const productItems: CartItem[] = []
+  const experienceItems: CartItem[] = []
+  const giftCardItems: CartItem[] = []
+
+  for (const item of cartItems) {
+    if (item.type === 'product') {
+      const productDoc = await adminDb.collection('products').doc(item.id).get()
+      if (!productDoc.exists) {
+        return { error: `Produktet "${item.name}" finnes ikke lenger.` }
+      }
+      const product = productDoc.data()
+      if (!product?.publishedAt) {
+        return { error: `Produktet "${item.name}" er ikke tilgjengelig.` }
+      }
+      let verifiedPrice = product.price
+      let verifiedStock = product.stockCount
+      if (item.variantId && product.variants?.length > 0) {
+        const variant = product.variants.find((v: { id: string; price: number; stockCount: number }) => v.id === item.variantId)
+        if (variant) {
+          verifiedPrice = variant.price
+          verifiedStock = variant.stockCount
+        }
+      }
+      if (verifiedStock < item.quantity) {
+        return { error: `Ikke nok "${item.name}" på lager. Tilgjengelig: ${verifiedStock}.` }
+      }
+      productItems.push({ ...item, price: verifiedPrice })
+    } else if (item.type === 'giftcard') {
+      const amountNOK = item.price / 100
+      if (amountNOK < 100 || amountNOK > 10000) {
+        return { error: 'Ugyldig gavekort-beløp.' }
+      }
+      giftCardItems.push(item)
+    } else {
+      // Experience booking
+      if (!item.experienceDateId) {
+        return { error: `Ugyldig booking for "${item.name}".` }
+      }
+      const expDoc = await adminDb.collection('experiences').doc(item.id).get()
+      if (!expDoc.exists) {
+        return { error: `Opplevelsen "${item.name}" finnes ikke lenger.` }
+      }
+      const dateDoc = await adminDb
+        .collection('experiences')
+        .doc(item.id)
+        .collection('dates')
+        .doc(item.experienceDateId)
+        .get()
+      if (!dateDoc.exists) {
+        return { error: `Datoen for "${item.name}" er ikke tilgjengelig.` }
+      }
+      const dateData = dateDoc.data()
+      if (!dateData?.isActive || dateData.availableSeats < item.quantity) {
+        return { error: `Ingen ledige plasser for "${item.name}" pa valgt dato.` }
+      }
+      const now = new Date()
+      let verifiedPrice = dateData.priceOverride ?? expDoc.data()?.basePrice ?? item.price
+      if (dateData.earlyBirdPrice && dateData.earlyBirdDeadline && dateData.earlyBirdDeadline.toDate() > now) {
+        verifiedPrice = dateData.earlyBirdPrice
+      }
+      experienceItems.push({ ...item, price: verifiedPrice })
+    }
+  }
+
+  const allItems = [...productItems, ...experienceItems, ...giftCardItems]
+
+  // Calculate totals (for metadata — amount is NOT changed on the existing PI)
+  const subtotal = allItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const shippingCost = hasProducts ? DEFAULT_SHIPPING_COST : 0
+  let total = subtotal + shippingCost
+
+  let giftCardDeduction = 0
+  if (giftCardCode) {
+    const gcResult = await validateGiftCard(giftCardCode)
+    if (!gcResult.valid) {
+      return { error: gcResult.error }
+    }
+    giftCardDeduction = Math.min(gcResult.balance, total)
+    total = total - giftCardDeduction
+  }
+
+  // Build shipping address for metadata
+  const shippingAddress = hasProducts
+    ? JSON.stringify({
+        fullName: formData.fullName || '',
+        address: formData.address || '',
+        postalCode: formData.postalCode || '',
+        city: formData.city || '',
+      })
+    : ''
+
+  try {
+    await stripe.paymentIntents.update(paymentIntentId, {
+      metadata: {
+        type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : hasGiftCards ? 'giftcard' : 'booking',
+        orderItems: JSON.stringify(
+          productItems.map((i) => ({
+            productId: i.id,
+            name: i.name,
+            price: i.price,
+            quantity: i.quantity,
+            image: i.image,
+            slug: i.slug,
+            variantId: i.variantId,
+            variantLabel: i.variantLabel,
+          }))
+        ),
+        bookingItems: JSON.stringify(
+          experienceItems.map((i) => ({
+            experienceId: i.id,
+            name: i.name,
+            price: i.price,
+            quantity: i.quantity,
+            experienceDateId: i.experienceDateId,
+            experienceDate: i.experienceDate,
+            experienceName: i.experienceName ?? i.name,
+            slug: i.slug,
+          }))
+        ),
+        giftCardItems: JSON.stringify(
+          giftCardItems.map((i) => ({
+            amount: i.price,
+            name: i.name,
+          }))
+        ),
+        giftCardRecipientName: giftCardItems[0]?.experienceName || '',
+        giftCardRecipientEmail: giftCardItems[0]?.experienceDate || '',
+        giftCardMessage: giftCardItems[0]?.experienceDateId || '',
+        customerEmail,
+        customerName: formData.fullName || '',
+        customerPhone: formData.phone || '',
+        customerId: customerId || '',
+        shippingAddress,
+        shippingCost: String(shippingCost),
+        subtotal: String(subtotal),
+        giftCardCode: giftCardCode || '',
+        giftCardDeduction: String(giftCardDeduction),
+      },
+    })
+
+    return { success: true }
+  } catch (err) {
+    console.error('Stripe PaymentIntent update error:', err)
+    return { error: 'Noe gikk galt med betalingen. Prøv igjen.' }
+  }
+}

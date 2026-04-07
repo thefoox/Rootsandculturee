@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
 import { Button } from '@/components/ui/Button'
-import { createPaymentIntent } from '@/actions/checkout'
+import { updatePaymentIntentMetadata } from '@/actions/checkout'
 import type { CartItem } from '@/types'
 
 const shippingSchema = z.object({
@@ -31,6 +31,7 @@ const contactOnlySchema = z.object({
 
 interface CheckoutFormProps {
   items: CartItem[]
+  paymentIntentId: string
   userEmail?: string | null
   onPaymentSuccess: (paymentIntentId: string, email: string) => void
   giftCardCode?: string | null
@@ -38,6 +39,7 @@ interface CheckoutFormProps {
 
 export function CheckoutForm({
   items,
+  paymentIntentId,
   userEmail,
   onPaymentSuccess,
   giftCardCode,
@@ -99,15 +101,16 @@ export function CheckoutForm({
     setLoading(true)
 
     try {
-      const formData = { email, fullName, phone, address, postalCode, city }
-      const result = await createPaymentIntent(formData, items, giftCardCode)
+      // Update existing PaymentIntent metadata with real customer data
+      const updateResult = await updatePaymentIntentMetadata(paymentIntentId, formData, items, giftCardCode)
 
-      if ('error' in result) {
-        setPaymentError(result.error)
+      if ('error' in updateResult) {
+        setPaymentError(updateResult.error)
         setLoading(false)
         return
       }
 
+      // Confirm payment with Stripe Elements (uses the same PI that was initialized)
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {

@@ -8,7 +8,7 @@ import { CheckoutForm } from '@/components/checkout/CheckoutForm'
 import { StripeElementsWrapper } from '@/components/checkout/StripeElementsWrapper'
 import { ConfirmationModal } from '@/components/checkout/ConfirmationModal'
 import { GiftCardInput } from '@/components/checkout/GiftCardInput'
-import { createPaymentIntent } from '@/actions/checkout'
+import { createPaymentIntent, getCheckoutUser } from '@/actions/checkout'
 import { formatPrice } from '@/lib/format'
 
 const FLAT_RATE_SHIPPING = 9900 // 99 NOK in ore
@@ -18,6 +18,8 @@ export default function CheckoutPage() {
   const { items, subtotal } = useCart()
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null)
+  const [initPaymentIntentId, setInitPaymentIntentId] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
   const [customerEmail, setCustomerEmail] = useState('')
   const [initError, setInitError] = useState('')
   const [summaryOpen, setSummaryOpen] = useState(false)
@@ -28,6 +30,13 @@ export default function CheckoutPage() {
   const shippingCost = hasProducts ? FLAT_RATE_SHIPPING : 0
   const giftCardDeduction = giftCardBalance ? Math.min(giftCardBalance, subtotal + shippingCost) : 0
   const total = subtotal + shippingCost - giftCardDeduction
+
+  // Load logged-in user email for pre-fill
+  useEffect(() => {
+    getCheckoutUser().then(({ email }) => {
+      if (email) setUserEmail(email)
+    })
+  }, [])
 
   // Redirect to cart if empty
   useEffect(() => {
@@ -52,6 +61,8 @@ export default function CheckoutPage() {
         )
         if ('clientSecret' in result) {
           setClientSecret(result.clientSecret)
+          // Extract PI id from clientSecret (format: pi_xxx_secret_yyy)
+          setInitPaymentIntentId(result.clientSecret.split('_secret_')[0])
         } else if ('error' in result) {
           setInitError(result.error)
         }
@@ -65,7 +76,7 @@ export default function CheckoutPage() {
 
   function handlePaymentSuccess(piId: string, email: string) {
     setPaymentIntentId(piId)
-    setCustomerEmail(email)
+    setCustomerEmail(email || userEmail || '')
   }
 
   // If payment succeeded, show confirmation modal
@@ -117,6 +128,8 @@ export default function CheckoutPage() {
             <StripeElementsWrapper clientSecret={clientSecret}>
               <CheckoutForm
                 items={items}
+                paymentIntentId={initPaymentIntentId ?? ''}
+                userEmail={userEmail}
                 onPaymentSuccess={handlePaymentSuccess}
                 giftCardCode={giftCardCode}
               />
