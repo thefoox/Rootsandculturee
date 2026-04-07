@@ -17,6 +17,7 @@ import type { CartItem } from '@/types'
 const shippingSchema = z.object({
   email: z.string().email('Ugyldig e-postadresse.'),
   fullName: z.string().min(1, 'Fullt navn er påkrevd.'),
+  phone: z.string().min(8, 'Telefonnummer må ha minst 8 siffer.'),
   address: z.string().min(1, 'Adresse er påkrevd.'),
   postalCode: z.string().regex(/^[0-9]{4}$/, 'Postnummer må være 4 siffer.'),
   city: z.string().min(1, 'Sted er påkrevd.'),
@@ -24,6 +25,8 @@ const shippingSchema = z.object({
 
 const contactOnlySchema = z.object({
   email: z.string().email('Ugyldig e-postadresse.'),
+  fullName: z.string().min(1, 'Fullt navn er påkrevd.'),
+  phone: z.string().min(8, 'Telefonnummer må ha minst 8 siffer.'),
 })
 
 interface CheckoutFormProps {
@@ -44,6 +47,7 @@ export function CheckoutForm({
 
   const [email, setEmail] = useState(userEmail || '')
   const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
   const [postalCode, setPostalCode] = useState('')
   const [city, setCity] = useState('')
@@ -66,7 +70,7 @@ export function CheckoutForm({
     }
 
     // Validate form
-    const formData = { email, fullName, address, postalCode, city }
+    const formData = { email, fullName, phone, address, postalCode, city }
     const schema = needsShipping ? shippingSchema : contactOnlySchema
     const validation = schema.safeParse(formData)
 
@@ -148,6 +152,24 @@ export function CheckoutForm({
             readOnly={!!userEmail}
             required
           />
+          <Input
+            label="Fullt navn"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            error={errors.fullName}
+            autoComplete="name"
+            required
+          />
+          <Input
+            label="Telefonnummer"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            error={errors.phone}
+            inputMode="tel"
+            autoComplete="tel"
+            required
+          />
         </div>
       </section>
 
@@ -158,13 +180,6 @@ export function CheckoutForm({
             Leveringsadresse
           </h2>
           <div className="space-y-4">
-            <Input
-              label="Fullt navn"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              error={errors.fullName}
-              required
-            />
             <Input
               label="Adresse"
               value={address}

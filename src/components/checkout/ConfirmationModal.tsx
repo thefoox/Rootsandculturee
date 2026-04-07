@@ -171,7 +171,7 @@ export function ConfirmationModal({
                   <div className="space-y-1">
                     {order.items.map((item, i) => (
                       <div key={i} className="flex justify-between text-body text-forest">
-                        <span>{item.name} x{item.quantity}</span>
+                        <span>{item.name}{item.variantLabel && ` — ${item.variantLabel}`} x{item.quantity}</span>
                         <span className="text-forest">{formatPrice(item.price * item.quantity)}</span>
                       </div>
                     ))}

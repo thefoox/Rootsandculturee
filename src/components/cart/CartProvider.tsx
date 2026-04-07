@@ -15,8 +15,8 @@ import type { CartItem } from '@/types'
 interface CartContextValue {
   items: CartItem[]
   addItem: (item: CartItem) => void
-  removeItem: (id: string, experienceDateId?: string) => void
-  updateQuantity: (id: string, quantity: number) => void
+  removeItem: (id: string, experienceDateId?: string, variantId?: string) => void
+  updateQuantity: (key: string, quantity: number) => void
   clearCart: () => void
   itemCount: number
   subtotal: number
@@ -24,8 +24,10 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null)
 
-function getItemKey(item: { id: string; experienceDateId?: string | null }): string {
-  return item.experienceDateId ? `${item.id}:${item.experienceDateId}` : item.id
+export function getItemKey(item: { id: string; experienceDateId?: string | null; variantId?: string | null }): string {
+  if (item.experienceDateId) return `${item.id}:${item.experienceDateId}`
+  if (item.variantId) return `${item.id}:${item.variantId}`
+  return item.id
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -63,18 +65,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const removeItem = useCallback((id: string, experienceDateId?: string) => {
+  const removeItem = useCallback((id: string, experienceDateId?: string, variantId?: string) => {
     setItems((prev) =>
-      prev.filter((i) => getItemKey(i) !== getItemKey({ id, experienceDateId }))
+      prev.filter((i) => getItemKey(i) !== getItemKey({ id, experienceDateId, variantId }))
     )
   }, [])
 
-  const updateQuantity = useCallback((id: string, quantity: number) => {
+  const updateQuantity = useCallback((key: string, quantity: number) => {
     if (quantity < 1) return
     setItems((prev) =>
       prev.map((i) => {
-        if (i.id !== id) return i
-        // Experience items always stay at quantity 1 (D-11)
+        if (getItemKey(i) !== key) return i
         if (i.type === 'experience') return i
         return { ...i, quantity }
       })

@@ -22,6 +22,8 @@ interface ProductMetaItem {
   price: number
   quantity: number
   image: { url: string; alt: string } | null
+  variantId?: string | null
+  variantLabel?: string | null
 }
 
 interface BookingMetaItem {
@@ -142,6 +144,8 @@ export async function POST(req: Request) {
           price: item.price,
           quantity: item.quantity,
           image: item.image,
+          variantId: item.variantId ?? null,
+          variantLabel: item.variantLabel ?? null,
         }))
 
         const orderRef = await adminDb.collection('orders').add({
@@ -221,7 +225,8 @@ export async function POST(req: Request) {
             stripePaymentIntentId: paymentIntent.id,
             customerId,
             customerEmail,
-            customerName: shippingAddress?.fullName || '',
+            customerName: metadata.customerName || shippingAddress?.fullName || '',
+            customerPhone: metadata.customerPhone || '',
             experienceId: item.experienceId,
             experienceName: item.experienceName,
             dateId: item.experienceDateId,
@@ -312,6 +317,8 @@ export async function POST(req: Request) {
                   price: i.price,
                   quantity: i.quantity,
                   image: i.image,
+                  variantId: i.variantId ?? null,
+                  variantLabel: i.variantLabel ?? null,
                 })),
                 subtotal,
                 shippingCost,
@@ -340,6 +347,8 @@ export async function POST(req: Request) {
                 price: i.price,
                 quantity: i.quantity,
                 image: i.image,
+                variantId: i.variantId ?? null,
+                variantLabel: i.variantLabel ?? null,
               })),
               subtotal,
               shippingCost,
@@ -378,7 +387,7 @@ export async function POST(req: Request) {
       try {
         await syncPaymentContact({
           email: customerEmail,
-          name: shippingAddress?.fullName || '',
+          name: metadata.customerName || shippingAddress?.fullName || '',
           hasProducts: orderItems.length > 0,
           hasBookings: bookingResults.length > 0,
         })

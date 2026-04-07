@@ -20,13 +20,14 @@ interface BookingEmailData {
   total: number
   whatToBring: string
   customerEmail: string
+  customerName?: string
 }
 
 export function orderConfirmationEmail(data: OrderEmailData) {
   const itemLines = data.items
     .map(
       (item) =>
-        `  - ${item.name} x${item.quantity}: ${formatPrice(item.price * item.quantity)}`
+        `  - ${item.name}${item.variantLabel ? ` (${item.variantLabel})` : ''} x${item.quantity}: ${formatPrice(item.price * item.quantity)}`
     )
     .join('\n')
 
@@ -66,9 +67,11 @@ export function bookingConfirmationEmail(data: BookingEmailData) {
     .map((item) => `  - ${item}`)
     .join('\n')
 
+  const greeting = data.customerName ? `Hei ${data.customerName}!` : 'Hei!'
+
   return {
     subject: `Bookingbekreftelse - ${data.experienceName}`,
-    text: `Hei!
+    text: `${greeting}
 
 Takk for din booking hos Roots & Culture.
 

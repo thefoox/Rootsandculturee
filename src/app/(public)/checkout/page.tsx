@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useCart } from '@/components/cart/CartProvider'
+import { useCart, getItemKey } from '@/components/cart/CartProvider'
 import { OrderSummaryPanel } from '@/components/cart/OrderSummaryPanel'
 import { CheckoutForm } from '@/components/checkout/CheckoutForm'
 import { StripeElementsWrapper } from '@/components/checkout/StripeElementsWrapper'
@@ -150,15 +150,12 @@ export default function CheckoutPage() {
               <div className="mt-4 space-y-2 rounded-lg border border-forest/12 bg-card p-4">
                 {items.map((item) => (
                   <div
-                    key={
-                      item.experienceDateId
-                        ? `${item.id}:${item.experienceDateId}`
-                        : item.id
-                    }
+                    key={getItemKey(item)}
                     className="flex justify-between text-label text-forest"
                   >
                     <span>
                       {item.name}
+                      {item.variantLabel && ` — ${item.variantLabel}`}
                       {item.quantity > 1 ? ` x${item.quantity}` : ''}
                     </span>
                     <span className="text-forest">
@@ -181,15 +178,12 @@ export default function CheckoutPage() {
             <div className="mt-4 space-y-2 rounded-lg border border-forest/12 bg-card p-4">
               {items.map((item) => (
                 <div
-                  key={
-                    item.experienceDateId
-                      ? `${item.id}:${item.experienceDateId}`
-                      : item.id
-                  }
+                  key={getItemKey(item)}
                   className="flex justify-between text-label text-forest"
                 >
                   <span>
                     {item.name}
+                    {item.variantLabel && ` — ${item.variantLabel}`}
                     {item.quantity > 1 ? ` x${item.quantity}` : ''}
                   </span>
                   <span className="text-forest">

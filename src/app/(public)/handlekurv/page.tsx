@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ShoppingBag, ArrowLeft } from 'lucide-react'
-import { useCart } from '@/components/cart/CartProvider'
+import { useCart, getItemKey } from '@/components/cart/CartProvider'
 import { CartItem } from '@/components/cart/CartItem'
 import { OrderSummaryPanel } from '@/components/cart/OrderSummaryPanel'
 import { Button } from '@/components/ui/Button'
@@ -46,11 +46,7 @@ export default function HandlekurvPage() {
           <ul role="list">
             {items.map((item) => (
               <CartItem
-                key={
-                  item.experienceDateId
-                    ? `${item.id}:${item.experienceDateId}`
-                    : item.id
-                }
+                key={getItemKey(item)}
                 item={item}
               />
             ))}

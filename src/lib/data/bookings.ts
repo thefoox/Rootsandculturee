@@ -11,6 +11,7 @@ function docToBooking(id: string, data: Record<string, unknown>): Booking {
     customerId: (data.customerId as string) || null,
     customerEmail: (data.customerEmail as string) || '',
     customerName: (data.customerName as string) || '',
+    customerPhone: (data.customerPhone as string) || '',
     experienceId: (data.experienceId as string) || '',
     experienceName: (data.experienceName as string) || '',
     dateId: (data.dateId as string) || '',

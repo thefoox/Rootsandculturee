@@ -198,6 +198,8 @@ export interface OrderItem {
   price: number           // ore, snapshot
   quantity: number
   image: ProductImage | null
+  variantId: string | null
+  variantLabel: string | null
 }
 
 export interface ShippingAddress {
@@ -234,6 +236,7 @@ export interface Booking {
   customerId: string | null
   customerEmail: string
   customerName: string
+  customerPhone: string
   experienceId: string
   experienceName: string
   dateId: string

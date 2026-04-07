@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { useCart } from './CartProvider'
+import { useCart, getItemKey } from './CartProvider'
 import { formatPrice, formatDate } from '@/lib/format'
 import type { CartItem as CartItemType } from '@/types'
 
@@ -15,7 +15,7 @@ export function CartItem({ item }: CartItemProps) {
   const { removeItem, updateQuantity } = useCart()
 
   function handleRemove() {
-    removeItem(item.id, item.experienceDateId ?? undefined)
+    removeItem(item.id, item.experienceDateId ?? undefined, item.variantId ?? undefined)
     toast('Fjernet fra handlekurven.')
   }
 
@@ -48,6 +48,11 @@ export function CartItem({ item }: CartItemProps) {
             <p className="font-body text-body font-normal leading-snug text-forest line-clamp-2">
               {item.name}
             </p>
+            {item.variantLabel && (
+              <p className="mt-0.5 text-label text-body">
+                {item.variantLabel}
+              </p>
+            )}
             {isExperience && item.experienceDate && (
               <p className="mt-1 text-label text-body">
                 Opplevelse &mdash; {formatDate(new Date(item.experienceDate))}
@@ -75,7 +80,7 @@ export function CartItem({ item }: CartItemProps) {
             <div className="flex items-center gap-0">
               <button
                 type="button"
-                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                onClick={() => updateQuantity(getItemKey(item), item.quantity - 1)}
                 disabled={item.quantity <= 1}
                 className="flex h-8 w-8 items-center justify-center rounded border border-forest/20 text-forest disabled:cursor-not-allowed disabled:opacity-40"
                 aria-label="Reduser antall"
@@ -88,7 +93,7 @@ export function CartItem({ item }: CartItemProps) {
               </span>
               <button
                 type="button"
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                onClick={() => updateQuantity(getItemKey(item), item.quantity + 1)}
                 className="flex h-8 w-8 items-center justify-center rounded border border-forest/20 text-forest"
                 aria-label="Ok antall"
               >

@@ -10,6 +10,7 @@ import type { CartItem } from '@/types'
 const shippingSchema = z.object({
   email: z.string().email('Ugyldig e-postadresse.'),
   fullName: z.string().min(1, 'Fullt navn er påkrevd.'),
+  phone: z.string().min(8, 'Telefonnummer må ha minst 8 siffer.'),
   address: z.string().min(1, 'Adresse er påkrevd.'),
   postalCode: z.string().regex(/^[0-9]{4}$/, 'Postnummer må være 4 siffer.'),
   city: z.string().min(1, 'Sted er påkrevd.'),
@@ -17,15 +18,14 @@ const shippingSchema = z.object({
 
 const contactOnlySchema = z.object({
   email: z.string().email('Ugyldig e-postadresse.'),
-  fullName: z.string().optional(),
-  address: z.string().optional(),
-  postalCode: z.string().optional(),
-  city: z.string().optional(),
+  fullName: z.string().min(1, 'Fullt navn er påkrevd.'),
+  phone: z.string().min(8, 'Telefonnummer må ha minst 8 siffer.'),
 })
 
 export interface CheckoutFormData {
   email: string
   fullName?: string
+  phone?: string
   address?: string
   postalCode?: string
   city?: string
@@ -86,11 +86,20 @@ export async function createPaymentIntent(
       if (!product?.publishedAt) {
         return { error: `Produktet "${item.name}" er ikke tilgjengelig.` }
       }
-      if (product.stockCount < item.quantity) {
-        return { error: `Ikke nok "${item.name}" på lager. Tilgjengelig: ${product.stockCount}.` }
+      // Use variant price/stock if applicable
+      let verifiedPrice = product.price
+      let verifiedStock = product.stockCount
+      if (item.variantId && product.variants?.length > 0) {
+        const variant = product.variants.find((v: { id: string; price: number; stockCount: number }) => v.id === item.variantId)
+        if (variant) {
+          verifiedPrice = variant.price
+          verifiedStock = variant.stockCount
+        }
       }
-      // Use verified Firestore price (prevents price manipulation)
-      productItems.push({ ...item, price: product.price })
+      if (verifiedStock < item.quantity) {
+        return { error: `Ikke nok "${item.name}" på lager. Tilgjengelig: ${verifiedStock}.` }
+      }
+      productItems.push({ ...item, price: verifiedPrice })
     } else if (item.type === 'giftcard') {
       // Gift card purchases: trust client price (validated min/max)
       const amountNOK = item.price / 100
@@ -185,6 +194,8 @@ export async function createPaymentIntent(
             quantity: i.quantity,
             image: i.image,
             slug: i.slug,
+            variantId: i.variantId,
+            variantLabel: i.variantLabel,
           }))
         ),
         bookingItems: JSON.stringify(
@@ -209,6 +220,8 @@ export async function createPaymentIntent(
         giftCardRecipientEmail: giftCardItems[0]?.experienceDate || '',
         giftCardMessage: giftCardItems[0]?.experienceDateId || '',
         customerEmail,
+        customerName: formData.fullName || '',
+        customerPhone: formData.phone || '',
         customerId: customerId || '',
         shippingAddress,
         shippingCost: String(shippingCost),
