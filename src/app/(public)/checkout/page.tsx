@@ -160,7 +160,13 @@ export default function CheckoutPage() {
                       {item.quantity > 1 ? ` x${item.quantity}` : ''}
                     </span>
                     <span className="text-forest">
+                      {item.isEarlybird && item.originalPrice && (
+                        <span className="mr-2 text-body/50 line-through">{formatPrice(item.originalPrice)}</span>
+                      )}
                       {formatPrice(item.price * item.quantity)}
+                      {item.isEarlybird && (
+                        <span className="ml-1 text-rust text-[11px]">earlybird</span>
+                      )}
                     </span>
                   </div>
                 ))}

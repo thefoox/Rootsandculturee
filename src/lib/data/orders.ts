@@ -44,17 +44,41 @@ export const getOrders = unstable_cache(
   { tags: ['orders'] }
 )
 
-export async function getOrdersByUser(uid: string): Promise<Order[]> {
+export async function getOrdersByUser(uid: string, email?: string): Promise<Order[]> {
   if (!adminDb) return []
 
-  const snapshot = await adminDb
+  // Query by customerId (primary)
+  const byIdSnapshot = await adminDb
     .collection('orders')
     .where('customerId', '==', uid)
     .orderBy('createdAt', 'desc')
     .limit(50)
     .get()
 
-  return snapshot.docs.map((doc) => docToOrder(doc.id, doc.data()))
+  const orders = byIdSnapshot.docs.map((doc) => docToOrder(doc.id, doc.data()))
+
+  // Also find orders by email where customerId was empty (guest checkout fallback)
+  if (email) {
+    const byEmailSnapshot = await adminDb
+      .collection('orders')
+      .where('customerEmail', '==', email)
+      .where('customerId', '==', null)
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+      .get()
+
+    const existingIds = new Set(orders.map((o) => o.id))
+    for (const doc of byEmailSnapshot.docs) {
+      if (!existingIds.has(doc.id)) {
+        orders.push(docToOrder(doc.id, doc.data()))
+      }
+    }
+
+    // Sort merged results
+    orders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+  }
+
+  return orders
 }
 
 export async function getOrderById(orderId: string): Promise<Order | null> {

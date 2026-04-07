@@ -55,21 +55,17 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
   return docToOrder(doc.id, doc.data()!)
 }
 
-export const getOrders = unstable_cache(
-  async (): Promise<Order[]> => {
-    if (!adminDb) return []
+export async function getOrders(): Promise<Order[]> {
+  if (!adminDb) return []
 
-    const snapshot = await adminDb
-      .collection('orders')
-      .orderBy('createdAt', 'desc')
-      .limit(100)
-      .get()
+  const snapshot = await adminDb
+    .collection('orders')
+    .orderBy('createdAt', 'desc')
+    .limit(100)
+    .get()
 
-    return snapshot.docs.map((doc) => docToOrder(doc.id, doc.data()))
-  },
-  ['orders'],
-  { tags: ['orders'] }
-)
+  return snapshot.docs.map((doc) => docToOrder(doc.id, doc.data()))
+}
 
 export async function updateOrderStatus(
   orderId: string,

@@ -49,17 +49,38 @@ export const getBookings = unstable_cache(
   { tags: ['bookings'] }
 )
 
-export async function getBookingsByUser(uid: string): Promise<Booking[]> {
+export async function getBookingsByUser(uid: string, email?: string): Promise<Booking[]> {
   if (!adminDb) return []
 
-  const snapshot = await adminDb
+  const byIdSnapshot = await adminDb
     .collection('bookings')
     .where('customerId', '==', uid)
     .orderBy('date', 'desc')
     .limit(50)
     .get()
 
-  return snapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
+  const bookings = byIdSnapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
+
+  if (email) {
+    const byEmailSnapshot = await adminDb
+      .collection('bookings')
+      .where('customerEmail', '==', email)
+      .where('customerId', '==', null)
+      .orderBy('date', 'desc')
+      .limit(50)
+      .get()
+
+    const existingIds = new Set(bookings.map((b) => b.id))
+    for (const doc of byEmailSnapshot.docs) {
+      if (!existingIds.has(doc.id)) {
+        bookings.push(docToBooking(doc.id, doc.data()))
+      }
+    }
+
+    bookings.sort((a, b) => b.date.getTime() - a.date.getTime())
+  }
+
+  return bookings
 }
 
 export async function getBookingsByExperience(experienceId: string): Promise<Booking[]> {

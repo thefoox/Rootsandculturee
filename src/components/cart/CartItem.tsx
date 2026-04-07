@@ -60,6 +60,12 @@ export function CartItem({ item }: CartItemProps) {
             )}
             <p className="mt-1 text-label text-body">
               {formatPrice(item.price)}
+              {item.isEarlybird && item.originalPrice && (
+                <>
+                  {' '}<span className="text-body/50 line-through">{formatPrice(item.originalPrice)}</span>
+                  {' '}<span className="text-rust text-[11px]">earlybird</span>
+                </>
+              )}
             </p>
           </div>
 

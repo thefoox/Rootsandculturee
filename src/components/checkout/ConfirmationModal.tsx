@@ -17,6 +17,7 @@ interface BookingConfirmation {
   date: string
   whatToBring: string
   total: number
+  isEarlybird?: boolean
 }
 
 interface ConfirmationModalProps {
@@ -232,6 +233,9 @@ export function ConfirmationModal({
                     </p>
                     <p className="text-body text-forest">
                       {formatPrice(booking.total)}
+                      {booking.isEarlybird && (
+                        <span className="ml-2 text-label text-rust"> earlybird-pris</span>
+                      )}
                     </p>
                     {booking.whatToBring && (
                       <BookingChecklist items={booking.whatToBring} />

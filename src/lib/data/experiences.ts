@@ -15,6 +15,8 @@ function mapExperience(doc: FirebaseFirestore.DocumentSnapshot): Experience {
     images: data.images || [],
     basePrice: data.basePrice,
     location: data.location,
+    locationLat: data.locationLat ?? null,
+    locationLng: data.locationLng ?? null,
     durationText: data.durationText,
     whatIsIncluded: data.whatIsIncluded || [],
     cancellationPolicy: data.cancellationPolicy || '',

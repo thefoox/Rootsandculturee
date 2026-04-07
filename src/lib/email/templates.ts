@@ -18,6 +18,7 @@ interface BookingEmailData {
   seats: number
   pricePerSeat: number
   total: number
+  isEarlybird?: boolean
   whatToBring: string
   customerEmail: string
   customerName?: string
@@ -80,7 +81,7 @@ Bekreftelseskode: ${data.confirmationCode}
 Opplevelse: ${data.experienceName}
 Dato: ${formatDate(data.date)}
 Antall plasser: ${data.seats}
-Pris per plass: ${formatPrice(data.pricePerSeat)}
+Pris per plass: ${formatPrice(data.pricePerSeat)}${data.isEarlybird ? ' (earlybird-pris)' : ''}
 Totalt: ${formatPrice(data.total)}
 
 Husk å ta med:

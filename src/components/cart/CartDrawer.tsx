@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { X, ShoppingBag } from 'lucide-react'
-import { useCart } from './CartProvider'
+import { useCart, getItemKey } from './CartProvider'
 import { CartItem } from './CartItem'
 import { OrderSummaryPanel } from './OrderSummaryPanel'
 import { Button } from '@/components/ui/Button'
@@ -115,11 +115,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <ul role="list">
               {items.map((item) => (
                 <CartItem
-                  key={
-                    item.experienceDateId
-                      ? `${item.id}:${item.experienceDateId}`
-                      : item.id
-                  }
+                  key={getItemKey(item)}
                   item={item}
                 />
               ))}

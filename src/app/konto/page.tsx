@@ -20,8 +20,8 @@ export default async function KontoPage() {
   }
 
   const [orders, bookings, profile] = await Promise.all([
-    getOrdersByUser(session.uid),
-    getBookingsByUser(session.uid),
+    getOrdersByUser(session.uid, session.email),
+    getBookingsByUser(session.uid, session.email),
     getUserProfile(session.uid),
   ])
 

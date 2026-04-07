@@ -34,6 +34,7 @@ interface BookingMetaItem {
   experienceDateId: string
   experienceDate: string
   experienceName: string
+  isEarlybird?: boolean
 }
 
 interface GiftCardMetaItem {
@@ -100,7 +101,7 @@ export async function POST(req: Request) {
       const metadata = paymentIntent.metadata
 
       const customerEmail = metadata.customerEmail || ''
-      const customerId = metadata.customerId || null
+      const customerId = metadata.customerId && metadata.customerId !== '' ? metadata.customerId : null
       const shippingCost = parseInt(metadata.shippingCost || '0', 10)
       const subtotal = parseInt(metadata.subtotal || '0', 10)
 
@@ -133,6 +134,7 @@ export async function POST(req: Request) {
         seats: number
         pricePerSeat: number
         total: number
+        isEarlybird: boolean
         whatToBring: string
       }> = []
 
@@ -234,6 +236,7 @@ export async function POST(req: Request) {
             seats: item.quantity,
             pricePerSeat: item.price,
             total: item.price * item.quantity,
+            isEarlybird: item.isEarlybird ?? false,
             whatToBring,
             status: 'confirmed',
             createdAt: new Date(),
@@ -246,6 +249,7 @@ export async function POST(req: Request) {
             date: new Date(item.experienceDate),
             seats: item.quantity,
             pricePerSeat: item.price,
+            isEarlybird: item.isEarlybird ?? false,
             total: item.price * item.quantity,
             whatToBring,
           })

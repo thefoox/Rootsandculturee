@@ -15,7 +15,7 @@ export default async function BookingerPage() {
     redirect('/')
   }
 
-  const bookings = await getBookingsByUser(session.uid)
+  const bookings = await getBookingsByUser(session.uid, session.email)
 
   const now = new Date()
   const upcoming = bookings.filter(

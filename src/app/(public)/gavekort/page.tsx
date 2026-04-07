@@ -77,6 +77,8 @@ export default function GavekortPage() {
       experienceDateId: message || null,       // greeting message
       experienceDate: recipientEmail || null,   // recipient email
       experienceName: recipientName || null,    // recipient name
+      isEarlybird: null,
+      originalPrice: null,
     })
 
     toast.success('Gavekort lagt i handlekurven.')

@@ -15,7 +15,7 @@ export default async function OrdrerPage() {
     redirect('/')
   }
 
-  const orders = await getOrdersByUser(session.uid)
+  const orders = await getOrdersByUser(session.uid, session.email)
 
   return (
     <div>

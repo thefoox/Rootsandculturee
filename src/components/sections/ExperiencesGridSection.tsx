@@ -43,6 +43,8 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
             <div className="mt-10 grid gap-5 md:grid-cols-3">
               {experiencesWithDates.map(({ experience, nextDate }) => {
                 const mainImage = experience.images[0]
+                const now = new Date()
+                const hasEb = nextDate?.earlyBirdPrice != null && nextDate?.earlyBirdDeadline != null && nextDate.earlyBirdDeadline > now
                 return (
                   <Link
                     key={experience.id}
@@ -80,7 +82,14 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
                         )}
                       </div>
                       <p className="mt-3 font-body text-lg font-bold text-cream">
-                        fra {formatPrice(experience.basePrice)}
+                        {hasEb ? (
+                          <>
+                            fra {formatPrice(nextDate!.earlyBirdPrice!)}{' '}
+                            <span className="text-cream/50 line-through text-sm font-normal">{formatPrice(experience.basePrice)}</span>
+                          </>
+                        ) : (
+                          <>fra {formatPrice(experience.basePrice)}</>
+                        )}
                       </p>
                     </div>
                   </Link>

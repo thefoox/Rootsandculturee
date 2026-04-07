@@ -64,6 +64,8 @@ export interface Experience {
   images: ProductImage[] // Reuses same image+alt structure
   basePrice: number // NOK in ore
   location: string
+  locationLat: number | null
+  locationLng: number | null
   durationText: string
   whatIsIncluded: string[]
   cancellationPolicy: string
@@ -187,6 +189,8 @@ export interface CartItem {
   experienceDateId: string | null
   experienceDate: string | null    // ISO string of the date
   experienceName: string | null
+  isEarlybird: boolean | null      // True if earlybird price was applied
+  originalPrice: number | null     // Normal price before earlybird discount
 }
 
 // Phase 3: Order types

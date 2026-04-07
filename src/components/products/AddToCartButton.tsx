@@ -33,6 +33,8 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       experienceDateId: null,
       experienceDate: null,
       experienceName: null,
+      isEarlybird: null,
+      originalPrice: null,
     })
     toast(`${product.name} lagt i handlekurven.`)
   }

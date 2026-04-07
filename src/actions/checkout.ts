@@ -208,6 +208,7 @@ export async function createPaymentIntent(
             experienceDate: i.experienceDate,
             experienceName: i.experienceName ?? i.name,
             slug: i.slug,
+            isEarlybird: i.isEarlybird ?? false,
           }))
         ),
         giftCardItems: JSON.stringify(
@@ -222,7 +223,7 @@ export async function createPaymentIntent(
         customerEmail,
         customerName: formData.fullName || '',
         customerPhone: formData.phone || '',
-        customerId: customerId || '',
+        customerId: customerId ?? '',
         shippingAddress,
         shippingCost: String(shippingCost),
         subtotal: String(subtotal),

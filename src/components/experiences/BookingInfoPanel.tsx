@@ -16,8 +16,10 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
   const { addItem } = useCart()
 
   const formattedDate = new Intl.DateTimeFormat('nb-NO', {
-    dateStyle: 'long',
     weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
   }).format(selectedDate.date)
 
   const normalPrice = selectedDate.priceOverride ?? experience.basePrice
@@ -44,6 +46,8 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
       experienceDateId: selectedDate.id,
       experienceDate: selectedDate.date.toISOString(),
       experienceName: experience.name,
+      isEarlybird: isEarlybirdActive,
+      originalPrice: isEarlybirdActive ? normalPrice : null,
     })
     toast.success(`${experience.name} lagt i handlekurven.`)
   }

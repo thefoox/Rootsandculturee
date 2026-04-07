@@ -13,9 +13,13 @@ import type { Order } from '@/types'
 
 export default function OrdersListPage() {
   const [orders, setOrders] = useState<Order[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getOrders().then(setOrders)
+    getOrders().then((data) => {
+      setOrders(data)
+      setLoading(false)
+    }).catch(() => setLoading(false))
   }, [])
 
   const columns: Column<Order>[] = [
@@ -86,6 +90,23 @@ export default function OrdersListPage() {
       ),
     },
   ]
+
+  if (loading) {
+    return (
+      <div>
+        <AdminBreadcrumb
+          items={[
+            { label: 'Admin', href: '/admin' },
+            { label: 'Ordrer' },
+          ]}
+        />
+        <h1 className="mb-6 font-heading text-h2 font-bold text-forest">
+          Ordrer
+        </h1>
+        <p className="text-body text-forest">Laster ordrer...</p>
+      </div>
+    )
+  }
 
   if (orders.length === 0) {
     return (

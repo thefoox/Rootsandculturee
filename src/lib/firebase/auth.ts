@@ -20,7 +20,7 @@ export async function signInWithGoogle() {
   if (!auth) throw new Error('Firebase er ikke konfigurert. Legg til miljøvariabler.')
   const provider = new GoogleAuthProvider()
   const credential = await signInWithPopup(auth, provider)
-  const idToken = await credential.user.getIdToken()
+  const idToken = await credential.user.getIdToken(true)
   return {
     idToken,
     uid: credential.user.uid,

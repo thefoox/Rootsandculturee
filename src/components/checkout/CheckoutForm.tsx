@@ -6,7 +6,7 @@ import {
   useElements,
   PaymentElement,
 } from '@stripe/react-stripe-js'
-import { LockKeyhole } from 'lucide-react'
+import { LockKeyhole, ArrowLeft, ArrowRight } from 'lucide-react'
 import { z } from 'zod'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
@@ -45,6 +45,7 @@ export function CheckoutForm({
   const stripe = useStripe()
   const elements = useElements()
 
+  const [step, setStep] = useState(1)
   const [email, setEmail] = useState(userEmail || '')
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
@@ -59,17 +60,7 @@ export function CheckoutForm({
   const hasProducts = items.some((i) => i.type === 'product')
   const needsShipping = hasProducts
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setErrors({})
-    setPaymentError('')
-
-    if (!stripe || !elements) {
-      setPaymentError('Betalingssystemet er ikke lastet enda. Vent litt.')
-      return
-    }
-
-    // Validate form
+  function validateStep1(): boolean {
     const formData = { email, fullName, phone, address, postalCode, city }
     const schema = needsShipping ? shippingSchema : contactOnlySchema
     const validation = schema.safeParse(formData)
@@ -83,13 +74,32 @@ export function CheckoutForm({
         }
       }
       setErrors(fieldErrors)
+      return false
+    }
+    return true
+  }
+
+  function handleNextStep() {
+    setErrors({})
+    if (validateStep1()) {
+      setStep(2)
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setErrors({})
+    setPaymentError('')
+
+    if (!stripe || !elements) {
+      setPaymentError('Betalingssystemet er ikke lastet enda. Vent litt.')
       return
     }
 
     setLoading(true)
 
     try {
-      // Create PaymentIntent on server
+      const formData = { email, fullName, phone, address, postalCode, city }
       const result = await createPaymentIntent(formData, items, giftCardCode)
 
       if ('error' in result) {
@@ -98,7 +108,6 @@ export function CheckoutForm({
         return
       }
 
-      // Confirm payment with Stripe Elements
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
@@ -108,7 +117,6 @@ export function CheckoutForm({
       })
 
       if (stripeError) {
-        // Map Stripe error codes to Norwegian messages
         const errorMessages: Record<string, string> = {
           card_declined: 'Kortet ble avvist. Prøv et annet kort.',
           insufficient_funds: 'Ikke nok dekning på kortet.',
@@ -136,122 +144,173 @@ export function CheckoutForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      {/* Section 1: Contact info */}
-      <section className="mb-8">
-        <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
-          Kontaktinformasjon
-        </h2>
-        <div className="space-y-4">
-          <Input
-            label={userEmail ? `Innlogget som ${userEmail}` : 'E-postadresse'}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={errors.email}
-            readOnly={!!userEmail}
-            required
-          />
-          <Input
-            label="Fullt navn"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            error={errors.fullName}
-            autoComplete="name"
-            required
-          />
-          <Input
-            label="Telefonnummer"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            error={errors.phone}
-            inputMode="tel"
-            autoComplete="tel"
-            required
-          />
+    <div>
+      {/* Step indicator */}
+      <div className="mb-8 flex items-center gap-3">
+        <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step === 1 ? 'bg-forest text-cream' : 'bg-forest/10 text-forest'}`}>
+          1
         </div>
-      </section>
+        <div className="h-px flex-1 bg-forest/12" />
+        <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step === 2 ? 'bg-forest text-cream' : 'bg-forest/10 text-forest'}`}>
+          2
+        </div>
+      </div>
 
-      {/* Section 2: Shipping address (only for products) */}
-      {needsShipping && (
-        <section className="mb-8">
-          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
-            Leveringsadresse
-          </h2>
-          <div className="space-y-4">
-            <Input
-              label="Adresse"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              error={errors.address}
-              required
-            />
-            <div className="grid grid-cols-2 gap-4">
+      {/* Step 1: Contact + Shipping */}
+      {step === 1 && (
+        <div>
+          <section className="mb-8">
+            <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
+              Kontaktinformasjon
+            </h2>
+            <div className="space-y-4">
               <Input
-                label="Postnummer"
-                value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
-                error={errors.postalCode}
-                pattern="[0-9]{4}"
-                inputMode="numeric"
-                maxLength={4}
+                label={userEmail ? `Innlogget som ${userEmail}` : 'E-postadresse'}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                error={errors.email}
+                readOnly={!!userEmail}
                 required
               />
               <Input
-                label="Sted"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                error={errors.city}
+                label="Fullt navn"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                error={errors.fullName}
+                autoComplete="name"
+                required
+              />
+              <Input
+                label="Telefonnummer"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                error={errors.phone}
+                inputMode="tel"
+                autoComplete="tel"
                 required
               />
             </div>
-          </div>
-        </section>
+          </section>
+
+          {needsShipping && (
+            <section className="mb-8">
+              <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
+                Leveringsadresse
+              </h2>
+              <div className="space-y-4">
+                <Input
+                  label="Adresse"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  error={errors.address}
+                  required
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    label="Postnummer"
+                    value={postalCode}
+                    onChange={(e) => setPostalCode(e.target.value)}
+                    error={errors.postalCode}
+                    pattern="[0-9]{4}"
+                    inputMode="numeric"
+                    maxLength={4}
+                    required
+                  />
+                  <Input
+                    label="Sted"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    error={errors.city}
+                    required
+                  />
+                </div>
+              </div>
+            </section>
+          )}
+
+          <Button
+            type="button"
+            variant="primary"
+            className="w-full"
+            onClick={handleNextStep}
+          >
+            <span>Gå til betaling</span>
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Button>
+        </div>
       )}
 
-      {/* Section 3: Payment */}
-      <section className="mb-8">
-        <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
-          Betaling
-        </h2>
-        <div className="mb-4 flex items-center gap-2">
-          <LockKeyhole className="h-4 w-4 text-body" aria-hidden="true" />
-          <span className="text-label text-body">Sikret med Stripe</span>
-        </div>
-        <div
-          className="rounded-lg border border-forest/20 bg-card p-6"
-          aria-label="Betalingsinformasjon"
-        >
-          <PaymentElement
-            onChange={(event) => setPaymentReady(event.complete)}
-          />
-        </div>
-        {paymentError && (
-          <div className="mt-4">
-            <FormError id="payment-error" message={paymentError} />
+      {/* Step 2: Payment */}
+      {step === 2 && (
+        <form onSubmit={handleSubmit} noValidate>
+          {/* Summary of step 1 info */}
+          <div className="mb-6 rounded-lg border border-forest/8 bg-card p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-body text-body text-forest font-medium">{fullName}</p>
+                <p className="font-body text-label text-body">{email}</p>
+                <p className="font-body text-label text-body">{phone}</p>
+                {needsShipping && (
+                  <p className="font-body text-label text-body mt-1">
+                    {address}, {postalCode} {city}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="flex items-center gap-1 text-label text-forest hover:underline"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+                Endre
+              </button>
+            </div>
           </div>
-        )}
-      </section>
 
-      {/* Submit button */}
-      <Button
-        type="submit"
-        variant="primary"
-        className="w-full"
-        loading={loading}
-        disabled={!stripe || !elements || !paymentReady}
-        aria-busy={loading}
-      >
-        {loading ? (
-          'Behandler betaling...'
-        ) : (
-          <>
-            <LockKeyhole className="h-4 w-4" aria-hidden="true" />
-            Betal na
-          </>
-        )}
-      </Button>
-    </form>
+          <section className="mb-8">
+            <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
+              Betaling
+            </h2>
+            <div className="mb-4 flex items-center gap-2">
+              <LockKeyhole className="h-4 w-4 text-body" aria-hidden="true" />
+              <span className="text-label text-body">Sikret med Stripe</span>
+            </div>
+            <div
+              className="rounded-lg border border-forest/20 bg-card p-6"
+              aria-label="Betalingsinformasjon"
+            >
+              <PaymentElement
+                onChange={(event) => setPaymentReady(event.complete)}
+              />
+            </div>
+            {paymentError && (
+              <div className="mt-4">
+                <FormError id="payment-error" message={paymentError} />
+              </div>
+            )}
+          </section>
+
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full"
+            loading={loading}
+            disabled={!stripe || !elements || !paymentReady}
+            aria-busy={loading}
+          >
+            {loading ? (
+              'Behandler betaling...'
+            ) : (
+              <>
+                <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+                Betal nå
+              </>
+            )}
+          </Button>
+        </form>
+      )}
+    </div>
   )
 }
