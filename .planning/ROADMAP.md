@@ -38,7 +38,13 @@
   3. Admin kan opprette, redigere og slette produkter, opplevelser og artikler uten feil
   4. Admin-dashboardet viser korrekte tall for produkter, opplevelser, ordrer, bookinger og inntekt
   5. Alle CMS-seksjonstyper (trust-bar, text, text-image, contact-info, gallery) har fungerende admin-editorer
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 07-01-PLAN.md — CMS API: revalidateTag i PUT, DELETE-endpoint, TrustBarSection dynamisk, imagePosition type
+- [ ] 07-02-PLAN.md — Slett-knapp i innhold-listen, 409-feilhåndtering, dashboard-verifisering
+- [ ] 07-03-PLAN.md — Produkt CRUD: inline VariantsEditor i opprett/rediger-skjema
+- [ ] 07-04-PLAN.md — Opplevelses-edit med DateSlotsEditor, artikkel-edit med Tiptap, ordrer/bookinger verifisert
+- [ ] 07-05-PLAN.md — CMS seksjoneditor fikser: trust-bar items, text body, imagePosition, contact-info href, gallery heading, Vis side, ContentBlockEditor slettet
 **UI hint**: yes
 
 ### Phase 8: E-commerce, Stripe og Booking-flyter
@@ -88,7 +94,7 @@
 | 4. Kundekonto | v1.0 | 1/1 | Complete | 2026-03-31 |
 | 5. Checkout-bekreftelse wiring | v1.0 | 1/1 | Complete | 2026-04-07 |
 | 6. Admin QA og feilsider | v1.0 | 2/2 | Complete | 2026-04-07 |
-| 7. CMS-fikser og Admin CRUD | v1.1 | 0/? | Not started | - |
+| 7. CMS-fikser og Admin CRUD | v1.1 | 0/5 | Not started | - |
 | 8. E-commerce, Stripe og Booking-flyter | v1.1 | 0/? | Not started | - |
 | 9. Typografi og UI-polish | v1.1 | 0/? | Not started | - |
 | 10. Gavekort, Kundekonto og SEO | v1.1 | 0/? | Not started | - |
