@@ -50,6 +50,12 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
   const mainImage = experience.images[0]
   const galleryImages = experience.images.slice(1)
 
+  // Find the lowest active earlybird price
+  const now = new Date()
+  const activeEarlybird = dates
+    .filter((d) => d.earlyBirdPrice != null && d.earlyBirdDeadline != null && d.earlyBirdDeadline > now)
+    .sort((a, b) => (a.earlyBirdPrice ?? 0) - (b.earlyBirdPrice ?? 0))[0]
+
   return (
     <>
       <script
@@ -108,7 +114,15 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
           </div>
           <div className="flex flex-wrap items-center gap-6 py-5">
             <span className="font-heading text-h3 font-bold text-forest">
-              {formatPrice(experience.basePrice)}
+              {activeEarlybird ? (
+                <>
+                  {formatPrice(activeEarlybird.earlyBirdPrice!)}{' '}
+                  <span className="text-body/50 line-through text-lg font-normal">{formatPrice(experience.basePrice)}</span>{' '}
+                  <span className="text-rust text-sm font-medium">earlybird</span>
+                </>
+              ) : (
+                formatPrice(experience.basePrice)
+              )}
             </span>
             <span className="flex items-center gap-1.5 font-body text-body">
               <Clock className="h-4 w-4" aria-hidden="true" />
@@ -250,10 +264,36 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
               </p>
               <p className="mt-2 font-body text-body leading-[1.7] text-body">
                 Opplevelsen finner sted i {experience.location}. Detaljert
-                veibeskrivelse og oppmøtested sendes per e-post etter
+                veibeskrivelse og oppmotested sendes per e-post etter
                 bekreftet booking.
               </p>
             </div>
+          </div>
+          {/* Map */}
+          <div className="mt-6 overflow-hidden rounded-lg border border-forest/8">
+            {experience.locationLat && experience.locationLng ? (
+              <iframe
+                title={`Kart over ${experience.location}`}
+                width="100%"
+                height="350"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&q=${experience.locationLat},${experience.locationLng}&zoom=14`}
+              />
+            ) : (
+              <iframe
+                title={`Kart over ${experience.location}`}
+                width="100%"
+                height="350"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&q=${encodeURIComponent(experience.location + ', Norge')}&zoom=10`}
+              />
+            )}
           </div>
         </div>
       </div>
