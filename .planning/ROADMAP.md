@@ -120,10 +120,11 @@ Plans:
   3. Ugyldige skjemainnsendinger scroller til forste feil og viser en tydelig feilmelding
   4. Runtime-feil viser en branded feilside pa norsk (ikke standard Next.js-feil)
   5. Admin-listesider med 0 elementer viser en tom tilstandsmelding
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-(not yet planned)
+- [ ] 06-01-PLAN.md — Fix /api/upload to use Firebase Storage, add global-error.tsx
+- [ ] 06-02-PLAN.md — Add scroll-to-first-error on all three admin create-forms
 
 **UI hint**: no
 
@@ -139,4 +140,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 3. Betaling og Booking | 0/2 | Planned | - |
 | 4. Kundekonto | 0/1 | Not started | - |
 | 5. Checkout-bekreftelse wiring | 1/1 | Complete | 2026-04-07 |
-| 6. Admin QA og feilsider | 0/0 | Not started | - |
+| 6. Admin QA og feilsider | 0/2 | Not started | - |
