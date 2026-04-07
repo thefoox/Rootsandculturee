@@ -1,0 +1,134 @@
+# Requirements: Roots & Culture v1.1
+
+**Defined:** 2026-04-07
+**Core Value:** Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturopplevelser i en informativ og tilgjengelig nettbutikk.
+
+## v1.1 Requirements
+
+Polish and production readiness. Fix known bugs, enforce design system consistency, complete CMS functionality, and verify all e-commerce/booking flows.
+
+### Typografi og Designsystem (TYPO)
+
+- [ ] **TYPO-01**: Alle headings (h1-h4) bruker CSS-variablene (--text-h1 til --text-h4, --text-hero) — ingen hardkodede text-storrelser
+- [ ] **TYPO-02**: Body-tekst bruker --text-body/--text-lg, labels bruker --text-label konsekvent pa alle sider
+- [ ] **TYPO-03**: Merriweather for headings og Inter for body er verifisert overalt via font-variables
+- [ ] **TYPO-04**: Alle farger bruker design-tokens — ingen hardkodede hex-verdier i komponenter
+- [ ] **TYPO-05**: Status-badges bruker de definerte badge-fargene fra globals.css
+
+### UI-komponenter (UIPOL)
+
+- [ ] **UIPOL-01**: Alle komponenter fungerer pa 375px mobil, 768px nettbrett og desktop
+- [ ] **UIPOL-02**: Alle knapper, lenker og kort har tydelige hover- og active-states
+- [ ] **UIPOL-03**: Sider som henter data har skjelettvisning eller spinner — ingen tom blank side
+- [ ] **UIPOL-04**: Alle lister har informativ tom-tilstand med ikon og hjelpetekst
+- [ ] **UIPOL-05**: Alle server actions og API-kall viser norske feilmeldinger med toast
+- [ ] **UIPOL-06**: CartDrawer apner/lukker korrekt, viser riktig totalsum, Ga til kassen fungerer
+- [ ] **UIPOL-07**: VariantSelector og AddToCartButton oppdaterer pris korrekt for alle produkttyper
+
+### E-commerce (ECOM)
+
+- [ ] **ECOM-01**: Produktkatalog med kategorier filtrerer korrekt
+- [ ] **ECOM-02**: Produktdetalj-side viser galleri, beskrivelse, pris, varianter og legg-i-handlekurv
+- [ ] **ECOM-03**: Handlekurven overlever sidenavigasjon og refresh
+- [ ] **ECOM-04**: Blandede handlekurver (produkter + opplevelser + gavekort) handteres korrekt
+- [ ] **ECOM-05**: CheckoutForm validerer alle pakrevde felt, Stripe Elements viser korrekt
+- [ ] **ECOM-06**: Gjestekjop og innlogget kjop fungerer — ordre knyttes til konto ved innlogging
+- [ ] **ECOM-07**: Webhook oppretter ordre og bookinger korrekt i Firestore
+- [ ] **ECOM-08**: Bekreftelsese-post sendes via Resend med riktige detaljer
+
+### Booking (BOOK)
+
+- [ ] **BOOK-09**: Opplevelsesside viser tilgjengelige datoer med plasser igjen i sanntid (onSnapshot)
+- [ ] **BOOK-10**: Datovalg oppdaterer pris (inkl. early-bird) og viser gjenvarende plasser
+- [ ] **BOOK-11**: Booking blokkeres med tydelig melding nar alle plasser er fylt
+- [ ] **BOOK-12**: Bekreftelseskode genereres og vises bade pa side og i e-post
+
+### Admin (ADMN)
+
+- [ ] **ADMN-09**: Dashboard viser korrekt oppsummering — produkter, opplevelser, ordrer, bookinger, inntekt
+- [ ] **ADMN-10**: Produkter CRUD fungerer komplett — opprett med bilde, pris, kategori, varianter
+- [ ] **ADMN-11**: Opplevelser CRUD fungerer — opprett med datoer/plasser, pris, sted, varighet
+- [ ] **ADMN-12**: Artikler CRUD fungerer — opprett med Tiptap-editor, forsidebilde, publiser/kladd
+- [ ] **ADMN-13**: Ordrer vises med riktig status, admin kan oppdatere status og refundere
+- [ ] **ADMN-14**: Bookinger vises med filtrering, admin kan kansellere
+
+### CMS (CMS)
+
+- [ ] **CMS-01**: PUT /api/page-content/[pageId] kaller revalidateTag('page-content') etter lagring
+- [ ] **CMS-02**: DELETE /api/page-content/[pageId] finnes med slett-knapp i admin-listen
+- [ ] **CMS-03**: trust-bar items er admin-redigerbare (ikke hardkodet)
+- [ ] **CMS-04**: text-seksjon har Tiptap-editor for brodtekst
+- [ ] **CMS-05**: text-image har imagePosition-toggle (venstre/hoyre)
+- [ ] **CMS-06**: contact-info har href-felt for lenker
+- [ ] **CMS-07**: gallery heading-felt er synlig i admin-editoren
+- [ ] **CMS-08**: Vis side-lenke i page-editoren som apner slug i ny fane
+- [ ] **CMS-09**: Slug-validering viser feilmelding ved duplikat-slug
+- [ ] **CMS-10**: ContentBlockEditor fjernes (dod kode)
+
+### Kundekonto (KONTO)
+
+- [ ] **KONTO-01**: Dashboard-oversikt viser siste ordrer og bookinger korrekt
+- [ ] **KONTO-02**: Ordrehistorikk viser alle ordrer med status og detaljer
+- [ ] **KONTO-03**: Bookinghistorikk viser kommende og tidligere med bekreftelseskode
+- [ ] **KONTO-04**: Profil-redigering og passordendring fungerer
+
+### SEO (SEO)
+
+- [ ] **SEO-01**: Alle offentlige sider har korrekt title og meta description pa norsk
+- [ ] **SEO-02**: Open Graph-metadata for sosiale medier
+- [ ] **SEO-03**: Sitemap inkluderer alle offentlige sider, produkter, opplevelser og artikler
+- [ ] **SEO-04**: Strukturert data (JSON-LD) for produkter og artikler
+
+### Stripe (STRIPE)
+
+- [ ] **STRIPE-01**: Webhook handterer tre tilfeller: kun produkter, kun opplevelser, blandet
+- [ ] **STRIPE-02**: Priser sendes korrekt i ore (1 NOK = 100 ore) — ingen avrundingsfeil
+- [ ] **STRIPE-03**: Stripe Elements styling matcher brand-designet
+
+### Gavekort (GAVE)
+
+- [ ] **GAVE-01**: Gavekort-siden lar kunder kjope gavekort med valgfri verdi
+- [ ] **GAVE-02**: Gavekort kan loses inn i checkout via GiftCardInput
+- [ ] **GAVE-03**: Gavekort-saldo reduseres korrekt ved innlosning
+- [ ] **GAVE-04**: Admin kan se og administrere gavekort
+
+## v2 Requirements
+
+Deferred to future release.
+
+- **V2-01**: Venteliste for utsolgte opplevelser
+- **V2-02**: Oppfolgingse-post etter gjennomfort opplevelse
+- **V2-03**: Sesongbasert kategorisering av opplevelser
+- **V2-04**: Rabattkoder / kampanjesystem via Stripe Coupons
+- **V2-05**: Avansert lagerstyring med lavt-pa-lager-varsler
+- **V2-06**: Nyhetsbrev-paamelding
+- **V2-07**: Sok pa tvers av produkter og opplevelser
+- **V2-08**: Automatisert fraktintegrasjon (Bring/Posten API)
+- **V2-09**: Auto-fetch seksjoner med konfigurerbart limit-felt
+- **V2-10**: Header transparent-modus automatisk deteksjon
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Flerspraklig stotte | Norsk identitet er kjernen |
+| Mobilapp | Web-first, responsivt design dekker mobil |
+| Stripe Tax (MVA) | Utsatt til v1.2 — krever egen beslutning om pris-modell |
+| Security headers | Utsatt til deploy-fase |
+| Sentry error logging | Utsatt til deploy-fase |
+| Juridisk gjennomgang | Ekstern — utenfor kodescope |
+| Tester (automatiserte) | Utsatt til v1.2 |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| (Populated during roadmap creation) | | |
+
+**Coverage:**
+- v1.1 requirements: 47 total
+- Mapped to phases: 0
+- Unmapped: 47
+
+---
+*Requirements defined: 2026-04-07*
