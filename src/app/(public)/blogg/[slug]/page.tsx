@@ -5,6 +5,7 @@ import { HeroImage } from '@/components/shared/HeroImage'
 import { ArticleProse } from '@/components/blog/ArticleProse'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { formatDate } from '@/lib/format'
+import { articleJsonLd } from '@/lib/json-ld'
 
 export const revalidate = 3600
 
@@ -46,6 +47,10 @@ export default async function ArtikkelDetailPage({ params }: PageProps) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(article)) }}
+      />
       {article.coverImage?.url && (
         <HeroImage
           src={article.coverImage.url}

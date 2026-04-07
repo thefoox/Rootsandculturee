@@ -1,4 +1,4 @@
-import type { Product, Experience } from '@/types'
+import type { Product, Experience, Article } from '@/types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rootsculture.no'
 
@@ -46,5 +46,29 @@ export function experienceJsonLd(experience: Experience) {
       name: 'Roots & Culture',
       url: BASE_URL,
     },
+  }
+}
+
+export function articleJsonLd(article: Article) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.metaTitle || article.title,
+    description: article.metaDescription || article.excerpt,
+    image: article.coverImage?.url
+      ? `${BASE_URL}${article.coverImage.url}`
+      : undefined,
+    author: {
+      '@type': 'Person',
+      name: article.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Roots & Culture',
+      url: BASE_URL,
+    },
+    datePublished: article.publishedAt?.toISOString() ?? undefined,
+    dateModified: article.updatedAt?.toISOString() ?? undefined,
+    url: `${BASE_URL}/blogg/${article.slug}`,
   }
 }
