@@ -18,6 +18,18 @@ export const productSchema = z.object({
   images: z.array(imageSchema).min(1, 'Minst ett bilde er påkrevd.'),
   stockCount: z.number().int().min(0),
   publish: z.boolean().optional(),
+  variants: z
+    .array(
+      z.object({
+        id: z.string(),
+        label: z.string().min(1, 'Variantnavn er påkrevd.'),
+        price: z.number().positive('Variantpris må være positiv.'),
+        inStock: z.boolean().optional().default(true),
+        stockCount: z.number().int().min(0).default(0),
+      })
+    )
+    .optional()
+    .default([]),
 })
 
 export const experienceSchema = z.object({

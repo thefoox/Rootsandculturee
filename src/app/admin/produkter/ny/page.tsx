@@ -27,6 +27,12 @@ export default function NewProductPage() {
   const [stockCount, setStockCount] = useState('0')
   const [category, setCategory] = useState<ProductCategory>('drikke')
   const [images, setImages] = useState<ProductImage[]>([])
+  const [variants, setVariants] = useState<Array<{
+    id: string
+    label: string
+    price: string
+    stockCount: string
+  }>>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSaving, setIsSaving] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
@@ -50,6 +56,14 @@ export default function NewProductPage() {
     formData.set('category', category)
     formData.set('images', JSON.stringify(images))
     formData.set('publish', String(publish))
+    formData.set('variants', JSON.stringify(
+      variants.map((v) => ({
+        id: v.id || `v-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+        label: v.label,
+        price: Number(v.price),
+        stockCount: Number(v.stockCount),
+      }))
+    ))
 
     const result = await createProduct(formData)
     loading(false)
@@ -207,6 +221,91 @@ export default function NewProductPage() {
               ))}
             </div>
           </fieldset>
+        </section>
+
+        <hr className="border-forest/12" />
+
+        {/* Varianter */}
+        <section>
+          <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
+            Varianter <span className="text-label font-normal text-body/60">(valgfritt)</span>
+          </h2>
+          <p className="mb-4 text-label text-body/70">
+            Legg til varianter hvis produktet finnes i ulike størrelser, volum eller typer.
+          </p>
+          <div className="space-y-3">
+            {variants.map((v, i) => (
+              <div key={v.id || i} className="flex flex-wrap items-end gap-3 rounded-lg border border-forest/10 bg-card p-4">
+                <div className="flex-1 min-w-[140px]">
+                  <label className="mb-1 block text-label font-medium text-forest" htmlFor={`v-label-${i}`}>
+                    Navn
+                  </label>
+                  <input
+                    id={`v-label-${i}`}
+                    type="text"
+                    value={v.label}
+                    onChange={(e) => {
+                      const updated = [...variants]
+                      updated[i] = { ...updated[i], label: e.target.value }
+                      setVariants(updated)
+                    }}
+                    placeholder="F.eks. 250 ml"
+                    className="w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-body text-forest focus:border-forest focus:outline-none"
+                  />
+                </div>
+                <div className="w-28">
+                  <label className="mb-1 block text-label font-medium text-forest" htmlFor={`v-price-${i}`}>
+                    Pris (NOK)
+                  </label>
+                  <input
+                    id={`v-price-${i}`}
+                    type="number"
+                    min={0}
+                    value={v.price}
+                    onChange={(e) => {
+                      const updated = [...variants]
+                      updated[i] = { ...updated[i], price: e.target.value }
+                      setVariants(updated)
+                    }}
+                    className="w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-body text-forest focus:border-forest focus:outline-none"
+                  />
+                </div>
+                <div className="w-24">
+                  <label className="mb-1 block text-label font-medium text-forest" htmlFor={`v-stock-${i}`}>
+                    Lager
+                  </label>
+                  <input
+                    id={`v-stock-${i}`}
+                    type="number"
+                    min={0}
+                    value={v.stockCount}
+                    onChange={(e) => {
+                      const updated = [...variants]
+                      updated[i] = { ...updated[i], stockCount: e.target.value }
+                      setVariants(updated)
+                    }}
+                    className="w-full rounded-md border border-forest/20 bg-cream px-3 py-2 text-body text-forest focus:border-forest focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setVariants(variants.filter((_, idx) => idx !== i))}
+                  className="shrink-0 rounded-md px-3 py-2 text-label text-body/60 hover:text-destructive"
+                  aria-label={`Fjern variant ${v.label || i + 1}`}
+                >
+                  Fjern
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setVariants([...variants, { id: '', label: '', price: '', stockCount: '0' }])}
+            className="mt-3 inline-flex items-center gap-1 rounded-lg border border-dashed border-forest/20 px-3 py-2 text-sm text-forest hover:bg-card"
+          >
+            <span aria-hidden="true">+</span>
+            Legg til variant
+          </button>
         </section>
       </div>
 

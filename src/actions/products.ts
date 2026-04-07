@@ -59,6 +59,7 @@ export async function createProduct(formData: FormData) {
 
   const rawImages = formData.get('images') as string
   const priceNOK = Number(formData.get('price'))
+  const rawVariants = formData.get('variants') as string
 
   const parsed = productSchema.safeParse({
     name: formData.get('name'),
@@ -69,6 +70,7 @@ export async function createProduct(formData: FormData) {
     images: rawImages ? JSON.parse(rawImages) : [],
     stockCount: Number(formData.get('stockCount')),
     publish: formData.get('publish') === 'true',
+    variants: rawVariants ? JSON.parse(rawVariants) : [],
   })
 
   if (!parsed.success) {
@@ -80,9 +82,17 @@ export async function createProduct(formData: FormData) {
     return { success: false, errors: fieldErrors }
   }
 
-  const { publish, ...data } = parsed.data
+  const { publish, variants, ...data } = parsed.data
+  const mappedVariants = (variants || []).map((v) => ({
+    id: v.id || `variant-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    label: v.label,
+    price: Math.round(v.price * 100),
+    inStock: v.stockCount > 0,
+    stockCount: v.stockCount,
+  }))
   const docRef = await adminDb.collection('products').add({
     ...data,
+    variants: mappedVariants,
     inStock: data.stockCount > 0,
     publishedAt: publish ? FieldValue.serverTimestamp() : null,
     createdAt: FieldValue.serverTimestamp(),
@@ -104,6 +114,7 @@ export async function updateProduct(id: string, formData: FormData) {
 
   const rawImages = formData.get('images') as string
   const priceNOK = Number(formData.get('price'))
+  const rawVariants = formData.get('variants') as string
 
   const parsed = productSchema.safeParse({
     name: formData.get('name'),
@@ -114,6 +125,7 @@ export async function updateProduct(id: string, formData: FormData) {
     images: rawImages ? JSON.parse(rawImages) : [],
     stockCount: Number(formData.get('stockCount')),
     publish: formData.get('publish') === 'true',
+    variants: rawVariants ? JSON.parse(rawVariants) : [],
   })
 
   if (!parsed.success) {
@@ -125,7 +137,14 @@ export async function updateProduct(id: string, formData: FormData) {
     return { success: false, errors: fieldErrors }
   }
 
-  const { publish, ...data } = parsed.data
+  const { publish, variants, ...data } = parsed.data
+  const mappedVariants = (variants || []).map((v) => ({
+    id: v.id || `variant-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    label: v.label,
+    price: Math.round(v.price * 100),
+    inStock: v.stockCount > 0,
+    stockCount: v.stockCount,
+  }))
   const existingDoc = await adminDb.collection('products').doc(id).get()
   const existing = existingDoc.data()
 
@@ -134,6 +153,7 @@ export async function updateProduct(id: string, formData: FormData) {
     .doc(id)
     .update({
       ...data,
+      variants: mappedVariants,
       inStock: data.stockCount > 0,
       publishedAt: publish
         ? existing?.publishedAt || FieldValue.serverTimestamp()
