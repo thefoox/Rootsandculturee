@@ -92,7 +92,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="flex h-11 w-11 items-center justify-center text-forest"
+            className="flex h-11 w-11 items-center justify-center rounded text-forest hover:bg-forest/10 motion-safe:transition-colors motion-safe:duration-100"
             aria-label="Lukk handlekurv"
           >
             <X className="h-6 w-6" aria-hidden="true" />
