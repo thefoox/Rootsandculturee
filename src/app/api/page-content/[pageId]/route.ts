@@ -88,22 +88,3 @@ export async function DELETE(
   return NextResponse.json({ success: true })
 }
 
-export async function DELETE(
-  _request: Request,
-  { params }: { params: Promise<{ pageId: string }> }
-) {
-  const { pageId } = await params
-
-  if (!adminDb) {
-    return NextResponse.json({ success: true, mock: true })
-  }
-
-  const doc = await adminDb.collection('pageContent').doc(pageId).get()
-  if (!doc.exists) {
-    return NextResponse.json({ error: 'Siden finnes ikke' }, { status: 404 })
-  }
-
-  await adminDb.collection('pageContent').doc(pageId).delete()
-
-  return NextResponse.json({ success: true })
-}

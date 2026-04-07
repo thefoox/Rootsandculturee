@@ -14,6 +14,12 @@ export function TextSection({ section }: { section: PageSection }) {
             {section.subheading}
           </p>
         )}
+        {section.body && (
+          <div
+            className="mt-5 max-w-2xl font-body text-body leading-relaxed text-forest prose-p:mt-4 first:prose-p:mt-0"
+            dangerouslySetInnerHTML={{ __html: section.body }}
+          />
+        )}
       </div>
     </section>
   )

@@ -7,9 +7,11 @@ export function TextImageSection({ section }: { section: PageSection }) {
   return (
     <section className="bg-cream">
       <div className="mx-auto max-w-[1200px] px-6 md:px-8">
-        <div className="grid items-center gap-10 py-20 md:grid-cols-2 md:gap-16 md:py-28">
+        <div className={`flex flex-col gap-10 py-20 md:gap-16 md:py-28 md:items-center ${
+          section.imagePosition === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'
+        }`}>
           {section.image && (
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl md:w-1/2">
               <Image
                 src={section.image.url}
                 alt={section.image.alt}
@@ -19,7 +21,7 @@ export function TextImageSection({ section }: { section: PageSection }) {
               />
             </div>
           )}
-          <div>
+          <div className="md:w-1/2">
             {section.heading && (
               <h2 className="font-heading text-h1 font-bold text-forest">
                 {section.heading}
@@ -27,7 +29,7 @@ export function TextImageSection({ section }: { section: PageSection }) {
             )}
             {section.body && (
               <div
-                className="mt-5 font-body text-body leading-relaxed text-body prose-p:mt-4 first:prose-p:mt-0"
+                className="mt-5 font-body text-body leading-relaxed text-forest prose-p:mt-4 first:prose-p:mt-0"
                 dangerouslySetInnerHTML={{ __html: section.body }}
               />
             )}
