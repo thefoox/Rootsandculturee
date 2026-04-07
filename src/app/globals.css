@@ -115,7 +115,7 @@ body {
 }
 .article-prose h2 {
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: var(--text-h3);
   font-weight: 700;
   line-height: 1.25;
   margin-top: 32px;
@@ -123,7 +123,7 @@ body {
 }
 .article-prose h3 {
   font-family: var(--font-heading);
-  font-size: 15px;
+  font-size: var(--text-h4);
   font-weight: 700;
   line-height: 1.4;
   margin-top: 24px;

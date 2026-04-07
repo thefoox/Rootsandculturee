@@ -60,7 +60,7 @@ export function VariantSelector({ product }: VariantSelectorProps) {
               className={`rounded-md border px-4 py-2 font-body text-body transition-all duration-100 min-h-[44px] ${
                 selectedVariantId === variant.id
                   ? 'border-forest bg-forest text-cream'
-                  : 'border-forest/20 bg-white text-forest hover:border-forest/40'
+                  : 'border-forest/20 bg-cream text-forest hover:border-forest/40'
               } disabled:opacity-40 disabled:cursor-not-allowed`}
               aria-pressed={selectedVariantId === variant.id}
             >
