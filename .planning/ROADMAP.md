@@ -17,6 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: Betaling og Booking** - Handlekurv, Stripe-checkout for produkter, fullstendig bookingsystem med atomisk plassreservering
 - [ ] **Phase 4: Kundekonto** - Kundedashboard med ordrehistorikk, bookinghistorikk og profilinnstillinger
 - [ ] **Phase 5: Checkout-bekreftelse wiring** - Fiks bookingbekreftelse pa side og kundens e-post i bekreftelsesmodalen (gap closure)
+- [ ] **Phase 6: Admin QA og feilsider** - Fiks admin CRUD-bugs (produktopprettelse), legg til error.tsx, scroll-to-error pa skjemaer, tomme tilstander
 
 ## Phase Details
 
@@ -109,6 +110,23 @@ Plans:
 
 **UI hint**: no
 
+### Phase 6: Admin QA og feilsider
+**Goal**: Alle admin CRUD-operasjoner fungerer korrekt, skjemafeil er synlige for brukeren, og uventede feil vises med en branded feilside
+**Depends on**: Phase 5
+**Requirements**: ADMN-02, ADMN-03, ADMN-04, ADMN-07
+**Success Criteria** (what must be TRUE):
+  1. Admin kan opprette et nytt produkt med bilde, pris og kategori — produktet vises i produktlisten
+  2. Admin kan opprette, redigere og slette opplevelser, artikler og sideinnhold uten feil
+  3. Ugyldige skjemainnsendinger scroller til forste feil og viser en tydelig feilmelding
+  4. Runtime-feil viser en branded feilside pa norsk (ikke standard Next.js-feil)
+  5. Admin-listesider med 0 elementer viser en tom tilstandsmelding
+**Plans:** TBD
+
+Plans:
+(not yet planned)
+
+**UI hint**: no
+
 ## Progress
 
 **Execution Order:**
@@ -120,4 +138,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. Butikkvindu og Admin | 0/2 | Planned | - |
 | 3. Betaling og Booking | 0/2 | Planned | - |
 | 4. Kundekonto | 0/1 | Not started | - |
-| 5. Checkout-bekreftelse wiring | 0/1 | Not started | - |
+| 5. Checkout-bekreftelse wiring | 1/1 | Complete | 2026-04-07 |
+| 6. Admin QA og feilsider | 0/0 | Not started | - |
