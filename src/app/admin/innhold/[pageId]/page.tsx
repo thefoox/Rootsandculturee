@@ -56,13 +56,13 @@ function createDefaultSection(type: SectionType, order: number): PageSection {
     base.ctaText = ''
     base.ctaLink = ''
   }
-  if (type === 'text-image') {
+  if (['text', 'text-image'].includes(type)) {
     base.body = ''
   }
   if (['hero', 'text', 'cta', 'experiences-grid', 'articles-grid', 'products-grid'].includes(type)) {
     base.subheading = ''
   }
-  if (['faq', 'values', 'team', 'gallery', 'contact-info'].includes(type)) {
+  if (['faq', 'values', 'team', 'gallery', 'contact-info', 'trust-bar'].includes(type)) {
     base.items = []
   }
   return base
@@ -98,10 +98,11 @@ function SortableSection({
   }
 
   const hasSubheading = ['hero', 'text', 'cta', 'experiences-grid', 'articles-grid', 'products-grid'].includes(section.type)
-  const hasBody = section.type === 'text-image'
+  const hasBody = section.type === 'text-image' || section.type === 'text'
   const hasImage = ['hero', 'text-image', 'cta', 'contact-info'].includes(section.type)
   const hasCta = ['hero', 'cta', 'text-image'].includes(section.type)
-  const hasItems = ['faq', 'values', 'team', 'gallery', 'contact-info'].includes(section.type)
+  const hasItems = ['faq', 'values', 'team', 'gallery', 'contact-info', 'trust-bar'].includes(section.type)
+  const hasImagePosition = section.type === 'text-image'
   const isDataSection = ['experiences-grid', 'articles-grid', 'products-grid'].includes(section.type)
 
   return (
@@ -151,13 +152,11 @@ function SortableSection({
             </p>
           )}
 
-          {section.type !== 'gallery' && (
-            <Input
-              label="Overskrift"
-              value={section.heading || ''}
-              onChange={(e) => onUpdate({ heading: e.target.value })}
-            />
-          )}
+          <Input
+            label="Overskrift"
+            value={section.heading || ''}
+            onChange={(e) => onUpdate({ heading: e.target.value })}
+          />
 
           {hasSubheading && (
             <div>
@@ -199,6 +198,29 @@ function SortableSection({
                 value={section.ctaLink || ''}
                 onChange={(e) => onUpdate({ ctaLink: e.target.value })}
               />
+            </div>
+          )}
+
+          {hasImagePosition && (
+            <div>
+              <label className="mb-2 block text-label font-medium text-forest">
+                Bildeposisjon
+              </label>
+              <div className="flex gap-3">
+                {(['left', 'right'] as const).map((pos) => (
+                  <label key={pos} className="flex items-center gap-2 text-body text-forest">
+                    <input
+                      type="radio"
+                      name={`imagePosition-${section.id}`}
+                      value={pos}
+                      checked={(section.imagePosition || 'left') === pos}
+                      onChange={() => onUpdate({ imagePosition: pos })}
+                      className="h-4 w-4 accent-forest"
+                    />
+                    {pos === 'left' ? 'Bilde til venstre' : 'Bilde til høyre'}
+                  </label>
+                ))}
+              </div>
             </div>
           )}
 
@@ -255,8 +277,22 @@ function SortableSection({
                       />
                     )}
                     {section.type === 'contact-info' && (
+                      <>
+                        <Input
+                          label="Ikon (lucide-navn)"
+                          value={item.icon || ''}
+                          onChange={(e) => onUpdateItem(i, { icon: e.target.value })}
+                        />
+                        <Input
+                          label="Lenke (mailto:, tel:, eller URL)"
+                          value={item.href || ''}
+                          onChange={(e) => onUpdateItem(i, { href: e.target.value })}
+                        />
+                      </>
+                    )}
+                    {section.type === 'trust-bar' && (
                       <Input
-                        label="Ikon (lucide-navn)"
+                        label="Ikon (lucide-navn, f.eks. Leaf)"
                         value={item.icon || ''}
                         onChange={(e) => onUpdateItem(i, { icon: e.target.value })}
                       />
@@ -551,6 +587,17 @@ export default function EditPageContentPage() {
         <Button variant="secondary" onClick={() => router.push('/admin/innhold')}>
           Tilbake
         </Button>
+        {pageSlug && (
+          <a
+            href={`/${pageSlug === '/' ? '' : pageSlug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-forest/20 px-4 py-2 text-sm font-medium text-forest hover:bg-card"
+          >
+            Vis side
+            <span aria-hidden="true">↗</span>
+          </a>
+        )}
       </div>
     </div>
   )
