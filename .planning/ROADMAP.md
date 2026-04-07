@@ -72,7 +72,12 @@ Plans:
   3. Sider med data-lasting viser skeleton eller spinner — ingen blank skjerm
   4. CartDrawer apner og lukker korrekt, viser riktig totalsum og navigerer til kassen
   5. Alle interaktive elementer (knapper, lenker, kort) har tydelige hover- og active-states
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 09-01-PLAN.md — Fiks hardkodede tekststorrelser og hex-farger; legg til badge-tokens; fiks focus-ring
+- [ ] 09-02-PLAN.md — DataTable mobil scroll-wrapper; CartDrawer hover-state; 5 loading.tsx-filer
+- [ ] 09-03-PLAN.md — konto/EmptyState oppgradering med ikon+heading; admin/ordrer tomt-tilstand + norsk feilmelding
+- [ ] 09-04-PLAN.md — VariantSelector dynamisk pris; CartDrawer audit; visuell checkpoint
 **UI hint**: yes
 
 ### Phase 10: Gavekort, Kundekonto og SEO
@@ -99,5 +104,5 @@ Plans:
 | 6. Admin QA og feilsider | v1.0 | 2/2 | Complete | 2026-04-07 |
 | 7. CMS-fikser og Admin CRUD | v1.1 | 0/5 | Not started | - |
 | 8. E-commerce, Stripe og Booking-flyter | v1.1 | 0/2 | Not started | - |
-| 9. Typografi og UI-polish | v1.1 | 0/? | Not started | - |
+| 9. Typografi og UI-polish | v1.1 | 0/4 | Not started | - |
 | 10. Gavekort, Kundekonto og SEO | v1.1 | 0/? | Not started | - |
