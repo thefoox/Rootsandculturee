@@ -135,6 +135,7 @@ export interface PageSection {
   subheading?: string
   body?: string
   image?: ProductImage
+  imagePosition?: 'left' | 'right'  // CMS-05: text-image venstre/høyre
   items?: SectionItem[]
   ctaText?: string
   ctaLink?: string
