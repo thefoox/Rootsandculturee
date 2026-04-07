@@ -40,11 +40,11 @@
   5. Alle CMS-seksjonstyper (trust-bar, text, text-image, contact-info, gallery) har fungerende admin-editorer
 **Plans**: 5 plans
 Plans:
-- [ ] 07-01-PLAN.md — CMS API: revalidateTag i PUT, DELETE-endpoint, TrustBarSection dynamisk, imagePosition type
-- [ ] 07-02-PLAN.md — Slett-knapp i innhold-listen, 409-feilhåndtering, dashboard-verifisering
-- [ ] 07-03-PLAN.md — Produkt CRUD: inline VariantsEditor i opprett/rediger-skjema
-- [ ] 07-04-PLAN.md — Opplevelses-edit med DateSlotsEditor, artikkel-edit med Tiptap, ordrer/bookinger verifisert
-- [ ] 07-05-PLAN.md — CMS seksjoneditor fikser: trust-bar items, text body, imagePosition, contact-info href, gallery heading, Vis side, ContentBlockEditor slettet
+- [x] 07-01-PLAN.md — CMS API: revalidateTag i PUT, DELETE-endpoint, TrustBarSection dynamisk, imagePosition type
+- [x] 07-02-PLAN.md — Slett-knapp i innhold-listen, 409-feilhåndtering, dashboard-verifisering
+- [x] 07-03-PLAN.md — Produkt CRUD: inline VariantsEditor i opprett/rediger-skjema
+- [x] 07-04-PLAN.md — Opplevelses-edit med DateSlotsEditor, artikkel-edit med Tiptap, ordrer/bookinger verifisert
+- [x] 07-05-PLAN.md — CMS seksjoneditor fikser: trust-bar items, text body, imagePosition, contact-info href, gallery heading, Vis side, ContentBlockEditor slettet
 **UI hint**: yes
 
 ### Phase 8: E-commerce, Stripe og Booking-flyter
