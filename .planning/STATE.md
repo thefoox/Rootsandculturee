@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Polish & Production Readiness
-status: defining
-stopped_at: Defining requirements for v1.1
-last_updated: "2026-04-07T23:50:00.000Z"
+status: roadmap_ready
+stopped_at: Roadmap created — ready to plan Phase 7
+last_updated: "2026-04-07T23:55:00.000Z"
 last_activity: 2026-04-07
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturopplevelser i en informativ og tilgjengelig nettbutikk.
-**Current focus:** Defining requirements for v1.1
+**Current focus:** v1.1 Polish & Production Readiness — Phase 7 ready to plan
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 7 — CMS-fikser og Admin CRUD (not started)
 Plan: —
-Status: Defining requirements
+Status: Roadmap ready
 Last activity: 2026-04-07
 
 Progress: [░░░░░░░░░░] 0%
@@ -36,7 +36,7 @@ Progress: [░░░░░░░░░░] 0%
 
 **Velocity:**
 
-- Total plans completed: 3
+- Total plans completed: 0 (v1.1)
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -44,8 +44,10 @@ Progress: [░░░░░░░░░░] 0%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 05 | 1 | - | - |
-| 06 | 2 | - | - |
+| 07 | TBD | - | - |
+| 08 | TBD | - | - |
+| 09 | TBD | - | - |
+| 10 | TBD | - | - |
 
 **Recent Trend:**
 
@@ -53,6 +55,8 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+
+**v1.0 reference data:**
 | Phase 01 P01 | 4min | 2 tasks | 20 files |
 | Phase 01 P02 | 2min | 2 tasks | 6 files |
 | Phase 01 P03 | 3min | 2 tasks | 8 files |
@@ -101,16 +105,17 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-- Norwegian MVA (VAT) i Stripe: avgj_r om Stripe Tax eller manuell MVA-beregning — besluttes under Phase 3-planlegging
-- E-postleverandor: Resend er identifisert men ikke planlagt — besluttes under Phase 3-planlegging
-- Norsk juridisk gjennomgang: angrerrettloven og ekomloven ma verifiseres for Phase 3 (checkout)
+None at roadmap start. Previous concerns resolved:
+- Norwegian MVA (VAT): deferred to v1.2 (out of scope in REQUIREMENTS.md)
+- E-postleverandor: Resend confirmed and implemented in v1.0
 
 ## Session Continuity
 
-Last session: 2026-03-31T00:12:51.449Z
-Stopped at: Phase 4 complete and verified — all phases done
+Last session: 2026-04-07
+Stopped at: v1.1 roadmap created — 4 phases, 47 requirements mapped
 Resume file: .planning/ROADMAP.md
+Next action: `/gsd-plan-phase 7`

@@ -123,12 +123,66 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (Populated during roadmap creation) | | |
+| TYPO-01 | Phase 9 | Pending |
+| TYPO-02 | Phase 9 | Pending |
+| TYPO-03 | Phase 9 | Pending |
+| TYPO-04 | Phase 9 | Pending |
+| TYPO-05 | Phase 9 | Pending |
+| UIPOL-01 | Phase 9 | Pending |
+| UIPOL-02 | Phase 9 | Pending |
+| UIPOL-03 | Phase 9 | Pending |
+| UIPOL-04 | Phase 9 | Pending |
+| UIPOL-05 | Phase 9 | Pending |
+| UIPOL-06 | Phase 9 | Pending |
+| UIPOL-07 | Phase 9 | Pending |
+| ECOM-01 | Phase 8 | Pending |
+| ECOM-02 | Phase 8 | Pending |
+| ECOM-03 | Phase 8 | Pending |
+| ECOM-04 | Phase 8 | Pending |
+| ECOM-05 | Phase 8 | Pending |
+| ECOM-06 | Phase 8 | Pending |
+| ECOM-07 | Phase 8 | Pending |
+| ECOM-08 | Phase 8 | Pending |
+| BOOK-09 | Phase 8 | Pending |
+| BOOK-10 | Phase 8 | Pending |
+| BOOK-11 | Phase 8 | Pending |
+| BOOK-12 | Phase 8 | Pending |
+| ADMN-09 | Phase 7 | Pending |
+| ADMN-10 | Phase 7 | Pending |
+| ADMN-11 | Phase 7 | Pending |
+| ADMN-12 | Phase 7 | Pending |
+| ADMN-13 | Phase 7 | Pending |
+| ADMN-14 | Phase 7 | Pending |
+| CMS-01 | Phase 7 | Pending |
+| CMS-02 | Phase 7 | Pending |
+| CMS-03 | Phase 7 | Pending |
+| CMS-04 | Phase 7 | Pending |
+| CMS-05 | Phase 7 | Pending |
+| CMS-06 | Phase 7 | Pending |
+| CMS-07 | Phase 7 | Pending |
+| CMS-08 | Phase 7 | Pending |
+| CMS-09 | Phase 7 | Pending |
+| CMS-10 | Phase 7 | Pending |
+| KONTO-01 | Phase 10 | Pending |
+| KONTO-02 | Phase 10 | Pending |
+| KONTO-03 | Phase 10 | Pending |
+| KONTO-04 | Phase 10 | Pending |
+| SEO-01 | Phase 10 | Pending |
+| SEO-02 | Phase 10 | Pending |
+| SEO-03 | Phase 10 | Pending |
+| SEO-04 | Phase 10 | Pending |
+| STRIPE-01 | Phase 8 | Pending |
+| STRIPE-02 | Phase 8 | Pending |
+| STRIPE-03 | Phase 8 | Pending |
+| GAVE-01 | Phase 10 | Pending |
+| GAVE-02 | Phase 10 | Pending |
+| GAVE-03 | Phase 10 | Pending |
+| GAVE-04 | Phase 10 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 47 total
-- Mapped to phases: 0
-- Unmapped: 47
+- Mapped to phases: 47
+- Unmapped: 0
 
 ---
-*Requirements defined: 2026-04-07*
+*Requirements defined: 2026-04-07 | Traceability populated: 2026-04-07*
