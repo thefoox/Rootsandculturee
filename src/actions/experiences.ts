@@ -101,7 +101,7 @@ export async function createExperience(formData: FormData) {
     basePrice: Math.round(priceNOK * 100),
     location: formData.get('location'),
     durationText: formData.get('durationText'),
-    difficulty: formData.get('difficulty'),
+
     whatIsIncluded: whatIsIncludedRaw,
     cancellationPolicy: (formData.get('cancellationPolicy') as string) || '',
     whatToBring: (formData.get('whatToBring') as string) || '',
@@ -179,7 +179,7 @@ export async function updateExperience(id: string, formData: FormData) {
     basePrice: Math.round(priceNOK * 100),
     location: formData.get('location'),
     durationText: formData.get('durationText'),
-    difficulty: formData.get('difficulty'),
+
     whatIsIncluded: whatIsIncludedRaw,
     cancellationPolicy: (formData.get('cancellationPolicy') as string) || '',
     whatToBring: (formData.get('whatToBring') as string) || '',
