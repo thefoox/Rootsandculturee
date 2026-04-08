@@ -5,9 +5,14 @@ import { Shield, Heart, Layers, CheckCircle, ArrowRight } from 'lucide-react'
 import { getExperiences, getExperienceDates } from '@/lib/data/experiences'
 import { getProducts } from '@/lib/data/products'
 import { getArticles } from '@/lib/data/articles'
+import { getPageContent } from '@/lib/data/page-content'
 import { FilterableExperienceGrid } from '@/components/experiences/FilterableExperienceGrid'
 import { formatPrice } from '@/lib/format'
-import type { Experience, ExperienceDate } from '@/types'
+import type { Experience, ExperienceDate, PageSection } from '@/types'
+
+function findSection(sections: PageSection[], type: string): PageSection | undefined {
+  return sections.find((s) => s.type === type)
+}
 
 export const metadata: Metadata = {
   title: 'Roots & Culture — Norske natur- og kulturopplevelser',
@@ -62,11 +67,17 @@ const TESTIMONIALS = [
 ]
 
 export default async function Home() {
-  const [experiences, products, articles] = await Promise.all([
+  const [experiences, products, articles, pageContent] = await Promise.all([
     getExperiences(),
     getProducts(),
     getArticles(),
+    getPageContent('forside'),
   ])
+
+  const sections = pageContent?.sections ?? []
+  const heroSection = findSection(sections, 'hero')
+  const trustSection = findSection(sections, 'trust-bar')
+  const ctaSection = findSection(sections, 'cta')
 
   const experiencesWithDates: Array<Experience & { nextDate?: ExperienceDate }> =
     await Promise.all(
@@ -82,8 +93,8 @@ export default async function Home() {
       <section className="relative flex min-h-screen items-end overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-20-desktop.webp"
-            alt="Gruppe på tur i norsk skog"
+            src={heroSection?.image?.url || '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-20-desktop.webp'}
+            alt={heroSection?.image?.alt || 'Gruppe på tur i norsk skog'}
             fill
             priority
             className="object-cover"
@@ -93,10 +104,10 @@ export default async function Home() {
         </div>
         <div className="relative z-10 mx-auto w-full max-w-[1200px] px-6 pb-20 md:px-8 md:pb-24">
           <h1 className="max-w-[700px] font-heading text-hero font-bold leading-[1.02] tracking-tighter text-cream">
-            Velkommen til Roots&nbsp;&amp;&nbsp;Culture
+            {heroSection?.heading || 'Velkommen til Roots\u00a0&\u00a0Culture'}
           </h1>
           <p className="mt-5 max-w-[520px] font-body text-lg leading-relaxed text-cream/85">
-            Gjennom våre tjenester arbeider vi for å øke bevisstheten om natur, tradisjon og kultur.
+            {heroSection?.subheading || 'Gjennom våre tjenester arbeider vi for å øke bevisstheten om natur, tradisjon og kultur.'}
           </p>
           <div className="mt-9 flex flex-wrap gap-3.5">
             <Link

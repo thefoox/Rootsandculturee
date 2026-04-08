@@ -2,6 +2,12 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Layers, Shield, Heart, MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
+import { getPageContent } from '@/lib/data/page-content'
+import type { PageSection } from '@/types'
+
+function findSection(sections: PageSection[], type: string): PageSection | undefined {
+  return sections.find((s) => s.type === type)
+}
 
 export const metadata: Metadata = {
   title: 'Om oss — Roots & Culture',
@@ -36,15 +42,21 @@ const TEAM = [
   { name: 'Navn Navnesen', role: 'Kokk & Matformidler', image: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-07-desktop.webp' },
 ]
 
-export default function OmOssPage() {
+export default async function OmOssPage() {
+  const pageContent = await getPageContent('om-oss')
+  const sections = pageContent?.sections ?? []
+  const heroSection = findSection(sections, 'hero')
+  const storySection = findSection(sections, 'text-image')
+  const ctaSection = findSection(sections, 'cta')
+
   return (
     <>
       {/* ═══ HERO ═══ */}
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-forest text-center">
         <div className="absolute inset-0 opacity-30">
           <Image
-            src="/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp"
-            alt=""
+            src={heroSection?.image?.url || '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp'}
+            alt={heroSection?.image?.alt || ''}
             fill
             priority
             className="object-cover"
@@ -53,10 +65,10 @@ export default function OmOssPage() {
         </div>
         <div className="relative z-10 max-w-[640px] px-6">
           <h1 className="font-heading text-h1 font-bold leading-tight text-cream">
-            Om Roots & Culture
+            {heroSection?.heading || 'Om Roots & Culture'}
           </h1>
           <p className="mt-4 font-heading text-lg font-light leading-relaxed text-cream/80">
-            Forankret i norsk natur og kulturarv
+            {heroSection?.subheading || 'Forankret i norsk natur og kulturarv'}
           </p>
         </div>
       </section>
@@ -68,8 +80,8 @@ export default function OmOssPage() {
             {/* Image — overlaps into text card */}
             <div className="relative z-10 aspect-[4/5] overflow-hidden rounded-r-3xl shadow-[24px_24px_48px_rgba(27,67,50,0.1)] md:-mr-12">
               <Image
-                src="/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp"
-                alt="Vår historie"
+                src={storySection?.image?.url || '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp'}
+                alt={storySection?.image?.alt || 'Vår historie'}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 55vw"
@@ -78,19 +90,17 @@ export default function OmOssPage() {
             {/* Text card */}
             <div className="relative z-20 rounded-3xl bg-card p-10 md:p-16">
               <h2 className="font-heading text-h2 font-bold tracking-tight text-forest">
-                Vår historie
+                {storySection?.heading || 'Vår historie'}
               </h2>
-              <div className="mt-5 space-y-4 font-body text-body leading-relaxed text-body">
-                <p>
-                  Roots & Culture ble startet med en enkel idé: å gjøre det lettere for folk å oppleve det beste av norsk natur og kulturarv.
-                </p>
-                <p>
-                  Fra starten har vi samarbeidet med lokale produsenter, bønder og naturguider som deler vår lidenskap for norsk natur.
-                </p>
-                <p>
-                  Enten du søker ro i skogen, vil lære om ville urter, eller drømmer om mat laget over bål — vi har noe for deg.
-                </p>
-              </div>
+              {storySection?.body ? (
+                <div className="mt-5 space-y-4 font-body text-body leading-relaxed text-body article-prose" dangerouslySetInnerHTML={{ __html: storySection.body }} />
+              ) : (
+                <div className="mt-5 space-y-4 font-body text-body leading-relaxed text-body">
+                  <p>Roots & Culture ble startet med en enkel idé: å gjøre det lettere for folk å oppleve det beste av norsk natur og kulturarv.</p>
+                  <p>Fra starten har vi samarbeidet med lokale produsenter, bønder og naturguider som deler vår lidenskap for norsk natur.</p>
+                  <p>Enten du søker ro i skogen, vil lære om ville urter, eller drømmer om mat laget over bål — vi har noe for deg.</p>
+                </div>
+              )}
               <p className="mt-8 font-heading text-body font-light italic text-bark">
                 — Grunnleggerne av Roots & Culture
               </p>

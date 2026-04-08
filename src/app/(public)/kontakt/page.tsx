@@ -1,6 +1,12 @@
 import type { Metadata } from 'next'
 import { Mail, Phone, MapPin, Clock, Globe, ExternalLink } from 'lucide-react'
+import { getPageContent } from '@/lib/data/page-content'
+import type { PageSection } from '@/types'
 import { ContactForm } from './ContactForm'
+
+function findSection(sections: PageSection[], type: string): PageSection | undefined {
+  return sections.find((s) => s.type === type)
+}
 
 export const metadata: Metadata = {
   title: 'Kontakt oss — Roots & Culture',
@@ -21,7 +27,12 @@ const FAQ = [
   { q: 'Har dere parkering?', a: 'Ja, gratis parkering på gården. Veibeskrivelse sendes med bookingbekreftelsen.' },
 ]
 
-export default function KontaktPage() {
+export default async function KontaktPage() {
+  const pageContent = await getPageContent('kontakt')
+  const sections = pageContent?.sections ?? []
+  const heroSection = findSection(sections, 'hero')
+  const contactSection = findSection(sections, 'contact-info')
+
   return (
     <>
       {/* ═══ HERO: Compact forest ═══ */}
@@ -29,10 +40,10 @@ export default function KontaktPage() {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8">
           <div className="max-w-[640px]">
             <h1 className="font-heading text-h1 font-bold leading-tight text-cream">
-              Ta kontakt
+              {heroSection?.heading || 'Ta kontakt'}
             </h1>
             <p className="mt-3 font-heading text-lg font-light leading-relaxed text-cream/75">
-              Har du spørsmål om opplevelser, produkter eller samarbeid? Vi svarer gjerne.
+              {heroSection?.subheading || 'Har du spørsmål om opplevelser, produkter eller samarbeid? Vi svarer gjerne.'}
             </p>
           </div>
         </div>
