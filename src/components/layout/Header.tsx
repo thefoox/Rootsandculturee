@@ -17,6 +17,8 @@ import { logoutAction } from '@/actions/auth'
 import { CartBadge } from '@/components/cart/CartBadge'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import { useCart } from '@/components/cart/CartProvider'
+import { useScrollPosition } from '@/hooks/useScrollPosition'
+import { cn } from '@/lib/utils'
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -28,6 +30,8 @@ export function Header() {
   const [navItems, setNavItems] = useState<NavItem[]>(mainNavItems)
   const { itemCount } = useCart()
   const pathname = usePathname()
+  const scrollY = useScrollPosition()
+  const isScrolled = scrollY > 80
 
   // Pages with hero images get transparent header with light text
   const heroPages = ['/', '/opplevelser', '/opplevelser/retreat', '/opplevelser/kurs', '/opplevelser/matopplevelse', '/om-oss', '/kontakt']
@@ -84,9 +88,16 @@ export function Header() {
   return (
     <>
       <header
-        className={`absolute top-0 left-0 right-0 z-50 flex h-20 items-center justify-center ${
-          isTransparent ? '' : 'bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)]'
-        }`}
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50 flex h-20 items-center justify-center motion-safe:transition-all motion-safe:duration-200',
+          isTransparent
+            ? isScrolled
+              ? 'bg-forest text-cream shadow-md'
+              : 'bg-transparent'
+            : isScrolled
+              ? 'bg-cream shadow-md'
+              : 'bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)]'
+        )}
       >
       <div className="flex w-full max-w-[1200px] items-center px-6 lg:px-8">
         {/* Logo -- left */}
