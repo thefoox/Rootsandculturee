@@ -10,10 +10,10 @@ Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturoppl
 
 ## Current State
 
-**Shipped:** v1.0 MVP (2026-04-07)
-**Codebase:** ~19,000 LOC TypeScript, 197 source files
+**Shipped:** v1.1 Polish & Production Readiness (2026-04-08)
+**Codebase:** ~20,000 LOC TypeScript, 200+ source files
 **Stack:** Next.js 16.2.1, Firebase 12.x, Stripe, Vercel
-**Timeline:** 2026-03-30 → 2026-04-07 (9 days)
+**Timeline:** v1.0 2026-03-30 → 2026-04-07 | v1.1 2026-04-07 → 2026-04-08
 
 ## Requirements
 
@@ -32,22 +32,17 @@ Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturoppl
 - ✓ Responsivt design (mobil, nettbrett, desktop) — v1.0
 - ✓ SEO-optimalisert med SSR/SSG — v1.0
 
+- ✓ CMS cache-invalidering, DELETE-endpoint, seksjonsforbedringer — v1.1
+- ✓ Admin CRUD komplett med produktvarianter — v1.1
+- ✓ PaymentIntent metadata bug fikset — v1.1
+- ✓ Typografi og designsystem-konsistens — v1.1
+- ✓ Loading skeletons, empty states, error toasts — v1.1
+- ✓ SEO komplett med JSON-LD for alle innholdstyper — v1.1
+- ✓ Premium UI: sticky header, scroll reveal, hero animasjon, card elevation — v1.1
+
 ### Active
 
-- [ ] Typografi og designsystem-konsistens pa alle sider
-- [ ] UI-komponenter polish (responsivitet, WCAG, states, feilhandtering)
-- [ ] E-commerce QA — full flyt fungerer korrekt
-- [ ] Bookingsystem QA — sanntid, atomisk, bekreftelseskode
-- [ ] Admin CRUD QA — alle operasjoner fungerer
-- [ ] CMS-system fixes (cache-invalidering, delete, seksjonsforbedringer)
-- [ ] Stripe-konfigurasjon QA
-- [ ] Kundekonto QA
-- [ ] SEO og metadata komplett
-- [ ] Gavekort-system QA
-
-## Current Milestone: v1.1 Polish & Production Readiness
-
-**Goal:** Fiks alle kjente bugs, sorg for designsystem-konsistens, full CMS-funksjonalitet, og verifiser at alle flyter fungerer korrekt.
+(Fresh for next milestone)
 
 ### Out of Scope
 
