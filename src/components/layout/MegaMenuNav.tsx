@@ -73,7 +73,7 @@ export function MegaMenuNav({ transparent = true, items }: { transparent?: boole
             {hasChildren ? (
               <button
                 type="button"
-                className={`flex items-center gap-1 px-3 py-2 text-body hover:underline ${transparent ? 'text-cream' : 'text-forest'}`}
+                className={`relative flex items-center gap-1 px-3 py-2 text-body after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:motion-safe:transition-all after:motion-safe:duration-200 hover:after:w-full ${transparent ? 'text-cream' : 'text-forest'}`}
                 role="menuitem"
                 aria-haspopup="true"
                 aria-expanded={isOpen}
@@ -104,7 +104,7 @@ export function MegaMenuNav({ transparent = true, items }: { transparent?: boole
             ) : (
               <Link
                 href={item.href}
-                className={`block px-3 py-2 text-body hover:underline ${transparent ? 'text-cream' : 'text-forest'}`}
+                className={`relative block px-3 py-2 text-body after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:motion-safe:transition-all after:motion-safe:duration-200 hover:after:w-full ${transparent ? 'text-cream' : 'text-forest'}`}
                 role="menuitem"
               >
                 {item.label}
