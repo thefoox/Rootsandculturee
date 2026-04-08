@@ -33,8 +33,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  const articles = await getArticles()
-  return articles.map((a) => ({ slug: a.slug }))
+  try {
+    const articles = await getArticles()
+    return articles.map((a) => ({ slug: a.slug }))
+  } catch {
+    return []
+  }
 }
 
 export default async function ArtikkelDetailPage({ params }: PageProps) {

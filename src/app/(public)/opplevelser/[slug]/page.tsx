@@ -34,8 +34,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  const experiences = await getExperiences()
-  return experiences.map((e) => ({ slug: e.slug }))
+  try {
+    const experiences = await getExperiences()
+    return experiences.map((e) => ({ slug: e.slug }))
+  } catch {
+    return []
+  }
 }
 
 export default async function OpplevelsDetailPage({ params }: PageProps) {
