@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { sanitizeHtml } from '@/lib/sanitize'
 import type { PageSection } from '@/types'
 
 export function TextImageSection({ section }: { section: PageSection }) {
@@ -30,7 +31,7 @@ export function TextImageSection({ section }: { section: PageSection }) {
             {section.body && (
               <div
                 className="mt-5 font-body text-body leading-relaxed text-forest prose-p:mt-4 first:prose-p:mt-0"
-                dangerouslySetInnerHTML={{ __html: section.body }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(section.body) }}
               />
             )}
             {section.ctaText && section.ctaLink && (

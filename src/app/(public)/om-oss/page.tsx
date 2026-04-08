@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Layers, Shield, Heart, MapPin, Mail, Phone, ArrowRight } from 'lucide-react'
 import { getPageContent } from '@/lib/data/page-content'
+import { sanitizeHtml } from '@/lib/sanitize'
 import type { PageSection } from '@/types'
 
 function findSection(sections: PageSection[], type: string): PageSection | undefined {
@@ -93,7 +94,7 @@ export default async function OmOssPage() {
                 {storySection?.heading || 'Vår historie'}
               </h2>
               {storySection?.body ? (
-                <div className="mt-5 space-y-4 font-body text-body leading-relaxed text-body article-prose" dangerouslySetInnerHTML={{ __html: storySection.body }} />
+                <div className="mt-5 space-y-4 font-body text-body leading-relaxed text-body article-prose" dangerouslySetInnerHTML={{ __html: sanitizeHtml(storySection.body) }} />
               ) : (
                 <div className="mt-5 space-y-4 font-body text-body leading-relaxed text-body">
                   <p>Roots & Culture ble startet med en enkel idé: å gjøre det lettere for folk å oppleve det beste av norsk natur og kulturarv.</p>
