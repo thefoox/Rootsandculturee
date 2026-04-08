@@ -20,6 +20,7 @@ function mapPageContent(doc: FirebaseFirestore.DocumentSnapshot): PageContent {
       subheading: s.subheading || undefined,
       body: s.body || undefined,
       image: s.image || undefined,
+      imagePosition: s.imagePosition || undefined,
       items: s.items || undefined,
       ctaText: s.ctaText || undefined,
       ctaLink: s.ctaLink || undefined,
