@@ -8,6 +8,8 @@ function findSection(sections: PageSection[], type: string): PageSection | undef
   return sections.find((s) => s.type === type)
 }
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'Kontakt oss — Roots & Culture',
   description:

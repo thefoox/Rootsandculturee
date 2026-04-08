@@ -10,6 +10,8 @@ function findSection(sections: PageSection[], type: string): PageSection | undef
   return sections.find((s) => s.type === type)
 }
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'Om oss — Roots & Culture',
   description: 'Forankret i norsk natur og kulturarv. Lær mer om Roots & Culture, vår historie og hva vi står for.',
