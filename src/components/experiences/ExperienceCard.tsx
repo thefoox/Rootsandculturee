@@ -14,7 +14,7 @@ interface ExperienceCardProps {
 export function ExperienceCard({ experience, nextDate }: ExperienceCardProps) {
   const mainImage = experience.images[0]
   const now = new Date()
-  const hasEarlybird = nextDate?.earlyBirdPrice != null && nextDate?.earlyBirdDeadline != null && nextDate.earlyBirdDeadline > now
+  const hasEarlybird = nextDate?.earlyBirdPrice != null && nextDate?.earlyBirdDeadline != null && new Date(nextDate.earlyBirdDeadline) > now
 
   return (
     <Link

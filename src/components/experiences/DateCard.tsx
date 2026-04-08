@@ -22,7 +22,7 @@ export function DateCard({ experienceDate, isSelected, onSelect }: DateCardProps
   const isEarlybirdActive =
     experienceDate.earlyBirdPrice != null &&
     experienceDate.earlyBirdDeadline != null &&
-    experienceDate.earlyBirdDeadline > new Date()
+    new Date(experienceDate.earlyBirdDeadline) > new Date()
   const { weekday, day, month, longDate } = formatDateParts(experienceDate.date)
 
   const ariaLabel = isSoldOut

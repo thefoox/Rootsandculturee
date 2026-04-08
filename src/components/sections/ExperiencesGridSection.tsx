@@ -44,7 +44,7 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
               {experiencesWithDates.map(({ experience, nextDate }) => {
                 const mainImage = experience.images[0]
                 const now = new Date()
-                const hasEb = nextDate?.earlyBirdPrice != null && nextDate?.earlyBirdDeadline != null && nextDate.earlyBirdDeadline > now
+                const hasEb = nextDate?.earlyBirdPrice != null && nextDate?.earlyBirdDeadline != null && new Date(nextDate.earlyBirdDeadline) > now
                 return (
                   <Link
                     key={experience.id}

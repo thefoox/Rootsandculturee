@@ -53,7 +53,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
   // Find the lowest active earlybird price
   const now = new Date()
   const activeEarlybird = dates
-    .filter((d) => d.earlyBirdPrice != null && d.earlyBirdDeadline != null && d.earlyBirdDeadline > now)
+    .filter((d) => d.earlyBirdPrice != null && d.earlyBirdDeadline != null && new Date(d.earlyBirdDeadline) > now)
     .sort((a, b) => (a.earlyBirdPrice ?? 0) - (b.earlyBirdPrice ?? 0))[0]
 
   return (

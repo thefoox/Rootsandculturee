@@ -27,7 +27,7 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
   const isEarlybirdActive =
     selectedDate.earlyBirdPrice != null &&
     selectedDate.earlyBirdDeadline != null &&
-    selectedDate.earlyBirdDeadline > new Date()
+    new Date(selectedDate.earlyBirdDeadline) > new Date()
 
   const price = isEarlybirdActive ? selectedDate.earlyBirdPrice! : normalPrice
   const isFull = selectedDate.availableSeats <= 0
