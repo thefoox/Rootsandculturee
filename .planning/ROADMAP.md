@@ -48,3 +48,13 @@ Plans:
 - [x] 12-01-PLAN.md — Fix --color-rust token, CategoryTabs sticky offset, experience sidebar sticky offset
 - [x] 12-02-PLAN.md — Fix HeroImage header overlap, add FilterableExperienceGrid empty state, remove DynamicPage dead code
 - [ ] 12-03-PLAN.md — Human verification checkpoint
+
+### Phase 13: Prodklar opprydding
+
+**Goal**: Fiks alle 20 bekymringer fra codebase-scan — sikkerhet, autentisering, XSS-sanitisering, security headers, booking-bug, gavekort-e-post, error monitoring, og lav-prioritet polish
+**Requirements**: SEC-01 through SEC-20
+**Depends on**: Phase 12
+**Plans:** TBD
+
+Plans:
+(not yet planned)
