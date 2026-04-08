@@ -21,10 +21,10 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link
       href={`/produkter/${product.slug}`}
       aria-label={`${product.name}, ${formatPrice(product.price)}`}
-      className="group block overflow-hidden rounded-xl border border-forest/8 bg-cream shadow-sm motion-safe:transition-all motion-safe:duration-150 hover:shadow-xl hover:-translate-y-1"
+      className="group block overflow-hidden rounded-xl border border-forest/8 bg-cream shadow-sm motion-safe:transition-all motion-safe:duration-200 hover:shadow-md hover:-translate-y-1"
     >
       {/* Ember accent strip */}
-      <div className="h-[3px] bg-forest" />
+      <div className="h-[3px] bg-gradient-to-r from-forest to-bark" />
 
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         {mainImage ? (
@@ -42,14 +42,14 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
       </div>
-      <div className="p-4">
+      <div className="p-4 md:p-5">
         <span className="text-label uppercase tracking-wider text-body/70">
           {categoryLabel}
         </span>
-        <h3 className="mt-1 line-clamp-2 font-heading text-lg font-bold leading-[1.25] text-forest">
+        <h3 className="mt-2 line-clamp-2 font-heading text-h4 font-bold leading-[1.25] text-forest">
           {product.name}
         </h3>
-        <span className="mt-1 block font-body text-body font-bold text-forest">
+        <span className="mt-2 block font-body text-h4 font-bold text-forest">
           {formatPrice(product.price)}
         </span>
       </div>
