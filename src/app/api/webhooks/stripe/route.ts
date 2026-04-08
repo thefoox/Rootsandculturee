@@ -443,6 +443,41 @@ export async function POST(req: Request) {
             createdAt: new Date(),
           })
         }
+
+        // Also restore booking seats if this payment had bookings
+        const bookingsSnapshot = await adminDb!
+          .collection('bookings')
+          .where('stripePaymentIntentId', '==', paymentIntentId)
+          .get()
+
+        for (const bookingDoc of bookingsSnapshot.docs) {
+          const booking = bookingDoc.data()
+          if (booking.status === 'confirmed' && booking.dateId) {
+            // Restore seats atomically (mirrors cancelBooking pattern)
+            const dateRef = adminDb!
+              .collection('experiences')
+              .doc(booking.experienceId)
+              .collection('dates')
+              .doc(booking.dateId)
+
+            await adminDb!.runTransaction(async (transaction) => {
+              const dateDoc = await transaction.get(dateRef)
+              if (!dateDoc.exists) return
+              const dateData = dateDoc.data()!
+              const currentBooked = (dateData.bookedSeats as number) || 0
+              const currentAvailable = (dateData.availableSeats as number) || 0
+              const seats = (booking.seats as number) || 1
+
+              transaction.update(dateRef, {
+                bookedSeats: Math.max(0, currentBooked - seats),
+                availableSeats: currentAvailable + seats,
+              })
+            })
+
+            // Mark booking as cancelled
+            await bookingDoc.ref.update({ status: 'cancelled' })
+          }
+        }
       }
     }
   } catch (err) {
