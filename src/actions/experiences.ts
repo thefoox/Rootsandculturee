@@ -215,36 +215,67 @@ export async function updateExperience(id: string, formData: FormData) {
       updatedAt: FieldValue.serverTimestamp(),
     })
 
-  // Update dates subcollection: delete all and re-create
+  // Update dates subcollection: merge to preserve existing booking counts
   if (dates) {
-    const existingDates = await adminDb
+    const existingDatesSnap = await adminDb
       .collection('experiences')
       .doc(id)
       .collection('dates')
       .get()
 
+    // Build lookup map: ISO date string → { docId, bookedSeats }
+    const existingByDate = new Map<string, { docId: string; bookedSeats: number }>()
+    for (const doc of existingDatesSnap.docs) {
+      const data = doc.data()
+      const isoDate = (data.date?.toDate() as Date)?.toISOString() ?? ''
+      existingByDate.set(isoDate, { docId: doc.id, bookedSeats: data.bookedSeats || 0 })
+    }
+
+    // Determine which incoming dates match existing by timestamp
+    const incomingIsoDates = new Set<string>()
     const batch = adminDb.batch()
-    existingDates.docs.forEach((doc) => batch.delete(doc.ref))
 
     for (const dateSlot of dates) {
-      const ebPrice = dateSlot.earlyBirdPrice ? Math.round(Number(dateSlot.earlyBirdPrice) * 100) : null
-      const ebDeadline = dateSlot.earlyBirdDeadline ? Timestamp.fromDate(new Date(dateSlot.earlyBirdDeadline)) : null
-      const dateDocRef = adminDb
-        .collection('experiences')
-        .doc(id)
-        .collection('dates')
-        .doc()
+      const isoDate = new Date(dateSlot.date).toISOString()
+      incomingIsoDates.add(isoDate)
+
+      const ebPrice = dateSlot.earlyBirdPrice
+        ? Math.round(Number(dateSlot.earlyBirdPrice) * 100)
+        : null
+      const ebDeadline = dateSlot.earlyBirdDeadline
+        ? Timestamp.fromDate(new Date(dateSlot.earlyBirdDeadline))
+        : null
+
+      const existing = existingByDate.get(isoDate)
+      const bookedSeats = existing?.bookedSeats ?? 0
+      const availableSeats = Math.max(0, dateSlot.maxSeats - bookedSeats)
+
+      // Reuse existing doc ID if available, otherwise create new
+      const dateDocRef = existing
+        ? adminDb.collection('experiences').doc(id).collection('dates').doc(existing.docId)
+        : adminDb.collection('experiences').doc(id).collection('dates').doc()
+
       batch.set(dateDocRef, {
         date: Timestamp.fromDate(new Date(dateSlot.date)),
         maxSeats: dateSlot.maxSeats,
-        bookedSeats: 0,
-        availableSeats: dateSlot.maxSeats,
+        bookedSeats,
+        availableSeats,
         isActive: true,
         priceOverride: null,
         earlyBirdPrice: ebPrice,
         earlyBirdDeadline: ebDeadline,
       })
     }
+
+    // Delete dates that were removed from the form
+    for (const [isoDate, { docId }] of existingByDate.entries()) {
+      if (!incomingIsoDates.has(isoDate)) {
+        batch.delete(
+          adminDb.collection('experiences').doc(id).collection('dates').doc(docId)
+        )
+      }
+    }
+
     await batch.commit()
   }
 
