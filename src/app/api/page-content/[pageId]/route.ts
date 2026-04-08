@@ -49,7 +49,7 @@ export async function PUT(
   const body = await request.json()
 
   if (!adminDb) {
-    revalidateTag('page-content')
+    revalidateTag('page-content', 'max')
     return NextResponse.json({ success: true, mock: true })
   }
 
@@ -68,7 +68,7 @@ export async function PUT(
     { merge: true }
   )
 
-  revalidateTag('page-content')
+  revalidateTag('page-content', 'max')
   return NextResponse.json({ success: true })
 }
 
@@ -84,12 +84,12 @@ export async function DELETE(
   const { pageId } = await params
 
   if (!adminDb) {
-    revalidateTag('page-content')
+    revalidateTag('page-content', 'max')
     return NextResponse.json({ success: true, mock: true })
   }
 
   await adminDb.collection('pageContent').doc(pageId).delete()
-  revalidateTag('page-content')
+  revalidateTag('page-content', 'max')
   return NextResponse.json({ success: true })
 }
 
