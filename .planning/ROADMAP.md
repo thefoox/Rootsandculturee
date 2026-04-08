@@ -60,3 +60,15 @@ Plans:
 - [x] 13-01-PLAN.md — Security: delete credentials file, auth-gate CMS write endpoints, HTTP security headers, XSS sanitization
 - [x] 13-02-PLAN.md — Data integrity: gift card field mapping, booking seat preserve, isEarlybird metadata, revalidateTag cleanup, cached getOrders
 - [x] 13-03-PLAN.md — Polish: error/loading pages, Stripe API pin, RESEND env validation, stats query cap, placeholder content, mock data guard
+
+### Phase 14: Komplett revisjon
+
+**Goal**: Fiks alle avdekkede feil fra komplett revisjon — kritiske betalingsfeil (gavekort + variant-lager), Google-innlogging, og gjor om-oss/kontakt/forside til fullt CMS-styrte sider
+**Requirements**: REV-01 (CMS dynamiske seksjoner), REV-02 (Kritiske betalingsfeil), REV-03 (Google-innlogging), REV-04 (Dataintegritet og opprydding)
+**Depends on**: Phase 13
+**Plans:** 0/3 plans complete
+
+Plans:
+- [ ] 14-01-PLAN.md — Critical: gift card PI amount fix, variant stock decrement, Google login CSP, session module safety
+- [ ] 14-02-PLAN.md — CMS: convert om-oss, kontakt, forside to fully dynamic SectionRenderer pages + fix imagePosition
+- [ ] 14-03-PLAN.md — Integrity: refund seat restore, dead code cleanup, middleware, Stripe API version
