@@ -173,12 +173,25 @@ export async function POST(req: Request) {
           await adminDb.runTransaction(async (transaction) => {
             const productDoc = await transaction.get(productRef)
             if (!productDoc.exists) return
-            const currentStock = productDoc.data()?.stockCount ?? 0
+            const data = productDoc.data()!
+            const currentStock = data.stockCount ?? 0
             const newStock = Math.max(0, currentStock - item.quantity)
-            transaction.update(productRef, {
+            const updates: Record<string, unknown> = {
               stockCount: newStock,
               inStock: newStock > 0,
-            })
+            }
+            // Also decrement variant stock if variantId present
+            if (item.variantId && Array.isArray(data.variants)) {
+              const variants = data.variants.map((v: { id: string; stockCount?: number }) => {
+                if (v.id === item.variantId) {
+                  const newVariantStock = Math.max(0, (v.stockCount ?? 0) - item.quantity)
+                  return { ...v, stockCount: newVariantStock }
+                }
+                return v
+              })
+              updates.variants = variants
+            }
+            transaction.update(productRef, updates)
           })
         }
       }
