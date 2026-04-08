@@ -199,7 +199,7 @@ export interface CartItem {
 }
 
 // Phase 3: Order types
-export type OrderStatus = 'pending' | 'paid' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled'
+export type OrderStatus = 'pending' | 'paid' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled' | 'partially_refunded'
 
 export interface OrderItem {
   productId: string

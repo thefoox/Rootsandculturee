@@ -21,7 +21,6 @@ interface ProductMetaItem {
   name: string
   price: number
   quantity: number
-  image: { url: string; alt: string } | null
   variantId?: string | null
   variantLabel?: string | null
 }
@@ -122,11 +121,17 @@ export async function POST(req: Request) {
       const giftCardCodeUsed = metadata.giftCardCode || ''
       const giftCardDeduction = parseInt(metadata.giftCardDeduction || '0', 10)
 
-      const shippingAddress: ShippingAddress | null = metadata.shippingAddress
-        ? JSON.parse(metadata.shippingAddress)
-        : null
+      let shippingAddress: ShippingAddress | null = null
+      if (metadata.shippingAddress) {
+        try {
+          shippingAddress = JSON.parse(metadata.shippingAddress)
+        } catch {
+          console.error('Failed to parse shippingAddress metadata:', metadata.shippingAddress)
+        }
+      }
 
       let orderId: string | null = null
+      let firestoreItems: OrderItem[] = []
       const bookingResults: Array<{
         confirmationCode: string
         experienceName: string
@@ -140,15 +145,30 @@ export async function POST(req: Request) {
 
       // Process product orders
       if (orderItems.length > 0) {
-        const firestoreItems: OrderItem[] = orderItems.map((item) => ({
-          productId: item.productId,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          image: item.image,
-          variantId: item.variantId ?? null,
-          variantLabel: item.variantLabel ?? null,
-        }))
+        // Re-fetch product images from Firestore (excluded from metadata to stay within 500-char limit)
+        firestoreItems = await Promise.all(
+          orderItems.map(async (item) => {
+            let image: { url: string; alt: string } | null = null
+            try {
+              const productDoc = await adminDb!.collection('products').doc(item.productId).get()
+              if (productDoc.exists) {
+                const productData = productDoc.data()
+                image = productData?.images?.[0] ?? null
+              }
+            } catch {
+              // Non-critical: order proceeds without image
+            }
+            return {
+              productId: item.productId,
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+              image,
+              variantId: item.variantId ?? null,
+              variantLabel: item.variantLabel ?? null,
+            }
+          })
+        )
 
         const orderRef = await adminDb.collection('orders').add({
           stripeSessionId: '',
@@ -324,19 +344,11 @@ export async function POST(req: Request) {
       if (resend && customerEmail) {
         try {
           if (orderItems.length > 0 && bookingResults.length > 0) {
-            // Mixed confirmation
+            // Mixed confirmation — use firestoreItems which have images fetched from Firestore
             const emailData = mixedConfirmationEmail(
               {
                 orderId: orderId || '',
-                items: orderItems.map((i) => ({
-                  productId: i.productId,
-                  name: i.name,
-                  price: i.price,
-                  quantity: i.quantity,
-                  image: i.image,
-                  variantId: i.variantId ?? null,
-                  variantLabel: i.variantLabel ?? null,
-                })),
+                items: firestoreItems,
                 subtotal,
                 shippingCost,
                 total: paymentIntent.amount,
@@ -355,18 +367,10 @@ export async function POST(req: Request) {
               text: emailData.text,
             })
           } else if (orderItems.length > 0) {
-            // Order only
+            // Order only — use firestoreItems which have images fetched from Firestore
             const emailData = orderConfirmationEmail({
               orderId: orderId || '',
-              items: orderItems.map((i) => ({
-                productId: i.productId,
-                name: i.name,
-                price: i.price,
-                quantity: i.quantity,
-                image: i.image,
-                variantId: i.variantId ?? null,
-                variantLabel: i.variantLabel ?? null,
-              })),
+              items: firestoreItems,
               subtotal,
               shippingCost,
               total: paymentIntent.amount,
@@ -417,6 +421,9 @@ export async function POST(req: Request) {
         ? charge.payment_intent
         : charge.payment_intent?.id || ''
 
+      // Determine if this is a full or partial refund
+      const isFullRefund = (charge.amount_refunded ?? 0) >= (charge.amount ?? 0)
+
       if (paymentIntentId) {
         // Find the order by PaymentIntent ID
         const ordersSnapshot = await adminDb!
@@ -429,9 +436,9 @@ export async function POST(req: Request) {
           const orderDoc = ordersSnapshot.docs[0]
           const refundAmount = charge.amount_refunded || 0
 
-          // Update order status
+          // Update order status: only cancel on full refund
           await orderDoc.ref.update({
-            status: 'cancelled',
+            status: isFullRefund ? 'cancelled' : 'partially_refunded',
           })
 
           // Log refund details
@@ -440,42 +447,45 @@ export async function POST(req: Request) {
             reason: charge.refunds?.data?.[0]?.reason || null,
             status: 'succeeded',
             stripeRefundId: charge.refunds?.data?.[0]?.id || '',
+            isFullRefund,
             createdAt: new Date(),
           })
         }
 
-        // Also restore booking seats if this payment had bookings
-        const bookingsSnapshot = await adminDb!
-          .collection('bookings')
-          .where('stripePaymentIntentId', '==', paymentIntentId)
-          .get()
+        // Only restore booking seats on full refund
+        if (isFullRefund) {
+          const bookingsSnapshot = await adminDb!
+            .collection('bookings')
+            .where('stripePaymentIntentId', '==', paymentIntentId)
+            .get()
 
-        for (const bookingDoc of bookingsSnapshot.docs) {
-          const booking = bookingDoc.data()
-          if (booking.status === 'confirmed' && booking.dateId) {
-            // Restore seats atomically (mirrors cancelBooking pattern)
-            const dateRef = adminDb!
-              .collection('experiences')
-              .doc(booking.experienceId)
-              .collection('dates')
-              .doc(booking.dateId)
+          for (const bookingDoc of bookingsSnapshot.docs) {
+            const booking = bookingDoc.data()
+            if (booking.status === 'confirmed' && booking.dateId) {
+              // Restore seats atomically (mirrors cancelBooking pattern)
+              const dateRef = adminDb!
+                .collection('experiences')
+                .doc(booking.experienceId)
+                .collection('dates')
+                .doc(booking.dateId)
 
-            await adminDb!.runTransaction(async (transaction) => {
-              const dateDoc = await transaction.get(dateRef)
-              if (!dateDoc.exists) return
-              const dateData = dateDoc.data()!
-              const currentBooked = (dateData.bookedSeats as number) || 0
-              const currentAvailable = (dateData.availableSeats as number) || 0
-              const seats = (booking.seats as number) || 1
+              await adminDb!.runTransaction(async (transaction) => {
+                const dateDoc = await transaction.get(dateRef)
+                if (!dateDoc.exists) return
+                const dateData = dateDoc.data()!
+                const currentBooked = (dateData.bookedSeats as number) || 0
+                const currentAvailable = (dateData.availableSeats as number) || 0
+                const seats = (booking.seats as number) || 1
 
-              transaction.update(dateRef, {
-                bookedSeats: Math.max(0, currentBooked - seats),
-                availableSeats: currentAvailable + seats,
+                transaction.update(dateRef, {
+                  bookedSeats: Math.max(0, currentBooked - seats),
+                  availableSeats: currentAvailable + seats,
+                })
               })
-            })
 
-            // Mark booking as cancelled
-            await bookingDoc.ref.update({ status: 'cancelled' })
+              // Mark booking as cancelled
+              await bookingDoc.ref.update({ status: 'cancelled' })
+            }
           }
         }
       }

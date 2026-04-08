@@ -1,5 +1,6 @@
 'use server'
 
+import crypto from 'crypto'
 import { z } from 'zod'
 import { stripe } from '@/lib/stripe/server'
 import { adminDb } from '@/lib/firebase/admin'
@@ -187,14 +188,14 @@ export async function createPaymentIntent(
       currency: 'nok',
       metadata: {
         type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : hasGiftCards ? 'giftcard' : 'booking',
+        // Exclude image/slug from metadata to stay within Stripe's 500-char limit per value.
+        // The webhook can re-fetch image data from Firestore by productId if needed.
         orderItems: JSON.stringify(
           productItems.map((i) => ({
             productId: i.id,
             name: i.name,
             price: i.price,
             quantity: i.quantity,
-            image: i.image,
-            slug: i.slug,
             variantId: i.variantId,
             variantLabel: i.variantLabel,
           }))
@@ -208,7 +209,6 @@ export async function createPaymentIntent(
             experienceDateId: i.experienceDateId,
             experienceDate: i.experienceDate,
             experienceName: i.experienceName ?? i.name,
-            slug: i.slug,
             isEarlybird: i.isEarlybird ?? false,
           }))
         ),
@@ -262,6 +262,10 @@ export async function updatePaymentIntentMetadata(
 
   if (!adminDb) {
     return { error: 'Systemet er ikke tilgjengelig. Prøv igjen senere.' }
+  }
+
+  if (!paymentIntentId || !paymentIntentId.startsWith('pi_')) {
+    return { error: 'Ugyldig betalings-ID.' }
   }
 
   if (!cartItems || cartItems.length === 0) {
@@ -420,11 +424,37 @@ export async function updatePaymentIntentMetadata(
         giftCardCode,
         giftCardDeduction,
       })
+
+      // Decrement stock for each product (mirrors webhook stock decrement logic)
+      for (const item of productItems) {
+        const productRef = adminDb!.collection('products').doc(item.id)
+        await adminDb!.runTransaction(async (transaction) => {
+          const productDoc = await transaction.get(productRef)
+          if (!productDoc.exists) return
+          const data = productDoc.data()!
+          const currentStock = data.stockCount ?? 0
+          const newStock = Math.max(0, currentStock - item.quantity)
+          const updates: Record<string, unknown> = {
+            stockCount: newStock,
+            inStock: newStock > 0,
+          }
+          if (item.variantId && Array.isArray(data.variants)) {
+            const variants = data.variants.map((v: { id: string; stockCount?: number }) => {
+              if (v.id === item.variantId) {
+                return { ...v, stockCount: Math.max(0, (v.stockCount ?? 0) - item.quantity) }
+              }
+              return v
+            })
+            updates.variants = variants
+          }
+          transaction.update(productRef, updates)
+        })
+      }
     }
 
     // Create bookings for experience items
     for (const item of experienceItems) {
-      const confirmationCode = Math.random().toString(36).substring(2, 10).toUpperCase()
+      const confirmationCode = crypto.randomBytes(4).toString('hex').toUpperCase()
       const dateRef = adminDb
         .collection('experiences')
         .doc(item.id)
@@ -489,14 +519,13 @@ export async function updatePaymentIntentMetadata(
       amount: total,
       metadata: {
         type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : hasGiftCards ? 'giftcard' : 'booking',
+        // Exclude image/slug from metadata to stay within Stripe's 500-char limit per value.
         orderItems: JSON.stringify(
           productItems.map((i) => ({
             productId: i.id,
             name: i.name,
             price: i.price,
             quantity: i.quantity,
-            image: i.image,
-            slug: i.slug,
             variantId: i.variantId,
             variantLabel: i.variantLabel,
           }))
@@ -510,7 +539,6 @@ export async function updatePaymentIntentMetadata(
             experienceDateId: i.experienceDateId,
             experienceDate: i.experienceDate,
             experienceName: i.experienceName ?? i.name,
-            slug: i.slug,
             isEarlybird: i.isEarlybird ?? false,
           }))
         ),
