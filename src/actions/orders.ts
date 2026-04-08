@@ -3,7 +3,8 @@
 import { adminDb } from '@/lib/firebase/admin'
 import { stripe } from '@/lib/stripe/server'
 import { verifySession } from '@/lib/dal'
-import { unstable_cache, revalidateTag } from 'next/cache'
+import { revalidateTag } from 'next/cache'
+import { getOrders as _getCachedOrders } from '@/lib/data/orders'
 import type { Order, OrderStatus, ShippingAddress, OrderNote } from '@/types'
 
 function docToOrder(id: string, data: Record<string, unknown>): Order {
@@ -56,15 +57,7 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
 }
 
 export async function getOrders(): Promise<Order[]> {
-  if (!adminDb) return []
-
-  const snapshot = await adminDb
-    .collection('orders')
-    .orderBy('createdAt', 'desc')
-    .limit(100)
-    .get()
-
-  return snapshot.docs.map((doc) => docToOrder(doc.id, doc.data()))
+  return _getCachedOrders()
 }
 
 export async function updateOrderStatus(
