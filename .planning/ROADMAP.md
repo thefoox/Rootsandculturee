@@ -40,9 +40,11 @@
 ### Phase 12: Fullstendig QA
 
 **Goal**: Ga gjennom hele nettsiden og verifiser at alt fungerer korrekt etter layout-endringene — alle sider, alle flyter, alle komponenter
-**Requirements**: TBD
+**Requirements**: QA-01, QA-02, QA-03, QA-04, QA-05, QA-06, QA-07
 **Depends on**: Phase 11
-**Plans:** TBD
+**Plans:** 3 plans
 
 Plans:
-(not yet planned)
+- [ ] 12-01-PLAN.md — Fix --color-rust token, CategoryTabs sticky offset, experience sidebar sticky offset
+- [ ] 12-02-PLAN.md — Fix HeroImage header overlap, add FilterableExperienceGrid empty state, remove DynamicPage dead code
+- [ ] 12-03-PLAN.md — Human verification checkpoint
