@@ -58,7 +58,7 @@ const _getExperiences = unstable_cache(
 export async function getExperiences(): Promise<Experience[]> {
   if (!adminDb) {
     if (process.env.NODE_ENV === 'production') {
-      throw new Error('[experiences] Firebase adminDb not initialized. Check FIREBASE_* env vars.')
+      return []
     }
     return mockExperiences
   }
@@ -83,7 +83,7 @@ const _getExperienceBySlug = unstable_cache(
 export async function getExperienceBySlug(slug: string): Promise<Experience | null> {
   if (!adminDb) {
     if (process.env.NODE_ENV === 'production') {
-      throw new Error('[experiences] Firebase adminDb not initialized. Check FIREBASE_* env vars.')
+      return []
     }
     return mockExperiences.find((e) => e.slug === slug) ?? null
   }
@@ -110,7 +110,7 @@ const _getExperienceDates = unstable_cache(
 export async function getExperienceDates(experienceId: string): Promise<ExperienceDate[]> {
   if (!adminDb) {
     if (process.env.NODE_ENV === 'production') {
-      throw new Error('[experiences] Firebase adminDb not initialized. Check FIREBASE_* env vars.')
+      return []
     }
     return mockExperienceDates.get(experienceId) ?? []
   }
