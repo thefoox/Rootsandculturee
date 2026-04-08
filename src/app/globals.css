@@ -98,6 +98,30 @@ body {
     animation-duration: revert;
     transition-duration: revert;
   }
+
+  /* Phase 11: Hero load animation */
+  @keyframes hero-enter {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Phase 11: Skeleton shimmer */
+  @keyframes shimmer {
+    0% { background-position: -400% 0; }
+    100% { background-position: 400% 0; }
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, #F5F0E8 25%, #EDE8DF 50%, #F5F0E8 75%);
+    background-size: 400% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
 }
 
 /* Cart drawer slide-in animation */
@@ -124,6 +148,7 @@ body {
   font-size: var(--text-h3);
   font-weight: 700;
   line-height: 1.25;
+  letter-spacing: -0.02em;
   margin-top: 32px;
   margin-bottom: 16px;
 }
@@ -132,6 +157,7 @@ body {
   font-size: var(--text-h4);
   font-weight: 700;
   line-height: 1.4;
+  letter-spacing: -0.015em;
   margin-top: 24px;
   margin-bottom: 8px;
 }
@@ -188,4 +214,18 @@ body {
     padding-top: 6rem;
     padding-bottom: 6rem;
   }
+}
+
+/* Phase 11: Grain texture for hero sections */
+.hero-texture {
+  position: relative;
+}
+.hero-texture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='64' height='64' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
 }
