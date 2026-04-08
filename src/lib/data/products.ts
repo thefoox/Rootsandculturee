@@ -94,7 +94,7 @@ const _getProductBySlug = unstable_cache(
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   if (!adminDb) {
     if (process.env.NODE_ENV === 'production') {
-      return []
+      return null
     }
     return mockProducts.find((p) => p.slug === slug) ?? null
   }

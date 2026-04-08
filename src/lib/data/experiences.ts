@@ -83,7 +83,7 @@ const _getExperienceBySlug = unstable_cache(
 export async function getExperienceBySlug(slug: string): Promise<Experience | null> {
   if (!adminDb) {
     if (process.env.NODE_ENV === 'production') {
-      return []
+      return null
     }
     return mockExperiences.find((e) => e.slug === slug) ?? null
   }
