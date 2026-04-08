@@ -1,31 +1,39 @@
 import { NextResponse } from 'next/server'
 import { adminDb } from '@/lib/firebase/admin'
 import { mockPageContent } from '@/lib/data/mock-data'
+import { verifySession } from '@/lib/dal'
 
 export async function GET() {
   if (!adminDb) {
-    const pages = Array.from(mockPageContent.values())
+    const pages = Array.from(mockPageContent.values()).filter((p) => p.isPublished !== false)
     return NextResponse.json(pages)
   }
 
   const snapshot = await adminDb.collection('pageContent').get()
-  const pages = snapshot.docs.map((doc) => {
-    const data = doc.data()
-    return {
-      id: doc.id,
-      title: data.title || '',
-      slug: data.slug || doc.id,
-      isPublished: data.isPublished ?? true,
-      showInNavigation: data.showInNavigation ?? false,
-      navigationOrder: data.navigationOrder ?? 0,
-      sections: data.sections || [],
-      updatedAt: data.updatedAt?.toDate() ?? new Date(),
-    }
-  })
+  const pages = snapshot.docs
+    .map((doc) => {
+      const data = doc.data()
+      return {
+        id: doc.id,
+        title: data.title || '',
+        slug: data.slug || doc.id,
+        isPublished: data.isPublished ?? true,
+        showInNavigation: data.showInNavigation ?? false,
+        navigationOrder: data.navigationOrder ?? 0,
+        sections: data.sections || [],
+        updatedAt: data.updatedAt?.toDate() ?? new Date(),
+      }
+    })
+    .filter((page) => page.isPublished !== false)
   return NextResponse.json(pages)
 }
 
 export async function POST(request: Request) {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') {
+    return NextResponse.json({ error: 'Ikke autorisert.' }, { status: 401 })
+  }
+
   const body = await request.json()
   const { title, slug } = body
 

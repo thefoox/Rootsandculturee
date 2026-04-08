@@ -40,11 +40,16 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ pageId: string }> }
 ) {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') {
+    return NextResponse.json({ error: 'Ikke autorisert.' }, { status: 401 })
+  }
+
   const { pageId } = await params
   const body = await request.json()
 
   if (!adminDb) {
-    revalidateTag('page-content', 'max')
+    revalidateTag('page-content')
     return NextResponse.json({ success: true, mock: true })
   }
 
@@ -63,7 +68,7 @@ export async function PUT(
     { merge: true }
   )
 
-  revalidateTag('page-content', 'max')
+  revalidateTag('page-content')
   return NextResponse.json({ success: true })
 }
 
@@ -79,12 +84,12 @@ export async function DELETE(
   const { pageId } = await params
 
   if (!adminDb) {
-    revalidateTag('page-content', 'max')
+    revalidateTag('page-content')
     return NextResponse.json({ success: true, mock: true })
   }
 
   await adminDb.collection('pageContent').doc(pageId).delete()
-  revalidateTag('page-content', 'max')
+  revalidateTag('page-content')
   return NextResponse.json({ success: true })
 }
 
