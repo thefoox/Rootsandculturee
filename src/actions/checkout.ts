@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { stripe } from '@/lib/stripe/server'
 import { adminDb } from '@/lib/firebase/admin'
 import { verifySession } from '@/lib/dal'
-import { validateGiftCard } from '@/lib/data/gift-cards'
+import { validateGiftCard, redeemGiftCard } from '@/lib/data/gift-cards'
 import type { CartItem } from '@/types'
 
 const shippingSchema = z.object({
@@ -255,7 +255,7 @@ export async function updatePaymentIntentMetadata(
   formData: CheckoutFormData,
   cartItems: CartItem[],
   giftCardCode?: string | null
-): Promise<{ success: true } | { error: string }> {
+): Promise<{ success: true } | { error: string } | { coveredByGiftCard: true; giftCardCode: string; totalDeducted: number }> {
   if (!stripe) {
     return { error: 'Betalingssystemet er ikke konfigurert. Kontakt oss.' }
   }
@@ -353,7 +353,7 @@ export async function updatePaymentIntentMetadata(
 
   const allItems = [...productItems, ...experienceItems, ...giftCardItems]
 
-  // Calculate totals (for metadata — amount is NOT changed on the existing PI)
+  // Calculate totals — amount will be updated on the PI if gift card applied
   const subtotal = allItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const shippingCost = hasProducts ? DEFAULT_SHIPPING_COST : 0
   let total = subtotal + shippingCost
@@ -368,6 +368,112 @@ export async function updatePaymentIntentMetadata(
     total = total - giftCardDeduction
   }
 
+  // If gift card covers the full amount, cancel PI and fulfill directly
+  if (total <= 0 && giftCardCode && giftCardDeduction > 0) {
+    try {
+      await stripe.paymentIntents.cancel(paymentIntentId)
+    } catch (cancelErr) {
+      console.error('Failed to cancel PI covered by gift card:', cancelErr)
+      // PI may already be canceled or in a non-cancelable state — continue
+    }
+    // Redeem the gift card
+    await redeemGiftCard(giftCardCode, giftCardDeduction)
+
+    // Create order/bookings directly (fulfillment without Stripe payment)
+    const customerEmail = formData.email
+    const session = await verifySession()
+    const customerId = session?.uid ?? null
+    const shippingAddress: { fullName: string; address: string; postalCode: string; city: string } | null = hasProducts
+      ? {
+          fullName: formData.fullName || '',
+          address: formData.address || '',
+          postalCode: formData.postalCode || '',
+          city: formData.city || '',
+        }
+      : null
+
+    // Create order for product items
+    if (productItems.length > 0) {
+      await adminDb.collection('orders').add({
+        stripeSessionId: '',
+        stripePaymentIntentId: paymentIntentId,
+        customerId,
+        customerEmail,
+        status: 'paid',
+        items: productItems.map((item) => ({
+          productId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image,
+          variantId: item.variantId ?? null,
+          variantLabel: item.variantLabel ?? null,
+        })),
+        shipping: shippingAddress,
+        subtotal,
+        shippingCost,
+        total: 0,
+        createdAt: new Date(),
+        paidAt: new Date(),
+        fulfilledAt: null,
+        paidByGiftCard: true,
+        giftCardCode,
+        giftCardDeduction,
+      })
+    }
+
+    // Create bookings for experience items
+    for (const item of experienceItems) {
+      const confirmationCode = Math.random().toString(36).substring(2, 10).toUpperCase()
+      const dateRef = adminDb
+        .collection('experiences')
+        .doc(item.id)
+        .collection('dates')
+        .doc(item.experienceDateId!)
+
+      await adminDb.runTransaction(async (transaction) => {
+        const dateDoc = await transaction.get(dateRef)
+        if (!dateDoc.exists) return
+        const dateData = dateDoc.data()!
+        const availableSeats = dateData.availableSeats ?? 0
+        if (availableSeats < item.quantity) return
+
+        transaction.update(dateRef, {
+          bookedSeats: (dateData.bookedSeats ?? 0) + item.quantity,
+          availableSeats: availableSeats - item.quantity,
+        })
+
+        const bookingRef = adminDb!.collection('bookings').doc()
+        transaction.set(bookingRef, {
+          confirmationCode,
+          stripeSessionId: '',
+          stripePaymentIntentId: paymentIntentId,
+          customerId,
+          customerEmail,
+          customerName: formData.fullName || '',
+          customerPhone: formData.phone || '',
+          experienceId: item.id,
+          experienceName: item.experienceName ?? item.name,
+          dateId: item.experienceDateId,
+          date: new Date(item.experienceDate || ''),
+          seats: item.quantity,
+          pricePerSeat: item.price,
+          total: item.price * item.quantity,
+          status: 'confirmed',
+          createdAt: new Date(),
+          confirmedAt: new Date(),
+          paidByGiftCard: true,
+        })
+      })
+    }
+
+    return {
+      coveredByGiftCard: true,
+      giftCardCode,
+      totalDeducted: giftCardDeduction,
+    }
+  }
+
   // Build shipping address for metadata
   const shippingAddress = hasProducts
     ? JSON.stringify({
@@ -380,6 +486,7 @@ export async function updatePaymentIntentMetadata(
 
   try {
     await stripe.paymentIntents.update(paymentIntentId, {
+      amount: total,
       metadata: {
         type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : hasGiftCards ? 'giftcard' : 'booking',
         orderItems: JSON.stringify(

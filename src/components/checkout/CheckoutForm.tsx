@@ -111,6 +111,12 @@ export function CheckoutForm({
         return
       }
 
+      // If gift card covers the full amount, skip Stripe payment
+      if ('coveredByGiftCard' in updateResult && updateResult.coveredByGiftCard) {
+        onPaymentSuccess(paymentIntentId, email)
+        return
+      }
+
       // Confirm payment with Stripe Elements (uses the same PI that was initialized)
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
         elements,
