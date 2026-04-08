@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Mail, Phone, MapPin, Clock, Instagram, Facebook } from 'lucide-react'
+import { Mail, Phone, MapPin, Clock, Globe, ExternalLink } from 'lucide-react'
 import { ContactForm } from './ContactForm'
 
 export const metadata: Metadata = {
@@ -117,11 +117,11 @@ export default function KontaktPage() {
                 <h3 className="font-heading text-h4 font-bold text-forest">Sosiale medier</h3>
                 <div className="mt-3 space-y-2">
                   <a href="#" className="flex items-center gap-3 text-body text-body/60 hover:text-forest">
-                    <Instagram className="h-5 w-5" aria-hidden="true" />
+                    <Globe className="h-5 w-5" aria-hidden="true" />
                     @rootsculture
                   </a>
                   <a href="#" className="flex items-center gap-3 text-body text-body/60 hover:text-forest">
-                    <Facebook className="h-5 w-5" aria-hidden="true" />
+                    <ExternalLink className="h-5 w-5" aria-hidden="true" />
                     Roots & Culture
                   </a>
                 </div>

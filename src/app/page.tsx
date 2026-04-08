@@ -312,7 +312,7 @@ export default async function Home() {
                     </div>
                     <div className="p-6">
                       <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-bark">
-                        {article.category || 'Artikkel'}
+                        {article.tags?.[0] || 'Artikkel'}
                       </div>
                       <h3 className="mt-2 font-heading text-h4 font-bold leading-snug text-forest">
                         {article.title}
