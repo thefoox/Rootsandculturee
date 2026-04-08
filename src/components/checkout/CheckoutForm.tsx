@@ -150,13 +150,28 @@ export function CheckoutForm({
   return (
     <div>
       {/* Step indicator */}
-      <div className="mb-8 flex items-center gap-3">
-        <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step === 1 ? 'bg-forest text-cream' : 'bg-forest/10 text-forest'}`}>
-          1
-        </div>
-        <div className="h-px flex-1 bg-forest/12" />
-        <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step === 2 ? 'bg-forest text-cream' : 'bg-forest/10 text-forest'}`}>
-          2
+      <div className="mb-8">
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col items-center gap-1">
+            <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step === 1 ? 'bg-forest text-cream' : 'bg-forest/10 text-forest'}`}>
+              1
+            </div>
+            <span className="text-label text-forest/60">Kontaktinfo</span>
+          </div>
+          {/* Connector: filled segment for completed, unfilled for upcoming */}
+          <div className="relative h-px flex-1">
+            <div className="absolute inset-0 bg-forest/12" />
+            <div
+              className="absolute inset-y-0 left-0 bg-forest motion-safe:transition-all motion-safe:duration-300"
+              style={{ width: step >= 2 ? '100%' : '0%' }}
+            />
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step === 2 ? 'bg-forest text-cream' : 'bg-forest/10 text-forest'}`}>
+              2
+            </div>
+            <span className="text-label text-forest/60">Betaling</span>
+          </div>
         </div>
       </div>
 

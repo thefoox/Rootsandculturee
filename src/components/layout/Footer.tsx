@@ -5,7 +5,7 @@ import { NewsletterSignup } from './NewsletterSignup'
 
 export function Footer() {
   return (
-    <footer className="border-t border-forest/10 bg-cream px-6 py-14 lg:px-8">
+    <footer className="border-t border-forest/10 bg-card px-6 py-14 lg:px-8">
       <div className="mx-auto max-w-[1200px]">
         {/* Logo + columns */}
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-5">
@@ -23,7 +23,7 @@ export function Footer() {
                 Roots &amp; Culture
               </span>
             </Link>
-            <p className="mt-3 text-label leading-relaxed text-body/70">
+            <p className="mt-3 text-body leading-relaxed text-body/70">
               Autentiske norske naturprodukter og opplevelser.
             </p>
           </div>
@@ -42,7 +42,7 @@ export function Footer() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-body/70 hover:text-forest hover:underline"
+                        className="text-body/70 motion-safe:transition-colors motion-safe:duration-150 hover:text-forest"
                         aria-label={`${link.label} (åpner i nytt vindu)`}
                       >
                         {link.label}
@@ -50,7 +50,7 @@ export function Footer() {
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-body/70 hover:text-forest hover:underline"
+                        className="text-body/70 motion-safe:transition-colors motion-safe:duration-150 hover:text-forest"
                       >
                         {link.label}
                       </Link>
@@ -64,18 +64,22 @@ export function Footer() {
 
         {/* Newsletter signup */}
         <div className="mt-10 border-t border-forest/8 pt-8">
-          <div className="mx-auto max-w-md">
-            <h2 className="mb-2 text-label font-bold uppercase tracking-wider text-forest">
-              Nyhetsbrev
-            </h2>
-            <p className="mb-3 text-body/70">
-              Få nyheter om produkter, opplevelser og norsk natur rett i innboksen.
-            </p>
-            <NewsletterSignup />
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="mb-2 text-label font-bold uppercase tracking-wider text-forest">
+                Nyhetsbrev
+              </h2>
+              <p className="text-body/70 max-w-sm">
+                Få nyheter om produkter, opplevelser og norsk natur rett i innboksen.
+              </p>
+            </div>
+            <div className="md:min-w-[320px]">
+              <NewsletterSignup />
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-forest/8 pt-6 text-center text-label text-body/50">
+        <div className="mt-8 border-t border-forest/8 pt-6 text-center text-label text-forest/40">
           &copy; {new Date().getFullYear()} Roots &amp; Culture. Alle rettigheter reservert.
         </div>
       </div>
