@@ -7,6 +7,7 @@ const statusConfig: Record<OrderStatus, { label: string; className: string }> = 
   shipped: { label: 'Sendt', className: 'bg-badge-warning-bg text-badge-warning' },
   delivered: { label: 'Levert', className: 'border border-forest/20 bg-card text-forest' },
   cancelled: { label: 'Avbrutt', className: 'bg-badge-error-bg text-badge-error' },
+  partially_refunded: { label: 'Delvis refundert', className: 'bg-badge-warning-bg text-badge-warning' },
 }
 
 interface OrderStatusBadgeProps {

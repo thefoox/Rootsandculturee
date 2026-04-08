@@ -24,6 +24,7 @@ const statusOptions: { value: OrderStatus; label: string }[] = [
   { value: 'shipped', label: 'Sendt' },
   { value: 'delivered', label: 'Levert' },
   { value: 'cancelled', label: 'Avbrutt' },
+  { value: 'partially_refunded', label: 'Delvis refundert' },
 ]
 
 export default function OrderDetailPage() {
