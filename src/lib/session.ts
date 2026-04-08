@@ -4,10 +4,16 @@ import { cookies } from 'next/headers'
 import type { SessionPayload } from '@/types'
 
 const secretKey = process.env.SESSION_SECRET
-if (!secretKey) {
-  throw new Error('SESSION_SECRET environment variable is required. Generate one with: openssl rand -base64 32')
+let _encodedKey: Uint8Array | null = null
+function getEncodedKey(): Uint8Array {
+  if (!_encodedKey) {
+    if (!secretKey) {
+      throw new Error('SESSION_SECRET environment variable is required. Generate one with: openssl rand -base64 32')
+    }
+    _encodedKey = new TextEncoder().encode(secretKey)
+  }
+  return _encodedKey
 }
-const encodedKey = new TextEncoder().encode(secretKey)
 const COOKIE_NAME = '__session'
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000 // 7 days in ms
 
@@ -17,7 +23,7 @@ export async function createSession(payload: Omit<SessionPayload, 'expiresAt'>) 
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(Math.floor(expiresAt / 1000))
-    .sign(encodedKey)
+    .sign(getEncodedKey())
 
   const cookieStore = await cookies()
   cookieStore.set(COOKIE_NAME, session, {
@@ -35,7 +41,7 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!cookie?.value) return null
 
   try {
-    const { payload } = await jwtVerify(cookie.value, encodedKey, {
+    const { payload } = await jwtVerify(cookie.value, getEncodedKey(), {
       algorithms: ['HS256'],
     })
     const session = payload as unknown as SessionPayload
