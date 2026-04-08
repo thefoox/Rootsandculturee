@@ -116,12 +116,12 @@ Plans:
 **Requirements**: UI11-FOUNDATIONS, UI11-FORMS, UI11-NAVIGATION, UI11-CARDS, UI11-HERO, UI11-TRUSTBAR, UI11-FOOTER, UI11-SCROLLREVEAL, UI11-CHECKOUT
 **Depends on**: Phase 9
 **UI hint**: yes
-**Plans:** 6 plans
+**Plans:** 6/6 plans complete
 
 Plans:
-- [ ] 11-01-PLAN.md — globals.css foundations: hero-enter keyframes, shimmer, hero-texture, Merriweather 300
-- [ ] 11-02-PLAN.md — Button + Input premium refinements: padding, radius, shadow, focus ring
-- [ ] 11-03-PLAN.md — Sticky header (fixed position + scroll transition) + animated nav underlines
-- [ ] 11-04-PLAN.md — Card elevation standardisation: ProductCard, ExperienceCard, ExperiencesGridSection
-- [ ] 11-05-PLAN.md — HeroSection load animation + dark TrustBarSection variant
-- [ ] 11-06-PLAN.md — Footer bg-card + newsletter layout + ScrollReveal hook + CheckoutForm step indicator
+- [x] 11-01-PLAN.md — globals.css foundations: hero-enter keyframes, shimmer, hero-texture, Merriweather 300
+- [x] 11-02-PLAN.md — Button + Input premium refinements: padding, radius, shadow, focus ring
+- [x] 11-03-PLAN.md — Sticky header (fixed position + scroll transition) + animated nav underlines
+- [x] 11-04-PLAN.md — Card elevation standardisation: ProductCard, ExperienceCard, ExperiencesGridSection
+- [x] 11-05-PLAN.md — HeroSection load animation + dark TrustBarSection variant
+- [x] 11-06-PLAN.md — Footer bg-card + newsletter layout + ScrollReveal hook + CheckoutForm step indicator
