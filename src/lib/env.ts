@@ -34,6 +34,7 @@ export function validateEnv() {
 
   if (process.env.NODE_ENV === 'production') {
     required.push('SESSION_SECRET')
+    required.push('RESEND_API_KEY') // email delivery is critical in production
   }
 
   const missing = required.filter((name) => !process.env[name])
@@ -47,7 +48,7 @@ export function validateEnv() {
   }
 
   // Warn about optional vars
-  const optional = ['RESEND_API_KEY', 'FIREBASE_PROJECT_ID']
+  const optional = ['FIREBASE_PROJECT_ID', 'RESEND_FROM_EMAIL']
   for (const name of optional) {
     if (!process.env[name]) {
       console.warn(`[env] Optional variable ${name} not set.`)
