@@ -169,7 +169,11 @@ async function getFirestoreOrderStats(): Promise<{
     return { orderCount: 0, totalRevenue: 0, averageOrder: 0 }
   }
 
-  const ordersSnap = await adminDb.collection('orders').get()
+  const ordersSnap = await adminDb
+    .collection('orders')
+    .orderBy('createdAt', 'desc')
+    .limit(500)
+    .get()
 
   let totalRevenue = 0
   for (const doc of ordersSnap.docs) {
@@ -193,6 +197,7 @@ async function getStripeOrderStats(): Promise<{
   }
 
   try {
+    // Note: Stripe list is limited to 100. For accurate revenue, use getFirestoreOrderStats.
     const paymentIntents = await stripe.paymentIntents.list({ limit: 100 })
     const succeeded = paymentIntents.data.filter((pi) => pi.status === 'succeeded')
 
