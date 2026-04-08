@@ -54,7 +54,9 @@ Plans:
 **Goal**: Fiks alle 20 bekymringer fra codebase-scan — sikkerhet, autentisering, XSS-sanitisering, security headers, booking-bug, gavekort-e-post, error monitoring, og lav-prioritet polish
 **Requirements**: SEC-01 through SEC-20
 **Depends on**: Phase 12
-**Plans:** TBD
+**Plans:** 3 plans
 
 Plans:
-(not yet planned)
+- [ ] 13-01-PLAN.md — Security: delete credentials file, auth-gate CMS write endpoints, HTTP security headers, XSS sanitization
+- [ ] 13-02-PLAN.md — Data integrity: gift card field mapping, booking seat preserve, isEarlybird metadata, revalidateTag cleanup, cached getOrders
+- [ ] 13-03-PLAN.md — Polish: error/loading pages, Stripe API pin, RESEND env validation, stats query cap, placeholder content, mock data guard
