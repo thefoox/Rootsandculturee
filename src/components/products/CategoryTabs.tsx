@@ -57,7 +57,7 @@ export function CategoryTabs({ categories, activeCategory }: CategoryTabsProps) 
 
   return (
     <div
-      className="sticky top-0 z-10 border-b border-forest/12 bg-cream py-2"
+      className="sticky top-20 z-10 border-b border-forest/12 bg-cream py-2"
       ref={tabsRef}
       role="tablist"
       aria-label="Produktkategorier"

@@ -203,7 +203,7 @@ export default async function OpplevelsDetailPage({ params }: PageProps) {
 
             {/* Right sidebar: booking widget (35%) */}
             <div className="lg:w-[35%]">
-              <div className="lg:sticky lg:top-8">
+              <div className="lg:sticky lg:top-24">
                 <div className="rounded-xl border border-forest/8 bg-card p-6">
                   <h2 className="font-heading text-lg font-bold text-forest">
                     Bestill opplevelse
