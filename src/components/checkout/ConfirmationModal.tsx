@@ -219,7 +219,11 @@ export function ConfirmationModal({
               {/* Email notice */}
               <div className="mb-6 flex items-center gap-2 text-label text-body">
                 <MailOpen className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-                <span>En bekreftelse er sendt til {customerEmail}.</span>
+                <span>
+                  {customerEmail
+                    ? `En bekreftelse er sendt til ${customerEmail}.`
+                    : 'Vi har sendt en bekreftelse til din e-postadresse.'}
+                </span>
               </div>
 
               {/* Dismiss CTA */}

@@ -72,7 +72,7 @@ export default function CheckoutPage() {
     return (
       <ConfirmationModal
         paymentIntentId={paymentIntentId}
-        customerEmail={customerEmail || 'kunde@example.com'}
+        customerEmail={customerEmail || ''}
       />
     )
   }

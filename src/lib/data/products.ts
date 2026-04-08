@@ -43,7 +43,12 @@ const _getProducts = unstable_cache(
 )
 
 export async function getProducts(): Promise<Product[]> {
-  if (!adminDb) return mockProducts
+  if (!adminDb) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('[products] Firebase adminDb not initialized. Check FIREBASE_* env vars.')
+    }
+    return mockProducts
+  }
   return _getProducts()
 }
 
@@ -62,7 +67,12 @@ const _getProductsByCategory = unstable_cache(
 )
 
 export async function getProductsByCategory(category: ProductCategory): Promise<Product[]> {
-  if (!adminDb) return mockProducts.filter((p) => p.category === category)
+  if (!adminDb) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('[products] Firebase adminDb not initialized. Check FIREBASE_* env vars.')
+    }
+    return mockProducts.filter((p) => p.category === category)
+  }
   return _getProductsByCategory(category)
 }
 
@@ -82,6 +92,11 @@ const _getProductBySlug = unstable_cache(
 )
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  if (!adminDb) return mockProducts.find((p) => p.slug === slug) ?? null
+  if (!adminDb) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('[products] Firebase adminDb not initialized. Check FIREBASE_* env vars.')
+    }
+    return mockProducts.find((p) => p.slug === slug) ?? null
+  }
   return _getProductBySlug(slug)
 }
