@@ -48,6 +48,9 @@ export function BookingInfoPanel({ selectedDate, experience }: BookingInfoPanelP
       experienceName: experience.name,
       isEarlybird: isEarlybirdActive,
       originalPrice: isEarlybirdActive ? normalPrice : null,
+      giftCardRecipientName: null,
+      giftCardRecipientEmail: null,
+      giftCardMessage: null,
     })
     toast.success(`${experience.name} lagt i handlekurven.`)
   }

@@ -53,7 +53,7 @@ export default function CheckoutPage() {
     async function initPayment() {
       try {
         const result = await createPaymentIntent(
-          { email: 'placeholder@init.no' },
+          { email: '', isInit: true },
           items
         )
         if ('clientSecret' in result) {

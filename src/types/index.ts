@@ -192,6 +192,10 @@ export interface CartItem {
   experienceName: string | null
   isEarlybird: boolean | null      // True if earlybird price was applied
   originalPrice: number | null     // Normal price before earlybird discount
+  // Gift card-specific fields (null for non-gift-card items)
+  giftCardRecipientName: string | null
+  giftCardRecipientEmail: string | null
+  giftCardMessage: string | null
 }
 
 // Phase 3: Order types

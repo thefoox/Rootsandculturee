@@ -35,6 +35,9 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       experienceName: null,
       isEarlybird: null,
       originalPrice: null,
+      giftCardRecipientName: null,
+      giftCardRecipientEmail: null,
+      giftCardMessage: null,
     })
     toast(`${product.name} lagt i handlekurven.`)
   }

@@ -43,6 +43,9 @@ export function VariantSelector({ product }: VariantSelectorProps) {
       experienceName: null,
       isEarlybird: null,
       originalPrice: null,
+      giftCardRecipientName: null,
+      giftCardRecipientEmail: null,
+      giftCardMessage: null,
     })
     const label = selectedVariant ? `${product.name} (${selectedVariant.label})` : product.name
     toast(`${label} lagt i handlekurven.`)

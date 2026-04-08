@@ -29,6 +29,7 @@ export interface CheckoutFormData {
   address?: string
   postalCode?: string
   city?: string
+  isInit?: boolean    // true for initial PI creation before user fills form
 }
 
 const DEFAULT_SHIPPING_COST = 9900 // 99 NOK in ore
@@ -56,7 +57,7 @@ export async function createPaymentIntent(
   const hasGiftCards = cartItems.some((item) => item.type === 'giftcard')
 
   // Validate form data (skip full validation for initial PaymentIntent creation)
-  const isInitCall = formData.email === 'placeholder@init.no'
+  const isInitCall = formData.isInit === true
   if (!isInitCall) {
     const schema = hasProducts ? shippingSchema : contactOnlySchema
     const validation = schema.safeParse(formData)
@@ -217,9 +218,9 @@ export async function createPaymentIntent(
             name: i.name,
           }))
         ),
-        giftCardRecipientName: giftCardItems[0]?.experienceName || '',
-        giftCardRecipientEmail: giftCardItems[0]?.experienceDate || '',
-        giftCardMessage: giftCardItems[0]?.experienceDateId || '',
+        giftCardRecipientName: giftCardItems[0]?.giftCardRecipientName || '',
+        giftCardRecipientEmail: giftCardItems[0]?.giftCardRecipientEmail || '',
+        giftCardMessage: giftCardItems[0]?.giftCardMessage || '',
         customerEmail,
         customerName: formData.fullName || '',
         customerPhone: formData.phone || '',
@@ -403,6 +404,7 @@ export async function updatePaymentIntentMetadata(
             experienceDate: i.experienceDate,
             experienceName: i.experienceName ?? i.name,
             slug: i.slug,
+            isEarlybird: i.isEarlybird ?? false,
           }))
         ),
         giftCardItems: JSON.stringify(
@@ -411,9 +413,9 @@ export async function updatePaymentIntentMetadata(
             name: i.name,
           }))
         ),
-        giftCardRecipientName: giftCardItems[0]?.experienceName || '',
-        giftCardRecipientEmail: giftCardItems[0]?.experienceDate || '',
-        giftCardMessage: giftCardItems[0]?.experienceDateId || '',
+        giftCardRecipientName: giftCardItems[0]?.giftCardRecipientName || '',
+        giftCardRecipientEmail: giftCardItems[0]?.giftCardRecipientEmail || '',
+        giftCardMessage: giftCardItems[0]?.giftCardMessage || '',
         customerEmail,
         customerName: formData.fullName || '',
         customerPhone: formData.phone || '',

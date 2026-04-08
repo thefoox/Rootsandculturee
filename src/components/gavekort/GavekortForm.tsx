@@ -73,12 +73,14 @@ export function GavekortForm() {
       slug: 'gavekort',
       variantId: null,
       variantLabel: null,
-      // Store recipient info in existing nullable fields for giftcard items
-      experienceDateId: message || null,       // greeting message
-      experienceDate: recipientEmail || null,   // recipient email
-      experienceName: recipientName || null,    // recipient name
+      experienceDateId: null,
+      experienceDate: null,
+      experienceName: null,
       isEarlybird: null,
       originalPrice: null,
+      giftCardRecipientName: recipientName || null,
+      giftCardRecipientEmail: recipientEmail || null,
+      giftCardMessage: message || null,
     })
 
     toast.success('Gavekort lagt i handlekurven.')
