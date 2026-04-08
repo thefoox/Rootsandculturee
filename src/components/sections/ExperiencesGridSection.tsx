@@ -49,7 +49,7 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
                   <Link
                     key={experience.id}
                     href={`/opplevelser/${experience.slug}`}
-                    className="group relative overflow-hidden rounded-2xl"
+                    className="group relative overflow-hidden rounded-xl"
                   >
                     <div className="relative aspect-[3/4]">
                       {mainImage ? (
@@ -63,7 +63,7 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
                       ) : (
                         <div className="h-full w-full bg-card" />
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                     </div>
                     <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                       <h3 className="font-heading text-h3 font-bold leading-tight text-cream">
@@ -81,7 +81,7 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
                           </span>
                         )}
                       </div>
-                      <p className="mt-3 font-body text-lg font-bold text-cream">
+                      <p className="mt-3 font-body text-h4 font-bold text-cream">
                         {hasEb ? (
                           <>
                             fra {formatPrice(nextDate!.earlyBirdPrice!)}{' '}

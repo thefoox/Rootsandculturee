@@ -20,9 +20,9 @@ export function ExperienceCard({ experience, nextDate }: ExperienceCardProps) {
     <Link
       href={`/opplevelser/${experience.slug}`}
       aria-label={`${experience.name}${nextDate ? `, ${formatDate(nextDate.date)}` : ''}, ${formatPrice(experience.basePrice)}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-forest/8 bg-card shadow-sm md:flex-row motion-safe:transition-all motion-safe:duration-150 hover:shadow-lg hover:-translate-y-1"
+      className="group flex flex-col overflow-hidden rounded-xl border border-forest/8 bg-card shadow-sm md:flex-row motion-safe:transition-all motion-safe:duration-200 hover:shadow-md hover:-translate-y-1"
     >
-      <div className="relative aspect-video w-full flex-shrink-0 overflow-hidden md:w-[280px] md:rounded-l-xl md:rounded-tr-none">
+      <div className="relative aspect-video w-full flex-shrink-0 overflow-hidden md:w-[320px] md:rounded-l-xl md:rounded-tr-none">
         {mainImage ? (
           <Image
             src={mainImage.url}
@@ -42,7 +42,7 @@ export function ExperienceCard({ experience, nextDate }: ExperienceCardProps) {
           {experience.name}
         </h3>
         {nextDate && (
-          <p className="mt-2 flex items-center gap-1 font-body text-label text-body">
+          <p className="mt-2 flex items-center gap-1 font-body text-label text-bark">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />
             {formatDate(nextDate.date)}
           </p>
