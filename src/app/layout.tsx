@@ -16,7 +16,7 @@ const inter = Inter({
 
 const merriweather = Merriweather({
   subsets: ['latin'],
-  weight: ['700'],
+  weight: ['300', '700'],
   variable: '--font-merriweather',
   display: 'swap',
 })
