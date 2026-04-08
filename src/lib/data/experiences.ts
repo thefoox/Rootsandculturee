@@ -62,7 +62,12 @@ export async function getExperiences(): Promise<Experience[]> {
     }
     return mockExperiences
   }
-  return _getExperiences()
+  try {
+    return await _getExperiences()
+  } catch (e) {
+    console.warn('getExperiences failed:', e)
+    return []
+  }
 }
 
 const _getExperienceBySlug = unstable_cache(
@@ -87,7 +92,12 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
     }
     return mockExperiences.find((e) => e.slug === slug) ?? null
   }
-  return _getExperienceBySlug(slug)
+  try {
+    return await _getExperienceBySlug(slug)
+  } catch (e) {
+    console.warn('getExperienceBySlug failed:', e)
+    return null
+  }
 }
 
 const _getExperienceDates = unstable_cache(
@@ -114,5 +124,10 @@ export async function getExperienceDates(experienceId: string): Promise<Experien
     }
     return mockExperienceDates.get(experienceId) ?? []
   }
-  return _getExperienceDates(experienceId)
+  try {
+    return await _getExperienceDates(experienceId)
+  } catch (e) {
+    console.warn('getExperienceDates failed:', e)
+    return []
+  }
 }

@@ -40,7 +40,12 @@ const _getArticles = unstable_cache(
 
 export async function getArticles(): Promise<Article[]> {
   if (!adminDb) return mockArticles
-  return _getArticles()
+  try {
+    return await _getArticles()
+  } catch (e) {
+    console.warn('getArticles failed, returning empty:', e)
+    return []
+  }
 }
 
 const _getArticleBySlug = unstable_cache(
@@ -60,5 +65,10 @@ const _getArticleBySlug = unstable_cache(
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   if (!adminDb) return mockArticles.find((a) => a.slug === slug) ?? null
-  return _getArticleBySlug(slug)
+  try {
+    return await _getArticleBySlug(slug)
+  } catch (e) {
+    console.warn('getArticleBySlug failed:', e)
+    return null
+  }
 }

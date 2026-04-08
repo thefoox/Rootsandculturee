@@ -41,7 +41,12 @@ const _getPageContent = unstable_cache(
 
 export async function getPageContent(pageId: string): Promise<PageContent | null> {
   if (!adminDb) return mockPageContent.get(pageId) ?? null
-  return _getPageContent(pageId)
+  try {
+    return await _getPageContent(pageId)
+  } catch (e) {
+    console.warn('getPageContent failed:', e)
+    return null
+  }
 }
 
 export function getSection(page: PageContent | null, sectionId: string): PageSection | undefined {

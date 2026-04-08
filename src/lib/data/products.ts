@@ -49,7 +49,12 @@ export async function getProducts(): Promise<Product[]> {
     }
     return mockProducts
   }
-  return _getProducts()
+  try {
+    return await _getProducts()
+  } catch (e) {
+    console.warn('getProducts failed:', e)
+    return []
+  }
 }
 
 const _getProductsByCategory = unstable_cache(
@@ -73,7 +78,12 @@ export async function getProductsByCategory(category: ProductCategory): Promise<
     }
     return mockProducts.filter((p) => p.category === category)
   }
-  return _getProductsByCategory(category)
+  try {
+    return await _getProductsByCategory(category)
+  } catch (e) {
+    console.warn('getProductsByCategory failed:', e)
+    return []
+  }
 }
 
 const _getProductBySlug = unstable_cache(
@@ -98,5 +108,10 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     }
     return mockProducts.find((p) => p.slug === slug) ?? null
   }
-  return _getProductBySlug(slug)
+  try {
+    return await _getProductBySlug(slug)
+  } catch (e) {
+    console.warn('getProductBySlug failed:', e)
+    return null
+  }
 }
