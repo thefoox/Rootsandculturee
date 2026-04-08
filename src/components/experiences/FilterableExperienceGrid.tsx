@@ -104,6 +104,19 @@ export function FilterableExperienceGrid({
 
       {/* Card grid */}
       <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
+        {filtered.length === 0 && (
+          <div className="col-span-full py-16 text-center">
+            <p className="font-body text-body text-body/60">
+              Ingen opplevelser i denne kategorien ennå.
+            </p>
+            <button
+              onClick={() => setActiveFilter('alle')}
+              className="mt-3 font-body text-label font-medium text-forest hover:underline"
+            >
+              Vis alle opplevelser
+            </button>
+          </div>
+        )}
         {filtered.map((exp) => {
           const mainImage = exp.images[0]
           const now = new Date()
