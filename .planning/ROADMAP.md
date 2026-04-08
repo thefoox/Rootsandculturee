@@ -36,3 +36,13 @@
 |-------|-----------|----------------|--------|-----------|
 | 1-6 | v1.0 | 13/13 | Complete | 2026-04-07 |
 | 7-11 | v1.1 | 19/19 | Complete | 2026-04-08 |
+
+### Phase 12: Fullstendig QA
+
+**Goal**: Ga gjennom hele nettsiden og verifiser at alt fungerer korrekt etter layout-endringene — alle sider, alle flyter, alle komponenter
+**Requirements**: TBD
+**Depends on**: Phase 11
+**Plans:** TBD
+
+Plans:
+(not yet planned)
