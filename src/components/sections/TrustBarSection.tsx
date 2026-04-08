@@ -20,7 +20,7 @@ void Leaf
 void RotateCcw
 void Mountain
 
-export function TrustBarSection({ section }: { section: PageSection }) {
+export function TrustBarSection({ section, variant = 'light' }: { section: PageSection; variant?: 'dark' | 'light' }) {
   const items = (section.items && section.items.length > 0)
     ? section.items.map((item) => ({
         icon: item.icon || 'Leaf',
@@ -30,16 +30,19 @@ export function TrustBarSection({ section }: { section: PageSection }) {
     : FALLBACK_ITEMS
 
   return (
-    <section className="border-y border-forest/8 bg-cream py-10 md:py-14">
+    <section className={variant === 'dark'
+      ? 'bg-forest py-12 md:py-16 dark-surface'
+      : 'border-y border-forest/8 bg-cream py-10 md:py-14'
+    }>
       <div className="mx-auto max-w-[1200px] px-6 md:px-8">
-        <div className="grid gap-8 sm:grid-cols-3">
+        <div className={`grid gap-8 sm:grid-cols-3 ${variant === 'dark' ? 'sm:divide-x sm:divide-cream/15' : ''}`}>
           {items.map(({ icon, label, description }) => {
             const Icon = getIcon(icon)
             return (
               <div key={label} className="flex flex-col items-center text-center">
-                {Icon && <Icon className="h-8 w-8 text-forest" aria-hidden="true" />}
-                <p className="mt-3 font-heading text-lg font-bold text-forest">{label}</p>
-                <p className="mt-1 font-body text-label text-body/70">{description}</p>
+                {Icon && <Icon className={variant === 'dark' ? 'h-10 w-10 text-cream/80' : 'h-8 w-8 text-forest'} aria-hidden="true" />}
+                <p className={`mt-3 font-heading text-lg font-bold ${variant === 'dark' ? 'text-cream' : 'text-forest'}`}>{label}</p>
+                <p className={`mt-1 font-body text-label ${variant === 'dark' ? 'text-cream/70' : 'text-body/70'}`}>{description}</p>
               </div>
             )
           })}
