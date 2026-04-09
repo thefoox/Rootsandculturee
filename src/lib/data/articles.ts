@@ -43,8 +43,8 @@ export async function getArticles(): Promise<Article[]> {
   try {
     return await _getArticles()
   } catch (e) {
-    console.warn('getArticles failed, returning empty:', e)
-    return []
+    console.warn('getArticles failed, returning mock:', e)
+    return mockArticles
   }
 }
 

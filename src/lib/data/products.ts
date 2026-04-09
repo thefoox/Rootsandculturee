@@ -44,16 +44,13 @@ const _getProducts = unstable_cache(
 
 export async function getProducts(): Promise<Product[]> {
   if (!adminDb) {
-    if (process.env.NODE_ENV === 'production') {
-      return []
-    }
     return mockProducts
   }
   try {
     return await _getProducts()
   } catch (e) {
     console.warn('getProducts failed:', e)
-    return []
+    return mockProducts
   }
 }
 
