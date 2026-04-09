@@ -46,7 +46,7 @@ export async function getPageContent(pageId: string): Promise<PageContent | null
     return await _getPageContent(pageId)
   } catch (e) {
     console.warn('getPageContent failed:', e)
-    return null
+    return mockPageContent.get(pageId) ?? null
   }
 }
 
