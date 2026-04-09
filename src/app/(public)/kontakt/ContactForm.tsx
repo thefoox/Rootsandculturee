@@ -20,10 +20,15 @@ export function ContactForm() {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
   const formRef = useRef<HTMLFormElement>(null)
 
+  const prevSuccess = useRef(false)
   useEffect(() => {
-    if (state?.success) {
+    if (state?.success && !prevSuccess.current) {
       toast.success('Melding sendt! Vi svarer deg sa snart vi kan.')
       formRef.current?.reset()
+      prevSuccess.current = true
+    }
+    if (!state?.success) {
+      prevSuccess.current = false
     }
   }, [state])
 
