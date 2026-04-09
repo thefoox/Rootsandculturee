@@ -1,6 +1,16 @@
 import type { NextConfig } from 'next'
 
 const config: NextConfig = {
+  // Proxy Firebase Auth handler to same origin — fixes signInWithRedirect/Popup
+  // on browsers that block third-party storage access (Firebase docs: redirect-best-practices)
+  async rewrites() {
+    return [
+      {
+        source: '/__/auth/:path*',
+        destination: 'https://roots-and-culture.firebaseapp.com/__/auth/:path*',
+      },
+    ]
+  },
   images: {
     remotePatterns: [
       {
