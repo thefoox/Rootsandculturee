@@ -94,30 +94,11 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
   async function handleGoogleLogin() {
     setFormError('')
     setGoogleLoading(true)
-
     try {
-      const { idToken } = await signInWithGoogle()
-      const result = await googleLoginAction(idToken)
-      if (!result.success) {
-        setFormError(result.error || 'Noe gikk galt.')
-        setGoogleLoading(false)
-        return
-      }
-
-      router.refresh()
-      onSuccess()
-    } catch (err: unknown) {
-      const firebaseError = err as { code?: string; message?: string }
-      if (firebaseError.message === 'redirect') {
-        // Redirecting to Google — don't show error
-        return
-      } else if (firebaseError.code === 'auth/popup-closed-by-user') {
-        // Bruker lukket popup — ingen feilmelding
-      } else if (firebaseError.code === 'auth/account-exists-with-different-credential') {
-        setFormError('Denne e-postadressen er allerede registrert med en annen innloggingsmetode.')
-      } else {
-        setFormError('Innlogging med Google feilet. Prøv igjen.')
-      }
+      // This redirects to Google — page will navigate away
+      await signInWithGoogle()
+    } catch {
+      setFormError('Kunne ikke starte Google-innlogging. Prøv igjen.')
       setGoogleLoading(false)
     }
   }

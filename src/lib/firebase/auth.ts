@@ -5,7 +5,6 @@ import {
   sendPasswordResetEmail,
   updateProfile,
   GoogleAuthProvider,
-  signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
 } from 'firebase/auth'
@@ -18,35 +17,21 @@ export async function signIn(email: string, password: string) {
   return { idToken, uid: credential.user.uid }
 }
 
+/**
+ * Start Google sign-in via redirect (not popup).
+ * Popup is blocked by Cross-Origin-Opener-Policy on Vercel.
+ * After Google auth, user is redirected back — call checkGoogleRedirectResult() on mount.
+ */
 export async function signInWithGoogle() {
   if (!auth) throw new Error('Firebase er ikke konfigurert. Legg til miljøvariabler.')
   const provider = new GoogleAuthProvider()
-
-  // Try popup first, fall back to redirect if COOP blocks it
-  try {
-    const credential = await signInWithPopup(auth, provider)
-    const idToken = await credential.user.getIdToken(true)
-    return {
-      idToken,
-      uid: credential.user.uid,
-      email: credential.user.email,
-      displayName: credential.user.displayName,
-    }
-  } catch (err: unknown) {
-    const error = err as { code?: string }
-    // If popup blocked by COOP or browser, use redirect
-    if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-      await signInWithRedirect(auth, provider)
-      // This won't return — page redirects to Google
-      throw new Error('redirect')
-    }
-    throw err
-  }
+  await signInWithRedirect(auth, provider)
+  // Page redirects to Google — this function never returns
 }
 
 /**
  * Check for Google redirect result on page load.
- * Call this in a useEffect to complete the redirect flow.
+ * Returns the user's idToken if they just completed a Google sign-in redirect.
  */
 export async function checkGoogleRedirectResult() {
   if (!auth) return null
