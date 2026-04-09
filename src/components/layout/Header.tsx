@@ -13,7 +13,8 @@ import { AuthModal } from '@/components/auth/AuthModal'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { RegisterForm } from '@/components/auth/RegisterForm'
 import { PasswordResetForm } from '@/components/auth/PasswordResetForm'
-import { logoutAction } from '@/actions/auth'
+import { logoutAction, googleLoginAction } from '@/actions/auth'
+import { checkGoogleRedirectResult } from '@/lib/firebase/auth'
 import { CartBadge } from '@/components/cart/CartBadge'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import { useCart } from '@/components/cart/CartProvider'
@@ -44,6 +45,21 @@ export function Header() {
       .then((r) => r.json())
       .then((data) => setIsLoggedIn(data.authenticated))
       .catch(() => setIsLoggedIn(false))
+  }, [])
+
+  // Handle Google redirect result (runs once on page load after Google redirects back)
+  useEffect(() => {
+    checkGoogleRedirectResult().then(async (result) => {
+      if (!result) return
+      try {
+        const loginResult = await googleLoginAction(result.idToken)
+        if (loginResult.success) {
+          setIsLoggedIn(true)
+        }
+      } catch {
+        // Silent fail — user can try again manually
+      }
+    })
   }, [])
 
   // Fetch dynamic navigation from CMS
