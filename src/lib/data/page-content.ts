@@ -24,6 +24,8 @@ function mapPageContent(doc: FirebaseFirestore.DocumentSnapshot): PageContent {
       items: s.items || undefined,
       ctaText: s.ctaText || undefined,
       ctaLink: s.ctaLink || undefined,
+      ctaSecondaryText: s.ctaSecondaryText || undefined,
+      ctaSecondaryLink: s.ctaSecondaryLink || undefined,
       order: typeof s.order === 'number' ? s.order : i,
     })) as PageSection[],
     updatedAt: data.updatedAt?.toDate() ?? new Date(),
