@@ -5,7 +5,8 @@ import {
   sendPasswordResetEmail,
   updateProfile,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
 } from 'firebase/auth'
 import { auth } from './client'
 
@@ -16,16 +17,28 @@ export async function signIn(email: string, password: string) {
   return { idToken, uid: credential.user.uid }
 }
 
+/**
+ * Start Google sign-in via full-page redirect.
+ * No popup, no iframe — avoids all COOP/CSP/X-Frame-Options issues.
+ */
 export async function signInWithGoogle() {
-  if (!auth) throw new Error('Firebase er ikke konfigurert. Legg til miljøvariabler.')
+  if (!auth) throw new Error('Firebase er ikke konfigurert.')
   const provider = new GoogleAuthProvider()
-  const credential = await signInWithPopup(auth, provider)
-  const idToken = await credential.user.getIdToken(true)
-  return {
-    idToken,
-    uid: credential.user.uid,
-    email: credential.user.email,
-    displayName: credential.user.displayName,
+  await signInWithRedirect(auth, provider)
+}
+
+/**
+ * Check for redirect result. Call on every page load.
+ */
+export async function getGoogleRedirectResult() {
+  if (!auth) return null
+  try {
+    const result = await getRedirectResult(auth)
+    if (!result) return null
+    const idToken = await result.user.getIdToken(true)
+    return { idToken, uid: result.user.uid, email: result.user.email, displayName: result.user.displayName }
+  } catch {
+    return null
   }
 }
 

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
 import { signUp, signInWithGoogle } from '@/lib/firebase/auth'
-import { registerAction, googleLoginAction } from '@/actions/auth'
+import { registerAction } from '@/actions/auth'
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void
@@ -74,27 +74,10 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
   async function handleGoogleSignUp() {
     setFormError('')
     setGoogleLoading(true)
-
     try {
-      const { idToken } = await signInWithGoogle()
-      const result = await googleLoginAction(idToken)
-      if (!result.success) {
-        setFormError(result.error || 'Noe gikk galt.')
-        setGoogleLoading(false)
-        return
-      }
-
-      router.refresh()
-      onSuccess()
-    } catch (err: unknown) {
-      const firebaseError = err as { code?: string }
-      if (firebaseError.code === 'auth/popup-closed-by-user') {
-        // User closed popup
-      } else if (firebaseError.code === 'auth/account-exists-with-different-credential') {
-        setFormError('Denne e-postadressen er allerede registrert med en annen innloggingsmetode.')
-      } else {
-        setFormError('Registrering med Google feilet. Prøv igjen.')
-      }
+      await signInWithGoogle()
+    } catch {
+      setFormError('Kunne ikke starte Google-registrering. Prøv igjen.')
       setGoogleLoading(false)
     }
   }

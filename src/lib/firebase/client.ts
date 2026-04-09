@@ -5,10 +5,7 @@ import { getStorage, type FirebaseStorage } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  // Use own domain for authDomain — proxied via /__/auth rewrite in next.config.ts
-  // This fixes signInWithPopup/Redirect on browsers blocking third-party storage
-  // See: https://firebase.google.com/docs/auth/web/redirect-best-practices
-  authDomain: typeof window !== 'undefined' ? window.location.host : (process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || ''),
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
