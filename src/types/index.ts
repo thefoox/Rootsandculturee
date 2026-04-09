@@ -139,6 +139,8 @@ export interface PageSection {
   items?: SectionItem[]
   ctaText?: string
   ctaLink?: string
+  ctaSecondaryText?: string
+  ctaSecondaryLink?: string
   order: number
 }
 

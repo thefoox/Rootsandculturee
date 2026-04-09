@@ -15,8 +15,9 @@ export function HeroSection({ section }: { section: PageSection }) {
 
 /** Fullscreen hero (forside-v4.html): 100vh, bottom-aligned text, dual CTA, scroll indicator */
 function FullscreenHero({ section }: { section: PageSection }) {
-  // Use items array for secondary CTA if available
-  const secondaryCta = section.items?.[0]
+  // Secondary CTA: prefer dedicated fields, fall back to items array
+  const secondaryText = section.ctaSecondaryText || section.items?.[0]?.title
+  const secondaryLink = section.ctaSecondaryLink || section.items?.[0]?.href
 
   return (
     <section className="relative flex min-h-screen items-end overflow-hidden">
@@ -67,12 +68,12 @@ function FullscreenHero({ section }: { section: PageSection }) {
               {section.ctaText}
             </Link>
           )}
-          {secondaryCta?.title && secondaryCta?.href && (
+          {secondaryText && secondaryLink && (
             <Link
-              href={secondaryCta.href}
+              href={secondaryLink}
               className="inline-flex items-center gap-2 rounded-[10px] border-[1.5px] border-cream/50 bg-cream/8 px-8 py-4 text-[0.9375rem] font-semibold text-cream backdrop-blur-sm motion-safe:transition-all hover:border-cream hover:bg-cream/15"
             >
-              {secondaryCta.title}
+              {secondaryText}
             </Link>
           )}
         </div>
