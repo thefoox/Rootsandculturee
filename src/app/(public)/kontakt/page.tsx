@@ -19,7 +19,7 @@ export default async function KontaktPage() {
   const page = await getPageContent('kontakt')
   if (!page) return <div>Innhold ikke tilgjengelig</div>
 
-  const sortedSections = page.sections.sort((a, b) => a.order - b.order)
+  const sortedSections = [...page.sections].sort((a, b) => a.order - b.order)
 
   // Split sections: render hero + contact-info first, then insert form, then faq + location
   const beforeForm = sortedSections.filter(

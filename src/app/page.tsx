@@ -61,7 +61,7 @@ export default async function Home() {
   const pageContent = await getPageContent('forside')
   if (!pageContent) return <div>Innhold ikke tilgjengelig</div>
 
-  const sortedSections = pageContent.sections.sort((a, b) => a.order - b.order)
+  const sortedSections = [...pageContent.sections].sort((a, b) => a.order - b.order)
 
   // Extract CMS sections by type for explicit ordering matching forside-v4.html
   const heroSection = sortedSections.find((s) => s.type === 'hero')

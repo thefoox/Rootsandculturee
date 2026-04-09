@@ -19,7 +19,7 @@ export default async function OmOssPage() {
   const page = await getPageContent('om-oss')
   if (!page) return <div>Innhold ikke tilgjengelig</div>
 
-  const sortedSections = page.sections.sort((a, b) => a.order - b.order)
+  const sortedSections = [...page.sections].sort((a, b) => a.order - b.order)
 
   return (
     <>
