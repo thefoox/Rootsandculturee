@@ -1,11 +1,12 @@
 import * as icons from 'lucide-react'
-import { Leaf, RotateCcw, Mountain } from 'lucide-react'
+import { Leaf, RotateCcw, Mountain, Shield } from 'lucide-react'
 import type { PageSection } from '@/types'
 
 const FALLBACK_ITEMS = [
-  { icon: 'Leaf', label: 'Lokal produksjon', description: 'Alle produkter fra norsk natur' },
-  { icon: 'RotateCcw', label: '14 dagers angrerett', description: 'Full returrett på alle produkter' },
-  { icon: 'Mountain', label: 'Norsk natur', description: 'Autentiske naturopplevelser' },
+  { icon: 'Shield', label: 'Trygg betaling' },
+  { icon: 'Leaf', label: 'Norsk kvalitet' },
+  { icon: 'Mountain', label: 'Lokale guider' },
+  { icon: 'RotateCcw', label: 'Gratis kansellering' },
 ]
 
 function getIcon(name?: string): icons.LucideIcon | null {
@@ -19,30 +20,26 @@ function getIcon(name?: string): icons.LucideIcon | null {
 void Leaf
 void RotateCcw
 void Mountain
+void Shield
 
-export function TrustBarSection({ section, variant = 'light' }: { section: PageSection; variant?: 'dark' | 'light' }) {
+export function TrustBarSection({ section }: { section: PageSection }) {
   const items = (section.items && section.items.length > 0)
     ? section.items.map((item) => ({
         icon: item.icon || 'Leaf',
         label: item.title,
-        description: item.description,
       }))
     : FALLBACK_ITEMS
 
   return (
-    <section className={variant === 'dark'
-      ? 'bg-forest py-12 md:py-16 dark-surface'
-      : 'border-y border-forest/8 bg-cream py-10 md:py-14'
-    }>
-      <div className="mx-auto max-w-[1200px] px-6 md:px-8">
-        <div className={`grid gap-8 sm:grid-cols-3 ${variant === 'dark' ? 'sm:divide-x sm:divide-cream/15' : ''}`}>
-          {items.map(({ icon, label, description }) => {
+    <section className="bg-forest py-7 border-t border-cream/5">
+      <div className="mx-auto max-w-[1200px] px-6">
+        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 max-md:justify-start max-md:gap-x-5 max-md:px-0">
+          {items.map(({ icon, label }) => {
             const Icon = getIcon(icon)
             return (
-              <div key={label} className="flex flex-col items-center text-center">
-                {Icon && <Icon className={variant === 'dark' ? 'h-10 w-10 text-cream/80' : 'h-8 w-8 text-forest'} aria-hidden="true" />}
-                <p className={`mt-3 font-heading text-lg font-bold ${variant === 'dark' ? 'text-cream' : 'text-forest'}`}>{label}</p>
-                <p className={`mt-1 font-body text-label ${variant === 'dark' ? 'text-cream/70' : 'text-body/70'}`}>{description}</p>
+              <div key={label} className="flex items-center gap-2 text-cream/65">
+                {Icon && <Icon className="h-4 w-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />}
+                <span className="text-[0.8125rem] font-medium">{label}</span>
               </div>
             )
           })}
