@@ -116,15 +116,12 @@ const _getExperienceDates = unstable_cache(
 
 export async function getExperienceDates(experienceId: string): Promise<ExperienceDate[]> {
   if (!adminDb) {
-    if (process.env.NODE_ENV === 'production') {
-      return []
-    }
     return mockExperienceDates.get(experienceId) ?? []
   }
   try {
     return await _getExperienceDates(experienceId)
   } catch (e) {
     console.warn('getExperienceDates failed:', e)
-    return []
+    return mockExperienceDates.get(experienceId) ?? []
   }
 }
