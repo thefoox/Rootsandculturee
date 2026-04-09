@@ -1,7 +1,24 @@
 import 'server-only'
+import { createPrivateKey } from 'crypto'
 import { initializeApp, getApps, cert } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { getAuth } from 'firebase-admin/auth'
+
+/**
+ * Convert any PEM private key to PKCS#8 format.
+ * Node 20+ (OpenSSL 3.0) rejects PKCS#1 keys (`BEGIN RSA PRIVATE KEY`).
+ * This normalizes to PKCS#8 (`BEGIN PRIVATE KEY`) which works on all versions.
+ */
+function normalizePem(raw: string): string {
+  const pem = raw.replace(/\\n/g, '\n')
+  try {
+    const key = createPrivateKey(pem)
+    return key.export({ type: 'pkcs8', format: 'pem' }) as string
+  } catch {
+    // If conversion fails, return as-is and let Firebase handle it
+    return pem
+  }
+}
 
 function getApp() {
   if (getApps().length > 0) return getApps()[0]
@@ -22,7 +39,7 @@ function getApp() {
       credential: cert({
         projectId,
         clientEmail,
-        privateKey: privateKey.replace(/\\n/g, '\n'),
+        privateKey: normalizePem(privateKey),
       }),
     })
   } catch (error) {

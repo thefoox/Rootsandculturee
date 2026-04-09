@@ -39,12 +39,12 @@ const _getArticles = unstable_cache(
 )
 
 export async function getArticles(): Promise<Article[]> {
-  if (!adminDb) return mockArticles
+  if (!adminDb) return []
   try {
     return await _getArticles()
   } catch (e) {
-    console.warn('getArticles failed, returning mock:', e)
-    return mockArticles
+    console.warn('getArticles failed:', e)
+    return []
   }
 }
 
