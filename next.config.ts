@@ -28,7 +28,15 @@ const config: NextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        // Allow Firebase auth iframe to be framed by own origin
+        source: '/__/auth/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+        ],
+      },
+      {
+        source: '/((?!__/auth).*)',
         headers: [
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
