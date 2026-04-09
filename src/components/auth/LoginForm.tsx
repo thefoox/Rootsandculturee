@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
-import { signIn, signInWithGoogle } from '@/lib/firebase/auth'
+import { signIn, signInWithGoogle, checkGoogleRedirectResult } from '@/lib/firebase/auth'
 import { loginAction, googleLoginAction } from '@/actions/auth'
 
 interface LoginFormProps {
@@ -22,6 +22,27 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
+
+  // Handle Google redirect result on mount (if user was redirected back)
+  useEffect(() => {
+    checkGoogleRedirectResult().then(async (result) => {
+      if (!result) return
+      setGoogleLoading(true)
+      try {
+        const loginResult = await googleLoginAction(result.idToken)
+        if (!loginResult.success) {
+          setFormError(loginResult.error || 'Noe gikk galt.')
+          setGoogleLoading(false)
+          return
+        }
+        router.refresh()
+        onSuccess()
+      } catch {
+        setFormError('Innlogging med Google feilet. Prøv igjen.')
+        setGoogleLoading(false)
+      }
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {}
@@ -86,8 +107,11 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
       router.refresh()
       onSuccess()
     } catch (err: unknown) {
-      const firebaseError = err as { code?: string }
-      if (firebaseError.code === 'auth/popup-closed-by-user') {
+      const firebaseError = err as { code?: string; message?: string }
+      if (firebaseError.message === 'redirect') {
+        // Redirecting to Google — don't show error
+        return
+      } else if (firebaseError.code === 'auth/popup-closed-by-user') {
         // Bruker lukket popup — ingen feilmelding
       } else if (firebaseError.code === 'auth/account-exists-with-different-credential') {
         setFormError('Denne e-postadressen er allerede registrert med en annen innloggingsmetode.')
