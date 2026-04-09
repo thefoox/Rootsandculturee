@@ -3,7 +3,7 @@ import { getPageContent } from '@/lib/data/page-content'
 import { SectionRenderer } from '@/components/sections/SectionRenderer'
 import { ContactForm } from './ContactForm'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Kontakt oss — Roots & Culture',

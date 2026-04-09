@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getPageContent } from '@/lib/data/page-content'
 import { SectionRenderer } from '@/components/sections/SectionRenderer'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Om oss — Roots & Culture',

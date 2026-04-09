@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Lær å sanke urter, lage mat fra naturen og opplev norsk natur på nært hold med våre kurs.',
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function KursPage() {
   const allExperiences = await getExperiences()

@@ -23,7 +23,8 @@ export async function loginAction(idToken: string): Promise<AuthResult> {
     })
 
     return { success: true }
-  } catch {
+  } catch (error) {
+    console.error('loginAction failed:', error)
     return { success: false, error: 'Feil e-post eller passord. Prover du igjen?' }
   }
 }
@@ -66,7 +67,8 @@ export async function registerAction(
     }
 
     return { success: true }
-  } catch {
+  } catch (error) {
+    console.error('registerAction failed:', error)
     return { success: false, error: 'Noe gikk galt. Sjekk internettforbindelsen og prøv på nytt.' }
   }
 }
@@ -109,7 +111,8 @@ export async function googleLoginAction(idToken: string): Promise<AuthResult> {
     })
 
     return { success: true }
-  } catch {
+  } catch (error) {
+    console.error('googleLoginAction failed:', error)
     return { success: false, error: 'Innlogging med Google feilet. Prøv igjen.' }
   }
 }
