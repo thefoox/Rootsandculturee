@@ -63,22 +63,23 @@ export default async function Home() {
 
   const sortedSections = pageContent.sections.sort((a, b) => a.order - b.order)
 
-  // Split sections: render CMS sections via SectionRenderer, interleave page-level components
-  // CMS sections: hero (0), trust-bar (1), experiences-grid (2), products-grid (3), text-image (4), articles-grid (5), cta (6)
-  // Page-level: categories (after trust-bar), testimonials (after articles-grid), newsletter (after cta)
+  // Extract CMS sections by type for explicit ordering matching forside-v4.html
   const heroSection = sortedSections.find((s) => s.type === 'hero')
   const trustBarSection = sortedSections.find((s) => s.type === 'trust-bar')
-  const remainingSections = sortedSections.filter((s) => s.type !== 'hero' && s.type !== 'trust-bar')
+  const experiencesSection = sortedSections.find((s) => s.type === 'experiences-grid')
+  const productsSection = sortedSections.find((s) => s.type === 'products-grid')
+  const articlesSection = sortedSections.find((s) => s.type === 'articles-grid')
+  const ctaSection = sortedSections.find((s) => s.type === 'cta')
 
   return (
     <>
-      {/* CMS hero */}
+      {/* 1. Hero (CMS) — fullscreen, dual CTA */}
       {heroSection && <SectionRenderer section={heroSection} />}
 
-      {/* CMS trust bar */}
+      {/* 2. Trust bar (CMS) — dark, 4 items */}
       {trustBarSection && <SectionRenderer section={trustBarSection} />}
 
-      {/* Categories — page-level (no CMS section type) */}
+      {/* 3. Categories (page-level) — 3 cards, 3/4 aspect ratio */}
       <section className="bg-cream py-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8">
           <div className="mb-12 text-center">
@@ -114,84 +115,71 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* CMS sections: grids, text-image, articles, cta */}
-      {remainingSections.map((section) => {
-        const rendered = <SectionRenderer key={section.id} section={section} />
+      {/* 4. Experiences (CMS) — filter tabs + detailed cards */}
+      {experiencesSection && <SectionRenderer section={experiencesSection} />}
 
-        // Insert testimonials after articles-grid
-        if (section.type === 'articles-grid') {
-          return (
-            <div key={section.id}>
-              {rendered}
+      {/* 5. Products (CMS) — 4-column grid */}
+      {productsSection && <SectionRenderer section={productsSection} />}
 
-              {/* Testimonials — page-level (no CMS section type) */}
-              <section className="bg-card py-24">
-                <div className="mx-auto max-w-[1200px] px-6 md:px-8">
-                  <div className="mb-12 text-center">
-                    <h2 className="font-heading text-h2 font-bold tracking-tight text-forest">
-                      Hva gjestene sier
-                    </h2>
-                  </div>
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                    {TESTIMONIALS.map((t) => (
-                      <div
-                        key={t.author}
-                        className="rounded-2xl border border-forest/4 bg-cream p-8"
-                      >
-                        <div className="text-sm tracking-wider text-[var(--color-cart-badge)]">
-                          &#9733;&#9733;&#9733;&#9733;&#9733;
-                        </div>
-                        <p className="mt-4 font-heading text-body font-light italic leading-relaxed text-forest">
-                          &laquo;{t.quote}&raquo;
-                        </p>
-                        <div className="mt-5 text-label font-semibold">{t.author}</div>
-                        <div className="text-[0.75rem] text-body/50">{t.role}</div>
-                      </div>
-                    ))}
-                  </div>
+      {/* 6. Testimonials (page-level) — 3 cards with stars */}
+      <section className="bg-card py-24">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-8">
+          <div className="mb-12 text-center">
+            <h2 className="font-heading text-h2 font-bold tracking-tight text-forest">
+              Hva gjestene sier
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {TESTIMONIALS.map((t) => (
+              <div
+                key={t.author}
+                className="rounded-2xl border border-forest/4 bg-cream p-8"
+              >
+                <div className="text-sm tracking-wider text-[var(--color-cart-badge)]">
+                  &#9733;&#9733;&#9733;&#9733;&#9733;
                 </div>
-              </section>
-            </div>
-          )
-        }
+                <p className="mt-4 font-heading text-body font-light italic leading-relaxed text-forest">
+                  &laquo;{t.quote}&raquo;
+                </p>
+                <div className="mt-5 text-label font-semibold">{t.author}</div>
+                <div className="text-[0.75rem] text-body/50">{t.role}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        // Insert newsletter after cta
-        if (section.type === 'cta') {
-          return (
-            <div key={section.id}>
-              {rendered}
+      {/* 7. Blog (CMS) — 3-column grid, first featured */}
+      {articlesSection && <SectionRenderer section={articlesSection} />}
 
-              {/* Newsletter — page-level (no CMS section type) */}
-              <section className="bg-forest py-20 text-center">
-                <div className="mx-auto max-w-[1200px] px-6 md:px-8">
-                  <h2 className="font-heading text-h2 font-bold tracking-tight text-cream">
-                    Hold deg oppdatert
-                  </h2>
-                  <p className="mt-2 text-body text-cream/65">
-                    Fa beskjed om nye opplevelser og sesong-tips
-                  </p>
-                  <div className="mx-auto mt-7 flex max-w-[480px] gap-3 rounded-xl border border-cream/10 bg-cream/8 p-1.5">
-                    <input
-                      type="email"
-                      placeholder="Din e-postadresse"
-                      className="flex-1 bg-transparent px-4 py-3.5 font-body text-body text-cream outline-none placeholder:text-cream/35"
-                      aria-label="E-postadresse for nyhetsbrev"
-                    />
-                    <button className="whitespace-nowrap rounded-lg bg-cream px-6 py-3.5 text-label font-semibold text-forest motion-safe:transition-opacity hover:opacity-90">
-                      Meld meg pa
-                    </button>
-                  </div>
-                  <p className="mt-3 text-[0.75rem] text-cream/35">
-                    Vi sender maks 2 e-poster i maneden. Ingen spam.
-                  </p>
-                </div>
-              </section>
-            </div>
-          )
-        }
+      {/* 8. Newsletter (page-level) — dark forest bg */}
+      <section className="bg-forest py-20 text-center">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-8">
+          <h2 className="font-heading text-h2 font-bold tracking-tight text-cream">
+            Hold deg oppdatert
+          </h2>
+          <p className="mt-2 text-body text-cream/65">
+            Fa beskjed om nye opplevelser og sesong-tips
+          </p>
+          <div className="mx-auto mt-7 flex max-w-[480px] gap-3 rounded-xl border border-cream/10 bg-cream/8 p-1.5">
+            <input
+              type="email"
+              placeholder="Din e-postadresse"
+              className="flex-1 bg-transparent px-4 py-3.5 font-body text-body text-cream outline-none placeholder:text-cream/35"
+              aria-label="E-postadresse for nyhetsbrev"
+            />
+            <button className="whitespace-nowrap rounded-lg bg-cream px-6 py-3.5 text-label font-semibold text-forest motion-safe:transition-opacity hover:opacity-90">
+              Meld meg pa
+            </button>
+          </div>
+          <p className="mt-3 text-[0.75rem] text-cream/35">
+            Vi sender maks 2 e-poster i maneden. Ingen spam.
+          </p>
+        </div>
+      </section>
 
-        return rendered
-      })}
+      {/* 9. CTA banner (CMS) — bg image */}
+      {ctaSection && <SectionRenderer section={ctaSection} />}
     </>
   )
 }
