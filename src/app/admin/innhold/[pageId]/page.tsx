@@ -48,7 +48,7 @@ const ALL_SECTION_TYPES = Object.keys(SECTION_TYPE_LABELS) as SectionType[]
 
 function createDefaultSection(type: SectionType, order: number): PageSection {
   const base: PageSection = {
-    id: `section-${Date.now()}`,
+    id: `section-${crypto.randomUUID()}`,
     type,
     heading: '',
     order,
