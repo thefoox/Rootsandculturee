@@ -66,9 +66,21 @@ Plans:
 **Goal**: Fiks alle avdekkede feil fra komplett revisjon — kritiske betalingsfeil (gavekort + variant-lager), Google-innlogging, og gjor om-oss/kontakt/forside til fullt CMS-styrte sider
 **Requirements**: REV-01 (CMS dynamiske seksjoner), REV-02 (Kritiske betalingsfeil), REV-03 (Google-innlogging), REV-04 (Dataintegritet og opprydding)
 **Depends on**: Phase 13
+**Plans:** 3/3 plans complete
+
+Plans:
+- [x] 14-01-PLAN.md — Critical: gift card PI amount fix, variant stock decrement, Google login CSP, session module safety
+- [x] 14-02-PLAN.md — CMS: convert om-oss, kontakt, forside to fully dynamic SectionRenderer pages + fix imagePosition
+- [x] 14-03-PLAN.md — Integrity: refund seat restore, dead code cleanup, middleware, Stripe API version
+
+### Phase 15: Redesign hovedsider
+
+**Goal**: Bygg om forside, kontakt og om-oss med nye layouts fra HTML-prototyper — fullscreen hero, filtrerbare opplevelseskort, overlappende story-layout, kontaktkort, FAQ-grid. Alle seksjoner CMS-styrte via SectionRenderer med oppdaterte section-komponenter.
+**Requirements**: RD-01 (Forside redesign), RD-02 (Kontakt redesign), RD-03 (Om-oss redesign)
+**Depends on**: Phase 14
 **Plans:** 0/3 plans complete
 
 Plans:
-- [ ] 14-01-PLAN.md — Critical: gift card PI amount fix, variant stock decrement, Google login CSP, session module safety
-- [ ] 14-02-PLAN.md — CMS: convert om-oss, kontakt, forside to fully dynamic SectionRenderer pages + fix imagePosition
-- [ ] 14-03-PLAN.md — Integrity: refund seat restore, dead code cleanup, middleware, Stripe API version
+- [ ] 15-01-PLAN.md — Oppgrader section-komponenter: HeroSection (fullscreen bunn-tekst + compact variant), TrustBarSection (dark inline), ExperiencesGridSection (filter-tabs + detaljkort), FaqSection (2-kolonne kort), ContactInfoSection (overlappende kort), TeamSection (foto-strip), ny LocationSection
+- [ ] 15-02-PLAN.md — Bygg om forside (page.tsx) med forside-v4 layout: fullscreen hero, dark trust bar, kategori-kort, filter-opplevelser, produkter 4-grid, testimonials, blogg, nyhetsbrev
+- [ ] 15-03-PLAN.md — Bygg om kontakt og om-oss: kontakt-v2 (compact hero + overlappende kort + skjema + FAQ-grid + lokasjon) og om-oss (centered hero + overlappende story + verdier + team + lokasjon dark + CTA)
