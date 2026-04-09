@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roots & Culture — Layout Explorer</title>
+<style>
+  :root {
+    --forest: #1a3a2a;
+    --cream: #faf6f0;
+    --rust: #a0522d;
+    --burnt-orange: #cc7733;
+    --warm-brown: #8b6914;
+    --body-text: #3d3d3d;
+    --ui-bg: #111;
+    --ui-surface: #1a1a1a;
+    --ui-border: #333;
+    --ui-text: #ccc;
+    --ui-accent: #7ec8a0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--ui-bg);
+    color: var(--ui-text);
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: 1fr auto;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Controls panel */
+  .controls {
+    grid-row: 1 / 3;
+    overflow-y: auto;
+    padding: 16px;
+    border-right: 1px solid var(--ui-border);
+    background: var(--ui-surface);
+  }
+
+  .controls h1 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ui-accent);
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .controls h2 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin: 20px 0 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--ui-border);
+  }
+
+  .control-group { margin-bottom: 12px; }
+
+  .control-group label {
+    display: block;
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 4px;
+  }
+
+  .control-group select,
+  .control-group input[type="range"] {
+    width: 100%;
+  }
+
+  select {
+    background: var(--ui-bg);
+    color: var(--ui-text);
+    border: 1px solid var(--ui-border);
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  input[type="range"] {
+    accent-color: var(--ui-accent);
+    cursor: pointer;
+  }
+
+  .range-val {
+    font-size: 11px;
+    color: var(--ui-accent);
+    float: right;
+  }
+
+  /* Presets */
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .preset-btn {
+    background: var(--ui-bg);
+    color: var(--ui-text);
+    border: 1px solid var(--ui-border);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .preset-btn:hover, .preset-btn.active {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+  }
+
+  /* Page selector tabs */
+  .page-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .page-tab {
+    background: var(--ui-bg);
+    color: #888;
+    border: 1px solid var(--ui-border);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .page-tab:hover { color: var(--ui-text); }
+  .page-tab.active {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    background: rgba(126,200,160,0.1);
+  }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .toggle-row label { margin-bottom: 0; }
+
+  .toggle {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .toggle input { display: none; }
+
+  .toggle span {
+    position: absolute;
+    inset: 0;
+    background: #444;
+    border-radius: 10px;
+    transition: 0.2s;
+  }
+
+  .toggle span::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+
+  .toggle input:checked + span { background: var(--ui-accent); }
+  .toggle input:checked + span::after { left: 18px; }
+
+  /* Preview */
+  .preview-area {
+    overflow-y: auto;
+    background: #222;
+    position: relative;
+  }
+
+  .preview-frame {
+    margin: 0 auto;
+    background: var(--cream);
+    min-height: 100%;
+    transition: max-width 0.3s;
+    overflow: hidden;
+  }
+
+  /* Prompt output */
+  .prompt-area {
+    border-top: 1px solid var(--ui-border);
+    padding: 12px 16px;
+    background: var(--ui-surface);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    max-height: 140px;
+    overflow-y: auto;
+  }
+
+  .prompt-text {
+    flex: 1;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #bbb;
+    white-space: pre-wrap;
+  }
+
+  .copy-btn {
+    background: var(--ui-accent);
+    color: #111;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .copy-btn:hover { opacity: 0.85; }
+
+  /* ===== PREVIEW STYLES ===== */
+  .p-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--px);
+    height: var(--nav-h);
+    border-bottom: 1px solid rgba(26,58,42,0.08);
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .p-logo {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--forest);
+    font-family: var(--heading-font);
+  }
+
+  .p-nav-links {
+    display: flex;
+    gap: 24px;
+    font-size: 14px;
+    color: var(--forest);
+  }
+
+  .p-nav-links span { opacity: 0.7; cursor: pointer; }
+  .p-nav-links span:hover { opacity: 1; }
+
+  /* Hero */
+  .p-hero {
+    position: relative;
+    height: var(--hero-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .p-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--forest) 0%, #2d5a3f 50%, var(--rust) 100%);
+  }
+
+  .p-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,var(--hero-overlay));
+  }
+
+  .p-hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 0 var(--px);
+    max-width: 640px;
+  }
+
+  .p-hero h1 {
+    font-family: var(--heading-font);
+    font-size: var(--hero-font);
+    font-weight: 700;
+    color: white;
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+
+  .p-hero p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .p-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: var(--btn-radius);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: 0.15s;
+  }
+
+  .p-btn-primary {
+    background: var(--rust);
+    color: white;
+  }
+
+  .p-btn-outline {
+    background: transparent;
+    color: var(--forest);
+    border: 2px solid var(--forest);
+  }
+
+  /* Section */
+  .p-section {
+    padding: var(--section-py) var(--px);
+    max-width: var(--content-w);
+    margin: 0 auto;
+  }
+
+  .p-section h2 {
+    font-family: var(--heading-font);
+    font-size: var(--h2-size);
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 8px;
+  }
+
+  .p-section .subtitle {
+    font-size: 15px;
+    color: var(--body-text);
+    opacity: 0.7;
+    margin-bottom: var(--grid-gap);
+  }
+
+  /* Grid */
+  .p-grid {
+    display: grid;
+    gap: var(--grid-gap);
+  }
+
+  .p-grid-3 { grid-template-columns: repeat(var(--grid-cols), 1fr); }
+  .p-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+  /* Card */
+  .p-card {
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    background: white;
+    transition: 0.2s;
+  }
+
+  .p-card-shadow { box-shadow: var(--card-shadow); }
+  .p-card-border { border: 1px solid rgba(26,58,42,0.1); }
+
+  .p-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  .p-card-img {
+    width: 100%;
+    aspect-ratio: var(--card-ratio);
+    background: linear-gradient(135deg, var(--forest), #3d7a5a);
+    position: relative;
+  }
+
+  .p-card-img.rust { background: linear-gradient(135deg, var(--rust), var(--burnt-orange)); }
+  .p-card-img.brown { background: linear-gradient(135deg, var(--warm-brown), #a88a3d); }
+
+  .p-card-body { padding: var(--card-padding); }
+
+  .p-card-body h3 {
+    font-family: var(--heading-font);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--forest);
+    margin-bottom: 6px;
+  }
+
+  .p-card-body p {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+
+  .p-card-body .price {
+    font-weight: 700;
+    color: var(--forest);
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  /* Product detail */
+  .p-product-layout {
+    display: grid;
+    gap: var(--grid-gap);
+    max-width: var(--content-w);
+    margin: 0 auto;
+    padding: var(--section-py) var(--px);
+  }
+
+  .p-product-layout.side { grid-template-columns: 1.2fr 1fr; }
+  .p-product-layout.top { grid-template-columns: 1fr; }
+
+  .p-product-gallery {
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--forest), #3d7a5a);
+    border-radius: var(--card-radius);
+  }
+
+  .p-product-info h1 {
+    font-family: var(--heading-font);
+    font-size: var(--h2-size);
+    color: var(--forest);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .p-product-info .price {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 16px;
+  }
+
+  .p-product-info .desc {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .p-variant-btns {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .p-variant-btn {
+    padding: 8px 16px;
+    border-radius: var(--btn-radius);
+    border: 2px solid var(--forest);
+    font-size: 13px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--forest);
+    font-weight: 500;
+  }
+
+  .p-variant-btn.selected {
+    background: var(--forest);
+    color: white;
+  }
+
+  /* Checkout */
+  .p-checkout {
+    max-width: var(--content-w);
+    margin: 0 auto;
+    padding: var(--section-py) var(--px);
+    display: grid;
+    gap: var(--grid-gap);
+  }
+
+  .p-checkout.side { grid-template-columns: 1.2fr 0.8fr; }
+  .p-checkout.stacked { grid-template-columns: 1fr; max-width: 640px; }
+
+  .p-form-section {
+    margin-bottom: 24px;
+  }
+
+  .p-form-section h2 {
+    font-family: var(--heading-font);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 12px;
+  }
+
+  .p-input {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid rgba(26,58,42,0.2);
+    border-radius: var(--btn-radius);
+    font-size: 14px;
+    margin-bottom: 10px;
+    background: white;
+    color: var(--forest);
+  }
+
+  .p-input::placeholder { color: #aaa; }
+
+  .p-input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .p-order-summary {
+    background: rgba(26,58,42,0.03);
+    border-radius: var(--card-radius);
+    padding: 20px;
+    border: 1px solid rgba(26,58,42,0.08);
+  }
+
+  .p-order-summary h2 {
+    font-family: var(--heading-font);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 16px;
+  }
+
+  .p-order-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--body-text);
+    margin-bottom: 8px;
+  }
+
+  .p-order-line.total {
+    font-weight: 700;
+    color: var(--forest);
+    font-size: 16px;
+    border-top: 1px solid rgba(26,58,42,0.1);
+    padding-top: 8px;
+    margin-top: 8px;
+  }
+
+  /* Footer */
+  .p-footer {
+    background: var(--forest);
+    color: rgba(255,255,255,0.7);
+    padding: 40px var(--px);
+    font-size: 13px;
+  }
+
+  .p-footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 32px;
+    max-width: var(--content-w);
+    margin: 0 auto;
+  }
+
+  .p-footer h3 {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .p-footer p, .p-footer a { line-height: 2; }
+
+  /* Text-image section */
+  .p-text-image {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--grid-gap);
+    align-items: center;
+    max-width: var(--content-w);
+    margin: 0 auto;
+    padding: var(--section-py) var(--px);
+  }
+
+  .p-text-image.reverse .p-ti-image { order: -1; }
+
+  .p-ti-text h2 {
+    font-family: var(--heading-font);
+    font-size: var(--h2-size);
+    color: var(--forest);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .p-ti-text p {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .p-ti-image {
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--rust), var(--burnt-orange));
+    border-radius: var(--card-radius);
+  }
+</style>
+</head>
+<body>
+  <!-- Controls -->
+  <div class="controls">
+    <h1>Roots & Culture</h1>
+
+    <div class="page-tabs" id="pageTabs"></div>
+
+    <h2>Forhåndsvisninger</h2>
+    <div class="presets" id="presets"></div>
+
+    <h2>Layout</h2>
+    <div class="control-group">
+      <label>Innholdsbredde <span class="range-val" id="contentWVal"></span></label>
+      <input type="range" id="contentW" min="800" max="1400" step="50">
+    </div>
+    <div class="control-group">
+      <label>Sidepadding <span class="range-val" id="pxVal"></span></label>
+      <input type="range" id="px" min="16" max="64" step="4">
+    </div>
+    <div class="control-group">
+      <label>Seksjon-mellomrom <span class="range-val" id="sectionPyVal"></span></label>
+      <input type="range" id="sectionPy" min="32" max="96" step="8">
+    </div>
+    <div class="control-group">
+      <label>Grid-kolonner <span class="range-val" id="gridColsVal"></span></label>
+      <input type="range" id="gridCols" min="2" max="4" step="1">
+    </div>
+    <div class="control-group">
+      <label>Grid-gap <span class="range-val" id="gridGapVal"></span></label>
+      <input type="range" id="gridGap" min="12" max="40" step="4">
+    </div>
+
+    <h2>Hero</h2>
+    <div class="control-group">
+      <label>Hero-hoyde <span class="range-val" id="heroHVal"></span></label>
+      <input type="range" id="heroH" min="300" max="700" step="25">
+    </div>
+    <div class="control-group">
+      <label>Hero-font <span class="range-val" id="heroFontVal"></span></label>
+      <input type="range" id="heroFont" min="28" max="56" step="2">
+    </div>
+    <div class="control-group">
+      <label>Overlay-styrke <span class="range-val" id="heroOverlayVal"></span></label>
+      <input type="range" id="heroOverlay" min="0" max="60" step="5">
+    </div>
+
+    <h2>Typografi</h2>
+    <div class="control-group">
+      <label>Heading-font</label>
+      <select id="headingFont">
+        <option value="Georgia, serif">Georgia (serif)</option>
+        <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+        <option value="-apple-system, sans-serif">System (sans)</option>
+        <option value="'DM Serif Display', Georgia, serif">DM Serif Display</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>H2-storrelse <span class="range-val" id="h2SizeVal"></span></label>
+      <input type="range" id="h2Size" min="20" max="36" step="2">
+    </div>
+
+    <h2>Kort</h2>
+    <div class="control-group">
+      <label>Kort-radius <span class="range-val" id="cardRadiusVal"></span></label>
+      <input type="range" id="cardRadius" min="0" max="20" step="2">
+    </div>
+    <div class="control-group">
+      <label>Kort-padding <span class="range-val" id="cardPaddingVal"></span></label>
+      <input type="range" id="cardPadding" min="12" max="28" step="2">
+    </div>
+    <div class="control-group">
+      <label>Bilde-ratio</label>
+      <select id="cardRatio">
+        <option value="3/2">3:2 (landskap)</option>
+        <option value="4/3">4:3</option>
+        <option value="1/1">1:1 (kvadrat)</option>
+        <option value="16/9">16:9 (vid)</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Kort-stil</label>
+      <select id="cardStyle">
+        <option value="shadow">Skygge</option>
+        <option value="border">Kantlinje</option>
+        <option value="flat">Flat</option>
+      </select>
+    </div>
+
+    <h2>Knapper</h2>
+    <div class="control-group">
+      <label>Knapp-radius <span class="range-val" id="btnRadiusVal"></span></label>
+      <input type="range" id="btnRadius" min="0" max="24" step="2">
+    </div>
+
+    <h2>Produktside</h2>
+    <div class="control-group">
+      <label>Layout</label>
+      <select id="productLayout">
+        <option value="side">Side ved side</option>
+        <option value="top">Bilde over</option>
+      </select>
+    </div>
+
+    <h2>Kasse</h2>
+    <div class="control-group">
+      <label>Layout</label>
+      <select id="checkoutLayout">
+        <option value="side">To kolonner</option>
+        <option value="stacked">En kolonne</option>
+      </select>
+    </div>
+
+    <div style="height: 60px"></div>
+  </div>
+
+  <!-- Preview -->
+  <div class="preview-area">
+    <div class="preview-frame" id="previewFrame"></div>
+  </div>
+
+  <!-- Prompt output -->
+  <div class="prompt-area">
+    <div class="prompt-text" id="promptText"></div>
+    <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Kopier</button>
+  </div>
+
+<script>
+const DEFAULTS = {
+  contentW: 1200, px: 32, sectionPy: 64, gridCols: 3, gridGap: 24,
+  heroH: 500, heroFont: 40, heroOverlay: 25,
+  headingFont: 'Georgia, serif', h2Size: 28,
+  cardRadius: 8, cardPadding: 16, cardRatio: '3/2', cardStyle: 'shadow',
+  btnRadius: 6, productLayout: 'side', checkoutLayout: 'side'
+};
+
+const PRESETS = {
+  'Organisk': {
+    contentW: 1100, px: 40, sectionPy: 72, gridCols: 3, gridGap: 28,
+    heroH: 550, heroFont: 44, heroOverlay: 20,
+    headingFont: "'Playfair Display', Georgia, serif", h2Size: 30,
+    cardRadius: 16, cardPadding: 20, cardRatio: '3/2', cardStyle: 'shadow',
+    btnRadius: 20, productLayout: 'side', checkoutLayout: 'side'
+  },
+  'Minimalistisk': {
+    contentW: 1000, px: 32, sectionPy: 56, gridCols: 3, gridGap: 20,
+    heroH: 400, heroFont: 36, heroOverlay: 30,
+    headingFont: "-apple-system, sans-serif", h2Size: 24,
+    cardRadius: 0, cardPadding: 16, cardRatio: '16/9', cardStyle: 'border',
+    btnRadius: 0, productLayout: 'side', checkoutLayout: 'stacked'
+  },
+  'Varm & Romslig': {
+    contentW: 1300, px: 48, sectionPy: 80, gridCols: 3, gridGap: 32,
+    heroH: 600, heroFont: 48, heroOverlay: 15,
+    headingFont: "'DM Serif Display', Georgia, serif", h2Size: 32,
+    cardRadius: 12, cardPadding: 24, cardRatio: '4/3', cardStyle: 'shadow',
+    btnRadius: 8, productLayout: 'side', checkoutLayout: 'side'
+  },
+  'Kompakt': {
+    contentW: 900, px: 24, sectionPy: 40, gridCols: 4, gridGap: 16,
+    heroH: 350, heroFont: 32, heroOverlay: 35,
+    headingFont: "-apple-system, sans-serif", h2Size: 22,
+    cardRadius: 6, cardPadding: 12, cardRatio: '1/1', cardStyle: 'flat',
+    btnRadius: 4, productLayout: 'top', checkoutLayout: 'stacked'
+  },
+  'Nordisk': {
+    contentW: 1200, px: 40, sectionPy: 64, gridCols: 3, gridGap: 24,
+    heroH: 480, heroFont: 42, heroOverlay: 25,
+    headingFont: "Georgia, serif", h2Size: 28,
+    cardRadius: 8, cardPadding: 16, cardRatio: '3/2', cardStyle: 'shadow',
+    btnRadius: 6, productLayout: 'side', checkoutLayout: 'side'
+  }
+};
+
+const PAGES = ['Forside', 'Produkter', 'Produktdetalj', 'Opplevelser', 'Kasse'];
+let activePage = 'Forside';
+const state = { ...DEFAULTS };
+
+// Build UI
+const tabsEl = document.getElementById('pageTabs');
+PAGES.forEach(p => {
+  const btn = document.createElement('button');
+  btn.className = 'page-tab' + (p === activePage ? ' active' : '');
+  btn.textContent = p;
+  btn.onclick = () => { activePage = p; updateTabs(); updateAll(); };
+  tabsEl.appendChild(btn);
+});
+
+const presetsEl = document.getElementById('presets');
+Object.keys(PRESETS).forEach(name => {
+  const btn = document.createElement('button');
+  btn.className = 'preset-btn';
+  btn.textContent = name;
+  btn.onclick = () => {
+    Object.assign(state, PRESETS[name]);
+    syncControls();
+    updateAll();
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  };
+  presetsEl.appendChild(btn);
+});
+
+function updateTabs() {
+  tabsEl.querySelectorAll('.page-tab').forEach(t => {
+    t.classList.toggle('active', t.textContent === activePage);
+  });
+}
+
+// Bind controls
+const controls = {
+  contentW: 'range', px: 'range', sectionPy: 'range', gridCols: 'range', gridGap: 'range',
+  heroH: 'range', heroFont: 'range', heroOverlay: 'range',
+  headingFont: 'select', h2Size: 'range',
+  cardRadius: 'range', cardPadding: 'range', cardRatio: 'select', cardStyle: 'select',
+  btnRadius: 'range', productLayout: 'select', checkoutLayout: 'select'
+};
+
+Object.entries(controls).forEach(([key, type]) => {
+  const el = document.getElementById(key);
+  const handler = () => {
+    state[key] = type === 'range' ? parseInt(el.value) : el.value;
+    if (type === 'range') {
+      const unit = ['heroOverlay'].includes(key) ? '%' : 'px';
+      const val = key === 'gridCols' ? el.value : el.value + unit;
+      document.getElementById(key + 'Val').textContent = val;
+    }
+    updateAll();
+  };
+  el.addEventListener('input', handler);
+});
+
+function syncControls() {
+  Object.entries(controls).forEach(([key, type]) => {
+    const el = document.getElementById(key);
+    el.value = state[key];
+    if (type === 'range') {
+      const unit = ['heroOverlay'].includes(key) ? '%' : 'px';
+      const val = key === 'gridCols' ? state[key] : state[key] + unit;
+      document.getElementById(key + 'Val').textContent = val;
+    }
+  });
+}
+
+function updateAll() {
+  renderPreview();
+  updatePrompt();
+}
+
+function cardClass() {
+  if (state.cardStyle === 'shadow') return 'p-card p-card-shadow';
+  if (state.cardStyle === 'border') return 'p-card p-card-border';
+  return 'p-card';
+}
+
+function renderPreview() {
+  const frame = document.getElementById('previewFrame');
+  frame.style.setProperty('--content-w', state.contentW + 'px');
+  frame.style.setProperty('--px', state.px + 'px');
+  frame.style.setProperty('--section-py', state.sectionPy + 'px');
+  frame.style.setProperty('--grid-cols', state.gridCols);
+  frame.style.setProperty('--grid-gap', state.gridGap + 'px');
+  frame.style.setProperty('--hero-h', state.heroH + 'px');
+  frame.style.setProperty('--hero-font', state.heroFont + 'px');
+  frame.style.setProperty('--hero-overlay', state.heroOverlay / 100);
+  frame.style.setProperty('--heading-font', state.headingFont);
+  frame.style.setProperty('--h2-size', state.h2Size + 'px');
+  frame.style.setProperty('--card-radius', state.cardRadius + 'px');
+  frame.style.setProperty('--card-padding', state.cardPadding + 'px');
+  frame.style.setProperty('--card-ratio', state.cardRatio);
+  frame.style.setProperty('--card-shadow', '0 2px 12px rgba(0,0,0,0.06)');
+  frame.style.setProperty('--btn-radius', state.btnRadius + 'px');
+  frame.style.setProperty('--nav-h', '60px');
+
+  const nav = `
+    <div class="p-nav">
+      <div class="p-logo">Roots & Culture</div>
+      <div class="p-nav-links">
+        <span>Produkter</span><span>Opplevelser</span><span>Blogg</span><span>Om oss</span><span>Kontakt</span>
+      </div>
+    </div>`;
+
+  const footer = `
+    <div class="p-footer">
+      <div class="p-footer-grid">
+        <div><strong style="color:white;font-size:15px">Roots & Culture</strong><p style="margin-top:8px">Autentiske norske naturprodukter og opplevelser.</p></div>
+        <div><h3>Utforsk</h3><p>Produkter<br>Opplevelser<br>Gavekort<br>Blogg</p></div>
+        <div><h3>Kundeservice</h3><p>Kontakt oss<br>Frakt og retur<br>Personvern<br>Vilkar</p></div>
+        <div><h3>Kontakt</h3><p>post@rootsculture.no</p></div>
+      </div>
+    </div>`;
+
+  let html = nav;
+
+  if (activePage === 'Forside') {
+    html += `
+      <div class="p-hero">
+        <div class="p-hero-bg"></div>
+        <div class="p-hero-overlay"></div>
+        <div class="p-hero-content">
+          <h1>Opplev norsk natur og kultur</h1>
+          <p>Handplukkede naturprodukter og unike opplevelser med rot i norsk tradisjon.</p>
+          <button class="p-btn p-btn-primary" style="border-radius:var(--btn-radius)">Utforsk produkter</button>
+        </div>
+      </div>
+      <div class="p-section">
+        <h2>Produkter</h2>
+        <p class="subtitle">Naturlige drikker, te og ville vekster fra norsk natur</p>
+        <div class="p-grid p-grid-3">
+          ${productCard('Tors Ild', '179 kr', 'Naturlig styrkedrikk med ville vekster', '')}
+          ${productCard('Fjellurt-te', '89 kr', 'Aromatisk urteblanding fra norske fjell', 'rust')}
+          ${productCard('Villblomst-honning', '199 kr', 'Ra honning fra ville blomsterenger', 'brown')}
+        </div>
+      </div>
+      <div class="p-text-image">
+        <div class="p-ti-text">
+          <h2>Vare opplevelser</h2>
+          <p>Fra naturretreater i stille skoger til matopplevelser med ville vekster. Vi tilbyr autentiske opplevelser som forbinder deg med norsk natur og kultur.</p>
+          <button class="p-btn p-btn-outline" style="border-radius:var(--btn-radius)">Se opplevelser</button>
+        </div>
+        <div class="p-ti-image"></div>
+      </div>
+      <div class="p-section">
+        <h2>Opplevelser</h2>
+        <p class="subtitle">Retreater, kurs og matopplevelser i norsk natur</p>
+        <div class="p-grid p-grid-3">
+          ${expCard('Tidlig var-retreat', 'Fra 2 490 kr', '3 dager i naturen')}
+          ${expCard('Sommer-retreat', 'Fra 2 990 kr', 'Midtsommerfeiring', 'rust')}
+          ${expCard('Forsommer-retreat', 'Fra 2 690 kr', 'Ville vekster og stillhet', 'brown')}
+        </div>
+      </div>`;
+  } else if (activePage === 'Produkter') {
+    html += `
+      <div class="p-section">
+        <h2>Alle produkter</h2>
+        <p class="subtitle">Naturlige drikker, te, krydder og ville vekster fra norsk natur</p>
+        <div class="p-grid p-grid-3">
+          ${productCard('Tors Ild', '179 kr', 'Naturlig styrkedrikk med ville vekster', '')}
+          ${productCard('Fjellurt-te', '89 kr', 'Aromatisk urteblanding fra norske fjell', 'rust')}
+          ${productCard('Villblomst-honning', '199 kr', 'Ra honning fra ville blomsterenger', 'brown')}
+          ${productCard('Bjorkesaft', '129 kr', 'Fersk bjorkesaft fra nordnorsk skog', '')}
+          ${productCard('Roykkaffe', '179 kr', 'Saktebrent over bjorkeved', 'rust')}
+          ${productCard('Ramslokpesto', '119 kr', 'Handlaget pesto av vill ramslok', 'brown')}
+        </div>
+      </div>`;
+  } else if (activePage === 'Produktdetalj') {
+    html += `
+      <div class="p-product-layout ${state.productLayout}">
+        <div class="p-product-gallery"></div>
+        <div class="p-product-info">
+          <h1>Tors Ild</h1>
+          <div class="price">179 kr</div>
+          <p class="desc">Skogen pa flaske! Naturlig styrkedrikk laget med ville vekster fra norsk natur. Handplukket, torket og brygget med stor aerbodighet for norske urtetradisjoner.</p>
+          <div style="font-size:13px;color:#888;margin-bottom:8px">Velg storrelse</div>
+          <div class="p-variant-btns">
+            <button class="p-variant-btn selected">250 ml — 179 kr</button>
+            <button class="p-variant-btn">125 ml — 89 kr</button>
+          </div>
+          <button class="p-btn p-btn-primary" style="border-radius:var(--btn-radius);width:100%">Legg i handlekurv</button>
+        </div>
+      </div>`;
+  } else if (activePage === 'Opplevelser') {
+    html += `
+      <div class="p-hero" style="height:calc(var(--hero-h) * 0.7)">
+        <div class="p-hero-bg" style="background:linear-gradient(135deg, var(--forest) 0%, #2d5a3f 60%, var(--rust) 100%)"></div>
+        <div class="p-hero-overlay"></div>
+        <div class="p-hero-content">
+          <h1>Opplevelser</h1>
+          <p>Naturretreater, kurs og matopplevelser i norsk natur</p>
+        </div>
+      </div>
+      <div class="p-section">
+        <h2>Retreater</h2>
+        <p class="subtitle">Koble fra hverdagen og koble til naturen</p>
+        <div class="p-grid p-grid-3">
+          ${expCard('Tidlig var-retreat', 'Fra 2 490 kr', '3 dager — mai 2026')}
+          ${expCard('Sommer-retreat', 'Fra 2 990 kr', '4 dager — juni 2026', 'rust')}
+          ${expCard('Midtsommer-retreat', 'Fra 3 490 kr', '5 dager — juli 2026', 'brown')}
+        </div>
+      </div>`;
+  } else if (activePage === 'Kasse') {
+    html += `
+      <div class="p-checkout ${state.checkoutLayout}">
+        <div>
+          <h1 style="font-family:var(--heading-font);font-size:var(--h2-size);color:var(--forest);font-weight:700;margin-bottom:24px">Kasse</h1>
+          <div class="p-form-section">
+            <h2>Kontaktinformasjon</h2>
+            <input class="p-input" placeholder="E-postadresse">
+            <input class="p-input" placeholder="Fullt navn">
+            <input class="p-input" placeholder="Telefonnummer">
+          </div>
+          <div class="p-form-section">
+            <h2>Leveringsadresse</h2>
+            <input class="p-input" placeholder="Adresse">
+            <div class="p-input-row">
+              <input class="p-input" placeholder="Postnummer">
+              <input class="p-input" placeholder="Sted">
+            </div>
+          </div>
+          <div class="p-form-section">
+            <h2>Betaling</h2>
+            <div style="background:white;border:1px solid rgba(26,58,42,0.15);border-radius:var(--btn-radius);padding:20px;color:#888;font-size:13px;text-align:center">
+              Stripe betalingsfelt
+            </div>
+          </div>
+          <button class="p-btn p-btn-primary" style="border-radius:var(--btn-radius);width:100%;margin-top:8px">Betal na</button>
+        </div>
+        <div>
+          <div class="p-order-summary" style="position:sticky;top:76px">
+            <h2>Sammendrag</h2>
+            <div class="p-order-line"><span>Tors Ild — 250 ml</span><span>179 kr</span></div>
+            <div class="p-order-line"><span>Tors Ild — 125 ml</span><span>89 kr</span></div>
+            <div class="p-order-line"><span>Frakt</span><span>99 kr</span></div>
+            <div class="p-order-line total"><span>Totalt</span><span>367 kr</span></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  html += footer;
+  frame.innerHTML = html;
+}
+
+function productCard(name, price, desc, colorClass) {
+  return `<div class="${cardClass()}">
+    <div class="p-card-img ${colorClass}"></div>
+    <div class="p-card-body">
+      <h3>${name}</h3>
+      <p>${desc}</p>
+      <div class="price">${price}</div>
+    </div>
+  </div>`;
+}
+
+function expCard(name, price, meta, colorClass = '') {
+  return `<div class="${cardClass()}">
+    <div class="p-card-img ${colorClass}"></div>
+    <div class="p-card-body">
+      <h3>${name}</h3>
+      <p>${meta}</p>
+      <div class="price">${price}</div>
+    </div>
+  </div>`;
+}
+
+function updatePrompt() {
+  const parts = [];
+  const d = DEFAULTS;
+
+  if (state.contentW !== d.contentW) parts.push(`innholdsbredde ${state.contentW}px`);
+  if (state.px !== d.px) parts.push(`sidepadding ${state.px}px`);
+  if (state.sectionPy !== d.sectionPy) parts.push(`${state.sectionPy}px mellom seksjoner`);
+  if (state.gridCols !== d.gridCols) parts.push(`${state.gridCols}-kolonners grid`);
+  if (state.gridGap !== d.gridGap) parts.push(`${state.gridGap}px grid-gap`);
+
+  if (state.heroH !== d.heroH) parts.push(`hero-hoyde ${state.heroH}px`);
+  if (state.heroFont !== d.heroFont) parts.push(`hero-tittel ${state.heroFont}px`);
+  if (state.heroOverlay !== d.heroOverlay) parts.push(`hero overlay ${state.heroOverlay}%`);
+
+  if (state.headingFont !== d.headingFont) {
+    const name = state.headingFont.split(',')[0].replace(/'/g, '');
+    parts.push(`heading-font ${name}`);
+  }
+  if (state.h2Size !== d.h2Size) parts.push(`h2 ${state.h2Size}px`);
+
+  if (state.cardRadius !== d.cardRadius) {
+    const feel = state.cardRadius >= 16 ? 'godt avrundede' : state.cardRadius === 0 ? 'skarpe' : 'lett avrundede';
+    parts.push(`${feel} kort (${state.cardRadius}px radius)`);
+  }
+  if (state.cardPadding !== d.cardPadding) parts.push(`kort-padding ${state.cardPadding}px`);
+  if (state.cardRatio !== d.cardRatio) parts.push(`bilde-ratio ${state.cardRatio}`);
+  if (state.cardStyle !== d.cardStyle) {
+    const labels = { shadow: 'skygge', border: 'kantlinje', flat: 'flat uten ramme' };
+    parts.push(`kort med ${labels[state.cardStyle]}`);
+  }
+
+  if (state.btnRadius !== d.btnRadius) {
+    const feel = state.btnRadius >= 16 ? 'pille-formede' : state.btnRadius === 0 ? 'skarpe' : 'avrundede';
+    parts.push(`${feel} knapper (${state.btnRadius}px)`);
+  }
+
+  if (state.productLayout !== d.productLayout) {
+    parts.push(`produktside: ${state.productLayout === 'top' ? 'bilde over tekst' : 'side ved side'}`);
+  }
+  if (state.checkoutLayout !== d.checkoutLayout) {
+    parts.push(`kasse: ${state.checkoutLayout === 'stacked' ? 'en kolonne' : 'to kolonner'}`);
+  }
+
+  const promptEl = document.getElementById('promptText');
+  if (parts.length === 0) {
+    promptEl.textContent = 'Juster kontrollene for a generere en design-prompt. Standardverdier er aktive.';
+  } else {
+    promptEl.textContent = `Oppdater Roots & Culture-designet med: ${parts.join(', ')}. Bruk Tailwind CSS. Behold merkevarefarger (forest #1a3a2a, cream #faf6f0, rust #a0522d).`;
+  }
+}
+
+function copyPrompt() {
+  const text = document.getElementById('promptText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Kopiert!';
+    setTimeout(() => btn.textContent = 'Kopier', 1500);
+  });
+}
+
+// Init
+syncControls();
+updateAll();
+</script>
+</body>
+</html>

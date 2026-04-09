@@ -43,12 +43,12 @@ const _getProducts = unstable_cache(
 )
 
 export async function getProducts(): Promise<Product[]> {
-  if (!adminDb) return []
+  if (!adminDb) return mockProducts
   try {
     return await _getProducts()
   } catch (e) {
     console.warn('getProducts failed:', e)
-    return []
+    return mockProducts
   }
 }
 
@@ -67,12 +67,12 @@ const _getProductsByCategory = unstable_cache(
 )
 
 export async function getProductsByCategory(category: ProductCategory): Promise<Product[]> {
-  if (!adminDb) return []
+  if (!adminDb) return mockProducts.filter((p) => p.category === category)
   try {
     return await _getProductsByCategory(category)
   } catch (e) {
     console.warn('getProductsByCategory failed:', e)
-    return []
+    return mockProducts.filter((p) => p.category === category)
   }
 }
 

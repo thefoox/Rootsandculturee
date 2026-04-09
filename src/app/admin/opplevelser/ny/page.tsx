@@ -249,7 +249,7 @@ export default function NewExperiencePage() {
                 htmlFor="whatToBring"
                 className="text-label font-normal tracking-wide text-forest"
               >
-                Hva du ma ta med
+                Hva du må ta med
               </label>
               <textarea
                 id="whatToBring"

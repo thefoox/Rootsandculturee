@@ -56,12 +56,12 @@ const _getExperiences = unstable_cache(
 )
 
 export async function getExperiences(): Promise<Experience[]> {
-  if (!adminDb) return []
+  if (!adminDb) return mockExperiences
   try {
     return await _getExperiences()
   } catch (e) {
     console.warn('getExperiences failed:', e)
-    return []
+    return mockExperiences
   }
 }
 
@@ -113,11 +113,11 @@ const _getExperienceDates = unstable_cache(
 )
 
 export async function getExperienceDates(experienceId: string): Promise<ExperienceDate[]> {
-  if (!adminDb) return []
+  if (!adminDb) return mockExperienceDates.get(experienceId) ?? []
   try {
     return await _getExperienceDates(experienceId)
   } catch (e) {
     console.warn('getExperienceDates failed:', e)
-    return []
+    return mockExperienceDates.get(experienceId) ?? []
   }
 }

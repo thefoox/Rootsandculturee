@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forside v2 — Kort-basert Layout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --forest: #1B4332; --cream: #FEFCF3; --card: #F5F0E8; --bark: #5C3D1E; --body-color: #374740; --rust: #B84D00; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; color: var(--body-color); background: var(--cream); }
+    h1, h2, h3, h4 { font-family: 'Merriweather', Georgia, serif; color: var(--forest); letter-spacing: -0.02em; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── HERO: Centered with video-style overlay ─── */
+    .hero {
+      position: relative; min-height: 90vh; display: flex; align-items: center;
+      justify-content: center; text-align: center; overflow: hidden;
+    }
+    .hero-bg { position: absolute; inset: 0; }
+    .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(27,67,50,0.4) 0%, rgba(27,67,50,0.6) 100%); }
+    .hero-content { position: relative; z-index: 1; max-width: 700px; padding: 0 24px; }
+    .hero h1 { color: var(--cream); font-size: clamp(3rem, 2.2rem + 2.5vw, 4.5rem); line-height: 1.05; font-weight: 700; }
+    .hero p { color: rgba(254,252,243,0.85); font-family: 'Merriweather', serif; font-weight: 300; font-size: 1.1875rem; line-height: 1.6; margin-top: 20px; }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; margin-top: 36px; }
+    .btn-primary {
+      padding: 16px 32px; background: var(--cream); color: var(--forest);
+      font-weight: 600; font-size: 0.9375rem; border-radius: 10px;
+      transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    .btn-outline {
+      padding: 16px 32px; border: 2px solid rgba(254,252,243,0.6); color: var(--cream);
+      font-weight: 500; font-size: 0.9375rem; border-radius: 10px; transition: all 0.2s;
+    }
+    .btn-outline:hover { background: rgba(254,252,243,0.1); border-color: var(--cream); }
+    .scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: rgba(254,252,243,0.5); }
+    .scroll-hint svg { width: 24px; height: 24px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+    /* ─── TRUST BAR ─── */
+    .trust { background: var(--forest); padding: 40px 0; }
+    .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+    .trust-item { color: var(--cream); }
+    .trust-item svg { width: 28px; height: 28px; margin: 0 auto 8px; opacity: 0.7; }
+    .trust-item p { font-size: 0.8125rem; font-weight: 500; opacity: 0.9; }
+
+    /* ─── OPPLEVELSER: Vertical card grid ─── */
+    .experiences { padding: 96px 0; background: var(--cream); }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-header h2 { font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem); }
+    .section-header p { margin-top: 8px; font-size: 0.9375rem; color: var(--body-color); opacity: 0.7; }
+    .see-all { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-weight: 500; font-size: 0.875rem; color: var(--forest); }
+    .see-all:hover { text-decoration: underline; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .card {
+      border-radius: 16px; overflow: hidden; background: var(--card);
+      transition: all 0.25s; border: 1px solid rgba(27,67,50,0.06);
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(27,67,50,0.12); }
+    .card-image { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+    .card-image img { transition: transform 0.4s; }
+    .card:hover .card-image img { transform: scale(1.05); }
+    .card-badge {
+      position: absolute; top: 16px; left: 16px; padding: 6px 12px;
+      background: var(--rust); color: white; font-size: 0.75rem;
+      font-weight: 600; border-radius: 6px; letter-spacing: 0.02em;
+    }
+    .card-spots {
+      position: absolute; bottom: 16px; right: 16px; padding: 6px 12px;
+      background: rgba(27,67,50,0.85); color: var(--cream); font-size: 0.75rem;
+      font-weight: 500; border-radius: 6px; backdrop-filter: blur(4px);
+    }
+    .card-body { padding: 24px; }
+    .card-meta { display: flex; align-items: center; gap: 6px; font-size: 0.8125rem; color: var(--bark); }
+    .card-meta svg { width: 14px; height: 14px; }
+    .card-title { font-size: 1.25rem; margin-top: 10px; line-height: 1.3; }
+    .card-location { font-size: 0.8125rem; color: var(--body-color); opacity: 0.6; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+    .card-location svg { width: 12px; height: 12px; }
+    .card-price { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(27,67,50,0.06); }
+    .card-price .current { font-size: 1.25rem; font-weight: 700; color: var(--forest); }
+    .card-price .original { font-size: 0.875rem; text-decoration: line-through; opacity: 0.45; }
+    .card-price .tag { font-size: 0.6875rem; font-weight: 600; color: var(--rust); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    /* ─── PRODUKTER: Same vertical card approach ─── */
+    .products { padding: 96px 0; background: var(--card); }
+    .product-card { border-radius: 16px; overflow: hidden; background: var(--cream); transition: all 0.25s; }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(27,67,50,0.1); }
+    .product-card .card-image { aspect-ratio: 1; }
+    .product-card .card-body { padding: 20px; }
+    .product-card .card-body h4 { font-size: 1.0625rem; }
+    .product-card .price { margin-top: 8px; font-weight: 700; color: var(--forest); font-size: 1.0625rem; }
+    .product-card .category { font-size: 0.75rem; color: var(--bark); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+
+    /* ─── OM OSS TEASER ─── */
+    .about { padding: 96px 0; background: var(--cream); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .about-image { border-radius: 24px; overflow: hidden; aspect-ratio: 4/5; }
+    .about h2 { font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); }
+    .about p { margin-top: 16px; line-height: 1.65; font-size: 0.9375rem; }
+    .about-link {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 28px;
+      padding: 14px 28px; border: 2px solid var(--forest); color: var(--forest);
+      font-weight: 600; font-size: 0.875rem; border-radius: 10px; transition: all 0.2s;
+    }
+    .about-link:hover { background: var(--forest); color: var(--cream); }
+
+    /* ─── CTA ─── */
+    .cta { padding: 120px 0; background: var(--forest); text-align: center; position: relative; overflow: hidden; }
+    .cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(254,252,243,0.03) 0%, transparent 60%);
+    }
+    .cta h2 { color: var(--cream); font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2.5rem); position: relative; }
+    .cta p { color: rgba(254,252,243,0.75); margin-top: 12px; font-size: 1.0625rem; position: relative; }
+    .cta .btn-primary { margin-top: 32px; display: inline-flex; position: relative; }
+
+    /* ─── FOOTER ─── */
+    footer { background: var(--card); padding: 64px 0 32px; border-top: 1px solid rgba(27,67,50,0.06); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+    .footer-brand h3 { font-size: 1.25rem; }
+    .footer-brand p { font-size: 0.875rem; margin-top: 12px; line-height: 1.6; opacity: 0.6; }
+    .footer-col h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; color: var(--bark); }
+    .footer-col a { display: block; font-size: 0.875rem; color: var(--body-color); margin-bottom: 8px; opacity: 0.6; }
+    .footer-col a:hover { opacity: 1; }
+    .footer-bottom { margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(27,67,50,0.06); font-size: 0.8125rem; opacity: 0.4; text-align: center; }
+
+    @media (max-width: 1024px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) {
+      .card-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+      .trust-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; gap: 32px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hero-actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-20-desktop.webp" alt=""></div>
+    <div class="hero-content">
+      <h1>Opplev det beste<br>av norsk natur</h1>
+      <p>Naturretreater, kurs og handplukkede produkter forankret i norsk kulturarv og tradisjon.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary">Se opplevelser &rarr;</a>
+        <a href="#" class="btn-outline">Se produkter</a>
+      </div>
+    </div>
+    <div class="scroll-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5"/><path d="M7 6l5 5 5-5"/></svg></div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <section class="trust">
+    <div class="container">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <p>Autentiske opplevelser</p>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <p>Trygg Stripe-betaling</p>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <p>Norsk kvalitet</p>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8l5 3-5 3z"/></svg>
+          <p>Gratis kansellering</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPPLEVELSER: Vertical cards -->
+  <section class="experiences">
+    <div class="container">
+      <div class="section-header">
+        <h2>Kommende opplevelser</h2>
+        <p>Book din neste naturopplevelse</p>
+        <a href="#" class="see-all">Se alle opplevelser &rarr;</a>
+      </div>
+      <div class="card-grid">
+        <a href="#" class="card">
+          <div class="card-image">
+            <img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp" alt="Retreat">
+            <span class="card-badge">Earlybird</span>
+            <span class="card-spots">12 plasser igjen</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              25. april 2026
+            </div>
+            <h3 class="card-title">Tidlig Var &mdash; retreat med ville vekster</h3>
+            <div class="card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Holtan Gard, Sande i Vestfold
+            </div>
+            <div class="card-price">
+              <span class="current">3 250 kr</span>
+              <span class="original">3 950 kr</span>
+              <span class="tag">Earlybird</span>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card-image">
+            <img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-07-desktop.webp" alt="Kurs">
+            <span class="card-badge">Earlybird</span>
+            <span class="card-spots">12 plasser igjen</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              25. juli 2026
+            </div>
+            <h3 class="card-title">Sommer &mdash; retreat med ville vekster</h3>
+            <div class="card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Holtan Gard, Sande i Vestfold
+            </div>
+            <div class="card-price">
+              <span class="current">3 250 kr</span>
+              <span class="original">3 950 kr</span>
+              <span class="tag">Earlybird</span>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card-image">
+            <img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-catering/catering-02-desktop.webp" alt="Catering">
+            <span class="card-badge">Earlybird</span>
+            <span class="card-spots">12 plasser igjen</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              27. juni 2026
+            </div>
+            <h3 class="card-title">Midtsommer &mdash; retreat med ville vekster</h3>
+            <div class="card-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Holtan Gard, Sande i Vestfold
+            </div>
+            <div class="card-price">
+              <span class="current">3 250 kr</span>
+              <span class="original">3 950 kr</span>
+              <span class="tag">Earlybird</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUKTER: Vertical product cards -->
+  <section class="products">
+    <div class="container">
+      <div class="section-header">
+        <h2>Produkter fra norsk natur</h2>
+        <p>Handplukkede produkter med rot i norsk tradisjon</p>
+        <a href="#" class="see-all">Se alle produkter &rarr;</a>
+      </div>
+      <div class="card-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="product-card">
+          <div class="card-image" style="aspect-ratio: 1;"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp" alt=""></div>
+          <div class="card-body"><div class="category">Drikke</div><h4>Tors Ild</h4><div class="price">179 kr</div></div>
+        </div>
+        <div class="product-card">
+          <div class="card-image" style="aspect-ratio: 1;"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-07-desktop.webp" alt=""></div>
+          <div class="card-body"><div class="category">Naturprodukter</div><h4>Bjorketjaere</h4><div class="price">249 kr</div></div>
+        </div>
+        <div class="product-card">
+          <div class="card-image" style="aspect-ratio: 1;"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-catering/catering-07-desktop.webp" alt=""></div>
+          <div class="card-body"><div class="category">Kaffe & Te</div><h4>Urtete-blanding</h4><div class="price">149 kr</div></div>
+        </div>
+        <div class="product-card">
+          <div class="card-image" style="aspect-ratio: 1;"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-catering/catering-02-desktop.webp" alt=""></div>
+          <div class="card-body"><div class="category">Drikke</div><h4>Granskuddsirup</h4><div class="price">189 kr</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OM OSS TEASER -->
+  <section class="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp" alt=""></div>
+        <div>
+          <h2>Var historie</h2>
+          <p>Roots & Culture ble startet med en enkel ide: a gjore det lettere for folk a oppleve det beste av norsk natur og kulturarv.</p>
+          <p>Fra starten har vi samarbeidet med lokale produsenter, bonder og naturguider som deler var lidenskap.</p>
+          <a href="#" class="about-link">Les mer om oss &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <h2>Klar for en opplevelse?</h2>
+      <p>Book din neste naturopplevelse og opplev det norske pa nart hold</p>
+      <a href="#" class="btn-primary" style="margin-top: 32px;">Se tilgjengelige opplevelser &rarr;</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>Roots & Culture</h3>
+          <p>Autentiske norske natur- og kulturopplevelser. Forankret i tradisjon.</p>
+        </div>
+        <div class="footer-col"><h4>Utforsk</h4><a href="#">Opplevelser</a><a href="#">Produkter</a><a href="#">Blogg</a><a href="#">Gavekort</a></div>
+        <div class="footer-col"><h4>Om oss</h4><a href="#">Var historie</a><a href="#">Kontakt</a><a href="#">Vilkar</a><a href="#">Personvern</a></div>
+        <div class="footer-col"><h4>Kontakt</h4><a href="#">post@rootsculture.no</a><a href="#">+47 123 45 678</a><a href="#">Sande i Vestfold</a></div>
+      </div>
+      <div class="footer-bottom">&copy; 2026 Roots & Culture. Alle rettigheter reservert.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

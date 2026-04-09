@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Smak på norske tradisjoner med matlagingskurs, gårdsmat og lokale råvarer fra norsk natur.',
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export default async function MatopplevelsePage() {
   const allExperiences = await getExperiences()

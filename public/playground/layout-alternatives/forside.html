@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forside — Layout Alternative</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest: #1B4332;
+      --cream: #FEFCF3;
+      --card: #F5F0E8;
+      --bark: #5C3D1E;
+      --body-color: #374740;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; color: var(--body-color); background: var(--cream); }
+    h1, h2, h3, h4 { font-family: 'Merriweather', Georgia, serif; color: var(--forest); letter-spacing: -0.02em; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+    /* ─── HERO: Split editorial ─── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--forest);
+    }
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px;
+      color: var(--cream);
+    }
+    .hero-content h1 {
+      font-size: clamp(2.75rem, 2rem + 2.5vw, 4rem);
+      line-height: 1.1;
+      color: var(--cream);
+      font-weight: 700;
+    }
+    .hero-content p {
+      font-family: 'Merriweather', serif;
+      font-weight: 300;
+      font-size: 1.125rem;
+      line-height: 1.65;
+      margin-top: 24px;
+      color: rgba(254,252,243,0.85);
+      max-width: 460px;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 40px;
+      padding: 16px 32px;
+      background: var(--cream);
+      color: var(--forest);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: fit-content;
+    }
+    .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    .hero-image {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, var(--forest) 0%, transparent 30%);
+    }
+
+    /* ─── TRUST BAR: Dark forest strip ─── */
+    .trust-bar {
+      background: var(--forest);
+      color: var(--cream);
+      padding: 48px 0;
+    }
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+    .trust-item h4 { color: var(--cream); font-size: 1.125rem; margin-top: 12px; }
+    .trust-item p { font-size: 0.875rem; color: rgba(254,252,243,0.7); margin-top: 4px; }
+    .trust-icon { width: 40px; height: 40px; margin: 0 auto; opacity: 0.8; }
+
+    /* ─── OPPLEVELSER: Staggered editorial ─── */
+    .experiences {
+      padding: 96px 0;
+      background: var(--cream);
+    }
+    .experiences .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+    }
+    .experiences h2 { font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); }
+    .see-all {
+      color: var(--forest);
+      font-weight: 500;
+      text-decoration: none;
+      font-size: 0.9375rem;
+    }
+    .see-all:hover { text-decoration: underline; }
+    .exp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .exp-card {
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--card);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .exp-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(27,67,50,0.1); }
+    .exp-card.featured {
+      grid-row: span 2;
+    }
+    .exp-card-image {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+    .exp-card.featured .exp-card-image { aspect-ratio: auto; height: 100%; }
+    .exp-card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 32px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      color: var(--cream);
+    }
+    .exp-card-overlay h3 {
+      color: var(--cream);
+      font-size: 1.375rem;
+    }
+    .exp-price {
+      margin-top: 8px;
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .exp-price .original {
+      text-decoration: line-through;
+      opacity: 0.6;
+      font-weight: 400;
+      font-size: 0.875rem;
+      margin-left: 8px;
+    }
+    .exp-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 0.8125rem;
+      opacity: 0.8;
+    }
+
+    /* ─── OM OSS: Asymmetric editorial ─── */
+    .about {
+      padding: 96px 0;
+      background: var(--card);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .about-image {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+    }
+    .about-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(to top, rgba(27,67,50,0.3), transparent);
+    }
+    .about h2 { font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); }
+    .about p {
+      margin-top: 16px;
+      line-height: 1.65;
+      font-size: 0.9375rem;
+    }
+    .about-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 12px 24px;
+      border: 2px solid var(--forest);
+      color: var(--forest);
+      font-weight: 600;
+      font-size: 0.875rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .about-link:hover { background: var(--forest); color: var(--cream); }
+
+    /* ─── PRODUKTER: Horizontal scroll ─── */
+    .products {
+      padding: 96px 0;
+      background: var(--cream);
+      overflow: hidden;
+    }
+    .products h2 {
+      font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem);
+      margin-bottom: 48px;
+    }
+    .product-scroll {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .product-scroll::-webkit-scrollbar { height: 4px; }
+    .product-scroll::-webkit-scrollbar-track { background: var(--card); border-radius: 4px; }
+    .product-scroll::-webkit-scrollbar-thumb { background: var(--forest); border-radius: 4px; opacity: 0.3; }
+    .product-card {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--card);
+      transition: transform 0.2s;
+    }
+    .product-card:hover { transform: translateY(-4px); }
+    .product-card-image { aspect-ratio: 1; }
+    .product-card-body { padding: 20px; }
+    .product-card-body h4 { font-size: 1.125rem; }
+    .product-card-body .price { margin-top: 8px; font-weight: 600; color: var(--forest); }
+
+    /* ─── BLOGG: Magazine grid ─── */
+    .blog {
+      padding: 96px 0;
+      background: var(--card);
+    }
+    .blog h2 {
+      font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem);
+      margin-bottom: 48px;
+    }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 24px;
+    }
+    .blog-card {
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--cream);
+      transition: transform 0.2s;
+    }
+    .blog-card:hover { transform: translateY(-4px); }
+    .blog-card.featured {
+      grid-row: span 2;
+    }
+    .blog-card-image { aspect-ratio: 16/9; }
+    .blog-card.featured .blog-card-image { aspect-ratio: auto; height: 60%; }
+    .blog-card-body { padding: 24px; }
+    .blog-card-body .tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--bark);
+    }
+    .blog-card-body h3 { font-size: 1.25rem; margin-top: 8px; }
+    .blog-card-body p { font-size: 0.875rem; margin-top: 8px; line-height: 1.5; color: var(--body-color); opacity: 0.8; }
+
+    /* ─── CTA BANNER ─── */
+    .cta-banner {
+      position: relative;
+      padding: 120px 0;
+      background: var(--forest);
+      text-align: center;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="80" fill="none" stroke="rgba(254,252,243,0.03)" stroke-width="1"/></svg>');
+      background-size: 300px;
+    }
+    .cta-banner h2 { color: var(--cream); font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2.5rem); position: relative; }
+    .cta-banner p { color: rgba(254,252,243,0.8); margin-top: 16px; font-size: 1.0625rem; position: relative; }
+    .cta-banner .hero-cta { margin-top: 32px; display: inline-flex; position: relative; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--card);
+      padding: 64px 0 32px;
+      border-top: 1px solid rgba(27,67,50,0.08);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+    }
+    .footer-brand h3 { font-size: 1.25rem; }
+    .footer-brand p { font-size: 0.875rem; margin-top: 12px; line-height: 1.6; opacity: 0.7; }
+    .footer-col h4 { font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+    .footer-col a { display: block; font-size: 0.875rem; color: var(--body-color); text-decoration: none; margin-bottom: 8px; opacity: 0.7; }
+    .footer-col a:hover { opacity: 1; }
+    .footer-bottom {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(27,67,50,0.08);
+      font-size: 0.8125rem;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-content { padding: 120px 24px 48px; }
+      .hero-image { aspect-ratio: 16/9; }
+      .hero-image::after { background: linear-gradient(to bottom, var(--forest) 0%, transparent 30%); }
+      .trust-grid { grid-template-columns: 1fr; gap: 24px; }
+      .exp-grid { grid-template-columns: 1fr; }
+      .exp-card.featured { grid-row: span 1; }
+      .about-grid { grid-template-columns: 1fr; gap: 32px; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .blog-card.featured { grid-row: span 1; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO: Split editorial with forest bg -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Velkommen til<br>Roots & Culture</h1>
+      <p>Gjennom vare tjenester arbeider vi for a oke bevisstheten om natur, tradisjon og kultur. Opplev det beste av norsk natur.</p>
+      <a href="#" class="hero-cta">Se tilgjengelige opplevelser &rarr;</a>
+    </div>
+    <div class="hero-image">
+      <img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-20-desktop.webp" alt="Naturopplevelse i norsk skog">
+    </div>
+  </section>
+
+  <!-- TRUST BAR: Dark strip -->
+  <section class="trust-bar">
+    <div class="container">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <h4>Autentiske opplevelser</h4>
+          <p>Kuratert av lokale naturguider</p>
+        </div>
+        <div class="trust-item">
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <h4>Trygg betaling</h4>
+          <p>Sikker Stripe-betaling i NOK</p>
+        </div>
+        <div class="trust-item">
+          <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <h4>Norsk kvalitet</h4>
+          <p>Handplukket fra norsk natur og kultur</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPPLEVELSER: Featured + supporting grid -->
+  <section class="experiences">
+    <div class="container">
+      <div class="section-header">
+        <h2>Kommende opplevelser</h2>
+        <a href="#" class="see-all">Se alle &rarr;</a>
+      </div>
+      <div class="exp-grid">
+        <div class="exp-card featured">
+          <div class="exp-card-image">
+            <img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp" alt="Retreat">
+            <div class="exp-card-overlay">
+              <h3>Tidlig Var &mdash; retreat med ville vekster</h3>
+              <div class="exp-price">fra 3 250 kr <span class="original">3 950 kr</span></div>
+              <div class="exp-meta">
+                <span>Holtan Gard, Sande</span>
+                <span>25. april 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="exp-card-image">
+            <img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-07-desktop.webp" alt="Kurs">
+            <div class="exp-card-overlay">
+              <h3>Sommer &mdash; retreat med ville vekster</h3>
+              <div class="exp-price">fra 3 250 kr <span class="original">3 950 kr</span></div>
+              <div class="exp-meta"><span>25. juli 2026</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="exp-card-image">
+            <img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-catering/catering-02-desktop.webp" alt="Catering">
+            <div class="exp-card-overlay">
+              <h3>Midtsommer &mdash; retreat med ville vekster</h3>
+              <div class="exp-price">fra 3 250 kr <span class="original">3 950 kr</span></div>
+              <div class="exp-meta"><span>27. juni 2026</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OM OSS: Asymmetric with tall image -->
+  <section class="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image">
+          <img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp" alt="Var historie">
+        </div>
+        <div>
+          <h2>Var historie</h2>
+          <p>Roots & Culture ble startet med en enkel ide: a gjore det lettere for folk a oppleve det beste av norsk natur og kulturarv.</p>
+          <p>Fra starten har vi samarbeidet med lokale produsenter, bonder og naturguider som deler var lidenskap.</p>
+          <p>Enten du soker ro i skogen, vil laere om ville urter, eller drommer om mat laget over bal &mdash; vi har noe for deg.</p>
+          <a href="#" class="about-link">Les mer om oss &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUKTER: Horizontal scroll -->
+  <section class="products">
+    <div class="container">
+      <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;">
+        <h2>Produkter fra norsk natur</h2>
+        <a href="#" class="see-all">Se alle &rarr;</a>
+      </div>
+    </div>
+    <div style="padding-left: max(24px, calc((100% - 1200px)/2 + 24px));">
+      <div class="product-scroll">
+        <div class="product-card">
+          <div class="product-card-image"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp" alt="Produkt"></div>
+          <div class="product-card-body"><h4>Tors Ild</h4><div class="price">179 kr</div></div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-image"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-07-desktop.webp" alt="Produkt"></div>
+          <div class="product-card-body"><h4>Bjorketjare</h4><div class="price">249 kr</div></div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-image"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-catering/catering-07-desktop.webp" alt="Produkt"></div>
+          <div class="product-card-body"><h4>Urtete-blanding</h4><div class="price">149 kr</div></div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-image"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-catering/catering-02-desktop.webp" alt="Produkt"></div>
+          <div class="product-card-body"><h4>Granskuddsirup</h4><div class="price">189 kr</div></div>
+        </div>
+        <div class="product-card" style="flex: 0 0 280px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="container">
+      <h2>Klar for en opplevelse?</h2>
+      <p>Book din neste naturopplevelse og opplev norsk natur pa nart hold</p>
+      <a href="#" class="hero-cta">Se tilgjengelige opplevelser &rarr;</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>Roots & Culture</h3>
+          <p>Autentiske norske natur- og kulturopplevelser. Forankret i norsk natur og kulturarv.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Utforsk</h4>
+          <a href="#">Opplevelser</a>
+          <a href="#">Produkter</a>
+          <a href="#">Blogg</a>
+        </div>
+        <div class="footer-col">
+          <h4>Info</h4>
+          <a href="#">Om oss</a>
+          <a href="#">Kontakt</a>
+          <a href="#">Vilkar</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontakt</h4>
+          <a href="#">post@rootsculture.no</a>
+          <a href="#">+47 123 45 678</a>
+          <a href="#">Sande i Vestfold</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; 2026 Roots & Culture. Alle rettigheter reservert.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

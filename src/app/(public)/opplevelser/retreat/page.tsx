@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Koble av i naturen med guidede retreater. Skogsbad, meditasjon og villmark ved fjord og fjell.',
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export default async function RetreatPage() {
   const allExperiences = await getExperiences()

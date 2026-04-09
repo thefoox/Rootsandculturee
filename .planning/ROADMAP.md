@@ -78,9 +78,9 @@ Plans:
 **Goal**: Bygg om forside, kontakt og om-oss med nye layouts fra HTML-prototyper — fullscreen hero, filtrerbare opplevelseskort, overlappende story-layout, kontaktkort, FAQ-grid. Alle seksjoner CMS-styrte via SectionRenderer med oppdaterte section-komponenter.
 **Requirements**: RD-01 (Forside redesign), RD-02 (Kontakt redesign), RD-03 (Om-oss redesign)
 **Depends on**: Phase 14
-**Plans:** 0/3 plans complete
+**Plans:** 3/3 plans complete
 
 Plans:
-- [ ] 15-01-PLAN.md — Oppgrader section-komponenter: HeroSection (fullscreen bunn-tekst + compact variant), TrustBarSection (dark inline), ExperiencesGridSection (filter-tabs + detaljkort), FaqSection (2-kolonne kort), ContactInfoSection (overlappende kort), TeamSection (foto-strip), ny LocationSection
-- [ ] 15-02-PLAN.md — Bygg om forside (page.tsx) med forside-v4 layout: fullscreen hero, dark trust bar, kategori-kort, filter-opplevelser, produkter 4-grid, testimonials, blogg, nyhetsbrev
-- [ ] 15-03-PLAN.md — Bygg om kontakt og om-oss: kontakt-v2 (compact hero + overlappende kort + skjema + FAQ-grid + lokasjon) og om-oss (centered hero + overlappende story + verdier + team + lokasjon dark + CTA)
+- [x] 15-01-PLAN.md — Oppgrader section-komponenter: HeroSection (fullscreen bunn-tekst + compact variant), TrustBarSection (dark inline), ExperiencesGridSection (filter-tabs + detaljkort), FaqSection (2-kolonne kort), ContactInfoSection (overlappende kort), TeamSection (foto-strip), ny LocationSection
+- [x] 15-02-PLAN.md — Bygg om forside (page.tsx) med forside-v4 layout: fullscreen hero, dark trust bar, kategori-kort, filter-opplevelser, produkter 4-grid, testimonials, blogg, nyhetsbrev
+- [x] 15-03-PLAN.md — Bygg om kontakt og om-oss: kontakt-v2 (compact hero + overlappende kort + skjema + FAQ-grid + lokasjon) og om-oss (centered hero + overlappende story + verdier + team + lokasjon dark + CTA)

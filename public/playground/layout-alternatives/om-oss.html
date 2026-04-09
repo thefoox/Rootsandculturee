@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Om oss — Layout Alternative</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --forest: #1B4332; --cream: #FEFCF3; --card: #F5F0E8; --bark: #5C3D1E; --body-color: #374740; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; color: var(--body-color); background: var(--cream); }
+    h1, h2, h3, h4 { font-family: 'Merriweather', Georgia, serif; color: var(--forest); letter-spacing: -0.02em; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+    /* Hero: Minimal, text-centered with soft image background */
+    .hero { min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; background: var(--forest); overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; opacity: 0.3; }
+    .hero-content { position: relative; z-index: 1; max-width: 640px; padding: 0 24px; }
+    .hero h1 { color: var(--cream); font-size: clamp(2.25rem, 1.8rem + 1.5vw, 3rem); line-height: 1.1; }
+    .hero p { color: rgba(254,252,243,0.8); font-family: 'Merriweather', serif; font-weight: 300; font-size: 1.125rem; line-height: 1.65; margin-top: 16px; }
+
+    /* Story: Overlapping layout */
+    .story { padding: 96px 0; background: var(--cream); }
+    .story-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; align-items: center; }
+    .story-image { position: relative; border-radius: 0 24px 24px 0; overflow: hidden; aspect-ratio: 4/5; margin-right: -48px; z-index: 1; box-shadow: 24px 24px 48px rgba(27,67,50,0.1); }
+    .story-text { background: var(--card); padding: 64px; border-radius: 24px; position: relative; z-index: 2; }
+    .story-text h2 { font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); }
+    .story-text p { margin-top: 16px; line-height: 1.65; font-size: 0.9375rem; }
+    .story-text .signature { margin-top: 32px; font-family: 'Merriweather', serif; font-weight: 300; font-style: italic; color: var(--bark); }
+
+    /* Values: Three pillars */
+    .values { padding: 96px 0; background: var(--card); }
+    .values-header { text-align: center; max-width: 640px; margin: 0 auto 64px; }
+    .values-header h2 { font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); }
+    .values-header p { margin-top: 12px; font-size: 0.9375rem; line-height: 1.65; }
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .value-card { text-align: center; padding: 48px 32px; background: var(--cream); border-radius: 20px; transition: transform 0.2s; }
+    .value-card:hover { transform: translateY(-4px); }
+    .value-icon { width: 48px; height: 48px; margin: 0 auto; color: var(--forest); }
+    .value-card h3 { font-size: 1.25rem; margin-top: 16px; }
+    .value-card p { margin-top: 8px; font-size: 0.875rem; line-height: 1.6; }
+
+    /* Team: Photo strip */
+    .team { padding: 96px 0; background: var(--cream); }
+    .team h2 { font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); text-align: center; margin-bottom: 48px; }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .team-card { text-align: center; }
+    .team-photo { aspect-ratio: 3/4; border-radius: 20px; overflow: hidden; background: var(--card); margin-bottom: 16px; }
+    .team-card h4 { font-size: 1.125rem; }
+    .team-card p { font-size: 0.8125rem; color: var(--bark); margin-top: 4px; }
+
+    /* Location: Map-style */
+    .location { padding: 96px 0; background: var(--forest); color: var(--cream); }
+    .location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .location h2 { color: var(--cream); font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); }
+    .location p { color: rgba(254,252,243,0.8); margin-top: 16px; line-height: 1.65; font-size: 0.9375rem; }
+    .location-detail { display: flex; align-items: center; gap: 12px; margin-top: 24px; }
+    .location-detail svg { width: 20px; height: 20px; flex-shrink: 0; color: rgba(254,252,243,0.6); }
+    .location-detail span { font-size: 0.9375rem; color: rgba(254,252,243,0.8); }
+    .location-map { aspect-ratio: 4/3; background: rgba(254,252,243,0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; color: rgba(254,252,243,0.4); }
+
+    /* CTA */
+    .cta { padding: 96px 0; background: var(--card); text-align: center; }
+    .cta h2 { font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); }
+    .cta p { margin-top: 12px; font-size: 0.9375rem; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.65; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 32px; padding: 16px 32px; background: var(--forest); color: var(--cream); font-weight: 600; font-size: 0.9375rem; border-radius: 8px; text-decoration: none; transition: transform 0.2s; }
+    .cta-btn:hover { transform: translateY(-2px); }
+
+    @media (max-width: 768px) {
+      .story-grid { grid-template-columns: 1fr; }
+      .story-image { border-radius: 0; margin-right: 0; aspect-ratio: 16/9; }
+      .story-text { border-radius: 0; padding: 32px 24px; }
+      .values-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr; }
+      .location-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-bg"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp" alt=""></div>
+    <div class="hero-content">
+      <h1>Om Roots & Culture</h1>
+      <p>Forankret i norsk natur og kulturarv. Vi bringer deg naermere det ekte.</p>
+    </div>
+  </section>
+
+  <section class="story">
+    <div class="container">
+      <div class="story-grid">
+        <div class="story-image"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp" alt="Var historie"></div>
+        <div class="story-text">
+          <h2>Var historie</h2>
+          <p>Roots & Culture ble startet med en enkel ide: a gjore det lettere for folk a oppleve det beste av norsk natur og kulturarv.</p>
+          <p>Fra starten har vi samarbeidet med lokale produsenter, bonder og naturguider som deler var lidenskap for norsk natur.</p>
+          <p>Enten du soker ro i skogen, vil laere om ville urter, eller drommer om mat laget over bal &mdash; vi har noe for deg.</p>
+          <p class="signature">&mdash; Grunnleggerne av Roots & Culture</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values">
+    <div class="container">
+      <div class="values-header">
+        <h2>Hva vi star for</h2>
+        <p>Tre verdier som driver alt vi gjor</p>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <h3>Autentisitet</h3>
+          <p>Alt vi tilbyr er ekte. Ekte naturopplevelser, ekte produkter fra norsk natur, ekte mennesker som brenner for det de gjor.</p>
+        </div>
+        <div class="value-card">
+          <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <h3>Baerekraft</h3>
+          <p>Vi tar vare pa naturen vi lever av. Alle opplevelser og produkter er utviklet med respekt for miljoet og lokale okosystemer.</p>
+        </div>
+        <div class="value-card">
+          <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <h3>Fellesskap</h3>
+          <p>Vi tror pa kraften i a dele opplevelser. Vare retreater og kurs skaper rom for a moetes, laere og vokse sammen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="team">
+    <div class="container">
+      <h2>Menneskene bak</h2>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-photo"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-21-desktop.webp" alt=""></div>
+          <h4>Navn Navnesen</h4>
+          <p>Grunnlegger & Naturguide</p>
+        </div>
+        <div class="team-card">
+          <div class="team-photo"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-07-desktop.webp" alt=""></div>
+          <h4>Navn Navnesen</h4>
+          <p>Opplevelsesdesigner</p>
+        </div>
+        <div class="team-card">
+          <div class="team-photo"><img src="http://localhost:3000/bilder-brukt-paa-sidene/opplevelser-catering/catering-07-desktop.webp" alt=""></div>
+          <h4>Navn Navnesen</h4>
+          <p>Kokk & Matformidler</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="location">
+    <div class="container">
+      <div class="location-grid">
+        <div>
+          <h2>Hvor du finner oss</h2>
+          <p>Vi holder til pa Holtan Gard i Sande, Vestfold &mdash; omgitt av skog, akerland og en av Norges vakreste kystlinjer.</p>
+          <div class="location-detail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Holtan Gard, Sande i Vestfold</span>
+          </div>
+          <div class="location-detail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>post@rootsculture.no</span>
+          </div>
+          <div class="location-detail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <span>+47 123 45 678</span>
+          </div>
+        </div>
+        <div class="location-map">[Kart: Sande i Vestfold]</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <h2>Klar for en opplevelse?</h2>
+      <p>Utforsk vare kommende opplevelser og finn noe som passer for deg.</p>
+      <a href="#" class="cta-btn">Se opplevelser &rarr;</a>
+    </div>
+  </section>
+
+</body>
+</html>
