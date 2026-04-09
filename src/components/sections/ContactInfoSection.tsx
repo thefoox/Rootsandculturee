@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import * as icons from 'lucide-react'
 import type { PageSection } from '@/types'
 
@@ -11,56 +10,51 @@ function getIcon(name?: string) {
 
 export function ContactInfoSection({ section }: { section: PageSection }) {
   return (
-    <section className="bg-cream section-padding">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-        {section.heading && (
-          <h2 className="font-heading text-h2 font-bold text-forest">
-            {section.heading}
-          </h2>
-        )}
+    <section className="relative z-[2] -mt-12 px-6">
+      <div className="mx-auto max-w-[1200px]">
         {section.items && section.items.length > 0 && (
-          <div className="mt-8 space-y-6">
+          <div className="grid gap-5 md:grid-cols-3">
             {section.items.map((item, i) => {
               const Icon = getIcon(item.icon)
               return (
-                <div key={i} className="flex items-start gap-4">
+                <div
+                  key={i}
+                  className="rounded-2xl border border-forest/4 bg-white p-8 text-center shadow-[0_4px_24px_rgba(27,67,50,0.08)] motion-safe:transition-all hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(27,67,50,0.12)]"
+                >
+                  {/* Icon container */}
                   {Icon && (
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-card">
-                      <Icon className="h-5 w-5 text-forest" aria-hidden="true" />
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-[14px] bg-forest/6">
+                      <Icon className="h-6 w-6 text-forest" aria-hidden="true" />
                     </div>
                   )}
-                  <div>
-                    <p className="text-label font-medium tracking-wide text-forest">
-                      {item.title}
+
+                  {/* Title */}
+                  <h3 className="font-heading text-[1.0625rem] font-bold text-forest">
+                    {item.title}
+                  </h3>
+
+                  {/* Description */}
+                  {item.description && (
+                    <p className="mt-1 text-[0.875rem] opacity-60">
+                      {item.description}
                     </p>
-                    {item.href ? (
-                      <a
-                        href={item.href}
-                        className="text-body underline-offset-2 motion-safe:transition-colors motion-safe:duration-100 hover:text-forest hover:underline"
-                        {...(item.href.startsWith('http')
-                          ? { target: '_blank', rel: 'noopener noreferrer' }
-                          : {})}
-                      >
-                        {item.description}
-                      </a>
-                    ) : (
-                      <p className="text-body">{item.description}</p>
-                    )}
-                  </div>
+                  )}
+
+                  {/* Value link */}
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      className="mt-3 inline-block text-[0.9375rem] font-semibold text-forest hover:underline"
+                      {...(item.href.startsWith('http')
+                        ? { target: '_blank', rel: 'noopener noreferrer' }
+                        : {})}
+                    >
+                      {item.href.replace('mailto:', '').replace('tel:', '')}
+                    </a>
+                  ) : null}
                 </div>
               )
             })}
-          </div>
-        )}
-        {section.image && (
-          <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-xl">
-            <Image
-              src={section.image.url}
-              alt={section.image.alt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
           </div>
         )}
       </div>
