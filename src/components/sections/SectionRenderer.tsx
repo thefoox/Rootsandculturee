@@ -12,6 +12,7 @@ import { ExperiencesGridSection } from './ExperiencesGridSection'
 import { ArticlesGridSection } from './ArticlesGridSection'
 import { ProductsGridSection } from './ProductsGridSection'
 import { TrustBarSection } from './TrustBarSection'
+import { LocationSection } from './LocationSection'
 
 export function SectionRenderer({ section }: { section: PageSection }) {
   switch (section.type) {
@@ -41,6 +42,8 @@ export function SectionRenderer({ section }: { section: PageSection }) {
       return <ProductsGridSection section={section} />
     case 'trust-bar':
       return <TrustBarSection section={section} />
+    case 'location':
+      return <LocationSection section={section} />
     default:
       return null
   }
