@@ -18,9 +18,9 @@ export function FaqSection({ section }: { section: PageSection }) {
                 key={i}
                 className="rounded-[14px] border border-forest/4 bg-cream p-6 motion-safe:transition-shadow hover:shadow-[0_4px_16px_rgba(27,67,50,0.06)]"
               >
-                <h4 className="font-heading text-[0.9375rem] font-bold leading-[1.3] text-forest">
+                <h3 className="font-heading text-[0.9375rem] font-bold leading-[1.3] text-forest">
                   {item.title}
-                </h4>
+                </h3>
                 <p className="mt-2 text-[0.8125rem] leading-[1.6] opacity-70">
                   {item.description}
                 </p>
