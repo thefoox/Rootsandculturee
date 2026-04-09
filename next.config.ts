@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const config: NextConfig = {
+  serverExternalPackages: ['firebase-admin'],
   // Proxy Firebase Auth handler to same origin — fixes signInWithRedirect/Popup
   // on browsers that block third-party storage access (Firebase docs: redirect-best-practices)
   async rewrites() {
