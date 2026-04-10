@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { ChevronUp } from 'lucide-react'
 import { useCart } from '@/components/cart/CartProvider'
 import { OrderSummaryPanel } from '@/components/cart/OrderSummaryPanel'
 import { CheckoutForm } from '@/components/checkout/CheckoutForm'
@@ -10,8 +11,84 @@ import { ConfirmationModal } from '@/components/checkout/ConfirmationModal'
 import { GiftCardInput } from '@/components/checkout/GiftCardInput'
 import { createPaymentIntent, getCheckoutUser } from '@/actions/checkout'
 import { formatPrice } from '@/lib/format'
+import { cn } from '@/lib/utils'
+import type { CartItem } from '@/types'
 
 const FLAT_RATE_SHIPPING = 9900 // 99 NOK in ore
+
+function MobileOrderSummary({
+  items,
+  subtotal,
+  shippingCost,
+  giftCardDeduction,
+  total,
+  giftCardCode,
+  onGiftCardApply,
+  onGiftCardRemove,
+}: {
+  items: CartItem[]
+  subtotal: number
+  shippingCost: number
+  giftCardDeduction: number
+  total: number
+  giftCardCode: string | null
+  onGiftCardApply: (code: string, balance: number) => void
+  onGiftCardRemove: () => void
+}) {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <div
+      className={cn(
+        'fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl border-t border-[#e8e3da] bg-white shadow-[0_-4px_24px_rgba(27,67,50,0.1)] lg:hidden',
+        expanded ? 'max-h-[70vh] overflow-y-auto' : ''
+      )}
+    >
+      {/* Peek bar -- always visible */}
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        className="flex w-full items-center justify-between px-6 py-4"
+        aria-expanded={expanded}
+        aria-label={expanded ? 'Skjul ordresammendrag' : 'Vis ordresammendrag'}
+      >
+        <div>
+          <div className="text-[13px] text-body/60">Din bestilling</div>
+          <div className="font-heading text-[18px] font-bold text-forest">
+            {formatPrice(total)}
+          </div>
+        </div>
+        <ChevronUp
+          className={cn(
+            'h-5 w-5 text-forest/50 motion-safe:transition-transform',
+            expanded && 'rotate-180'
+          )}
+          aria-hidden="true"
+        />
+      </button>
+
+      {/* Expandable content */}
+      {expanded && (
+        <div className="px-6 pb-6">
+          <OrderSummaryPanel
+            items={items}
+            subtotal={subtotal}
+            shippingCost={shippingCost}
+            giftCardDeduction={giftCardDeduction}
+            showCta={false}
+          >
+            <GiftCardInput
+              onApply={onGiftCardApply}
+              onRemove={onGiftCardRemove}
+              appliedCode={giftCardCode}
+              appliedBalance={giftCardDeduction > 0 ? giftCardDeduction : null}
+            />
+          </OrderSummaryPanel>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -22,7 +99,6 @@ export default function CheckoutPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [customerEmail, setCustomerEmail] = useState('')
   const [initError, setInitError] = useState('')
-  const [summaryOpen, setSummaryOpen] = useState(false)
   const [giftCardCode, setGiftCardCode] = useState<string | null>(null)
   const [giftCardBalance, setGiftCardBalance] = useState<number | null>(null)
 
@@ -91,20 +167,20 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[900px] px-4 pt-24 pb-16">
-      <h1 className="mb-8 font-heading text-h2 font-bold text-forest">
+    <div className="mx-auto max-w-[1120px] px-8 pt-24 pb-20 max-lg:px-4 max-lg:pb-[120px]">
+      <h1 className="mb-10 font-heading text-h2 font-bold text-forest max-lg:mb-6 max-lg:text-[1.5rem]">
         Kasse
       </h1>
 
-      {initError && (
-        <div className="mb-6 rounded-lg bg-destructive/10 p-4 text-body text-destructive">
-          {initError}
-        </div>
-      )}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_380px] lg:gap-14 items-start">
+        {/* LEFT: Form area */}
+        <div>
+          {initError && (
+            <div className="mb-6 rounded-lg bg-destructive/10 p-4 text-body text-destructive">
+              {initError}
+            </div>
+          )}
 
-      <div className="flex flex-col gap-12 lg:flex-row">
-        {/* Checkout form -- left column */}
-        <div className="flex-1 lg:w-[60%]">
           {clientSecret ? (
             <StripeElementsWrapper clientSecret={clientSecret}>
               <CheckoutForm
@@ -124,43 +200,10 @@ export default function CheckoutPage() {
           )}
         </div>
 
-        {/* Order summary -- right column */}
-        <div className="lg:w-[40%]">
-          {/* Mobile: collapsible accordion */}
-          <details
-            className="lg:hidden"
-            open={summaryOpen}
-            onToggle={(e) => setSummaryOpen((e.target as HTMLDetailsElement).open)}
-          >
-            <summary className="cursor-pointer rounded-lg border border-forest/12 bg-card px-4 py-3 text-body text-forest">
-              Vis ordresammendrag ({formatPrice(total)})
-            </summary>
-            <div className="mt-3">
-              <OrderSummaryPanel
-                items={items}
-                subtotal={subtotal}
-                shippingCost={shippingCost}
-                giftCardDeduction={giftCardDeduction}
-                showCta={false}
-              >
-                <GiftCardInput
-                  onApply={(code, balance) => {
-                    setGiftCardCode(code)
-                    setGiftCardBalance(balance)
-                  }}
-                  onRemove={() => {
-                    setGiftCardCode(null)
-                    setGiftCardBalance(null)
-                  }}
-                  appliedCode={giftCardCode}
-                  appliedBalance={giftCardDeduction > 0 ? giftCardDeduction : null}
-                />
-              </OrderSummaryPanel>
-            </div>
-          </details>
-
-          {/* Desktop: always visible */}
-          <div className="sticky top-24 hidden lg:block">
+        {/* RIGHT: Order Summary Sidebar */}
+        {/* Desktop: sticky sidebar, always visible */}
+        <div className="hidden lg:block">
+          <div className="sticky top-24">
             <OrderSummaryPanel
               items={items}
               subtotal={subtotal}
@@ -183,6 +226,24 @@ export default function CheckoutPage() {
             </OrderSummaryPanel>
           </div>
         </div>
+
+        {/* Mobile: Fixed bottom sheet */}
+        <MobileOrderSummary
+          items={items}
+          subtotal={subtotal}
+          shippingCost={shippingCost}
+          giftCardDeduction={giftCardDeduction}
+          total={total}
+          giftCardCode={giftCardCode}
+          onGiftCardApply={(code, balance) => {
+            setGiftCardCode(code)
+            setGiftCardBalance(balance)
+          }}
+          onGiftCardRemove={() => {
+            setGiftCardCode(null)
+            setGiftCardBalance(null)
+          }}
+        />
       </div>
     </div>
   )
