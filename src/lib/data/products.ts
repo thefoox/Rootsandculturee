@@ -47,7 +47,7 @@ export async function getProducts(): Promise<Product[]> {
   try {
     return await _getProducts()
   } catch (e) {
-    console.warn('getProducts failed:', e)
+    console.error('[getProducts] Firestore query failed, returning mock data:', e)
     return mockProducts
   }
 }
@@ -70,7 +70,7 @@ export async function getProductsByCategory(category: ProductCategory): Promise<
   try {
     return await _getProductsByCategory(category)
   } catch (e) {
-    console.warn('getProductsByCategory failed:', e)
+    console.error('[getProductsByCategory] Firestore query failed, returning mock data:', e)
     return mockProducts.filter((p) => p.category === category)
   }
 }
@@ -94,7 +94,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
     return await _getProductBySlug(slug)
   } catch (e) {
-    console.warn('getProductBySlug failed:', e)
+    console.error('[getProductBySlug] Firestore query failed:', e)
     return null
   }
 }

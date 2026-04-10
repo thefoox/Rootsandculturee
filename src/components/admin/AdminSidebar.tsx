@@ -117,12 +117,14 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
           <span aria-hidden="true">←</span>
           Tilbake til nettbutikk
         </Link>
-        <button
-          onClick={() => logoutAction()}
-          className="flex h-[44px] w-full items-center text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
-        >
-          Logg ut
-        </button>
+        <form action={logoutAction}>
+          <button
+            type="submit"
+            className="flex h-[44px] w-full items-center text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
+          >
+            Logg ut
+          </button>
+        </form>
       </div>
     </aside>
   )

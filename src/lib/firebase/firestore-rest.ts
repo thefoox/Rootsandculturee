@@ -186,7 +186,14 @@ async function getAccessToken(): Promise<string> {
 
   if (!tokenRes.ok) {
     const body = await tokenRes.text()
-    throw new Error(`Firestore REST: OAuth2 token exchange failed: ${body}`)
+    console.error('[Firestore REST] OAuth2 token exchange failed:', {
+      status: tokenRes.status,
+      body,
+      clientEmail,
+      projectId,
+      keyPreview: privateKey.slice(0, 80),
+    })
+    throw new Error(`Firestore REST: OAuth2 token exchange failed (${tokenRes.status}): ${body}`)
   }
 
   const tokenData = await tokenRes.json()

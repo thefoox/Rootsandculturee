@@ -60,7 +60,7 @@ export async function getExperiences(): Promise<Experience[]> {
   try {
     return await _getExperiences()
   } catch (e) {
-    console.warn('getExperiences failed:', e)
+    console.error('[getExperiences] Firestore query failed, returning mock data:', e)
     return mockExperiences
   }
 }
@@ -84,7 +84,7 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
   try {
     return await _getExperienceBySlug(slug)
   } catch (e) {
-    console.warn('getExperienceBySlug failed:', e)
+    console.error('[getExperienceBySlug] Firestore query failed:', e)
     return mockExperiences.find((e) => e.slug === slug) ?? null
   }
 }
@@ -108,7 +108,7 @@ export async function getExperienceDates(experienceId: string): Promise<Experien
   try {
     return await _getExperienceDates(experienceId)
   } catch (e) {
-    console.warn('getExperienceDates failed:', e)
+    console.error('[getExperienceDates] Firestore query failed:', e)
     return mockExperienceDates.get(experienceId) ?? []
   }
 }

@@ -1,5 +1,6 @@
 'use server'
 
+import { redirect } from 'next/navigation'
 import { verifyFirebaseToken } from '@/lib/auth/verify-token'
 import { createSession, deleteSession } from '@/lib/session'
 import type { AuthResult } from '@/types'
@@ -74,4 +75,5 @@ export async function googleLoginAction(idToken: string): Promise<AuthResult> {
 
 export async function logoutAction(): Promise<void> {
   await deleteSession()
+  redirect('/')
 }
