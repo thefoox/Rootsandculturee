@@ -110,6 +110,105 @@ const experiences = [
   },
 ]
 
+const products = [
+  {
+    id: 'prod-1',
+    slug: 'skogsbaer-saft',
+    name: 'Skogsbær-saft',
+    description: 'Håndplukket norsk skogsbærsaft laget av blåbær, tyttebær og bringebær fra dype skoger i Trøndelag. Saftig og naturlig søt uten tilsetningsstoffer. Perfekt til festlige anledninger eller som en daglig vitaminboost.',
+    price: 14900,
+    category: 'drikke',
+    images: [{ url: '/bilder-brukt-paa-sidene/produkter/tors-ild-desktop.webp', alt: 'Skogsbær-saft fra norsk skog' }],
+    inStock: true,
+    stockCount: 50,
+    variants: [],
+  },
+  {
+    id: 'prod-2',
+    slug: 'fjellurt-te',
+    name: 'Fjellurt-te',
+    description: 'En aromatisk urteblanding håndplukket fra norske fjellsider over 800 meter. Inneholder reinrose, fjellflokk og karve som gir en mild og beroligende smak. Nytes best en kald kveld foran peisen.',
+    price: 8900,
+    category: 'kaffe-te',
+    images: [{ url: '/bilder-brukt-paa-sidene/forside/ville_vekster.webp', alt: 'Fjellurt-te urteblanding' }],
+    inStock: true,
+    stockCount: 50,
+    variants: [],
+  },
+  {
+    id: 'prod-3',
+    slug: 'villblomst-honning',
+    name: 'Villblomst-honning',
+    description: 'Rå, ubehandlet honning fra ville blomsterenger i Hardanger. Biene henter nektar fra kløver, mjødurt og engblom gjennom hele sommersesongen. Smaker fantastisk på nybakt brød eller i te.',
+    price: 19900,
+    category: 'naturprodukter',
+    images: [{ url: '/bilder-brukt-paa-sidene/forside/sea_moss.webp', alt: 'Villblomst-honning fra Hardanger' }],
+    inStock: true,
+    stockCount: 50,
+    variants: [],
+  },
+  {
+    id: 'prod-4',
+    slug: 'bjorkesaft',
+    name: 'Bjørkesaft',
+    description: 'Fersk bjørkesaft tappet fra nordnorsk skog tidlig på våren. Naturlig mineralrik og lett søtlig i smaken. En gammel norsk tradisjon som gir kroppen viktige mineraler etter en lang vinter.',
+    price: 12900,
+    category: 'drikke',
+    images: [{ url: '/bilder-brukt-paa-sidene/forside/retreat-07-desktop.webp', alt: 'Bjørkesaft fra nordnorsk skog' }],
+    inStock: true,
+    stockCount: 50,
+    variants: [],
+  },
+  {
+    id: 'prod-5',
+    slug: 'roykkaffe-mork-brent',
+    name: 'Røykkaffe — Mørk Brent',
+    description: 'Spesialkaffe saktebrent over bjørkeved i tradisjonell norsk stil. Gir en dyp, røykfylt aroma med hint av sjokolade og ville bær. Malt til filterkaffe for optimal smaksutvikling.',
+    price: 17900,
+    category: 'kaffe-te',
+    images: [{ url: '/bilder-brukt-paa-sidene/forside/tors-ild-desktop.webp', alt: 'Røykkaffe mørk brent' }],
+    inStock: true,
+    stockCount: 50,
+    variants: [],
+  },
+  {
+    id: 'prod-6',
+    slug: 'trollkrem-pulver',
+    name: 'Trollkrem-pulver',
+    description: 'Frysetørket tyttebærpulver til tradisjonell trollkrem — den klassiske norske desserten. Bare tilsett eggehvite og sukker for en luftig, rosa drøm. Pakket i praktisk boks med oppskrift.',
+    price: 6900,
+    category: 'naturprodukter',
+    images: [{ url: '/bilder-brukt-paa-sidene/forside/catering-04-desktop.webp', alt: 'Trollkrem-pulver tyttebær' }],
+    inStock: true,
+    stockCount: 50,
+    variants: [],
+  },
+  {
+    id: 'prod-7',
+    slug: 'ramslokpesto',
+    name: 'Ramsløkpesto',
+    description: 'Håndlaget pesto av vill ramsløk plukket i skogene rundt Oslofjorden om våren. Blandet med norske solsikkefrø, olivenolje og parmesan. Gir en unik, hvitløksaktig smak til pasta, brød og grillmat.',
+    price: 11900,
+    category: 'naturprodukter',
+    images: [{ url: '/bilder-brukt-paa-sidene/forside/catering-13-desktop.webp', alt: 'Ramsløkpesto håndlaget' }],
+    inStock: true,
+    stockCount: 50,
+    variants: [],
+  },
+  {
+    id: 'prod-8',
+    slug: 'grankvist-sirup',
+    name: 'Grankvist-sirup',
+    description: 'Sirup laget av ferske granskudd plukket om våren i Østmarka. De lyse, myke skuddene gir en frisk og aromatisk sirup med hint av sitrus og skog. Perfekt til pannekaker, yoghurt eller cocktails.',
+    price: 9900,
+    category: 'drikke',
+    images: [{ url: '/bilder-brukt-paa-sidene/forside/catering-05-desktop.webp', alt: 'Grankvist-sirup fra Østmarka' }],
+    inStock: true,
+    stockCount: 50,
+    variants: [],
+  },
+]
+
 async function seed() {
   console.log('Seeding Firestore...\n')
 
@@ -131,7 +230,20 @@ async function seed() {
     console.log(`  Deleted experience: ${doc.id}`)
   }
 
-  console.log('\nOld data cleared. Adding new experiences...\n')
+  console.log('\nOld data cleared. Adding products...\n')
+
+  for (const prod of products) {
+    const { id, ...prodData } = prod
+    await db.collection('products').doc(id).set({
+      ...prodData,
+      createdAt: Timestamp.fromDate(new Date('2026-03-01')),
+      updatedAt: now,
+      publishedAt: Timestamp.fromDate(new Date('2026-03-01')),
+    })
+    console.log(`  Added product: ${prod.name}`)
+  }
+
+  console.log('\nAdding experiences...\n')
 
   for (const exp of experiences) {
     const { dates, id, ...expData } = exp
@@ -158,7 +270,7 @@ async function seed() {
     }
   }
 
-  console.log('\nDone! Firestore seeded with 4 real retreats.')
+  console.log('\nDone! Firestore seeded with 8 products and 4 retreats.')
 }
 
 seed().catch(console.error)

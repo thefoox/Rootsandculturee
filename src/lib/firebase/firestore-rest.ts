@@ -244,6 +244,17 @@ async function firestoreRequest(
 // ---------------------------------------------------------------------------
 
 function encodeFilter(where: WhereClause): Record<string, unknown> {
+  // firebase-admin translates `!= null` to IS_NOT_NULL and `== null` to IS_NULL
+  // unaryFilter, not fieldFilter. The REST API requires this distinction.
+  if (where.value === null || where.value === undefined) {
+    if (where.op === '!=') {
+      return { unaryFilter: { field: { fieldPath: where.field }, op: 'IS_NOT_NULL' } }
+    }
+    if (where.op === '==') {
+      return { unaryFilter: { field: { fieldPath: where.field }, op: 'IS_NULL' } }
+    }
+  }
+
   const opMap: Record<WhereOp, string> = {
     '==': 'EQUAL',
     '!=': 'NOT_EQUAL',
