@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 17 UI-SPEC approved
-last_updated: "2026-04-10T18:26:50.884Z"
-last_activity: 2026-04-10 -- Phase 17 planning complete
+last_updated: "2026-04-10T18:32:17.956Z"
+last_activity: 2026-04-10 -- Phase 17 execution started
 progress:
   total_phases: 6
   completed_phases: 4
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Kunder kan enkelt oppdage, kjope og booke autentiske norske natur- og kulturopplevelser i en informativ og tilgjengelig nettbutikk.
-**Current focus:** Phase 13 — prodklar-opprydding
+**Current focus:** Phase 17 — Checkout Redesign
 
 ## Current Position
 
-Phase: 16
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-04-10 -- Phase 17 planning complete
+Phase: 17 (Checkout Redesign) — EXECUTING
+Plan: 1 of 3
+Status: Executing Phase 17
+Last activity: 2026-04-10 -- Phase 17 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
