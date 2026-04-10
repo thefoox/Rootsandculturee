@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { cn } from '@/lib/utils'
 import { AdminSidebar } from './AdminSidebar'
 import { AdminTopBar } from './AdminTopBar'
 
@@ -10,12 +11,18 @@ interface AdminShellProps {
 
 export function AdminShell({ children }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
 
   return (
     <div className="fixed inset-0 z-[200] flex bg-cream">
       {/* Desktop sidebar */}
-      <div className="hidden md:block">
-        <AdminSidebar />
+      <div
+        className={cn(
+          'hidden md:block overflow-hidden motion-safe:transition-[width] motion-safe:duration-200',
+          collapsed ? 'w-[64px]' : 'w-[240px]'
+        )}
+      >
+        <AdminSidebar collapsed={collapsed} onToggleCollapse={() => setCollapsed(prev => !prev)} />
       </div>
 
       {/* Mobile sidebar overlay */}
