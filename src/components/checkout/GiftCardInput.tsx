@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Ticket, Check, X } from 'lucide-react'
+import { Ticket, Check, X, ChevronDown } from 'lucide-react'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { formatPrice } from '@/lib/format'
 import { validateGiftCardAction } from '@/actions/gift-cards'
+import { cn } from '@/lib/utils'
 
 interface GiftCardInputProps {
   onApply: (code: string, balance: number) => void
@@ -24,6 +25,7 @@ export function GiftCardInput({
   const [checking, setChecking] = useState(false)
   const [error, setError] = useState('')
   const [validBalance, setValidBalance] = useState<number | null>(null)
+  const [expanded, setExpanded] = useState(false)
 
   async function handleCheck() {
     if (!code.trim()) {
@@ -63,11 +65,11 @@ export function GiftCardInput({
   // Show applied state
   if (appliedCode && appliedBalance !== null) {
     return (
-      <div className="rounded-lg border border-forest/12 bg-card p-4">
+      <div className="rounded-xl border border-success/20 bg-success-bg p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-badge-easy" aria-hidden="true" />
-            <span className="font-body text-body font-medium text-forest">
+            <Check className="h-4 w-4 text-success" aria-hidden="true" />
+            <span className="font-body text-body font-normal text-forest">
               Gavekort brukt
             </span>
           </div>
@@ -83,7 +85,7 @@ export function GiftCardInput({
         </div>
         <div className="mt-2 flex items-center justify-between">
           <span className="font-body text-label text-body">{appliedCode}</span>
-          <span className="font-body text-body font-medium text-forest">
+          <span className="font-body text-body font-bold text-forest">
             −{formatPrice(appliedBalance)}
           </span>
         </div>
@@ -92,51 +94,70 @@ export function GiftCardInput({
   }
 
   return (
-    <div className="rounded-lg border border-forest/12 bg-card p-4">
-      <div className="flex items-center gap-2 mb-3">
-        <Ticket className="h-4 w-4 text-forest" aria-hidden="true" />
-        <span className="font-body text-body font-medium text-forest">
-          Har du et gavekort?
+    <div className="rounded-xl border border-forest/10 bg-card">
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        className="flex w-full items-center justify-between p-4 text-left"
+        aria-expanded={expanded}
+        aria-controls="gift-card-panel"
+      >
+        <span className="flex items-center gap-2">
+          <Ticket className="h-4 w-4 text-forest" aria-hidden="true" />
+          <span className="font-body text-body font-normal text-forest">
+            Har du et gavekort?
+          </span>
         </span>
-      </div>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 text-forest/60 motion-safe:transition-transform motion-safe:duration-200",
+            expanded && "rotate-180"
+          )}
+          aria-hidden="true"
+        />
+      </button>
 
-      <div className="flex gap-2">
-        <div className="flex-1">
-          <Input
-            label="Gavekort-kode"
-            value={code}
-            onChange={(e) => {
-              setCode(e.target.value)
-              setError('')
-              setValidBalance(null)
-            }}
-            placeholder="RC-XXXX-XXXX"
-            error={error}
-          />
-        </div>
-        <div className="pt-[22px]">
-          <Button
-            variant="secondary"
-            onClick={handleCheck}
-            loading={checking}
-            disabled={!code.trim()}
-            type="button"
-          >
-            Sjekk
-          </Button>
-        </div>
-      </div>
-
-      {validBalance !== null && (
-        <div className="mt-3 rounded-md border border-forest/12 bg-cream p-3">
-          <p className="font-body text-body text-forest">
-            Tilgjengelig saldo: <strong>{formatPrice(validBalance)}</strong>
-          </p>
-          <div className="mt-2">
-            <Button variant="primary" onClick={handleApply} type="button">
-              Bruk gavekort
-            </Button>
+      {expanded && (
+        <div id="gift-card-panel" className="px-4 pb-4">
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Input
+                label="Gavekort-kode"
+                value={code}
+                onChange={(e) => {
+                  setCode(e.target.value)
+                  setError('')
+                  setValidBalance(null)
+                }}
+                placeholder="RC-XXXX-XXXX"
+                error={error}
+              />
+            </div>
+            <div className="pt-[22px]">
+              <Button
+                variant="secondary"
+                onClick={handleCheck}
+                loading={checking}
+                disabled={!code.trim()}
+                type="button"
+              >
+                Sjekk
+              </Button>
+            </div>
           </div>
+
+          {validBalance !== null && (
+            <div className="mt-3 rounded-md border border-forest/12 bg-cream p-3">
+              <p className="font-body text-body text-forest">
+                Tilgjengelig saldo: <strong>{formatPrice(validBalance)}</strong>
+              </p>
+              <div className="mt-2">
+                <Button variant="primary" onClick={handleApply} type="button">
+                  Bruk gavekort
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
