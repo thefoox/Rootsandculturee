@@ -59,11 +59,12 @@ export function Header() {
   }, [])
 
   async function handleLogout() {
-    // logoutAction deletes the session cookie and calls redirect('/') server-side.
-    // The redirect throws a Next.js NEXT_REDIRECT which causes the server action
-    // response to carry a redirect header — the browser follows it automatically.
-    // No client-side navigation code needed here.
-    await logoutAction()
+    try {
+      await logoutAction()
+    } catch {
+      // redirect() throws NEXT_REDIRECT — expected
+    }
+    window.location.href = '/'
   }
 
   function handleAuthClose() {

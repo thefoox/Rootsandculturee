@@ -221,6 +221,7 @@ async function firestoreRequest(
 
   const res = await fetch(url, {
     method,
+    cache: 'no-store' as RequestCache,
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
