@@ -1,17 +1,36 @@
 import 'server-only'
-import { createRemoteJWKSet, jwtVerify } from 'jose'
+import { createLocalJWKSet, jwtVerify, type JSONWebKeySet } from 'jose'
 
 /**
  * Verify Firebase ID token WITHOUT firebase-admin.
- * Uses Google's public JWKS endpoint to verify the JWT signature.
+ * Fetches Google's public JWKS with in-memory caching + stale fallback.
  * This works on Vercel serverless where firebase-admin fails to load.
  */
 
-const GOOGLE_JWKS = createRemoteJWKSet(
-  new URL('https://www.googleapis.com/service_account/v1/jwk/securetoken@system.gserviceaccount.com')
-)
+const JWKS_URL = 'https://www.googleapis.com/service_account/v1/jwk/securetoken@system.gserviceaccount.com'
+const FIREBASE_PROJECT_ID = (process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || '').trim()
 
-const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+let cachedJWKS: ReturnType<typeof createLocalJWKSet> | null = null
+let cacheExpiry = 0
+
+async function getJWKS() {
+  if (cachedJWKS && Date.now() < cacheExpiry) {
+    return cachedJWKS
+  }
+
+  try {
+    const res = await fetch(JWKS_URL)
+    if (!res.ok) throw new Error(`JWKS fetch ${res.status}`)
+    const jwks: JSONWebKeySet = await res.json()
+    cachedJWKS = createLocalJWKSet(jwks)
+    cacheExpiry = Date.now() + 3600_000 // 1 hour
+    return cachedJWKS
+  } catch (error) {
+    console.error('JWKS fetch failed:', error instanceof Error ? error.message : error)
+    if (cachedJWKS) return cachedJWKS // use stale cache
+    throw error
+  }
+}
 
 interface DecodedToken {
   uid: string
@@ -27,7 +46,8 @@ export async function verifyFirebaseToken(idToken: string): Promise<DecodedToken
   }
 
   try {
-    const { payload } = await jwtVerify(idToken, GOOGLE_JWKS, {
+    const jwks = await getJWKS()
+    const { payload } = await jwtVerify(idToken, jwks, {
       issuer: `https://securetoken.google.com/${FIREBASE_PROJECT_ID}`,
       audience: FIREBASE_PROJECT_ID,
     })
@@ -42,7 +62,7 @@ export async function verifyFirebaseToken(idToken: string): Promise<DecodedToken
       admin: (payload.admin as boolean) || undefined,
     }
   } catch (error) {
-    console.error('verifyFirebaseToken failed:', error)
+    console.error('verifyFirebaseToken failed:', error instanceof Error ? error.message : error)
     return null
   }
 }
