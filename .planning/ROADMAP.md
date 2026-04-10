@@ -96,14 +96,14 @@ Plans:
 - [x] 16-01-PLAN.md — White admin navigation with lucide icons: retheme sidebar and top bar from dark green to white, add lucide-react icons to all nav items and footer actions
 - [x] 16-02-PLAN.md — Collapsible sidebar: add collapsed state management, toggle button, icon-only mode with tooltips, width transition with motion-safe guard
 
-### Phase 17: Checkout Redesign
+### Phase 17: Checkout Redesign + Header Floating Pill
 
-**Goal**: Redesign checkout-siden til profesjonell premium-kvalitet — forbedre layout, spacing, typografi og visuelt hierarki. Behold all funksjonalitet (2-stegs skjema, gavekort, sammendrag) men oppgrader visuelt design til å matche en premium norsk natur-nettbutikk.
+**Goal**: Implementer godkjent checkout-prototype (3-stegs ikon-indikator, bottom-border inputs, delt navn, produktbilder i sammendrag, gavekort i sidebar, mobil bottom sheet) og legg til floating pill header med bruker-initialer avatar.
 **Requirements**: UI-SPEC (visual design contract)
 **Depends on**: Phase 16
 **Plans:** 3 plans
 
 Plans:
-- [ ] 17-01-PLAN.md — OrderSummaryPanel warm borders and Totalt hierarchy + GiftCardInput disclosure toggle and success applied state
-- [ ] 17-02-PLAN.md — CheckoutForm step indicator redesign, section cards with bark accent bar, payment section warmth, CTA sizing, and WCAG focus management
-- [ ] 17-03-PLAN.md — CheckoutPage layout (960px), GiftCardInput reposition below form, loading skeleton, mobile summary accordion with ChevronDown, item list continuation
+- [ ] 17-01-PLAN.md — Input underline variant + CheckoutForm redesign: 3-step icon indicator, split Fornavn/Etternavn, bottom-border inputs, section descriptions, recap card, premium CTA
+- [ ] 17-02-PLAN.md — OrderSummaryPanel white card with product images, earlybird tags, legal text + GiftCardInput collapsible sidebar disclosure
+- [ ] 17-03-PLAN.md — Checkout page grid layout (1120px, 1fr+380px), GiftCardInput in sidebar, mobile bottom sheet with peek bar + Header floating pill + user initials avatar
