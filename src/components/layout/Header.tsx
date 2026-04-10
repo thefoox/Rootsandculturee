@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, ShoppingBag, User, LogOut } from 'lucide-react'
+import { Menu, ShoppingBag, LogOut } from 'lucide-react'
 import { MegaMenuNav } from './MegaMenuNav'
 import { MobileNav } from './MobileNav'
 import { buildNavItems, mainNavItems, type NavItem } from '@/lib/navigation'
@@ -26,6 +26,7 @@ export function Header() {
   const [authView, setAuthView] = useState<'login' | 'register' | 'reset'>('login')
   const [cartOpen, setCartOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
   const [profileOpen, setProfileOpen] = useState(false)
   const [navItems, setNavItems] = useState<NavItem[]>(mainNavItems)
   const { itemCount } = useCart()
@@ -42,7 +43,12 @@ export function Header() {
   useEffect(() => {
     fetch('/api/auth/session')
       .then((r) => r.json())
-      .then((data) => setIsLoggedIn(data.authenticated))
+      .then((data) => {
+        setIsLoggedIn(data.authenticated)
+        if (data.authenticated && data.email) {
+          setUserEmail(data.email)
+        }
+      })
       .catch(() => setIsLoggedIn(false))
   }, [])
 
@@ -80,6 +86,18 @@ export function Header() {
     setMobileOpen(false)
   }
 
+  function getInitials(email: string | null): string {
+    if (!email) return '?'
+    if (email.includes('@')) {
+      return email[0].toUpperCase()
+    }
+    const parts = email.trim().split(/\s+/)
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    }
+    return email[0].toUpperCase()
+  }
+
   const cartLabel = itemCount > 0
     ? `Handlekurv, ${itemCount} varer`
     : 'Handlekurv, tom'
@@ -88,13 +106,16 @@ export function Header() {
     <>
       <header
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 flex h-20 items-center justify-center motion-safe:transition-all motion-safe:duration-200',
+          'fixed z-50 flex h-20 items-center justify-center motion-safe:transition-all motion-safe:duration-300',
+          isScrolled
+            ? 'top-3 left-4 right-4 lg:left-6 lg:right-6 rounded-2xl shadow-lg'
+            : 'top-0 left-0 right-0',
           isTransparent
             ? isScrolled
-              ? 'bg-forest text-cream shadow-md'
+              ? 'bg-forest text-cream'
               : 'bg-transparent'
             : isScrolled
-              ? 'bg-cream shadow-md'
+              ? 'bg-cream'
               : 'bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)]'
         )}
       >
@@ -135,14 +156,12 @@ export function Header() {
             <div className="relative">
               <button
                 type="button"
-                className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                  isTransparent ? 'bg-cream/20 text-cream hover:bg-cream/30' : 'bg-forest/10 text-forest hover:bg-forest/20'
-                }`}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-forest text-cream text-[14px] font-semibold hover:bg-forest/90 motion-safe:transition-colors"
                 onClick={() => setProfileOpen(!profileOpen)}
                 aria-label="Min konto"
                 aria-expanded={profileOpen}
               >
-                <User className="h-5 w-5" aria-hidden="true" />
+                {getInitials(userEmail)}
               </button>
               {profileOpen && (
                 <div className="absolute right-0 top-12 w-48 rounded-xl border border-forest/10 bg-cream py-2 shadow-lg">
