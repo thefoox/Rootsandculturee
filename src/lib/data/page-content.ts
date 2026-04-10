@@ -82,7 +82,12 @@ const _getNavigationPages = unstable_cache(
 
 export async function getNavigationPages(): Promise<PageContent[]> {
   if (!adminDb) return getMockNavigationPages()
-  return _getNavigationPages()
+  try {
+    return await _getNavigationPages()
+  } catch (e) {
+    console.warn('getNavigationPages failed:', e)
+    return getMockNavigationPages()
+  }
 }
 
 const _getPageContentBySlug = unstable_cache(
@@ -105,5 +110,10 @@ export async function getPageContentBySlug(slug: string): Promise<PageContent | 
   if (!adminDb) {
     return Array.from(mockPageContent.values()).find((p) => p.slug === slug) ?? null
   }
-  return _getPageContentBySlug(slug)
+  try {
+    return await _getPageContentBySlug(slug)
+  } catch (e) {
+    console.warn('getPageContentBySlug failed:', e)
+    return Array.from(mockPageContent.values()).find((p) => p.slug === slug) ?? null
+  }
 }
