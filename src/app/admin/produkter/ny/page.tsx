@@ -73,8 +73,9 @@ export default function NewProductPage() {
       router.push('/admin/produkter')
     } else if (result.errors) {
       setErrors(result.errors)
-      if (result.errors._form) {
-        toast.error(result.errors._form)
+      const firstError = result.errors._form || Object.values(result.errors)[0]
+      if (firstError) {
+        toast.error(firstError)
       }
       // Scroll to first visible error after React re-renders
       requestAnimationFrame(() => {
@@ -157,10 +158,10 @@ export default function NewProductPage() {
             Bilder
           </h2>
           <ImageUpload images={images} onChange={setImages} />
-          {errors.images && (
+          {(errors.images || Object.keys(errors).some(k => k.startsWith('images.'))) && (
             <FormError
               id="images-error"
-              message={errors.images}
+              message={errors.images || Object.entries(errors).filter(([k]) => k.startsWith('images.')).map(([, v]) => v).join('. ')}
               className="mt-2"
             />
           )}

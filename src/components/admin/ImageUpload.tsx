@@ -39,7 +39,8 @@ export function ImageUpload({
           const res = await fetch('/api/upload', { method: 'POST', body: formData })
           const data = await res.json()
           if (!res.ok) throw new Error(data.error || 'Opplasting feilet.')
-          const newImage: ProductImage = { url: data.url, alt: '' }
+          const altFromFilename = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ')
+          const newImage: ProductImage = { url: data.url, alt: altFromFilename }
           onChange([...images, newImage])
           images = [...images, newImage]
           toast.success('Bilde lastet opp.')

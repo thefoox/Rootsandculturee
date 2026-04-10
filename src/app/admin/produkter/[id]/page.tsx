@@ -97,6 +97,10 @@ export default function EditProductPage() {
       router.push('/admin/produkter')
     } else if (result.errors) {
       setErrors(result.errors)
+      const firstError = result.errors._form || Object.values(result.errors)[0]
+      if (firstError) {
+        toast.error(firstError)
+      }
     }
   }
 
