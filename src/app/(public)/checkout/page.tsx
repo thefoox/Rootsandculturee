@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useCart, getItemKey } from '@/components/cart/CartProvider'
+import { useCart } from '@/components/cart/CartProvider'
 import { OrderSummaryPanel } from '@/components/cart/OrderSummaryPanel'
 import { CheckoutForm } from '@/components/checkout/CheckoutForm'
 import { StripeElementsWrapper } from '@/components/checkout/StripeElementsWrapper'
@@ -105,22 +105,6 @@ export default function CheckoutPage() {
       <div className="flex flex-col gap-12 lg:flex-row">
         {/* Checkout form -- left column */}
         <div className="flex-1 lg:w-[60%]">
-          {/* Gift card redemption */}
-          <div className="mb-6">
-            <GiftCardInput
-              onApply={(code, balance) => {
-                setGiftCardCode(code)
-                setGiftCardBalance(balance)
-              }}
-              onRemove={() => {
-                setGiftCardCode(null)
-                setGiftCardBalance(null)
-              }}
-              appliedCode={giftCardCode}
-              appliedBalance={giftCardDeduction > 0 ? giftCardDeduction : null}
-            />
-          </div>
-
           {clientSecret ? (
             <StripeElementsWrapper clientSecret={clientSecret}>
               <CheckoutForm
@@ -153,62 +137,50 @@ export default function CheckoutPage() {
             </summary>
             <div className="mt-3">
               <OrderSummaryPanel
+                items={items}
                 subtotal={subtotal}
                 shippingCost={shippingCost}
+                giftCardDeduction={giftCardDeduction}
                 showCta={false}
-              />
-              {/* Item list */}
-              <div className="mt-4 space-y-2 rounded-lg border border-forest/12 bg-card p-4">
-                {items.map((item) => (
-                  <div
-                    key={getItemKey(item)}
-                    className="flex justify-between text-label text-forest"
-                  >
-                    <span>
-                      {item.name}
-                      {item.variantLabel && ` — ${item.variantLabel}`}
-                      {item.quantity > 1 ? ` x${item.quantity}` : ''}
-                    </span>
-                    <span className="text-forest">
-                      {item.isEarlybird && item.originalPrice && (
-                        <span className="mr-2 text-body/50 line-through">{formatPrice(item.originalPrice)}</span>
-                      )}
-                      {formatPrice(item.price * item.quantity)}
-                      {item.isEarlybird && (
-                        <span className="ml-1 text-rust text-[11px]">earlybird</span>
-                      )}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              >
+                <GiftCardInput
+                  onApply={(code, balance) => {
+                    setGiftCardCode(code)
+                    setGiftCardBalance(balance)
+                  }}
+                  onRemove={() => {
+                    setGiftCardCode(null)
+                    setGiftCardBalance(null)
+                  }}
+                  appliedCode={giftCardCode}
+                  appliedBalance={giftCardDeduction > 0 ? giftCardDeduction : null}
+                />
+              </OrderSummaryPanel>
             </div>
           </details>
 
           {/* Desktop: always visible */}
           <div className="sticky top-24 hidden lg:block">
             <OrderSummaryPanel
+              items={items}
               subtotal={subtotal}
               shippingCost={shippingCost}
+              giftCardDeduction={giftCardDeduction}
               showCta={false}
-            />
-            {/* Item list */}
-            <div className="mt-4 space-y-2 rounded-lg border border-forest/12 bg-card p-4">
-              {items.map((item) => (
-                <div
-                  key={getItemKey(item)}
-                  className="flex justify-between text-label text-forest"
-                >
-                  <span>
-                    {item.name}
-                    {item.variantLabel && ` — ${item.variantLabel}`}
-                    {item.quantity > 1 ? ` x${item.quantity}` : ''}
-                  </span>
-                  <span className="text-forest">
-                    {formatPrice(item.price * item.quantity)}
-                  </span>
-                </div>
-              ))}
-            </div>
+            >
+              <GiftCardInput
+                onApply={(code, balance) => {
+                  setGiftCardCode(code)
+                  setGiftCardBalance(balance)
+                }}
+                onRemove={() => {
+                  setGiftCardCode(null)
+                  setGiftCardBalance(null)
+                }}
+                appliedCode={giftCardCode}
+                appliedBalance={giftCardDeduction > 0 ? giftCardDeduction : null}
+              />
+            </OrderSummaryPanel>
           </div>
         </div>
       </div>

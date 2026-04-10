@@ -64,6 +64,7 @@ export default function HandlekurvPage() {
         {/* Order summary -- right column */}
         <div className="lg:w-[35%]">
           <OrderSummaryPanel
+            items={items}
             subtotal={subtotal}
             shippingCost={shippingCost}
             ctaText="Gå til betaling"

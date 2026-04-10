@@ -127,6 +127,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         {items.length > 0 && (
           <div className="border-t border-forest/12 p-4 space-y-3">
             <OrderSummaryPanel
+              items={items}
               subtotal={subtotal}
               shippingCost={shippingCost}
               ctaText="Gå til betaling"
