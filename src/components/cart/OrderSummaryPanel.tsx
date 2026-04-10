@@ -22,8 +22,8 @@ export function OrderSummaryPanel({
   const total = subtotal + shippingCost
 
   return (
-    <div className="rounded-lg border border-forest/12 bg-card p-6">
-      <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
+    <div className="rounded-xl border border-bark/20 bg-card p-6">
+      <h2 className="mb-5 font-heading text-h4 font-bold text-forest tracking-[-0.015em]">
         Sammendrag
       </h2>
 
@@ -40,11 +40,11 @@ export function OrderSummaryPanel({
           </span>
         </div>
 
-        <div className="border-t border-forest/12 my-4" />
+        <div className="border-t border-bark/20 my-4" />
 
-        <div className="flex items-center justify-between">
-          <span className="text-body font-normal text-forest">Totalt</span>
-          <span className="text-body text-forest">{formatPrice(total)}</span>
+        <div className="flex items-center justify-between pt-3">
+          <span className="text-body font-bold text-forest">Totalt</span>
+          <span className="text-h4 font-bold text-forest">{formatPrice(total)}</span>
         </div>
       </div>
 
