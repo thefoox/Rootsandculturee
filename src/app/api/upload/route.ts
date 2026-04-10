@@ -95,15 +95,14 @@ export async function POST(request: Request) {
     const encodedFilename = encodeURIComponent(filename)
     const buffer = Buffer.from(await file.arrayBuffer())
 
-    // Upload via Firebase Storage JSON API
-    const uploadUrl = `https://storage.googleapis.com/upload/storage/v1/b/${encodeURIComponent(bucketName)}/o?uploadType=media&name=${encodedFilename}`
+    // Upload via Firebase Storage API (not GCS JSON API)
+    const uploadUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o?name=${encodedFilename}`
 
     const uploadRes = await fetch(uploadUrl, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': file.type || 'application/octet-stream',
-        'Content-Length': String(buffer.length),
       },
       body: buffer,
     })
@@ -117,19 +116,12 @@ export async function POST(request: Request) {
       )
     }
 
-    // Make the object public
-    const makePublicUrl = `https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(bucketName)}/o/${encodedFilename}/acl`
-    await fetch(makePublicUrl, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ entity: 'allUsers', role: 'READER' }),
-    })
+    // Firebase Storage returns metadata with a download token
+    const metadata = await uploadRes.json()
+    const downloadToken = metadata.downloadTokens
 
-    // Build the public URL
-    const url = `https://storage.googleapis.com/${bucketName}/${filename}`
+    // Build the download URL using Firebase Storage token format
+    const url = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedFilename}?alt=media&token=${downloadToken}`
     return NextResponse.json({ url })
   } catch (error) {
     console.error('Upload feil:', error)
