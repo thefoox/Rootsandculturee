@@ -1,13 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import {
   useStripe,
   useElements,
   PaymentElement,
 } from '@stripe/react-stripe-js'
-import { LockKeyhole, ArrowLeft, ArrowRight } from 'lucide-react'
+import { LockKeyhole, ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { z } from 'zod'
+import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
 import { Button } from '@/components/ui/Button'
@@ -59,6 +60,9 @@ export function CheckoutForm({
   const [loading, setLoading] = useState(false)
   const [paymentReady, setPaymentReady] = useState(false)
 
+  const step2HeadingRef = useRef<HTMLHeadingElement>(null)
+  const formRef = useRef<HTMLDivElement>(null)
+
   const hasProducts = items.some((i) => i.type === 'product')
   const needsShipping = hasProducts
 
@@ -85,6 +89,17 @@ export function CheckoutForm({
     setErrors({})
     if (validateStep1()) {
       setStep(2)
+      // Focus step 2 heading after render for WCAG AA
+      setTimeout(() => {
+        step2HeadingRef.current?.focus()
+        step2HeadingRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
+    } else {
+      // Focus first errored field for WCAG AA
+      setTimeout(() => {
+        const firstError = formRef.current?.querySelector('[aria-invalid="true"]') as HTMLElement | null
+        firstError?.focus()
+      }, 50)
     }
   }
 
@@ -156,39 +171,60 @@ export function CheckoutForm({
   return (
     <div>
       {/* Step indicator */}
-      <div className="mb-8">
+      <div className="mb-10">
         <div className="flex items-center gap-3">
+          {/* Step 1 */}
           <div className="flex flex-col items-center gap-1">
-            <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step === 1 ? 'bg-forest text-cream' : 'bg-forest/10 text-forest'}`}>
-              1
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-full text-body font-bold ${
+                step >= 2
+                  ? 'bg-forest text-cream'
+                  : step === 1
+                    ? 'bg-forest text-cream ring-2 ring-offset-2 ring-forest/20'
+                    : 'bg-card border border-forest/20 text-body/40'
+              }`}
+              {...(step >= 2 ? { 'aria-label': 'Fullfort' } : {})}
+            >
+              {step >= 2 ? (
+                <Check className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                1
+              )}
             </div>
-            <span className="text-label text-forest/60">Kontaktinfo</span>
+            <span className="text-label text-body">Kontaktinfo</span>
           </div>
-          {/* Connector: filled segment for completed, unfilled for upcoming */}
-          <div className="relative h-px flex-1">
+          {/* Connector */}
+          <div className="relative h-0.5 flex-1">
             <div className="absolute inset-0 bg-forest/12" />
             <div
               className="absolute inset-y-0 left-0 bg-forest motion-safe:transition-all motion-safe:duration-300"
               style={{ width: step >= 2 ? '100%' : '0%' }}
             />
           </div>
+          {/* Step 2 */}
           <div className="flex flex-col items-center gap-1">
-            <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step === 2 ? 'bg-forest text-cream' : 'bg-forest/10 text-forest'}`}>
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-full text-body font-bold ${
+                step === 2
+                  ? 'bg-forest text-cream ring-2 ring-offset-2 ring-forest/20'
+                  : 'bg-card border border-forest/20 text-body/40'
+              }`}
+            >
               2
             </div>
-            <span className="text-label text-forest/60">Betaling</span>
+            <span className="text-label text-body">Betaling</span>
           </div>
         </div>
       </div>
 
       {/* Step 1: Contact + Shipping */}
       {step === 1 && (
-        <div>
-          <section className="mb-8">
-            <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
+        <div ref={formRef}>
+          <section className="relative overflow-hidden rounded-xl border border-forest/10 bg-card p-6 mb-6 before:content-[''] before:absolute before:left-0 before:top-6 before:bottom-6 before:w-0.5 before:bg-bark/40 before:rounded-full">
+            <h2 className="mb-5 font-heading text-h4 font-bold text-forest tracking-[-0.015em]">
               Kontaktinformasjon
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <Input
                 label={userEmail ? `Innlogget som ${userEmail}` : 'E-postadresse'}
                 type="email"
@@ -220,11 +256,11 @@ export function CheckoutForm({
           </section>
 
           {needsShipping && (
-            <section className="mb-8">
-              <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
+            <section className="relative overflow-hidden rounded-xl border border-forest/10 bg-card p-6 mb-6 before:content-[''] before:absolute before:left-0 before:top-6 before:bottom-6 before:w-0.5 before:bg-bark/40 before:rounded-full">
+              <h2 className="mb-5 font-heading text-h4 font-bold text-forest tracking-[-0.015em]">
                 Leveringsadresse
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <Input
                   label="Adresse"
                   value={address}
@@ -258,7 +294,7 @@ export function CheckoutForm({
           <Button
             type="button"
             variant="primary"
-            className="w-full"
+            className="w-full min-h-[48px] font-bold"
             onClick={handleNextStep}
           >
             <span>Gå til betaling</span>
@@ -271,10 +307,11 @@ export function CheckoutForm({
       {step === 2 && (
         <form onSubmit={handleSubmit} noValidate>
           {/* Summary of step 1 info */}
-          <div className="mb-6 rounded-lg border border-forest/8 bg-card p-4">
+          <div className="mb-6 rounded-xl border border-forest/10 bg-card p-5">
+            <p className="text-label font-normal text-body mb-3">Dine opplysninger</p>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-body text-body text-forest font-medium">{fullName}</p>
+                <p className="font-body text-body text-forest font-normal">{fullName}</p>
                 <p className="font-body text-label text-body">{email}</p>
                 <p className="font-body text-label text-body">{phone}</p>
                 {needsShipping && (
@@ -294,16 +331,23 @@ export function CheckoutForm({
             </div>
           </div>
 
-          <section className="mb-8">
-            <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
+          <section className="mb-6">
+            <h2
+              ref={step2HeadingRef}
+              tabIndex={-1}
+              className="mb-5 font-heading text-h4 font-bold text-forest tracking-[-0.015em] outline-none"
+            >
               Betaling
             </h2>
             <div className="mb-4 flex items-center gap-2">
-              <LockKeyhole className="h-4 w-4 text-body" aria-hidden="true" />
+              <LockKeyhole className="h-4 w-4 text-success" aria-hidden="true" />
               <span className="text-label text-body">Sikret med Stripe</span>
             </div>
             <div
-              className="rounded-lg border border-forest/20 bg-card p-6"
+              className={cn(
+                "rounded-xl border border-bark/30 bg-card p-6",
+                loading && "pointer-events-none opacity-60"
+              )}
               aria-label="Betalingsinformasjon"
             >
               <PaymentElement
@@ -320,7 +364,7 @@ export function CheckoutForm({
           <Button
             type="submit"
             variant="primary"
-            className="w-full"
+            className="w-full min-h-[48px] font-bold shadow-md"
             loading={loading}
             disabled={!stripe || !elements || !paymentReady}
             aria-busy={loading}
