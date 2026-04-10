@@ -5,13 +5,14 @@ import { createSession, deleteSession } from '@/lib/session'
 import { subscribeNewsletter } from '@/lib/email/contacts'
 import type { AuthResult } from '@/types'
 
-// Optional: firebase-admin for Firestore user docs (may fail on Vercel)
-let adminDb: FirebaseFirestore.Firestore | null = null
-try {
-  const admin = await import('@/lib/firebase/admin')
-  adminDb = admin.adminDb
-} catch {
-  // firebase-admin not available — auth still works, just no user docs
+// firebase-admin loaded lazily per-action to avoid crashing the whole file
+async function getAdminDb() {
+  try {
+    const admin = await import('@/lib/firebase/admin')
+    return admin.adminDb
+  } catch {
+    return null
+  }
 }
 
 export async function loginAction(idToken: string): Promise<AuthResult> {
@@ -49,9 +50,10 @@ export async function registerAction(
     }
 
     // Create user document in Firestore (optional — may fail if firebase-admin unavailable)
-    if (adminDb) {
+    const db = await getAdminDb()
+    if (db) {
       try {
-        await adminDb.collection('users').doc(decoded.uid).set({
+        await db.collection('users').doc(decoded.uid).set({
           uid: decoded.uid,
           email: decoded.email,
           displayName,
@@ -94,11 +96,12 @@ export async function googleLoginAction(idToken: string): Promise<AuthResult> {
     }
 
     // Create/update user doc in Firestore (optional — may fail if firebase-admin unavailable)
-    if (adminDb) {
+    const db2 = await getAdminDb()
+    if (db2) {
       try {
-        const userDoc = await adminDb.collection('users').doc(decoded.uid).get()
+        const userDoc = await db2.collection('users').doc(decoded.uid).get()
         if (!userDoc.exists) {
-          await adminDb.collection('users').doc(decoded.uid).set({
+          await db2.collection('users').doc(decoded.uid).set({
             uid: decoded.uid,
             email: decoded.email,
             displayName: decoded.name || '',
@@ -108,7 +111,7 @@ export async function googleLoginAction(idToken: string): Promise<AuthResult> {
             lastLoginAt: new Date(),
           })
         } else {
-          await adminDb.collection('users').doc(decoded.uid).update({
+          await db2.collection('users').doc(decoded.uid).update({
             lastLoginAt: new Date(),
           })
         }
