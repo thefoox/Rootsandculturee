@@ -212,7 +212,7 @@ export async function createPaymentIntent(
         giftCardCode: giftCardCode || '',
         giftCardDeduction: String(giftCardDeduction),
       },
-      receipt_email: customerEmail,
+      ...(customerEmail ? { receipt_email: customerEmail } : {}),
     })
 
     if (!paymentIntent.client_secret) {

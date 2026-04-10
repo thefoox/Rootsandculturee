@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import crypto from 'crypto'
+import { revalidateTag } from 'next/cache'
 import { stripe } from '@/lib/stripe/server'
 import { adminDb } from '@/lib/firebase/admin'
 import { resend, FROM_EMAIL } from '@/lib/email/resend'
@@ -273,6 +274,12 @@ export async function POST(req: Request) {
             whatToBring,
           })
         })
+      }
+
+      // Invalidate bookings cache so admin page shows new bookings
+      if (bookingItems.length > 0) {
+        revalidateTag('bookings', 'max')
+        revalidateTag('experience-dates', 'max')
       }
 
       // Process gift card purchases

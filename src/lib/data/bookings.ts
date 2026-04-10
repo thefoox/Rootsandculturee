@@ -1,5 +1,4 @@
 import 'server-only'
-import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Booking, BookingStatus } from '@/types'
 import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
@@ -30,18 +29,14 @@ function docToBooking(doc: FirestoreDoc): Booking {
   }
 }
 
-export const getBookings = unstable_cache(
-  async (): Promise<Booking[]> => {
-    const snapshot = await adminDb
-      .collection('bookings')
-      .orderBy('createdAt', 'desc')
-      .limit(100)
-      .get()
-    return snapshot.docs.map(docToBooking)
-  },
-  ['bookings'],
-  { tags: ['bookings'] }
-)
+export async function getBookings(): Promise<Booking[]> {
+  const snapshot = await adminDb
+    .collection('bookings')
+    .orderBy('createdAt', 'desc')
+    .limit(100)
+    .get()
+  return snapshot.docs.map(docToBooking)
+}
 
 export async function getBookingsByUser(uid: string, email?: string): Promise<Booking[]> {
   const byIdSnapshot = await adminDb
