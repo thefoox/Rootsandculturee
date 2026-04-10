@@ -4,19 +4,21 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { signOut } from '@/lib/firebase/auth'
+import { Package, TreePine, FileText, LayoutTemplate, ShoppingBag, CalendarDays, Gift, Users, ArrowLeft, LogOut, X } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-const contentNavItems = [
-  { href: '/admin/produkter', label: 'Produkter' },
-  { href: '/admin/opplevelser', label: 'Opplevelser' },
-  { href: '/admin/artikler', label: 'Artikler' },
-  { href: '/admin/innhold', label: 'Sideinnhold' },
+const contentNavItems: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: '/admin/produkter', label: 'Produkter', icon: Package },
+  { href: '/admin/opplevelser', label: 'Opplevelser', icon: TreePine },
+  { href: '/admin/artikler', label: 'Artikler', icon: FileText },
+  { href: '/admin/innhold', label: 'Sideinnhold', icon: LayoutTemplate },
 ]
 
-const orderNavItems = [
-  { href: '/admin/ordrer', label: 'Ordrer' },
-  { href: '/admin/bookinger', label: 'Bookinger' },
-  { href: '/admin/gavekort', label: 'Gavekort' },
-  { href: '/admin/kunder', label: 'Kunder' },
+const orderNavItems: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: '/admin/ordrer', label: 'Ordrer', icon: ShoppingBag },
+  { href: '/admin/bookinger', label: 'Bookinger', icon: CalendarDays },
+  { href: '/admin/gavekort', label: 'Gavekort', icon: Gift },
+  { href: '/admin/kunder', label: 'Kunder', icon: Users },
 ]
 
 interface AdminSidebarProps {
@@ -30,21 +32,21 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
   return (
     <aside
       className={cn(
-        'dark-surface flex h-full w-[240px] flex-col bg-admin-sidebar',
+        'flex h-full w-[240px] flex-col bg-white border-r border-forest/12',
         mobile && 'fixed inset-y-0 left-0 z-[250]'
       )}
     >
       <div className="flex items-center justify-between px-4 pb-4 pt-6">
-        <span className="font-body text-label text-cream">
+        <span className="font-body text-label text-forest">
           Roots &amp; Culture Admin
         </span>
         {mobile && (
           <button
             onClick={onClose}
-            className="flex h-[44px] w-[44px] items-center justify-center text-cream"
+            className="flex h-[44px] w-[44px] items-center justify-center text-forest"
             aria-label="Lukk admin-meny"
           >
-            <span aria-hidden="true">✕</span>
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
         )}
       </div>
@@ -65,13 +67,14 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    'flex h-[44px] items-center px-4 text-body text-cream',
-                    'hover:bg-[rgba(254,252,243,0.08)]',
+                    'flex h-[44px] items-center gap-3 px-4 text-body text-forest',
+                    'hover:bg-card/60',
                     isActive &&
-                      'border-l-[3px] border-forest bg-[rgba(254,252,243,0.08)]'
+                      'border-l-[3px] border-forest bg-card'
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >
+                  <item.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
                   {item.label}
                 </Link>
               </li>
@@ -94,13 +97,14 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    'flex h-[44px] items-center px-4 text-body text-cream',
-                    'hover:bg-[rgba(254,252,243,0.08)]',
+                    'flex h-[44px] items-center gap-3 px-4 text-body text-forest',
+                    'hover:bg-card/60',
                     isActive &&
-                      'border-l-[3px] border-forest bg-[rgba(254,252,243,0.08)]'
+                      'border-l-[3px] border-forest bg-card'
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >
+                  <item.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
                   {item.label}
                 </Link>
               </li>
@@ -109,12 +113,12 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
         </ul>
       </nav>
 
-      <div className="border-t border-cream/10 px-4 py-4">
+      <div className="border-t border-forest/12 px-4 py-4">
         <Link
           href="/"
-          className="flex h-[44px] items-center gap-2 text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
+          className="flex h-[44px] items-center gap-3 text-body text-forest hover:bg-card/60"
         >
-          <span aria-hidden="true">←</span>
+          <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden="true" />
           Tilbake til nettbutikk
         </Link>
         <button
@@ -124,8 +128,9 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
             await fetch('/api/auth/logout', { method: 'POST' })
             window.location.href = '/'
           }}
-          className="flex h-[44px] w-full items-center text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
+          className="flex h-[44px] w-full items-center gap-3 text-body text-forest hover:text-destructive hover:bg-card/60"
         >
+          <LogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
           Logg ut
         </button>
       </div>
