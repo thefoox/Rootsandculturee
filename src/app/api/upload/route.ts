@@ -23,7 +23,7 @@ async function getStorageAccessToken(): Promise<string> {
   const key = await importPKCS8(privateKey, 'RS256')
 
   const jwt = await new SignJWT({
-    scope: 'https://www.googleapis.com/auth/devstorage.read_write',
+    scope: 'https://www.googleapis.com/auth/cloud-platform',
     iss: clientEmail,
     sub: clientEmail,
     aud: 'https://oauth2.googleapis.com/token',
@@ -95,8 +95,8 @@ export async function POST(request: Request) {
     const encodedFilename = encodeURIComponent(filename)
     const buffer = Buffer.from(await file.arrayBuffer())
 
-    // Upload via Firebase Storage API (not GCS JSON API)
-    const uploadUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o?name=${encodedFilename}`
+    // Upload via GCS JSON API with cloud-platform scope
+    const uploadUrl = `https://storage.googleapis.com/upload/storage/v1/b/${bucketName}/o?uploadType=media&name=${encodedFilename}`
 
     const uploadRes = await fetch(uploadUrl, {
       method: 'POST',
@@ -109,19 +109,15 @@ export async function POST(request: Request) {
 
     if (!uploadRes.ok) {
       const err = await uploadRes.text()
-      console.error('Storage upload failed:', err)
+      console.error('Storage upload failed:', uploadRes.status, err)
       return NextResponse.json(
         { error: 'Opplasting mislyktes. Prøv igjen.' },
         { status: 500 }
       )
     }
 
-    // Firebase Storage returns metadata with a download token
-    const metadata = await uploadRes.json()
-    const downloadToken = metadata.downloadTokens
-
-    // Build the download URL using Firebase Storage token format
-    const url = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedFilename}?alt=media&token=${downloadToken}`
+    // Use Firebase Storage download URL format (works without ACLs)
+    const url = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedFilename}?alt=media`
     return NextResponse.json({ url })
   } catch (error) {
     console.error('Upload feil:', error)
