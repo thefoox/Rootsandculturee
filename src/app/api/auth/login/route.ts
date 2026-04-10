@@ -9,15 +9,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Mangler token.' }, { status: 400 })
     }
 
-    // Debug: decode JWT header+payload without verification to see what we're working with
+    // Debug: decode JWT to check issuer/audience mismatch
     const parts = idToken.split('.')
-    const header = JSON.parse(Buffer.from(parts[0], 'base64url').toString())
-    const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString())
-    console.error('LOGIN DEBUG — token issuer:', payload.iss, 'audience:', payload.aud, 'alg:', header.alg, 'kid:', header.kid, 'projectId:', process.env.FIREBASE_PROJECT_ID)
+    const jwtPayload = JSON.parse(Buffer.from(parts[1], 'base64url').toString())
+    const debugInfo = {
+      tokenIssuer: jwtPayload.iss,
+      tokenAudience: jwtPayload.aud,
+      serverProjectId: process.env.FIREBASE_PROJECT_ID,
+      expectedIssuer: `https://securetoken.google.com/${process.env.FIREBASE_PROJECT_ID}`,
+      match: jwtPayload.iss === `https://securetoken.google.com/${process.env.FIREBASE_PROJECT_ID}` && jwtPayload.aud === process.env.FIREBASE_PROJECT_ID,
+    }
 
     const decoded = await verifyFirebaseToken(idToken)
     if (!decoded) {
-      return NextResponse.json({ success: false, error: 'Ugyldig innlogging. Prøv igjen.' })
+      return NextResponse.json({ success: false, error: 'Ugyldig innlogging. Prøv igjen.', _debug: debugInfo })
     }
 
     await createSession({
