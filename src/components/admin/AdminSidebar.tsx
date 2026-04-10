@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { logoutAction } from '@/actions/auth'
 import { signOut } from '@/lib/firebase/auth'
 
 const contentNavItems = [
@@ -122,7 +121,7 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
           type="button"
           onClick={async () => {
             await signOut()
-            try { await logoutAction() } catch { /* NEXT_REDIRECT */ }
+            await fetch('/api/auth/logout', { method: 'POST' })
             window.location.href = '/'
           }}
           className="flex h-[44px] w-full items-center text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"

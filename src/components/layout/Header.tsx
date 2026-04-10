@@ -13,7 +13,6 @@ import { AuthModal } from '@/components/auth/AuthModal'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { RegisterForm } from '@/components/auth/RegisterForm'
 import { PasswordResetForm } from '@/components/auth/PasswordResetForm'
-import { logoutAction } from '@/actions/auth'
 import { signOut } from '@/lib/firebase/auth'
 import { CartBadge } from '@/components/cart/CartBadge'
 import { CartDrawer } from '@/components/cart/CartDrawer'
@@ -61,11 +60,7 @@ export function Header() {
 
   async function handleLogout() {
     await signOut()
-    try {
-      await logoutAction()
-    } catch {
-      // NEXT_REDIRECT may throw — expected
-    }
+    await fetch('/api/auth/logout', { method: 'POST' })
     window.location.href = '/'
   }
 
