@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // Shared image schema -- alt is always required (WCAG-04, D-19)
 export const imageSchema = z.object({
-  url: z.string().url(),
+  url: z.string().min(1, 'Bilde-URL er påkrevd.'),
   alt: z.string().min(1, 'Alt-tekst er påkrevd for alle bilder.'),
 })
 
