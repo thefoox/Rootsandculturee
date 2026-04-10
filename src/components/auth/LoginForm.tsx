@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
 import { signIn } from '@/lib/firebase/auth'
-import { loginAction } from '@/actions/auth'
 
 interface LoginFormProps {
   onSwitchToRegister: () => void
@@ -41,8 +40,13 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
       // Step 1: Firebase client auth
       const { idToken } = await signIn(email, password)
 
-      // Step 2: Server Action creates jose session cookie
-      const result = await loginAction(idToken)
+      // Step 2: API route creates jose session cookie
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      })
+      const result = await res.json()
       if (!result.success) {
         setFormError(result.error || 'Noe gikk galt.')
         setLoading(false)

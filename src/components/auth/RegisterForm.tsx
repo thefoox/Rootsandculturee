@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
 import { signUp } from '@/lib/firebase/auth'
-import { registerAction } from '@/actions/auth'
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void
@@ -45,8 +44,13 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
       // Step 1: Firebase client auth
       const { idToken } = await signUp(email, password, name)
 
-      // Step 2: Server Action creates user doc + session
-      const result = await registerAction(idToken, name, address, newsletterConsent)
+      // Step 2: API route creates session cookie
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      })
+      const result = await res.json()
       if (!result.success) {
         setFormError(result.error || 'Noe gikk galt.')
         setLoading(false)
