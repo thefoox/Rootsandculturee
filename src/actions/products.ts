@@ -19,6 +19,7 @@ function mapProduct(doc: FirestoreDoc): Product {
     images: (data.images as Product['images']) || [],
     inStock: data.inStock as boolean,
     stockCount: data.stockCount as number,
+    shippingCost: (data.shippingCost as number) ?? 0,
     variants: ((data.variants as Product['variants']) || []).map((v) => ({
       id: v.id,
       label: v.label,
@@ -64,6 +65,7 @@ export async function createProduct(formData: FormData) {
     category: formData.get('category'),
     images: rawImages ? JSON.parse(rawImages) : [],
     stockCount: Number(formData.get('stockCount')),
+    shippingCost: Math.round(Number(formData.get('shippingCost') || '0') * 100),
     publish: formData.get('publish') === 'true',
     variants: rawVariants ? JSON.parse(rawVariants) : [],
   })
@@ -118,6 +120,7 @@ export async function updateProduct(id: string, formData: FormData) {
     category: formData.get('category'),
     images: rawImages ? JSON.parse(rawImages) : [],
     stockCount: Number(formData.get('stockCount')),
+    shippingCost: Math.round(Number(formData.get('shippingCost') || '0') * 100),
     publish: formData.get('publish') === 'true',
     variants: rawVariants ? JSON.parse(rawVariants) : [],
   })

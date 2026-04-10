@@ -69,11 +69,28 @@ export default async function ProduktDetailPage({ params }: PageProps) {
           {product.variants.length === 0 && (
             <PriceBadge priceInOre={product.price} className="mt-4 block text-h4" />
           )}
+          <p className="mt-2 text-label text-forest/70">
+            {product.shippingCost > 0
+              ? `Frakt: ${(product.shippingCost / 100).toLocaleString('nb-NO')} kr`
+              : 'Gratis frakt'}
+          </p>
           <p className="mt-6 font-body text-body leading-[1.5] text-forest whitespace-pre-line">
             {product.description}
           </p>
           <div className="mt-8">
-            {product.variants.length > 0 ? (
+            {!product.inStock ? (
+              <div>
+                <button
+                  disabled
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-forest/30 px-6 font-body text-body font-semibold text-cream cursor-not-allowed"
+                >
+                  Utsolgt
+                </button>
+                <p className="mt-3 text-label text-forest/60">
+                  Dette produktet er midlertidig utsolgt.
+                </p>
+              </div>
+            ) : product.variants.length > 0 ? (
               <VariantSelector product={{ id: product.id, slug: product.slug, name: product.name, price: product.price, images: product.images, variants: product.variants }} />
             ) : (
               <AddToCartButton product={{ id: product.id, slug: product.slug, name: product.name, price: product.price, images: product.images }} />

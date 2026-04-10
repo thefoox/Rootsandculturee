@@ -17,6 +17,7 @@ export const productSchema = z.object({
   category: z.enum(['drikke', 'kaffe-te', 'naturprodukter']),
   images: z.array(imageSchema).min(1, 'Minst ett bilde er påkrevd.'),
   stockCount: z.number().int().min(0),
+  shippingCost: z.number().int().min(0).default(0),
   publish: z.boolean().optional(),
   variants: z
     .array(

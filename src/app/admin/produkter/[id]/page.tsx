@@ -27,6 +27,7 @@ export default function EditProductPage() {
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
+  const [shippingCost, setShippingCost] = useState('0')
   const [stockCount, setStockCount] = useState('0')
   const [category, setCategory] = useState<ProductCategory>('drikke')
   const [images, setImages] = useState<ProductImage[]>([])
@@ -52,6 +53,7 @@ export default function EditProductPage() {
       setSlug(product.slug)
       setDescription(product.description)
       setPrice(String(product.price / 100))
+      setShippingCost(String((product.shippingCost || 0) / 100))
       setStockCount(String(product.stockCount))
       setCategory(product.category)
       setImages(product.images)
@@ -77,6 +79,7 @@ export default function EditProductPage() {
     formData.set('description', description)
     formData.set('price', price)
     formData.set('stockCount', stockCount)
+    formData.set('shippingCost', shippingCost)
     formData.set('category', category)
     formData.set('images', JSON.stringify(images))
     formData.set('publish', String(publish))
@@ -196,7 +199,7 @@ export default function EditProductPage() {
           <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Pris og lager
           </h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <Input
               label="Pris (NOK)"
               type="number"
@@ -204,6 +207,15 @@ export default function EditProductPage() {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               error={errors.price}
+            />
+            <Input
+              label="Frakt (NOK)"
+              type="number"
+              min={0}
+              value={shippingCost}
+              onChange={(e) => setShippingCost(e.target.value)}
+              error={errors.shippingCost}
+              placeholder="0 = gratis"
             />
             <Input
               label="Lagertall"

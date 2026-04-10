@@ -46,6 +46,7 @@ export interface Product {
   images: ProductImage[]
   inStock: boolean
   stockCount: number
+  shippingCost: number // NOK in ore (integer) — 0 = gratis frakt
   variants: ProductVariant[]
   createdAt: Date
   updatedAt: Date

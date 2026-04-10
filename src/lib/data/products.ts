@@ -17,6 +17,7 @@ function mapProduct(doc: FirestoreDoc): Product {
     images: (data.images as Product['images']) || [],
     inStock: data.inStock as boolean,
     stockCount: data.stockCount as number,
+    shippingCost: (data.shippingCost as number) ?? 0,
     variants: ((data.variants as Product['variants']) || []).map((v) => ({
       id: v.id,
       label: v.label,
