@@ -7,7 +7,7 @@ import { createLocalJWKSet, jwtVerify, type JSONWebKeySet } from 'jose'
  * This works on Vercel serverless where firebase-admin fails to load.
  */
 
-const JWKS_URL = 'https://www.googleapis.com/service_account/v1/jwk/securetoken@system.gserviceaccount.com'
+const JWKS_URL = 'https://www.googleapis.com/robot/v1/metadata/jwk/securetoken@system.gserviceaccount.com'
 const FIREBASE_PROJECT_ID = (process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || '').trim()
 
 let cachedJWKS: ReturnType<typeof createLocalJWKSet> | null = null
