@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { logoutAction } from '@/actions/auth'
+import { signOut } from '@/lib/firebase/auth'
 
 const contentNavItems = [
   { href: '/admin/produkter', label: 'Produkter' },
@@ -117,14 +118,17 @@ export function AdminSidebar({ mobile, onClose }: AdminSidebarProps) {
           <span aria-hidden="true">←</span>
           Tilbake til nettbutikk
         </Link>
-        <form action={logoutAction}>
-          <button
-            type="submit"
-            className="flex h-[44px] w-full items-center text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
-          >
-            Logg ut
-          </button>
-        </form>
+        <button
+          type="button"
+          onClick={async () => {
+            await signOut()
+            try { await logoutAction() } catch { /* NEXT_REDIRECT */ }
+            window.location.href = '/'
+          }}
+          className="flex h-[44px] w-full items-center text-body text-cream hover:bg-[rgba(254,252,243,0.08)]"
+        >
+          Logg ut
+        </button>
       </div>
     </aside>
   )

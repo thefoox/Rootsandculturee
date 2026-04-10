@@ -14,6 +14,7 @@ import { LoginForm } from '@/components/auth/LoginForm'
 import { RegisterForm } from '@/components/auth/RegisterForm'
 import { PasswordResetForm } from '@/components/auth/PasswordResetForm'
 import { logoutAction } from '@/actions/auth'
+import { signOut } from '@/lib/firebase/auth'
 import { CartBadge } from '@/components/cart/CartBadge'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import { useCart } from '@/components/cart/CartProvider'
@@ -59,10 +60,11 @@ export function Header() {
   }, [])
 
   async function handleLogout() {
+    await signOut()
     try {
       await logoutAction()
     } catch {
-      // redirect() throws NEXT_REDIRECT — expected
+      // NEXT_REDIRECT may throw — expected
     }
     window.location.href = '/'
   }
