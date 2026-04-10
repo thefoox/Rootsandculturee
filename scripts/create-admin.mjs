@@ -23,13 +23,35 @@ const auth = getAuth(app)
 const db = getFirestore(app)
 
 async function main() {
-  const EMAIL = 'admin@rootsandculture.com'
+  const EMAIL = 'williamlundflink@gmail.com'
+
+  // Look up existing user
   const user = await auth.getUserByEmail(EMAIL)
-  console.log('UID:', user.uid)
-  console.log('Providers:', user.providerData.map(p => p.providerId))
-  console.log('Custom claims:', JSON.stringify(user.customClaims))
-  console.log('Email verified:', user.emailVerified)
-  console.log('Disabled:', user.disabled)
+  console.log('Found user:', user.uid, user.email)
+
+  // Set admin custom claims
+  await auth.setCustomUserClaims(user.uid, { admin: true })
+  console.log('Set admin custom claims for', user.uid)
+
+  // Create Firestore user profile
+  await db.collection('users').doc(user.uid).set({
+    uid: user.uid,
+    email: EMAIL,
+    displayName: user.displayName || '',
+    address: '',
+    role: 'admin',
+    createdAt: new Date(),
+  }, { merge: true })
+  console.log('Created/updated Firestore user profile')
+
+  // Verify
+  const updated = await auth.getUser(user.uid)
+  console.log('\n--- Verification ---')
+  console.log('UID:', updated.uid)
+  console.log('Email:', updated.email)
+  console.log('Display name:', updated.displayName)
+  console.log('Custom claims:', JSON.stringify(updated.customClaims))
+  console.log('Email verified:', updated.emailVerified)
 }
 
 main().catch((err) => {

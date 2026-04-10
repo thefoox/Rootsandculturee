@@ -95,3 +95,15 @@ Plans:
 Plans:
 - [x] 16-01-PLAN.md — White admin navigation with lucide icons: retheme sidebar and top bar from dark green to white, add lucide-react icons to all nav items and footer actions
 - [x] 16-02-PLAN.md — Collapsible sidebar: add collapsed state management, toggle button, icon-only mode with tooltips, width transition with motion-safe guard
+
+### Phase 17: Checkout Redesign
+
+**Goal**: Redesign checkout-siden til profesjonell premium-kvalitet — forbedre layout, spacing, typografi og visuelt hierarki. Behold all funksjonalitet (2-stegs skjema, gavekort, sammendrag) men oppgrader visuelt design til å matche en premium norsk natur-nettbutikk.
+**Requirements**: UI-SPEC (visual design contract)
+**Depends on**: Phase 16
+**Plans:** 3 plans
+
+Plans:
+- [ ] 17-01-PLAN.md — OrderSummaryPanel warm borders and Totalt hierarchy + GiftCardInput disclosure toggle and success applied state
+- [ ] 17-02-PLAN.md — CheckoutForm step indicator redesign, section cards with bark accent bar, payment section warmth, CTA sizing, and WCAG focus management
+- [ ] 17-03-PLAN.md — CheckoutPage layout (960px), GiftCardInput reposition below form, loading skeleton, mobile summary accordion with ChevronDown, item list continuation
