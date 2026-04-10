@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
 import { signIn, signInWithGoogle } from '@/lib/firebase/auth'
-import { loginAction } from '@/actions/auth'
+import { loginAction, googleLoginAction } from '@/actions/auth'
 
 interface LoginFormProps {
   onSwitchToRegister: () => void
@@ -75,10 +75,23 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
     setGoogleLoading(true)
 
     try {
-      // Redirects to Google — page navigates away
-      await signInWithGoogle()
-    } catch {
-      setFormError('Kunne ikke starte Google-innlogging. Prøv igjen.')
+      const { idToken } = await signInWithGoogle()
+      const result = await googleLoginAction(idToken)
+      if (!result.success) {
+        setFormError(result.error || 'Noe gikk galt.')
+        setGoogleLoading(false)
+        return
+      }
+      router.refresh()
+      onSuccess()
+    } catch (err: unknown) {
+      const firebaseError = err as { code?: string }
+      if (firebaseError.code === 'auth/popup-closed-by-user') {
+        // User closed popup — no error
+      } else {
+        console.error('Google login error:', err)
+        setFormError('Innlogging med Google feilet. Prøv igjen.')
+      }
       setGoogleLoading(false)
     }
   }

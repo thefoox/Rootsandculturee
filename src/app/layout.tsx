@@ -6,7 +6,6 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { CookieBanner } from '@/components/layout/CookieBanner'
 import { CartProvider } from '@/components/cart/CartProvider'
-import { GoogleRedirectHandler } from '@/components/auth/GoogleRedirectHandler'
 import './globals.css'
 
 const inter = Inter({
@@ -32,7 +31,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="nb" className={`${inter.variable} ${merriweather.variable}`}>
       <body>
         <CartProvider>
-          <GoogleRedirectHandler />
           <SkipLink />
           <Header />
           <main id="main-content">
