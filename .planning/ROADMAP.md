@@ -84,3 +84,14 @@ Plans:
 - [x] 15-01-PLAN.md — Oppgrader section-komponenter: HeroSection (fullscreen bunn-tekst + compact variant), TrustBarSection (dark inline), ExperiencesGridSection (filter-tabs + detaljkort), FaqSection (2-kolonne kort), ContactInfoSection (overlappende kort), TeamSection (foto-strip), ny LocationSection
 - [x] 15-02-PLAN.md — Bygg om forside (page.tsx) med forside-v4 layout: fullscreen hero, dark trust bar, kategori-kort, filter-opplevelser, produkter 4-grid, testimonials, blogg, nyhetsbrev
 - [x] 15-03-PLAN.md — Bygg om kontakt og om-oss: kontakt-v2 (compact hero + overlappende kort + skjema + FAQ-grid + lokasjon) og om-oss (centered hero + overlappende story + verdier + team + lokasjon dark + CTA)
+
+### Phase 16: Admin Dashboard Redesign
+
+**Goal**: Redesign admin-panelet med hvitt sidepanel, mulighet til a lukke/apne sidepanelet, og forbedret navigasjon — behold alle eksisterende menylenker og seksjoner, bytt fra mork bakgrunn til hvit, legg til lucide-react ikoner og collapsed-modus
+**Requirements**: ADR-01 (White sidebar), ADR-02 (Lucide icons), ADR-03 (Collapsible sidebar), ADR-04 (Mobile top bar white), ADR-05 (WCAG 2.1 AA), ADR-06 (Motion-safe transitions)
+**Depends on**: Phase 15
+**Plans:** 2 plans
+
+Plans:
+- [ ] 16-01-PLAN.md — White admin navigation with lucide icons: retheme sidebar and top bar from dark green to white, add lucide-react icons to all nav items and footer actions
+- [ ] 16-02-PLAN.md — Collapsible sidebar: add collapsed state management, toggle button, icon-only mode with tooltips, width transition with motion-safe guard
