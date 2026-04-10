@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormError } from '@/components/ui/FormError'
-import { signIn, signInWithGoogle } from '@/lib/firebase/auth'
-import { loginAction, googleLoginAction } from '@/actions/auth'
+import { signIn } from '@/lib/firebase/auth'
+import { loginAction } from '@/actions/auth'
 
 interface LoginFormProps {
   onSwitchToRegister: () => void
@@ -21,7 +21,6 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [googleLoading, setGoogleLoading] = useState(false)
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {}
@@ -70,57 +69,19 @@ export function LoginForm({ onSwitchToRegister, onSwitchToReset, onSuccess }: Lo
     }
   }
 
-  async function handleGoogleLogin() {
-    setFormError('')
-    setGoogleLoading(true)
-
-    try {
-      const { idToken } = await signInWithGoogle()
-      const result = await googleLoginAction(idToken)
-      if (!result.success) {
-        setFormError(result.error || 'Noe gikk galt.')
-        setGoogleLoading(false)
-        return
-      }
-      router.refresh()
-      onSuccess()
-    } catch (err: unknown) {
-      const firebaseError = err as { code?: string }
-      if (firebaseError.code === 'auth/popup-closed-by-user') {
-        // User closed popup — no error
-      } else {
-        console.error('Google login error:', err)
-        setFormError('Innlogging med Google feilet. Prøv igjen.')
-      }
-      setGoogleLoading(false)
-    }
-  }
-
   return (
     <form onSubmit={handleSubmit} noValidate>
       {formError && (
         <FormError id="login-form-error" message={formError} className="mb-4" />
       )}
 
-      <button
-        type="button"
-        onClick={handleGoogleLogin}
-        disabled={googleLoading || loading}
-        className="flex w-full items-center justify-center gap-2 rounded-md border border-forest/20 bg-white px-4 py-2 font-body text-body font-medium text-forest transition-all duration-100 min-h-[44px] hover:bg-cream disabled:opacity-40 disabled:cursor-not-allowed"
-        aria-busy={googleLoading || undefined}
+      <a
+        href="/api/auth/google"
+        className="flex w-full items-center justify-center gap-2 rounded-md border border-forest/20 bg-white px-4 py-2 font-body text-body font-medium text-forest transition-all duration-100 min-h-[44px] hover:bg-cream"
       >
-        {googleLoading ? (
-          <>
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-forest/20 border-t-forest" aria-hidden="true" />
-            <span>Laster...</span>
-          </>
-        ) : (
-          <>
-            <span className="text-lg font-bold leading-none" aria-hidden="true">G</span>
-            <span>Logg inn med Google</span>
-          </>
-        )}
-      </button>
+        <span className="text-lg font-bold leading-none" aria-hidden="true">G</span>
+        <span>Logg inn med Google</span>
+      </a>
 
       <div className="flex items-center gap-3 my-6">
         <div className="h-px flex-1 bg-forest/12" />
