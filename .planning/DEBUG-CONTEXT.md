@@ -127,12 +127,48 @@
 
 ---
 
+## OFFISIELL DOKUMENTASJON — LES DISSE
+
+### Firebase Admin SDK på Vercel/Serverless
+- **Firebase Admin Node.js SDK setup:** https://firebase.google.com/docs/admin/setup
+- **initializeFirestore med preferRest:** https://github.com/firebase/firebase-admin-node — se `initializeFirestore(app, { preferRest: true })`
+- **Firestore REST API (alternativ til firebase-admin):** https://firebase.google.com/docs/firestore/use-rest-api
+- **Firestore REST API referanse:** https://cloud.google.com/firestore/docs/reference/rest
+
+### Firebase Auth og Google Login
+- **signInWithRedirect best practices (third-party cookies):** https://firebase.google.com/docs/auth/web/redirect-best-practices
+- **Firebase Auth Web SDK:** https://firebase.google.com/docs/auth/web/start
+- **Google OAuth 2.0 server-side flow:** https://developers.google.com/identity/protocols/oauth2/web-server
+- **Google JWKS endpoint (for token-verifisering):** https://www.googleapis.com/service_account/v1/jwk/securetoken@system.gserviceaccount.com
+- **Verify Firebase ID tokens (uten Admin SDK):** https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
+
+### Vercel + Next.js
+- **Next.js on Vercel:** https://vercel.com/docs/frameworks/nextjs
+- **serverExternalPackages:** https://nextjs.org/docs/app/api-reference/config/next-config-js/serverExternalPackages
+- **Next.js headers config:** https://nextjs.org/docs/app/api-reference/config/next-config-js/headers
+- **Next.js rewrites:** https://nextjs.org/docs/app/api-reference/config/next-config-js/rewrites
+- **Vercel Environment Variables:** https://vercel.com/docs/environment-variables
+
+### COOP/CSP/Iframe-problematikk
+- **Next.js GitHub Discussion #51135 (COOP + Firebase):** https://github.com/vercel/next.js/discussions/51135
+- **Firebase JS SDK Issue #8541 (COOP):** https://github.com/firebase/firebase-js-sdk/issues/8541
+- **Firebase JS SDK Issue #8295 (COOP):** https://github.com/firebase/firebase-js-sdk/issues/8295
+- **SO: COOP fix for Firebase:** https://stackoverflow.com/questions/76446840/cross-origin-opener-policy-policy-would-block-the-window-closed-call-error-while
+
+### Nøkkelkonsepter å forstå
+- **COOP (Cross-Origin-Opener-Policy):** Vercel setter denne automatisk. `same-origin-allow-popups` tillater popup-kommunikasjon. COOP-warnings i konsollen er fra Google og kan IKKE fjernes — de er ufarlige.
+- **Firestore REST API:** Kan brukes uten firebase-admin npm-pakken. Krever OAuth2 access token fra service account. Kan være løsningen for å hente ekte data fra Firestore på Vercel.
+- **jose biblioteket:** Allerede installert (v6.2.2). Brukes for JWT-verifisering og session-cookies. Kan verifisere Firebase ID tokens via Google JWKS.
+- **`Failed to load external module`:** Turbopack (Vercel bundler) kan ikke bundle firebase-admin sine native gRPC-avhengigheter. Ingen kjent workaround for Next.js 16 + Turbopack.
+
+---
+
 ## NESTE STEG
 
 1. **Verifiser** at logout fungerer etter siste push (fjernet firebase-admin fra auth actions)
 2. **Legg til** `ADMIN_EMAILS=wlundskall@gmail.com` i Vercel → logg ut/inn → test /admin
 3. **Løs firebase-admin på Vercel** — det store uløste problemet. Alternativer:
-   - Bruk Firestore REST API direkte (uten firebase-admin npm-pakke)
+   - **Firestore REST API** direkte (uten firebase-admin npm-pakke) — mest lovende
    - Flytt til Firebase Hosting (Cloud Functions kjører firebase-admin nativt)
    - Aksepter mock-data og bruk admin CMS lokalt
 4. **Test** e-post/passord login + registrering
