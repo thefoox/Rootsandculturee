@@ -3,23 +3,16 @@ import { createSession } from '@/lib/session'
 
 const GOOGLE_CLIENT_ID = '914297093615-06o57idijbrb86vn16v757ks8u0j2gh3.apps.googleusercontent.com'
 
-function getCallbackUrl() {
-  const base = process.env.NEXT_PUBLIC_URL || process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000'
-  return `${base}/api/auth/google/callback`
-}
-
 export async function GET(request: NextRequest) {
+  const host = request.headers.get('host') || 'rootsnew.vercel.app'
+  const protocol = host.includes('localhost') ? 'http' : 'https'
+  const baseUrl = `${protocol}://${host}`
+  const callbackUrl = `${baseUrl}/api/auth/google/callback`
+
   const code = request.nextUrl.searchParams.get('code')
   const error = request.nextUrl.searchParams.get('error')
 
-  const baseUrl = process.env.NEXT_PUBLIC_URL || process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000'
-
   if (error || !code) {
-    // User cancelled or error occurred
     return NextResponse.redirect(`${baseUrl}/?auth_error=cancelled`)
   }
 
@@ -38,7 +31,7 @@ export async function GET(request: NextRequest) {
         code,
         client_id: GOOGLE_CLIENT_ID,
         client_secret: clientSecret,
-        redirect_uri: getCallbackUrl(),
+        redirect_uri: callbackUrl,
         grant_type: 'authorization_code',
       }),
     })
