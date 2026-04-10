@@ -4,26 +4,26 @@ import { revalidateTag } from 'next/cache'
 import { verifySession } from '@/lib/dal'
 import { adminDb } from '@/lib/firebase/admin'
 import { articleSchema } from '@/lib/validations'
-import { FieldValue } from 'firebase-admin/firestore'
 import type { Article } from '@/types'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function mapArticle(doc: FirebaseFirestore.DocumentSnapshot): Article {
-  const data = doc.data()!
+function mapArticle(doc: FirestoreDoc): Article {
+  const data = doc.data()
   return {
     id: doc.id,
-    slug: data.slug,
-    title: data.title,
-    excerpt: data.excerpt || '',
-    body: data.body,
-    coverImage: data.coverImage || { url: '', alt: '' },
-    author: data.author || '',
-    tags: data.tags || [],
-    status: data.status,
-    metaTitle: data.metaTitle || data.title,
-    metaDescription: data.metaDescription || data.excerpt || '',
-    createdAt: data.createdAt?.toDate() ?? new Date(),
-    updatedAt: data.updatedAt?.toDate() ?? new Date(),
-    publishedAt: data.publishedAt?.toDate() ?? null,
+    slug: data.slug as string,
+    title: data.title as string,
+    excerpt: (data.excerpt as string) || '',
+    body: data.body as string,
+    coverImage: (data.coverImage as Article['coverImage']) || { url: '', alt: '' },
+    author: (data.author as string) || '',
+    tags: (data.tags as string[]) || [],
+    status: data.status as Article['status'],
+    metaTitle: (data.metaTitle as string) || (data.title as string),
+    metaDescription: (data.metaDescription as string) || (data.excerpt as string) || '',
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
+    publishedAt: data.publishedAt instanceof Date ? data.publishedAt : null,
   }
 }
 
@@ -32,7 +32,6 @@ function stripHtml(html: string): string {
 }
 
 export async function getAllArticles(): Promise<Article[]> {
-  if (!adminDb) return []
   const snapshot = await adminDb
     .collection('articles')
     .orderBy('createdAt', 'desc')
@@ -41,7 +40,6 @@ export async function getAllArticles(): Promise<Article[]> {
 }
 
 export async function getArticleById(id: string): Promise<Article | null> {
-  if (!adminDb) return null
   const doc = await adminDb.collection('articles').doc(id).get()
   if (!doc.exists) return null
   return mapArticle(doc)
@@ -51,9 +49,6 @@ export async function createArticle(formData: FormData) {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
-  }
-  if (!adminDb) {
-    return { success: false, errors: { _form: 'Server er ikke konfigurert.' } }
   }
 
   const rawCoverImage = formData.get('coverImage') as string
@@ -79,8 +74,8 @@ export async function createArticle(formData: FormData) {
   }
 
   const { publish, ...data } = parsed.data
-  // Auto-generate excerpt from body if not provided
   const excerpt = data.excerpt || stripHtml(data.body).slice(0, 200)
+  const now = new Date()
 
   const docRef = await adminDb.collection('articles').add({
     ...data,
@@ -88,9 +83,9 @@ export async function createArticle(formData: FormData) {
     author: session.email,
     tags: [],
     status: publish ? 'published' : 'draft',
-    publishedAt: publish ? FieldValue.serverTimestamp() : null,
-    createdAt: FieldValue.serverTimestamp(),
-    updatedAt: FieldValue.serverTimestamp(),
+    publishedAt: publish ? now : null,
+    createdAt: now,
+    updatedAt: now,
   })
 
   revalidateTag('articles', 'max')
@@ -101,9 +96,6 @@ export async function updateArticle(id: string, formData: FormData) {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
-  }
-  if (!adminDb) {
-    return { success: false, errors: { _form: 'Server er ikke konfigurert.' } }
   }
 
   const rawCoverImage = formData.get('coverImage') as string
@@ -132,19 +124,17 @@ export async function updateArticle(id: string, formData: FormData) {
   const existingDoc = await adminDb.collection('articles').doc(id).get()
   const existing = existingDoc.data()
   const excerpt = data.excerpt || stripHtml(data.body).slice(0, 200)
+  const now = new Date()
 
-  await adminDb
-    .collection('articles')
-    .doc(id)
-    .update({
-      ...data,
-      excerpt,
-      status: publish ? 'published' : 'draft',
-      publishedAt: publish
-        ? existing?.publishedAt || FieldValue.serverTimestamp()
-        : existing?.publishedAt || null,
-      updatedAt: FieldValue.serverTimestamp(),
-    })
+  await adminDb.collection('articles').doc(id).update({
+    ...data,
+    excerpt,
+    status: publish ? 'published' : 'draft',
+    publishedAt: publish
+      ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
+      : (existing.publishedAt instanceof Date ? existing.publishedAt : null),
+    updatedAt: now,
+  })
 
   revalidateTag('articles', 'max')
   return { success: true }
@@ -154,9 +144,6 @@ export async function deleteArticle(id: string) {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, error: 'Ikke autorisert.' }
-  }
-  if (!adminDb) {
-    return { success: false, error: 'Server er ikke konfigurert.' }
   }
 
   await adminDb.collection('articles').doc(id).delete()

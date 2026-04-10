@@ -2,10 +2,12 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Booking, BookingStatus } from '@/types'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function docToBooking(id: string, data: Record<string, unknown>): Booking {
+function docToBooking(doc: FirestoreDoc): Booking {
+  const data = doc.data()
   return {
-    id,
+    id: doc.id,
     confirmationCode: (data.confirmationCode as string) || '',
     stripeSessionId: (data.stripeSessionId as string) || '',
     stripePaymentIntentId: (data.stripePaymentIntentId as string) || '',
@@ -16,43 +18,32 @@ function docToBooking(id: string, data: Record<string, unknown>): Booking {
     experienceId: (data.experienceId as string) || '',
     experienceName: (data.experienceName as string) || '',
     dateId: (data.dateId as string) || '',
-    date: data.date
-      ? new Date((data.date as { _seconds: number })._seconds * 1000)
-      : new Date(),
+    date: data.date instanceof Date ? data.date : new Date(),
     seats: (data.seats as number) || 1,
     pricePerSeat: (data.pricePerSeat as number) || 0,
     total: (data.total as number) || 0,
     isEarlybird: (data.isEarlybird as boolean) ?? false,
     whatToBring: (data.whatToBring as string) || '',
     status: (data.status as BookingStatus) || 'pending',
-    createdAt: data.createdAt
-      ? new Date((data.createdAt as { _seconds: number })._seconds * 1000)
-      : new Date(),
-    confirmedAt: data.confirmedAt
-      ? new Date((data.confirmedAt as { _seconds: number })._seconds * 1000)
-      : null,
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    confirmedAt: data.confirmedAt instanceof Date ? data.confirmedAt : null,
   }
 }
 
 export const getBookings = unstable_cache(
   async (): Promise<Booking[]> => {
-    if (!adminDb) return []
-
     const snapshot = await adminDb
       .collection('bookings')
       .orderBy('createdAt', 'desc')
       .limit(100)
       .get()
-
-    return snapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
+    return snapshot.docs.map(docToBooking)
   },
   ['bookings'],
   { tags: ['bookings'] }
 )
 
 export async function getBookingsByUser(uid: string, email?: string): Promise<Booking[]> {
-  if (!adminDb) return []
-
   const byIdSnapshot = await adminDb
     .collection('bookings')
     .where('customerId', '==', uid)
@@ -60,7 +51,7 @@ export async function getBookingsByUser(uid: string, email?: string): Promise<Bo
     .limit(50)
     .get()
 
-  const bookings = byIdSnapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
+  const bookings = byIdSnapshot.docs.map(docToBooking)
 
   if (email) {
     const byEmailSnapshot = await adminDb
@@ -74,7 +65,7 @@ export async function getBookingsByUser(uid: string, email?: string): Promise<Bo
     const existingIds = new Set(bookings.map((b) => b.id))
     for (const doc of byEmailSnapshot.docs) {
       if (!existingIds.has(doc.id)) {
-        bookings.push(docToBooking(doc.id, doc.data()))
+        bookings.push(docToBooking(doc))
       }
     }
 
@@ -85,51 +76,40 @@ export async function getBookingsByUser(uid: string, email?: string): Promise<Bo
 }
 
 export async function getBookingsByExperience(experienceId: string): Promise<Booking[]> {
-  if (!adminDb) return []
-
   const snapshot = await adminDb
     .collection('bookings')
     .where('experienceId', '==', experienceId)
     .orderBy('createdAt', 'desc')
     .get()
-
-  return snapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
+  return snapshot.docs.map(docToBooking)
 }
 
 export async function getBookingsByExperienceAndDate(
   experienceId: string,
   dateId: string
 ): Promise<Booking[]> {
-  if (!adminDb) return []
-
   const snapshot = await adminDb
     .collection('bookings')
     .where('experienceId', '==', experienceId)
     .where('dateId', '==', dateId)
     .orderBy('createdAt', 'desc')
     .get()
-
-  return snapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
+  return snapshot.docs.map(docToBooking)
 }
 
 export async function getBookingById(bookingId: string): Promise<Booking | null> {
-  if (!adminDb) return null
-
   const doc = await adminDb.collection('bookings').doc(bookingId).get()
   if (!doc.exists) return null
-  return docToBooking(doc.id, doc.data()!)
+  return docToBooking(doc)
 }
 
 export async function getBookingsByPaymentIntent(
   paymentIntentId: string
 ): Promise<Booking[]> {
-  if (!adminDb) return []
-
   const snapshot = await adminDb
     .collection('bookings')
     .where('stripePaymentIntentId', '==', paymentIntentId)
     .orderBy('createdAt', 'desc')
     .get()
-
-  return snapshot.docs.map((doc) => docToBooking(doc.id, doc.data()))
+  return snapshot.docs.map(docToBooking)
 }

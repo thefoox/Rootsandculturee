@@ -5,6 +5,7 @@ import { revalidateTag } from 'next/cache'
 import { verifySession } from '@/lib/dal'
 import { getBookings, getBookingsByExperience, getBookingsByExperienceAndDate, getBookingsByPaymentIntent } from '@/lib/data/bookings'
 import type { Booking } from '@/types'
+import type { DocRef } from '@/lib/firebase/firestore-rest'
 
 export async function cancelBooking(
   bookingId: string
@@ -14,19 +15,15 @@ export async function cancelBooking(
     return { success: false, error: 'Ingen tilgang.' }
   }
 
-  if (!adminDb) {
-    return { success: false, error: 'Database ikke tilgjengelig.' }
-  }
-
   try {
-    const bookingRef = adminDb.collection('bookings').doc(bookingId)
-    const bookingDoc = await bookingRef.get()
+    const bookingDocRef = adminDb.collection('bookings').doc(bookingId) as unknown as DocRef
+    const bookingDoc = await bookingDocRef.get()
 
     if (!bookingDoc.exists) {
       return { success: false, error: 'Booking ikke funnet.' }
     }
 
-    const bookingData = bookingDoc.data()!
+    const bookingData = bookingDoc.data()
     if (bookingData.status === 'cancelled') {
       return { success: false, error: 'Bookingen er allerede kansellert.' }
     }
@@ -35,26 +32,24 @@ export async function cancelBooking(
     const dateId = bookingData.dateId as string
     const seats = (bookingData.seats as number) || 1
 
-    // Atomic transaction: cancel booking + reverse seat reservation
-    await adminDb.runTransaction(async (transaction) => {
-      const dateRef = adminDb!
-        .collection('experiences')
-        .doc(experienceId)
-        .collection('dates')
-        .doc(dateId)
+    const dateDocRef = adminDb
+      .collection(`experiences/${experienceId}/dates`)
+      .doc(dateId) as unknown as DocRef
 
-      const dateDoc = await transaction.get(dateRef)
+    // Atomic transaction: cancel booking + reverse seat reservation
+    await adminDb.runTransaction(async (tx) => {
+      const dateDoc = await tx.get(dateDocRef)
 
       // Update booking status
-      transaction.update(bookingRef, { status: 'cancelled' })
+      tx.update(bookingDocRef, { status: 'cancelled' })
 
       // Reverse seat reservation if date doc exists
       if (dateDoc.exists) {
-        const dateData = dateDoc.data()!
+        const dateData = dateDoc.data()
         const currentBooked = (dateData.bookedSeats as number) || 0
         const currentAvailable = (dateData.availableSeats as number) || 0
 
-        transaction.update(dateRef, {
+        tx.update(dateDocRef, {
           bookedSeats: Math.max(0, currentBooked - seats),
           availableSeats: currentAvailable + seats,
         })

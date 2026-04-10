@@ -33,10 +33,6 @@ export async function updateProfileAction(
     return { success: false, error: 'Du er ikke logget inn.' }
   }
 
-  if (!adminDb) {
-    return { success: false, error: 'Server er ikke konfigurert. Kontakt administrator.' }
-  }
-
   const raw = {
     displayName: formData.get('displayName'),
     address: formData.get('address'),

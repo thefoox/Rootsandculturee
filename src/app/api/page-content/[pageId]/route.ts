@@ -11,29 +11,29 @@ export async function GET(
 ) {
   const { pageId } = await params
 
-  if (!adminDb) {
+  try {
+    const doc = await adminDb.collection('pageContent').doc(pageId).get()
+    if (!doc.exists) {
+      const mock = mockPageContent.get(pageId)
+      return NextResponse.json(mock || null)
+    }
+
+    const data = doc.data()
+    const content: PageContent = {
+      id: doc.id,
+      title: (data.title as string) || '',
+      slug: (data.slug as string) || doc.id,
+      isPublished: (data.isPublished as boolean) ?? true,
+      showInNavigation: (data.showInNavigation as boolean) ?? false,
+      navigationOrder: (data.navigationOrder as number) ?? 0,
+      sections: (data.sections as PageContent['sections']) || [],
+      updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
+    }
+    return NextResponse.json(content)
+  } catch {
     const mock = mockPageContent.get(pageId)
     return NextResponse.json(mock || null)
   }
-
-  const doc = await adminDb.collection('pageContent').doc(pageId).get()
-  if (!doc.exists) {
-    const mock = mockPageContent.get(pageId)
-    return NextResponse.json(mock || null)
-  }
-
-  const data = doc.data()!
-  const content: PageContent = {
-    id: doc.id,
-    title: data.title || '',
-    slug: data.slug || doc.id,
-    isPublished: data.isPublished ?? true,
-    showInNavigation: data.showInNavigation ?? false,
-    navigationOrder: data.navigationOrder ?? 0,
-    sections: data.sections || [],
-    updatedAt: data.updatedAt?.toDate() ?? new Date(),
-  }
-  return NextResponse.json(content)
 }
 
 export async function PUT(
@@ -48,28 +48,27 @@ export async function PUT(
   const { pageId } = await params
   const body = await request.json()
 
-  if (!adminDb) {
-    revalidateTag('page-content', 'max')
-    return NextResponse.json({ success: true, mock: true })
-  }
-
   const { title, slug, isPublished, showInNavigation, navigationOrder, sections } = body
 
-  await adminDb.collection('pageContent').doc(pageId).set(
-    {
-      title,
-      slug,
-      isPublished,
-      showInNavigation,
-      navigationOrder,
-      sections,
-      updatedAt: new Date(),
-    },
-    { merge: true }
-  )
+  try {
+    await adminDb.collection('pageContent').doc(pageId).set(
+      {
+        title,
+        slug,
+        isPublished,
+        showInNavigation,
+        navigationOrder,
+        sections,
+        updatedAt: new Date(),
+      },
+      true // merge
+    )
 
-  revalidateTag('page-content', 'max')
-  return NextResponse.json({ success: true })
+    revalidateTag('page-content', 'max')
+    return NextResponse.json({ success: true })
+  } catch {
+    return NextResponse.json({ error: 'Kunne ikke oppdatere siden.' }, { status: 500 })
+  }
 }
 
 export async function DELETE(
@@ -83,13 +82,11 @@ export async function DELETE(
 
   const { pageId } = await params
 
-  if (!adminDb) {
+  try {
+    await adminDb.collection('pageContent').doc(pageId).delete()
     revalidateTag('page-content', 'max')
-    return NextResponse.json({ success: true, mock: true })
+    return NextResponse.json({ success: true })
+  } catch {
+    return NextResponse.json({ error: 'Kunne ikke slette siden.' }, { status: 500 })
   }
-
-  await adminDb.collection('pageContent').doc(pageId).delete()
-  revalidateTag('page-content', 'max')
-  return NextResponse.json({ success: true })
 }
-

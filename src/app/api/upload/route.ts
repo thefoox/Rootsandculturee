@@ -1,25 +1,66 @@
 import { NextResponse } from 'next/server'
-import { getStorage } from 'firebase-admin/storage'
-import { adminApp } from '@/lib/firebase/admin'
 import { verifySession } from '@/lib/dal'
+import { importPKCS8, SignJWT } from 'jose'
 import path from 'path'
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg']
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 
-export async function POST(request: Request) {
-  // Auth check
-  const session = await verifySession()
-  if (!session) {
-    return NextResponse.json(
-      { error: 'Ikke autorisert.' },
-      { status: 401 }
-    )
+/**
+ * Get a Google OAuth2 access token with storage scope.
+ * Uses jose (Web Crypto) — no native OpenSSL required.
+ */
+async function getStorageAccessToken(): Promise<string> {
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim()
+  const privateKeyRaw = process.env.FIREBASE_PRIVATE_KEY
+
+  if (!clientEmail || !privateKeyRaw) {
+    throw new Error('Firebase Storage: Missing FIREBASE_CLIENT_EMAIL or FIREBASE_PRIVATE_KEY')
   }
 
-  if (!adminApp) {
+  const privateKey = privateKeyRaw.replace(/\\n/g, '\n')
+  const nowSec = Math.floor(Date.now() / 1000)
+  const key = await importPKCS8(privateKey, 'RS256')
+
+  const jwt = await new SignJWT({
+    scope: 'https://www.googleapis.com/auth/devstorage.read_write',
+    iss: clientEmail,
+    sub: clientEmail,
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: nowSec,
+    exp: nowSec + 3600,
+  })
+    .setProtectedHeader({ alg: 'RS256' })
+    .sign(key)
+
+  const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt,
+    }),
+  })
+
+  if (!tokenRes.ok) {
+    const body = await tokenRes.text()
+    throw new Error(`Storage token exchange failed: ${body}`)
+  }
+
+  const data = await tokenRes.json()
+  return data.access_token as string
+}
+
+export async function POST(request: Request) {
+  const session = await verifySession()
+  if (!session) {
+    return NextResponse.json({ error: 'Ikke autorisert.' }, { status: 401 })
+  }
+
+  const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+  if (!bucketName) {
     return NextResponse.json(
-      { error: 'Server er ikke konfigurert.' },
+      { error: 'Storage-bucket er ikke konfigurert.' },
       { status: 500 }
     )
   }
@@ -40,7 +81,7 @@ export async function POST(request: Request) {
     )
   }
 
-  // Validate size (5MB)
+  // Validate size
   if (file.size > MAX_FILE_SIZE) {
     return NextResponse.json(
       { error: 'Filen er for stor (maks 5 MB).' },
@@ -48,26 +89,47 @@ export async function POST(request: Request) {
     )
   }
 
-  const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-  if (!bucketName) {
-    return NextResponse.json(
-      { error: 'Storage-bucket er ikke konfigurert.' },
-      { status: 500 }
-    )
-  }
-
   try {
-    const bucket = getStorage(adminApp).bucket(bucketName)
+    const token = await getStorageAccessToken()
     const filename = `uploads/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`
-    const fileRef = bucket.file(filename)
+    const encodedFilename = encodeURIComponent(filename)
     const buffer = Buffer.from(await file.arrayBuffer())
 
-    await fileRef.save(buffer, {
-      metadata: { contentType: file.type },
-    })
-    await fileRef.makePublic()
-    const url = fileRef.publicUrl()
+    // Upload via Firebase Storage JSON API
+    const uploadUrl = `https://storage.googleapis.com/upload/storage/v1/b/${encodeURIComponent(bucketName)}/o?uploadType=media&name=${encodedFilename}`
 
+    const uploadRes = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': file.type || 'application/octet-stream',
+        'Content-Length': String(buffer.length),
+      },
+      body: buffer,
+    })
+
+    if (!uploadRes.ok) {
+      const err = await uploadRes.text()
+      console.error('Storage upload failed:', err)
+      return NextResponse.json(
+        { error: 'Opplasting mislyktes. Prøv igjen.' },
+        { status: 500 }
+      )
+    }
+
+    // Make the object public
+    const makePublicUrl = `https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(bucketName)}/o/${encodedFilename}/acl`
+    await fetch(makePublicUrl, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ entity: 'allUsers', role: 'READER' }),
+    })
+
+    // Build the public URL
+    const url = `https://storage.googleapis.com/${bucketName}/${filename}`
     return NextResponse.json({ url })
   } catch (error) {
     console.error('Upload feil:', error)

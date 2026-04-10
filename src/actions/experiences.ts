@@ -4,51 +4,48 @@ import { revalidateTag } from 'next/cache'
 import { verifySession } from '@/lib/dal'
 import { adminDb } from '@/lib/firebase/admin'
 import { experienceSchema } from '@/lib/validations'
-import { FieldValue, Timestamp } from 'firebase-admin/firestore'
 import type { Experience, ExperienceDate } from '@/types'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function mapExperience(doc: FirebaseFirestore.DocumentSnapshot): Experience {
-  const data = doc.data()!
+function mapExperience(doc: FirestoreDoc): Experience {
+  const data = doc.data()
   return {
     id: doc.id,
-    slug: data.slug,
-    name: data.name,
-    description: data.description,
-    category: data.category,
-    images: data.images || [],
-    basePrice: data.basePrice,
-    location: data.location,
-    locationLat: data.locationLat ?? null,
-    locationLng: data.locationLng ?? null,
-    durationText: data.durationText,
-    whatIsIncluded: data.whatIsIncluded || [],
-    cancellationPolicy: data.cancellationPolicy || '',
-    whatToBring: data.whatToBring || '',
-    createdAt: data.createdAt?.toDate() ?? new Date(),
-    updatedAt: data.updatedAt?.toDate() ?? new Date(),
-    publishedAt: data.publishedAt?.toDate() ?? null,
+    slug: data.slug as string,
+    name: data.name as string,
+    description: data.description as string,
+    category: data.category as Experience['category'],
+    images: (data.images as Experience['images']) || [],
+    basePrice: data.basePrice as number,
+    location: data.location as string,
+    locationLat: (data.locationLat as number) ?? null,
+    locationLng: (data.locationLng as number) ?? null,
+    durationText: data.durationText as string,
+    whatIsIncluded: (data.whatIsIncluded as string[]) || [],
+    cancellationPolicy: (data.cancellationPolicy as string) || '',
+    whatToBring: (data.whatToBring as string) || '',
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
+    publishedAt: data.publishedAt instanceof Date ? data.publishedAt : null,
   }
 }
 
-function mapExperienceDate(
-  doc: FirebaseFirestore.DocumentSnapshot
-): ExperienceDate {
-  const data = doc.data()!
+function mapExperienceDate(doc: FirestoreDoc): ExperienceDate {
+  const data = doc.data()
   return {
     id: doc.id,
-    date: data.date?.toDate() ?? new Date(),
-    maxSeats: data.maxSeats,
-    bookedSeats: data.bookedSeats || 0,
-    availableSeats: data.availableSeats || data.maxSeats,
-    isActive: data.isActive ?? true,
-    priceOverride: data.priceOverride ?? null,
-    earlyBirdPrice: data.earlyBirdPrice ?? null,
-    earlyBirdDeadline: data.earlyBirdDeadline?.toDate() ?? null,
+    date: data.date instanceof Date ? data.date : new Date(),
+    maxSeats: data.maxSeats as number,
+    bookedSeats: (data.bookedSeats as number) || 0,
+    availableSeats: (data.availableSeats as number) || (data.maxSeats as number),
+    isActive: (data.isActive as boolean) ?? true,
+    priceOverride: (data.priceOverride as number) ?? null,
+    earlyBirdPrice: (data.earlyBirdPrice as number) ?? null,
+    earlyBirdDeadline: data.earlyBirdDeadline instanceof Date ? data.earlyBirdDeadline : null,
   }
 }
 
 export async function getAllExperiences(): Promise<Experience[]> {
-  if (!adminDb) return []
   const snapshot = await adminDb
     .collection('experiences')
     .orderBy('createdAt', 'desc')
@@ -56,23 +53,15 @@ export async function getAllExperiences(): Promise<Experience[]> {
   return snapshot.docs.map(mapExperience)
 }
 
-export async function getExperienceById(
-  id: string
-): Promise<Experience | null> {
-  if (!adminDb) return null
+export async function getExperienceById(id: string): Promise<Experience | null> {
   const doc = await adminDb.collection('experiences').doc(id).get()
   if (!doc.exists) return null
   return mapExperience(doc)
 }
 
-export async function getExperienceDatesAdmin(
-  experienceId: string
-): Promise<ExperienceDate[]> {
-  if (!adminDb) return []
+export async function getExperienceDatesAdmin(experienceId: string): Promise<ExperienceDate[]> {
   const snapshot = await adminDb
-    .collection('experiences')
-    .doc(experienceId)
-    .collection('dates')
+    .collection(`experiences/${experienceId}/dates`)
     .orderBy('date', 'asc')
     .get()
   return snapshot.docs.map(mapExperienceDate)
@@ -82,9 +71,6 @@ export async function createExperience(formData: FormData) {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
-  }
-  if (!adminDb) {
-    return { success: false, errors: { _form: 'Server er ikke konfigurert.' } }
   }
 
   const rawImages = formData.get('images') as string
@@ -101,7 +87,6 @@ export async function createExperience(formData: FormData) {
     basePrice: Math.round(priceNOK * 100),
     location: formData.get('location'),
     durationText: formData.get('durationText'),
-
     whatIsIncluded: whatIsIncludedRaw,
     cancellationPolicy: (formData.get('cancellationPolicy') as string) || '',
     whatToBring: (formData.get('whatToBring') as string) || '',
@@ -119,15 +104,16 @@ export async function createExperience(formData: FormData) {
   }
 
   const { publish, dates, ...data } = parsed.data
+  const now = new Date()
   const docRef = await adminDb.collection('experiences').add({
     ...data,
     whatIsIncluded: data.whatIsIncluded
       .split('\n')
       .map((s) => s.trim())
       .filter(Boolean),
-    publishedAt: publish ? FieldValue.serverTimestamp() : null,
-    createdAt: FieldValue.serverTimestamp(),
-    updatedAt: FieldValue.serverTimestamp(),
+    publishedAt: publish ? now : null,
+    createdAt: now,
+    updatedAt: now,
   })
 
   // Create date subcollection docs
@@ -135,10 +121,10 @@ export async function createExperience(formData: FormData) {
     const batch = adminDb.batch()
     for (const dateSlot of dates) {
       const ebPrice = dateSlot.earlyBirdPrice ? Math.round(Number(dateSlot.earlyBirdPrice) * 100) : null
-      const ebDeadline = dateSlot.earlyBirdDeadline ? Timestamp.fromDate(new Date(dateSlot.earlyBirdDeadline)) : null
-      const dateDocRef = docRef.collection('dates').doc()
+      const ebDeadline = dateSlot.earlyBirdDeadline ? new Date(dateSlot.earlyBirdDeadline) : null
+      const dateDocRef = docRef.collection(`dates`).doc()
       batch.set(dateDocRef, {
-        date: Timestamp.fromDate(new Date(dateSlot.date)),
+        date: new Date(dateSlot.date),
         maxSeats: dateSlot.maxSeats,
         bookedSeats: 0,
         availableSeats: dateSlot.maxSeats,
@@ -161,9 +147,6 @@ export async function updateExperience(id: string, formData: FormData) {
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
   }
-  if (!adminDb) {
-    return { success: false, errors: { _form: 'Server er ikke konfigurert.' } }
-  }
 
   const rawImages = formData.get('images') as string
   const rawDates = formData.get('dates') as string
@@ -179,7 +162,6 @@ export async function updateExperience(id: string, formData: FormData) {
     basePrice: Math.round(priceNOK * 100),
     location: formData.get('location'),
     durationText: formData.get('durationText'),
-
     whatIsIncluded: whatIsIncludedRaw,
     cancellationPolicy: (formData.get('cancellationPolicy') as string) || '',
     whatToBring: (formData.get('whatToBring') as string) || '',
@@ -199,39 +181,35 @@ export async function updateExperience(id: string, formData: FormData) {
   const { publish, dates, ...data } = parsed.data
   const existingDoc = await adminDb.collection('experiences').doc(id).get()
   const existing = existingDoc.data()
+  const now = new Date()
 
-  await adminDb
-    .collection('experiences')
-    .doc(id)
-    .update({
-      ...data,
-      whatIsIncluded: data.whatIsIncluded
-        .split('\n')
-        .map((s) => s.trim())
-        .filter(Boolean),
-      publishedAt: publish
-        ? existing?.publishedAt || FieldValue.serverTimestamp()
-        : null,
-      updatedAt: FieldValue.serverTimestamp(),
-    })
+  await adminDb.collection('experiences').doc(id).update({
+    ...data,
+    whatIsIncluded: data.whatIsIncluded
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean),
+    publishedAt: publish
+      ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
+      : null,
+    updatedAt: now,
+  })
 
   // Update dates subcollection: merge to preserve existing booking counts
   if (dates) {
     const existingDatesSnap = await adminDb
-      .collection('experiences')
-      .doc(id)
-      .collection('dates')
+      .collection(`experiences/${id}/dates`)
       .get()
 
     // Build lookup map: ISO date string → { docId, bookedSeats }
     const existingByDate = new Map<string, { docId: string; bookedSeats: number }>()
     for (const doc of existingDatesSnap.docs) {
-      const data = doc.data()
-      const isoDate = (data.date?.toDate() as Date)?.toISOString() ?? ''
-      existingByDate.set(isoDate, { docId: doc.id, bookedSeats: data.bookedSeats || 0 })
+      const d = doc.data()
+      const dateVal = d.date instanceof Date ? d.date : null
+      const isoDate = dateVal?.toISOString() ?? ''
+      existingByDate.set(isoDate, { docId: doc.id, bookedSeats: (d.bookedSeats as number) || 0 })
     }
 
-    // Determine which incoming dates match existing by timestamp
     const incomingIsoDates = new Set<string>()
     const batch = adminDb.batch()
 
@@ -243,20 +221,19 @@ export async function updateExperience(id: string, formData: FormData) {
         ? Math.round(Number(dateSlot.earlyBirdPrice) * 100)
         : null
       const ebDeadline = dateSlot.earlyBirdDeadline
-        ? Timestamp.fromDate(new Date(dateSlot.earlyBirdDeadline))
+        ? new Date(dateSlot.earlyBirdDeadline)
         : null
 
-      const existing = existingByDate.get(isoDate)
-      const bookedSeats = existing?.bookedSeats ?? 0
+      const existingEntry = existingByDate.get(isoDate)
+      const bookedSeats = existingEntry?.bookedSeats ?? 0
       const availableSeats = Math.max(0, dateSlot.maxSeats - bookedSeats)
 
-      // Reuse existing doc ID if available, otherwise create new
-      const dateDocRef = existing
-        ? adminDb.collection('experiences').doc(id).collection('dates').doc(existing.docId)
-        : adminDb.collection('experiences').doc(id).collection('dates').doc()
+      const dateDocRef = existingEntry
+        ? adminDb.collection(`experiences/${id}/dates`).doc(existingEntry.docId)
+        : adminDb.collection(`experiences/${id}/dates`).doc()
 
       batch.set(dateDocRef, {
-        date: Timestamp.fromDate(new Date(dateSlot.date)),
+        date: new Date(dateSlot.date),
         maxSeats: dateSlot.maxSeats,
         bookedSeats,
         availableSeats,
@@ -270,9 +247,7 @@ export async function updateExperience(id: string, formData: FormData) {
     // Delete dates that were removed from the form
     for (const [isoDate, { docId }] of existingByDate.entries()) {
       if (!incomingIsoDates.has(isoDate)) {
-        batch.delete(
-          adminDb.collection('experiences').doc(id).collection('dates').doc(docId)
-        )
+        batch.delete(adminDb.collection(`experiences/${id}/dates`).doc(docId))
       }
     }
 
@@ -289,15 +264,10 @@ export async function deleteExperience(id: string) {
   if (!session || session.role !== 'admin') {
     return { success: false, error: 'Ikke autorisert.' }
   }
-  if (!adminDb) {
-    return { success: false, error: 'Server er ikke konfigurert.' }
-  }
 
   // Delete dates subcollection first
   const datesSnapshot = await adminDb
-    .collection('experiences')
-    .doc(id)
-    .collection('dates')
+    .collection(`experiences/${id}/dates`)
     .get()
   const batch = adminDb.batch()
   datesSnapshot.docs.forEach((doc) => batch.delete(doc.ref))

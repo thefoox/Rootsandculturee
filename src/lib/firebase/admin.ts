@@ -1,37 +1,22 @@
+/**
+ * Server-side Firebase access — pure HTTP, no native binaries.
+ *
+ * Previously used firebase-admin which requires gRPC native bindings that
+ * crash on Vercel's serverless runtime ("Failed to load external module").
+ *
+ * Now uses:
+ *   - firestoreDb  → Firestore REST API (this file)
+ *   - Firebase Storage REST API (see upload route)
+ *   - jose + Google JWKS for auth token verification (unchanged)
+ *
+ * All callers that previously used `adminDb` now use the same `adminDb`
+ * export name — the interface is compatible.
+ */
 import 'server-only'
-import { initializeApp, getApps, cert } from 'firebase-admin/app'
-import { initializeFirestore } from 'firebase-admin/firestore'
-import { getAuth } from 'firebase-admin/auth'
+import { firestoreDb } from './firestore-rest'
 
-function getApp() {
-  if (getApps().length > 0) return getApps()[0]
-
-  const projectId = process.env.FIREBASE_PROJECT_ID?.trim()
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim()
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY
-
-  if (!projectId || !clientEmail || !privateKey) {
-    console.warn('Firebase Admin: Missing credentials.')
-    return null
-  }
-
-  try {
-    return initializeApp({
-      credential: cert({
-        projectId,
-        clientEmail,
-        privateKey: privateKey.replace(/\\n/g, '\n'),
-      }),
-    })
-  } catch (error) {
-    console.warn('Firebase Admin: Failed to initialize.', error)
-    return null
-  }
-}
-
-const app = getApp()
-
-// REST transport — avoids gRPC DECODER routines::unsupported on Vercel serverless
-export const adminDb = app ? initializeFirestore(app, { preferRest: true }) : null
-export const adminAuth = app ? getAuth(app) : null
-export const adminApp = app
+export const adminDb = firestoreDb
+// adminAuth is no longer needed — auth uses jose + JWKS + ADMIN_EMAILS env var
+export const adminAuth = null
+// adminApp is no longer needed — Storage uses REST API (see upload route)
+export const adminApp = null

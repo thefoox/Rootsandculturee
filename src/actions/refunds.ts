@@ -16,7 +16,7 @@ export async function createRefund(
     return { success: false, error: 'Ingen tilgang.' }
   }
 
-  if (!stripe || !adminDb) {
+  if (!stripe) {
     return { success: false, error: 'Stripe eller database ikke konfigurert.' }
   }
 
@@ -26,14 +26,13 @@ export async function createRefund(
       return { success: false, error: 'Ordre ikke funnet.' }
     }
 
-    const orderData = orderDoc.data()!
+    const orderData = orderDoc.data()
     const paymentIntentId = orderData.stripePaymentIntentId as string
 
     if (!paymentIntentId) {
       return { success: false, error: 'Ingen Stripe-betaling knyttet til denne ordren.' }
     }
 
-    // Build refund params
     const refundParams: {
       payment_intent: string
       amount?: number
@@ -50,16 +49,12 @@ export async function createRefund(
       refundParams.reason = reason
     }
 
-    // Create refund via Stripe with idempotency key
     const refund = await stripe.refunds.create(refundParams, {
       idempotencyKey: `refund-${orderId}-${Date.now()}`,
     })
 
-    // Update order status if full refund
     const orderTotal = (orderData.total as number) || 0
-    const refundedAmount = refund.amount || 0
 
-    // Check total refunded for this payment intent
     const allRefunds = await stripe.refunds.list({
       payment_intent: paymentIntentId,
       limit: 100,

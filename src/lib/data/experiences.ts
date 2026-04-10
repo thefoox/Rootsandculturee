@@ -3,48 +3,49 @@ import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Experience, ExperienceDate } from '@/types'
 import { mockExperiences, mockExperienceDates } from '@/lib/data/mock-data'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function mapExperience(doc: FirebaseFirestore.DocumentSnapshot): Experience {
-  const data = doc.data()!
+function mapExperience(doc: FirestoreDoc): Experience {
+  const data = doc.data()
   return {
     id: doc.id,
-    slug: data.slug,
-    name: data.name,
-    description: data.description,
-    category: data.category,
-    images: data.images || [],
-    basePrice: data.basePrice,
-    location: data.location,
-    locationLat: data.locationLat ?? null,
-    locationLng: data.locationLng ?? null,
-    durationText: data.durationText,
-    whatIsIncluded: data.whatIsIncluded || [],
-    cancellationPolicy: data.cancellationPolicy || '',
-    whatToBring: data.whatToBring || '',
-    createdAt: data.createdAt?.toDate() ?? new Date(),
-    updatedAt: data.updatedAt?.toDate() ?? new Date(),
-    publishedAt: data.publishedAt?.toDate() ?? null,
+    slug: data.slug as string,
+    name: data.name as string,
+    description: data.description as string,
+    category: data.category as Experience['category'],
+    images: (data.images as Experience['images']) || [],
+    basePrice: data.basePrice as number,
+    location: data.location as string,
+    locationLat: (data.locationLat as number) ?? null,
+    locationLng: (data.locationLng as number) ?? null,
+    durationText: data.durationText as string,
+    whatIsIncluded: (data.whatIsIncluded as string[]) || [],
+    cancellationPolicy: (data.cancellationPolicy as string) || '',
+    whatToBring: (data.whatToBring as string) || '',
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
+    publishedAt: data.publishedAt instanceof Date ? data.publishedAt : null,
   }
 }
 
-function mapExperienceDate(doc: FirebaseFirestore.DocumentSnapshot): ExperienceDate {
-  const data = doc.data()!
+function mapExperienceDate(doc: FirestoreDoc): ExperienceDate {
+  const data = doc.data()
   return {
     id: doc.id,
-    date: data.date?.toDate() ?? new Date(),
-    maxSeats: data.maxSeats,
-    bookedSeats: data.bookedSeats,
-    availableSeats: data.availableSeats,
-    isActive: data.isActive,
-    priceOverride: data.priceOverride ?? null,
-    earlyBirdPrice: data.earlyBirdPrice ?? null,
-    earlyBirdDeadline: data.earlyBirdDeadline?.toDate() ?? null,
+    date: data.date instanceof Date ? data.date : new Date(),
+    maxSeats: data.maxSeats as number,
+    bookedSeats: data.bookedSeats as number,
+    availableSeats: data.availableSeats as number,
+    isActive: data.isActive as boolean,
+    priceOverride: (data.priceOverride as number) ?? null,
+    earlyBirdPrice: (data.earlyBirdPrice as number) ?? null,
+    earlyBirdDeadline: data.earlyBirdDeadline instanceof Date ? data.earlyBirdDeadline : null,
   }
 }
 
 const _getExperiences = unstable_cache(
   async (): Promise<Experience[]> => {
-    const snapshot = await adminDb!
+    const snapshot = await adminDb
       .collection('experiences')
       .where('publishedAt', '!=', null)
       .orderBy('publishedAt', 'desc')
@@ -56,7 +57,6 @@ const _getExperiences = unstable_cache(
 )
 
 export async function getExperiences(): Promise<Experience[]> {
-  if (!adminDb) return mockExperiences
   try {
     return await _getExperiences()
   } catch (e) {
@@ -67,7 +67,7 @@ export async function getExperiences(): Promise<Experience[]> {
 
 const _getExperienceBySlug = unstable_cache(
   async (slug: string): Promise<Experience | null> => {
-    const snapshot = await adminDb!
+    const snapshot = await adminDb
       .collection('experiences')
       .where('slug', '==', slug)
       .where('publishedAt', '!=', null)
@@ -81,27 +81,19 @@ const _getExperienceBySlug = unstable_cache(
 )
 
 export async function getExperienceBySlug(slug: string): Promise<Experience | null> {
-  if (!adminDb) {
-    if (process.env.NODE_ENV === 'production') {
-      return null
-    }
-    return mockExperiences.find((e) => e.slug === slug) ?? null
-  }
   try {
     return await _getExperienceBySlug(slug)
   } catch (e) {
     console.warn('getExperienceBySlug failed:', e)
-    return null
+    return mockExperiences.find((e) => e.slug === slug) ?? null
   }
 }
 
 const _getExperienceDates = unstable_cache(
   async (experienceId: string): Promise<ExperienceDate[]> => {
     const now = new Date()
-    const snapshot = await adminDb!
-      .collection('experiences')
-      .doc(experienceId)
-      .collection('dates')
+    const snapshot = await adminDb
+      .collection(`experiences/${experienceId}/dates`)
       .where('isActive', '==', true)
       .where('date', '>=', now)
       .orderBy('date', 'asc')
@@ -113,7 +105,6 @@ const _getExperienceDates = unstable_cache(
 )
 
 export async function getExperienceDates(experienceId: string): Promise<ExperienceDate[]> {
-  if (!adminDb) return mockExperienceDates.get(experienceId) ?? []
   try {
     return await _getExperienceDates(experienceId)
   } catch (e) {

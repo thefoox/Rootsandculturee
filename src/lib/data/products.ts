@@ -3,35 +3,36 @@ import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Product, ProductCategory } from '@/types'
 import { mockProducts } from '@/lib/data/mock-data'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function mapProduct(doc: FirebaseFirestore.DocumentSnapshot): Product {
-  const data = doc.data()!
+function mapProduct(doc: FirestoreDoc): Product {
+  const data = doc.data()
   return {
     id: doc.id,
-    slug: data.slug,
-    name: data.name,
-    description: data.description,
-    price: data.price,
-    category: data.category,
-    images: data.images || [],
-    inStock: data.inStock,
-    stockCount: data.stockCount,
-    variants: (data.variants || []).map((v: { id: string; label: string; price: number; inStock: boolean; stockCount: number }) => ({
+    slug: data.slug as string,
+    name: data.name as string,
+    description: data.description as string,
+    price: data.price as number,
+    category: data.category as Product['category'],
+    images: (data.images as Product['images']) || [],
+    inStock: data.inStock as boolean,
+    stockCount: data.stockCount as number,
+    variants: ((data.variants as Product['variants']) || []).map((v) => ({
       id: v.id,
       label: v.label,
       price: v.price,
       inStock: v.inStock,
       stockCount: v.stockCount,
     })),
-    createdAt: data.createdAt?.toDate() ?? new Date(),
-    updatedAt: data.updatedAt?.toDate() ?? new Date(),
-    publishedAt: data.publishedAt?.toDate() ?? null,
+    createdAt: (data.createdAt instanceof Date ? data.createdAt : new Date()) as Date,
+    updatedAt: (data.updatedAt instanceof Date ? data.updatedAt : new Date()) as Date,
+    publishedAt: data.publishedAt instanceof Date ? data.publishedAt : null,
   }
 }
 
 const _getProducts = unstable_cache(
   async (): Promise<Product[]> => {
-    const snapshot = await adminDb!
+    const snapshot = await adminDb
       .collection('products')
       .where('publishedAt', '!=', null)
       .orderBy('publishedAt', 'desc')
@@ -43,7 +44,6 @@ const _getProducts = unstable_cache(
 )
 
 export async function getProducts(): Promise<Product[]> {
-  if (!adminDb) return mockProducts
   try {
     return await _getProducts()
   } catch (e) {
@@ -54,7 +54,7 @@ export async function getProducts(): Promise<Product[]> {
 
 const _getProductsByCategory = unstable_cache(
   async (category: ProductCategory): Promise<Product[]> => {
-    const snapshot = await adminDb!
+    const snapshot = await adminDb
       .collection('products')
       .where('publishedAt', '!=', null)
       .where('category', '==', category)
@@ -67,7 +67,6 @@ const _getProductsByCategory = unstable_cache(
 )
 
 export async function getProductsByCategory(category: ProductCategory): Promise<Product[]> {
-  if (!adminDb) return mockProducts.filter((p) => p.category === category)
   try {
     return await _getProductsByCategory(category)
   } catch (e) {
@@ -78,7 +77,7 @@ export async function getProductsByCategory(category: ProductCategory): Promise<
 
 const _getProductBySlug = unstable_cache(
   async (slug: string): Promise<Product | null> => {
-    const snapshot = await adminDb!
+    const snapshot = await adminDb
       .collection('products')
       .where('slug', '==', slug)
       .where('publishedAt', '!=', null)
@@ -92,12 +91,6 @@ const _getProductBySlug = unstable_cache(
 )
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  if (!adminDb) {
-    if (process.env.NODE_ENV === 'production') {
-      return null
-    }
-    return mockProducts.find((p) => p.slug === slug) ?? null
-  }
   try {
     return await _getProductBySlug(slug)
   } catch (e) {

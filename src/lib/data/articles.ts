@@ -3,30 +3,31 @@ import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Article } from '@/types'
 import { mockArticles } from '@/lib/data/mock-data'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function mapArticle(doc: FirebaseFirestore.DocumentSnapshot): Article {
-  const data = doc.data()!
+function mapArticle(doc: FirestoreDoc): Article {
+  const data = doc.data()
   return {
     id: doc.id,
-    slug: data.slug,
-    title: data.title,
-    excerpt: data.excerpt,
-    body: data.body,
-    coverImage: data.coverImage || { url: '', alt: '' },
-    author: data.author,
-    tags: data.tags || [],
-    status: data.status,
-    metaTitle: data.metaTitle || data.title,
-    metaDescription: data.metaDescription || data.excerpt,
-    createdAt: data.createdAt?.toDate() ?? new Date(),
-    updatedAt: data.updatedAt?.toDate() ?? new Date(),
-    publishedAt: data.publishedAt?.toDate() ?? null,
+    slug: data.slug as string,
+    title: data.title as string,
+    excerpt: data.excerpt as string,
+    body: data.body as string,
+    coverImage: (data.coverImage as Article['coverImage']) || { url: '', alt: '' },
+    author: data.author as string,
+    tags: (data.tags as string[]) || [],
+    status: data.status as Article['status'],
+    metaTitle: (data.metaTitle as string) || (data.title as string),
+    metaDescription: (data.metaDescription as string) || (data.excerpt as string),
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
+    publishedAt: data.publishedAt instanceof Date ? data.publishedAt : null,
   }
 }
 
 const _getArticles = unstable_cache(
   async (): Promise<Article[]> => {
-    const snapshot = await adminDb!
+    const snapshot = await adminDb
       .collection('articles')
       .where('status', '==', 'published')
       .where('publishedAt', '!=', null)
@@ -39,7 +40,6 @@ const _getArticles = unstable_cache(
 )
 
 export async function getArticles(): Promise<Article[]> {
-  if (!adminDb) return mockArticles
   try {
     return await _getArticles()
   } catch (e) {
@@ -50,7 +50,7 @@ export async function getArticles(): Promise<Article[]> {
 
 const _getArticleBySlug = unstable_cache(
   async (slug: string): Promise<Article | null> => {
-    const snapshot = await adminDb!
+    const snapshot = await adminDb
       .collection('articles')
       .where('slug', '==', slug)
       .where('status', '==', 'published')
@@ -64,11 +64,10 @@ const _getArticleBySlug = unstable_cache(
 )
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
-  if (!adminDb) return mockArticles.find((a) => a.slug === slug) ?? null
   try {
     return await _getArticleBySlug(slug)
   } catch (e) {
     console.warn('getArticleBySlug failed:', e)
-    return null
+    return mockArticles.find((a) => a.slug === slug) ?? null
   }
 }

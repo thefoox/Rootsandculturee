@@ -4,36 +4,35 @@ import { revalidateTag } from 'next/cache'
 import { verifySession } from '@/lib/dal'
 import { adminDb } from '@/lib/firebase/admin'
 import { productSchema } from '@/lib/validations'
-import { FieldValue } from 'firebase-admin/firestore'
 import type { Product } from '@/types'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function mapProduct(doc: FirebaseFirestore.DocumentSnapshot): Product {
-  const data = doc.data()!
+function mapProduct(doc: FirestoreDoc): Product {
+  const data = doc.data()
   return {
     id: doc.id,
-    slug: data.slug,
-    name: data.name,
-    description: data.description,
-    price: data.price,
-    category: data.category,
-    images: data.images || [],
-    inStock: data.inStock,
-    stockCount: data.stockCount,
-    variants: (data.variants || []).map((v: { id: string; label: string; price: number; inStock: boolean; stockCount: number }) => ({
+    slug: data.slug as string,
+    name: data.name as string,
+    description: data.description as string,
+    price: data.price as number,
+    category: data.category as Product['category'],
+    images: (data.images as Product['images']) || [],
+    inStock: data.inStock as boolean,
+    stockCount: data.stockCount as number,
+    variants: ((data.variants as Product['variants']) || []).map((v) => ({
       id: v.id,
       label: v.label,
       price: v.price,
       inStock: v.inStock,
       stockCount: v.stockCount,
     })),
-    createdAt: data.createdAt?.toDate() ?? new Date(),
-    updatedAt: data.updatedAt?.toDate() ?? new Date(),
-    publishedAt: data.publishedAt?.toDate() ?? null,
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
+    publishedAt: data.publishedAt instanceof Date ? data.publishedAt : null,
   }
 }
 
 export async function getAllProducts(): Promise<Product[]> {
-  if (!adminDb) return []
   const snapshot = await adminDb
     .collection('products')
     .orderBy('createdAt', 'desc')
@@ -42,7 +41,6 @@ export async function getAllProducts(): Promise<Product[]> {
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
-  if (!adminDb) return null
   const doc = await adminDb.collection('products').doc(id).get()
   if (!doc.exists) return null
   return mapProduct(doc)
@@ -52,9 +50,6 @@ export async function createProduct(formData: FormData) {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
-  }
-  if (!adminDb) {
-    return { success: false, errors: { _form: 'Server er ikke konfigurert.' } }
   }
 
   const rawImages = formData.get('images') as string
@@ -90,13 +85,15 @@ export async function createProduct(formData: FormData) {
     inStock: v.stockCount > 0,
     stockCount: v.stockCount,
   }))
+
+  const now = new Date()
   const docRef = await adminDb.collection('products').add({
     ...data,
     variants: mappedVariants,
     inStock: data.stockCount > 0,
-    publishedAt: publish ? FieldValue.serverTimestamp() : null,
-    createdAt: FieldValue.serverTimestamp(),
-    updatedAt: FieldValue.serverTimestamp(),
+    publishedAt: publish ? now : null,
+    createdAt: now,
+    updatedAt: now,
   })
 
   revalidateTag('products', 'max')
@@ -108,9 +105,6 @@ export async function updateProduct(id: string, formData: FormData) {
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
   }
-  if (!adminDb) {
-    return { success: false, errors: { _form: 'Server er ikke konfigurert.' } }
-  }
 
   const rawImages = formData.get('images') as string
   const priceNOK = Number(formData.get('price'))
@@ -145,21 +139,20 @@ export async function updateProduct(id: string, formData: FormData) {
     inStock: v.stockCount > 0,
     stockCount: v.stockCount,
   }))
+
   const existingDoc = await adminDb.collection('products').doc(id).get()
   const existing = existingDoc.data()
+  const now = new Date()
 
-  await adminDb
-    .collection('products')
-    .doc(id)
-    .update({
-      ...data,
-      variants: mappedVariants,
-      inStock: data.stockCount > 0,
-      publishedAt: publish
-        ? existing?.publishedAt || FieldValue.serverTimestamp()
-        : null,
-      updatedAt: FieldValue.serverTimestamp(),
-    })
+  await adminDb.collection('products').doc(id).update({
+    ...data,
+    variants: mappedVariants,
+    inStock: data.stockCount > 0,
+    publishedAt: publish
+      ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
+      : null,
+    updatedAt: now,
+  })
 
   revalidateTag('products', 'max')
   return { success: true }
@@ -169,9 +162,6 @@ export async function deleteProduct(id: string) {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, error: 'Ikke autorisert.' }
-  }
-  if (!adminDb) {
-    return { success: false, error: 'Server er ikke konfigurert.' }
   }
 
   await adminDb.collection('products').doc(id).delete()

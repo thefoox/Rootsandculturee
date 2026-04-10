@@ -40,15 +40,13 @@ export async function sendAdminEmail(
     })
 
     // Log to Firestore
-    if (adminDb) {
-      await adminDb.collection('emailLog').add({
-        to,
-        subject,
-        message,
-        sentBy: session.email,
-        sentAt: new Date(),
-      })
-    }
+    await adminDb.collection('emailLog').add({
+      to,
+      subject,
+      message,
+      sentBy: session.email,
+      sentAt: new Date(),
+    })
 
     return { success: true }
   } catch (err) {

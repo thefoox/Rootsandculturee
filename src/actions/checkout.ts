@@ -44,20 +44,14 @@ export async function createPaymentIntent(
     return { error: 'Betalingssystemet er ikke konfigurert. Kontakt oss.' }
   }
 
-  if (!adminDb) {
-    return { error: 'Systemet er ikke tilgjengelig. Provigjen senere.' }
-  }
-
   if (!cartItems || cartItems.length === 0) {
     return { error: 'Handlekurven er tom.' }
   }
 
-  // Determine if cart has products (needs shipping)
   const hasProducts = cartItems.some((item) => item.type === 'product')
   const hasExperiences = cartItems.some((item) => item.type === 'experience')
   const hasGiftCards = cartItems.some((item) => item.type === 'giftcard')
 
-  // Validate form data (skip full validation for initial PaymentIntent creation)
   const isInitCall = formData.isInit === true
   if (!isInitCall) {
     const schema = hasProducts ? shippingSchema : contactOnlySchema
@@ -68,12 +62,10 @@ export async function createPaymentIntent(
     }
   }
 
-  // Check session (optional -- guest checkout allowed per D-09)
   const session = await verifySession()
   const customerId = session?.uid ?? null
   const customerEmail = formData.email
 
-  // Re-validate cart items against Firestore
   const productItems: CartItem[] = []
   const experienceItems: CartItem[] = []
   const giftCardItems: CartItem[] = []
@@ -85,14 +77,14 @@ export async function createPaymentIntent(
         return { error: `Produktet "${item.name}" finnes ikke lenger.` }
       }
       const product = productDoc.data()
-      if (!product?.publishedAt) {
+      if (!product.publishedAt) {
         return { error: `Produktet "${item.name}" er ikke tilgjengelig.` }
       }
-      // Use variant price/stock if applicable
-      let verifiedPrice = product.price
-      let verifiedStock = product.stockCount
-      if (item.variantId && product.variants?.length > 0) {
-        const variant = product.variants.find((v: { id: string; price: number; stockCount: number }) => v.id === item.variantId)
+      let verifiedPrice = product.price as number
+      let verifiedStock = product.stockCount as number
+      const variants = product.variants as Array<{ id: string; price: number; stockCount: number }> | null
+      if (item.variantId && Array.isArray(variants) && variants.length > 0) {
+        const variant = variants.find((v) => v.id === item.variantId)
         if (variant) {
           verifiedPrice = variant.price
           verifiedStock = variant.stockCount
@@ -103,14 +95,12 @@ export async function createPaymentIntent(
       }
       productItems.push({ ...item, price: verifiedPrice })
     } else if (item.type === 'giftcard') {
-      // Gift card purchases: trust client price (validated min/max)
       const amountNOK = item.price / 100
       if (amountNOK < 100 || amountNOK > 10000) {
         return { error: 'Ugyldig gavekort-beløp.' }
       }
       giftCardItems.push(item)
     } else {
-      // Experience booking
       if (!item.experienceDateId) {
         return { error: `Ugyldig booking for "${item.name}".` }
       }
@@ -119,36 +109,31 @@ export async function createPaymentIntent(
         return { error: `Opplevelsen "${item.name}" finnes ikke lenger.` }
       }
       const dateDoc = await adminDb
-        .collection('experiences')
-        .doc(item.id)
-        .collection('dates')
+        .collection(`experiences/${item.id}/dates`)
         .doc(item.experienceDateId)
         .get()
       if (!dateDoc.exists) {
         return { error: `Datoen for "${item.name}" er ikke tilgjengelig.` }
       }
       const dateData = dateDoc.data()
-      if (!dateData?.isActive || dateData.availableSeats < item.quantity) {
+      if (!dateData.isActive || (dateData.availableSeats as number) < item.quantity) {
         return { error: `Ingen ledige plasser for "${item.name}" pa valgt dato.` }
       }
-      // Use verified Firestore price (earlybird or priceOverride or basePrice)
       const now = new Date()
-      let verifiedPrice = dateData.priceOverride ?? expDoc.data()?.basePrice ?? item.price
-      if (dateData.earlyBirdPrice && dateData.earlyBirdDeadline && dateData.earlyBirdDeadline.toDate() > now) {
-        verifiedPrice = dateData.earlyBirdPrice
+      let verifiedPrice = (dateData.priceOverride as number | null) ?? (expDoc.data().basePrice as number) ?? item.price
+      const earlyBirdDeadline = dateData.earlyBirdDeadline instanceof Date ? dateData.earlyBirdDeadline : null
+      if (dateData.earlyBirdPrice && earlyBirdDeadline && earlyBirdDeadline > now) {
+        verifiedPrice = dateData.earlyBirdPrice as number
       }
       experienceItems.push({ ...item, price: verifiedPrice })
     }
   }
 
   const allItems = [...productItems, ...experienceItems, ...giftCardItems]
-
-  // Calculate total
   const subtotal = allItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const shippingCost = hasProducts ? DEFAULT_SHIPPING_COST : 0
   let total = subtotal + shippingCost
 
-  // Apply gift card deduction
   let giftCardDeduction = 0
   if (giftCardCode) {
     const gcResult = await validateGiftCard(giftCardCode)
@@ -158,7 +143,6 @@ export async function createPaymentIntent(
     giftCardDeduction = Math.min(gcResult.balance, total)
     total = total - giftCardDeduction
 
-    // If gift card covers the full amount, no Stripe payment needed
     if (total <= 0) {
       return {
         coveredByGiftCard: true,
@@ -172,7 +156,6 @@ export async function createPaymentIntent(
     return { error: 'Ugyldig totalbeløp.' }
   }
 
-  // Build shipping address for metadata
   const shippingAddress = hasProducts
     ? JSON.stringify({
         fullName: formData.fullName || '',
@@ -188,8 +171,6 @@ export async function createPaymentIntent(
       currency: 'nok',
       metadata: {
         type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : hasGiftCards ? 'giftcard' : 'booking',
-        // Exclude image/slug from metadata to stay within Stripe's 500-char limit per value.
-        // The webhook can re-fetch image data from Firestore by productId if needed.
         orderItems: JSON.stringify(
           productItems.map((i) => ({
             productId: i.id,
@@ -260,10 +241,6 @@ export async function updatePaymentIntentMetadata(
     return { error: 'Betalingssystemet er ikke konfigurert. Kontakt oss.' }
   }
 
-  if (!adminDb) {
-    return { error: 'Systemet er ikke tilgjengelig. Prøv igjen senere.' }
-  }
-
   if (!paymentIntentId || !paymentIntentId.startsWith('pi_')) {
     return { error: 'Ugyldig betalings-ID.' }
   }
@@ -272,12 +249,10 @@ export async function updatePaymentIntentMetadata(
     return { error: 'Handlekurven er tom.' }
   }
 
-  // Determine cart composition
   const hasProducts = cartItems.some((item) => item.type === 'product')
   const hasExperiences = cartItems.some((item) => item.type === 'experience')
   const hasGiftCards = cartItems.some((item) => item.type === 'giftcard')
 
-  // Always validate formData with the appropriate schema
   const schema = hasProducts ? shippingSchema : contactOnlySchema
   const validation = schema.safeParse(formData)
   if (!validation.success) {
@@ -285,12 +260,10 @@ export async function updatePaymentIntentMetadata(
     return { error: firstError.message }
   }
 
-  // Check session (optional — guest checkout allowed)
   const session = await verifySession()
   const customerId = session?.uid ?? null
   const customerEmail = formData.email
 
-  // Re-validate all cart items against Firestore
   const productItems: CartItem[] = []
   const experienceItems: CartItem[] = []
   const giftCardItems: CartItem[] = []
@@ -302,13 +275,14 @@ export async function updatePaymentIntentMetadata(
         return { error: `Produktet "${item.name}" finnes ikke lenger.` }
       }
       const product = productDoc.data()
-      if (!product?.publishedAt) {
+      if (!product.publishedAt) {
         return { error: `Produktet "${item.name}" er ikke tilgjengelig.` }
       }
-      let verifiedPrice = product.price
-      let verifiedStock = product.stockCount
-      if (item.variantId && product.variants?.length > 0) {
-        const variant = product.variants.find((v: { id: string; price: number; stockCount: number }) => v.id === item.variantId)
+      let verifiedPrice = product.price as number
+      let verifiedStock = product.stockCount as number
+      const variants = product.variants as Array<{ id: string; price: number; stockCount: number }> | null
+      if (item.variantId && Array.isArray(variants) && variants.length > 0) {
+        const variant = variants.find((v) => v.id === item.variantId)
         if (variant) {
           verifiedPrice = variant.price
           verifiedStock = variant.stockCount
@@ -325,7 +299,6 @@ export async function updatePaymentIntentMetadata(
       }
       giftCardItems.push(item)
     } else {
-      // Experience booking
       if (!item.experienceDateId) {
         return { error: `Ugyldig booking for "${item.name}".` }
       }
@@ -334,30 +307,27 @@ export async function updatePaymentIntentMetadata(
         return { error: `Opplevelsen "${item.name}" finnes ikke lenger.` }
       }
       const dateDoc = await adminDb
-        .collection('experiences')
-        .doc(item.id)
-        .collection('dates')
+        .collection(`experiences/${item.id}/dates`)
         .doc(item.experienceDateId)
         .get()
       if (!dateDoc.exists) {
         return { error: `Datoen for "${item.name}" er ikke tilgjengelig.` }
       }
       const dateData = dateDoc.data()
-      if (!dateData?.isActive || dateData.availableSeats < item.quantity) {
+      if (!dateData.isActive || (dateData.availableSeats as number) < item.quantity) {
         return { error: `Ingen ledige plasser for "${item.name}" pa valgt dato.` }
       }
       const now = new Date()
-      let verifiedPrice = dateData.priceOverride ?? expDoc.data()?.basePrice ?? item.price
-      if (dateData.earlyBirdPrice && dateData.earlyBirdDeadline && dateData.earlyBirdDeadline.toDate() > now) {
-        verifiedPrice = dateData.earlyBirdPrice
+      let verifiedPrice = (dateData.priceOverride as number | null) ?? (expDoc.data().basePrice as number) ?? item.price
+      const earlyBirdDeadline = dateData.earlyBirdDeadline instanceof Date ? dateData.earlyBirdDeadline : null
+      if (dateData.earlyBirdPrice && earlyBirdDeadline && earlyBirdDeadline > now) {
+        verifiedPrice = dateData.earlyBirdPrice as number
       }
       experienceItems.push({ ...item, price: verifiedPrice })
     }
   }
 
   const allItems = [...productItems, ...experienceItems, ...giftCardItems]
-
-  // Calculate totals — amount will be updated on the PI if gift card applied
   const subtotal = allItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const shippingCost = hasProducts ? DEFAULT_SHIPPING_COST : 0
   let total = subtotal + shippingCost
@@ -378,16 +348,10 @@ export async function updatePaymentIntentMetadata(
       await stripe.paymentIntents.cancel(paymentIntentId)
     } catch (cancelErr) {
       console.error('Failed to cancel PI covered by gift card:', cancelErr)
-      // PI may already be canceled or in a non-cancelable state — continue
     }
-    // Redeem the gift card
     await redeemGiftCard(giftCardCode, giftCardDeduction)
 
-    // Create order/bookings directly (fulfillment without Stripe payment)
-    const customerEmail = formData.email
-    const session = await verifySession()
-    const customerId = session?.uid ?? null
-    const shippingAddress: { fullName: string; address: string; postalCode: string; city: string } | null = hasProducts
+    const shippingAddr: { fullName: string; address: string; postalCode: string; city: string } | null = hasProducts
       ? {
           fullName: formData.fullName || '',
           address: formData.address || '',
@@ -396,7 +360,6 @@ export async function updatePaymentIntentMetadata(
         }
       : null
 
-    // Create order for product items
     if (productItems.length > 0) {
       await adminDb.collection('orders').add({
         stripeSessionId: '',
@@ -413,7 +376,7 @@ export async function updatePaymentIntentMetadata(
           variantId: item.variantId ?? null,
           variantLabel: item.variantLabel ?? null,
         })),
-        shipping: shippingAddress,
+        shipping: shippingAddr,
         subtotal,
         shippingCost,
         total: 0,
@@ -425,21 +388,21 @@ export async function updatePaymentIntentMetadata(
         giftCardDeduction,
       })
 
-      // Decrement stock for each product (mirrors webhook stock decrement logic)
+      // Decrement stock for each product
       for (const item of productItems) {
-        const productRef = adminDb!.collection('products').doc(item.id)
-        await adminDb!.runTransaction(async (transaction) => {
-          const productDoc = await transaction.get(productRef)
+        const productDocRef = adminDb.collection('products').doc(item.id)
+        await adminDb.runTransaction(async (tx) => {
+          const productDoc = await tx.get(productDocRef)
           if (!productDoc.exists) return
-          const data = productDoc.data()!
-          const currentStock = data.stockCount ?? 0
+          const data = productDoc.data()
+          const currentStock = (data.stockCount as number) ?? 0
           const newStock = Math.max(0, currentStock - item.quantity)
           const updates: Record<string, unknown> = {
             stockCount: newStock,
             inStock: newStock > 0,
           }
           if (item.variantId && Array.isArray(data.variants)) {
-            const variants = data.variants.map((v: { id: string; stockCount?: number }) => {
+            const variants = (data.variants as Array<{ id: string; stockCount?: number }>).map((v) => {
               if (v.id === item.variantId) {
                 return { ...v, stockCount: Math.max(0, (v.stockCount ?? 0) - item.quantity) }
               }
@@ -447,7 +410,7 @@ export async function updatePaymentIntentMetadata(
             })
             updates.variants = variants
           }
-          transaction.update(productRef, updates)
+          tx.update(productDocRef, updates)
         })
       }
     }
@@ -455,26 +418,24 @@ export async function updatePaymentIntentMetadata(
     // Create bookings for experience items
     for (const item of experienceItems) {
       const confirmationCode = crypto.randomBytes(4).toString('hex').toUpperCase()
-      const dateRef = adminDb
-        .collection('experiences')
-        .doc(item.id)
-        .collection('dates')
+      const dateDocRef = adminDb
+        .collection(`experiences/${item.id}/dates`)
         .doc(item.experienceDateId!)
 
-      await adminDb.runTransaction(async (transaction) => {
-        const dateDoc = await transaction.get(dateRef)
+      await adminDb.runTransaction(async (tx) => {
+        const dateDoc = await tx.get(dateDocRef)
         if (!dateDoc.exists) return
-        const dateData = dateDoc.data()!
-        const availableSeats = dateData.availableSeats ?? 0
+        const dateData = dateDoc.data()
+        const availableSeats = (dateData.availableSeats as number) ?? 0
         if (availableSeats < item.quantity) return
 
-        transaction.update(dateRef, {
-          bookedSeats: (dateData.bookedSeats ?? 0) + item.quantity,
+        tx.update(dateDocRef, {
+          bookedSeats: ((dateData.bookedSeats as number) ?? 0) + item.quantity,
           availableSeats: availableSeats - item.quantity,
         })
 
-        const bookingRef = adminDb!.collection('bookings').doc()
-        transaction.set(bookingRef, {
+        const bookingDocRef = adminDb.collection('bookings').doc()
+        tx.set(bookingDocRef, {
           confirmationCode,
           stripeSessionId: '',
           stripePaymentIntentId: paymentIntentId,
@@ -504,7 +465,6 @@ export async function updatePaymentIntentMetadata(
     }
   }
 
-  // Build shipping address for metadata
   const shippingAddress = hasProducts
     ? JSON.stringify({
         fullName: formData.fullName || '',
@@ -519,7 +479,6 @@ export async function updatePaymentIntentMetadata(
       amount: total,
       metadata: {
         type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : hasGiftCards ? 'giftcard' : 'booking',
-        // Exclude image/slug from metadata to stay within Stripe's 500-char limit per value.
         orderItems: JSON.stringify(
           productItems.map((i) => ({
             productId: i.id,

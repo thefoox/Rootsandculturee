@@ -13,6 +13,7 @@ import {
 import { syncPaymentContact } from '@/lib/email/contacts'
 import { createGiftCard, redeemGiftCard } from '@/lib/data/gift-cards'
 import type { OrderItem, ShippingAddress } from '@/types'
+import type { DocRef, FSData } from '@/lib/firebase/firestore-rest'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,18 +43,16 @@ interface GiftCardMetaItem {
 }
 
 export async function POST(req: Request) {
-  // Validate required env vars at runtime (not build time)
   const { validateEnv } = await import('@/lib/env')
   validateEnv()
 
-  if (!stripe || !adminDb) {
+  if (!stripe) {
     return NextResponse.json(
       { error: 'Server ikke konfigurert.' },
       { status: 500 }
     )
   }
 
-  // CRITICAL: Use req.text() NOT req.json() for raw body (Pitfall 4)
   const rawBody = await req.text()
   const headersList = await headers()
   const sig = headersList.get('stripe-signature')
@@ -80,16 +79,14 @@ export async function POST(req: Request) {
     )
   }
 
-  // Idempotency check (Pitfall 3): Check if event already processed
-  const eventRef = adminDb.collection('stripeEvents').doc(event.id)
-  const eventDoc = await eventRef.get()
+  // Idempotency check: prevent double-processing
+  const eventDoc = await adminDb.collection('stripeEvents').doc(event.id).get()
   if (eventDoc.exists) {
-    // Already processed -- return 200 to stop retries
     return NextResponse.json({ received: true }, { status: 200 })
   }
 
-  // Mark event as processing (write before processing for idempotency)
-  await eventRef.set({
+  // Mark event as processing before handling
+  await adminDb.collection('stripeEvents').doc(event.id).set({
     type: event.type,
     processedAt: new Date(),
   })
@@ -108,15 +105,9 @@ export async function POST(req: Request) {
       let bookingItems: BookingMetaItem[] = []
       let giftCardItems: GiftCardMetaItem[] = []
 
-      try {
-        orderItems = JSON.parse(metadata.orderItems || '[]')
-      } catch { /* empty */ }
-      try {
-        bookingItems = JSON.parse(metadata.bookingItems || '[]')
-      } catch { /* empty */ }
-      try {
-        giftCardItems = JSON.parse(metadata.giftCardItems || '[]')
-      } catch { /* empty */ }
+      try { orderItems = JSON.parse(metadata.orderItems || '[]') } catch { /* empty */ }
+      try { bookingItems = JSON.parse(metadata.bookingItems || '[]') } catch { /* empty */ }
+      try { giftCardItems = JSON.parse(metadata.giftCardItems || '[]') } catch { /* empty */ }
 
       const giftCardCodeUsed = metadata.giftCardCode || ''
       const giftCardDeduction = parseInt(metadata.giftCardDeduction || '0', 10)
@@ -145,15 +136,14 @@ export async function POST(req: Request) {
 
       // Process product orders
       if (orderItems.length > 0) {
-        // Re-fetch product images from Firestore (excluded from metadata to stay within 500-char limit)
         firestoreItems = await Promise.all(
           orderItems.map(async (item) => {
             let image: { url: string; alt: string } | null = null
             try {
-              const productDoc = await adminDb!.collection('products').doc(item.productId).get()
+              const productDoc = await adminDb.collection('products').doc(item.productId).get()
               if (productDoc.exists) {
                 const productData = productDoc.data()
-                image = productData?.images?.[0] ?? null
+                image = (productData?.images as { url: string; alt: string }[])?.[0] ?? null
               }
             } catch {
               // Non-critical: order proceeds without image
@@ -187,22 +177,21 @@ export async function POST(req: Request) {
         })
         orderId = orderRef.id
 
-        // Decrement stock for each product (PROD-07) using transaction
+        // Decrement stock for each product using transactions
         for (const item of orderItems) {
-          const productRef = adminDb.collection('products').doc(item.productId)
-          await adminDb.runTransaction(async (transaction) => {
-            const productDoc = await transaction.get(productRef)
+          const productDocRef = adminDb.collection('products').doc(item.productId) as unknown as DocRef
+          await adminDb.runTransaction(async (tx) => {
+            const productDoc = await tx.get(productDocRef)
             if (!productDoc.exists) return
-            const data = productDoc.data()!
-            const currentStock = data.stockCount ?? 0
+            const data = productDoc.data()
+            const currentStock = (data.stockCount as number) ?? 0
             const newStock = Math.max(0, currentStock - item.quantity)
             const updates: Record<string, unknown> = {
               stockCount: newStock,
               inStock: newStock > 0,
             }
-            // Also decrement variant stock if variantId present
             if (item.variantId && Array.isArray(data.variants)) {
-              const variants = data.variants.map((v: { id: string; stockCount?: number }) => {
+              const variants = (data.variants as Array<{ id: string; stockCount?: number }>).map((v) => {
                 if (v.id === item.variantId) {
                   const newVariantStock = Math.max(0, (v.stockCount ?? 0) - item.quantity)
                   return { ...v, stockCount: newVariantStock }
@@ -211,50 +200,47 @@ export async function POST(req: Request) {
               })
               updates.variants = variants
             }
-            transaction.update(productRef, updates)
+            tx.update(productDocRef, updates as FSData)
           })
         }
       }
 
-      // Process booking items using Firestore transactions (Pitfall 2)
+      // Process booking items using transactions
       for (const item of bookingItems) {
         const confirmationCode = crypto
           .randomBytes(4)
           .toString('hex')
           .toUpperCase()
 
-        const dateRef = adminDb
-          .collection('experiences')
-          .doc(item.experienceId)
-          .collection('dates')
-          .doc(item.experienceDateId)
+        const dateDocRef = adminDb
+          .collection(`experiences/${item.experienceId}/dates`)
+          .doc(item.experienceDateId) as unknown as DocRef
 
-        await adminDb.runTransaction(async (transaction) => {
-          const dateDoc = await transaction.get(dateRef)
+        await adminDb.runTransaction(async (tx) => {
+          const dateDoc = await tx.get(dateDocRef)
           if (!dateDoc.exists) {
             throw new Error(`Date ${item.experienceDateId} not found`)
           }
-          const dateData = dateDoc.data()!
-          const availableSeats = dateData.availableSeats ?? 0
+          const dateData = dateDoc.data()
+          const availableSeats = (dateData.availableSeats as number) ?? 0
           if (availableSeats < item.quantity) {
             throw new Error(`Not enough seats for ${item.experienceName}`)
           }
 
           // Decrement seats atomically
-          transaction.update(dateRef, {
-            bookedSeats: (dateData.bookedSeats ?? 0) + item.quantity,
+          tx.update(dateDocRef, {
+            bookedSeats: ((dateData.bookedSeats as number) ?? 0) + item.quantity,
             availableSeats: availableSeats - item.quantity,
           })
 
           // Get whatToBring from experience document
-          const expDoc = await transaction.get(
-            adminDb!.collection('experiences').doc(item.experienceId)
-          )
-          const whatToBring = expDoc.data()?.whatToBring || ''
+          const expDocRef = adminDb.collection('experiences').doc(item.experienceId) as unknown as DocRef
+          const expDoc = await tx.get(expDocRef)
+          const whatToBring = (expDoc.data()?.whatToBring as string) || ''
 
           // Create booking document
-          const bookingRef = adminDb!.collection('bookings').doc()
-          transaction.set(bookingRef, {
+          const bookingDocRef = adminDb.collection('bookings').doc() as unknown as DocRef
+          tx.set(bookingDocRef, {
             confirmationCode,
             stripeSessionId: '',
             stripePaymentIntentId: paymentIntent.id,
@@ -289,11 +275,9 @@ export async function POST(req: Request) {
         })
       }
 
-      // Process gift card purchases — create GiftCard documents and email recipients
+      // Process gift card purchases
       const createdGiftCards: Array<{ code: string; amount: number; recipientEmail: string; recipientName: string }> = []
       for (const item of giftCardItems) {
-        // Gift card metadata is stored in the PaymentIntent; recipient info comes from there
-        // For now, create the gift card with purchaser as recipient (webhook gets recipient from stored metadata)
         const gc = await createGiftCard({
           amount: item.amount,
           purchasedBy: customerId,
@@ -312,7 +296,7 @@ export async function POST(req: Request) {
         }
       }
 
-      // Redeem gift card if one was used for this payment
+      // Redeem gift card if one was used
       if (giftCardCodeUsed && giftCardDeduction > 0) {
         await redeemGiftCard(giftCardCodeUsed, giftCardDeduction)
       }
@@ -340,11 +324,10 @@ export async function POST(req: Request) {
         }
       }
 
-      // Send confirmation emails via Resend (D-18, D-20)
+      // Send confirmation emails
       if (resend && customerEmail) {
         try {
           if (orderItems.length > 0 && bookingResults.length > 0) {
-            // Mixed confirmation — use firestoreItems which have images fetched from Firestore
             const emailData = mixedConfirmationEmail(
               {
                 orderId: orderId || '',
@@ -355,10 +338,7 @@ export async function POST(req: Request) {
                 shipping: shippingAddress,
                 customerEmail,
               },
-              bookingResults.map((b) => ({
-                ...b,
-                customerEmail,
-              }))
+              bookingResults.map((b) => ({ ...b, customerEmail }))
             )
             await resend.emails.send({
               from: FROM_EMAIL,
@@ -367,7 +347,6 @@ export async function POST(req: Request) {
               text: emailData.text,
             })
           } else if (orderItems.length > 0) {
-            // Order only — use firestoreItems which have images fetched from Firestore
             const emailData = orderConfirmationEmail({
               orderId: orderId || '',
               items: firestoreItems,
@@ -384,12 +363,8 @@ export async function POST(req: Request) {
               text: emailData.text,
             })
           } else if (bookingResults.length > 0) {
-            // Booking only
             for (const booking of bookingResults) {
-              const emailData = bookingConfirmationEmail({
-                ...booking,
-                customerEmail,
-              })
+              const emailData = bookingConfirmationEmail({ ...booking, customerEmail })
               await resend.emails.send({
                 from: FROM_EMAIL,
                 to: customerEmail,
@@ -400,7 +375,6 @@ export async function POST(req: Request) {
           }
         } catch (emailErr) {
           console.error('Email sending error:', emailErr)
-          // Don't fail the webhook for email errors
         }
       }
 
@@ -415,18 +389,17 @@ export async function POST(req: Request) {
       } catch {
         // Contact sync failure should never break the webhook
       }
+
     } else if (event.type === 'charge.refunded') {
       const charge = event.data.object
       const paymentIntentId = typeof charge.payment_intent === 'string'
         ? charge.payment_intent
         : charge.payment_intent?.id || ''
 
-      // Determine if this is a full or partial refund
       const isFullRefund = (charge.amount_refunded ?? 0) >= (charge.amount ?? 0)
 
       if (paymentIntentId) {
-        // Find the order by PaymentIntent ID
-        const ordersSnapshot = await adminDb!
+        const ordersSnapshot = await adminDb
           .collection('orders')
           .where('stripePaymentIntentId', '==', paymentIntentId)
           .limit(1)
@@ -436,13 +409,11 @@ export async function POST(req: Request) {
           const orderDoc = ordersSnapshot.docs[0]
           const refundAmount = charge.amount_refunded || 0
 
-          // Update order status: only cancel on full refund
-          await orderDoc.ref.update({
+          await adminDb.collection('orders').doc(orderDoc.id).update({
             status: isFullRefund ? 'cancelled' : 'partially_refunded',
           })
 
-          // Log refund details
-          await orderDoc.ref.collection('refunds').add({
+          await adminDb.collection(`orders/${orderDoc.id}/refunds`).add({
             amount: refundAmount,
             reason: charge.refunds?.data?.[0]?.reason || null,
             status: 'succeeded',
@@ -452,9 +423,8 @@ export async function POST(req: Request) {
           })
         }
 
-        // Only restore booking seats on full refund
         if (isFullRefund) {
-          const bookingsSnapshot = await adminDb!
+          const bookingsSnapshot = await adminDb
             .collection('bookings')
             .where('stripePaymentIntentId', '==', paymentIntentId)
             .get()
@@ -462,29 +432,27 @@ export async function POST(req: Request) {
           for (const bookingDoc of bookingsSnapshot.docs) {
             const booking = bookingDoc.data()
             if (booking.status === 'confirmed' && booking.dateId) {
-              // Restore seats atomically (mirrors cancelBooking pattern)
-              const dateRef = adminDb!
-                .collection('experiences')
-                .doc(booking.experienceId)
-                .collection('dates')
-                .doc(booking.dateId)
+              const dateDocRef = adminDb
+                .collection(`experiences/${booking.experienceId as string}/dates`)
+                .doc(booking.dateId as string) as unknown as DocRef
+              const bookingDocRef = adminDb
+                .collection('bookings')
+                .doc(bookingDoc.id) as unknown as DocRef
 
-              await adminDb!.runTransaction(async (transaction) => {
-                const dateDoc = await transaction.get(dateRef)
+              await adminDb.runTransaction(async (tx) => {
+                const dateDoc = await tx.get(dateDocRef)
                 if (!dateDoc.exists) return
-                const dateData = dateDoc.data()!
+                const dateData = dateDoc.data()
                 const currentBooked = (dateData.bookedSeats as number) || 0
                 const currentAvailable = (dateData.availableSeats as number) || 0
                 const seats = (booking.seats as number) || 1
 
-                transaction.update(dateRef, {
+                tx.update(dateDocRef, {
                   bookedSeats: Math.max(0, currentBooked - seats),
                   availableSeats: currentAvailable + seats,
                 })
+                tx.update(bookingDocRef, { status: 'cancelled' })
               })
-
-              // Mark booking as cancelled
-              await bookingDoc.ref.update({ status: 'cancelled' })
             }
           }
         }
@@ -492,8 +460,6 @@ export async function POST(req: Request) {
     }
   } catch (err) {
     console.error('Webhook processing error:', err)
-    // Still return 200 to prevent Stripe from retrying a failed event
-    // The event is already marked as processed (idempotency)
   }
 
   return NextResponse.json({ received: true }, { status: 200 })

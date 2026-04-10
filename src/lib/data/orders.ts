@@ -2,10 +2,12 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Order, OrderStatus } from '@/types'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function docToOrder(id: string, data: Record<string, unknown>): Order {
+function docToOrder(doc: FirestoreDoc): Order {
+  const data = doc.data()
   return {
-    id,
+    id: doc.id,
     stripeSessionId: (data.stripeSessionId as string) || '',
     stripePaymentIntentId: (data.stripePaymentIntentId as string) || '',
     customerId: (data.customerId as string) || null,
@@ -16,37 +18,26 @@ function docToOrder(id: string, data: Record<string, unknown>): Order {
     subtotal: (data.subtotal as number) || 0,
     shippingCost: (data.shippingCost as number) || 0,
     total: (data.total as number) || 0,
-    createdAt: data.createdAt
-      ? new Date((data.createdAt as { _seconds: number })._seconds * 1000)
-      : new Date(),
-    paidAt: data.paidAt
-      ? new Date((data.paidAt as { _seconds: number })._seconds * 1000)
-      : null,
-    fulfilledAt: data.fulfilledAt
-      ? new Date((data.fulfilledAt as { _seconds: number })._seconds * 1000)
-      : null,
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    paidAt: data.paidAt instanceof Date ? data.paidAt : null,
+    fulfilledAt: data.fulfilledAt instanceof Date ? data.fulfilledAt : null,
   }
 }
 
 export const getOrders = unstable_cache(
   async (): Promise<Order[]> => {
-    if (!adminDb) return []
-
     const snapshot = await adminDb
       .collection('orders')
       .orderBy('createdAt', 'desc')
       .limit(100)
       .get()
-
-    return snapshot.docs.map((doc) => docToOrder(doc.id, doc.data()))
+    return snapshot.docs.map(docToOrder)
   },
   ['orders'],
   { tags: ['orders'] }
 )
 
 export async function getOrdersByUser(uid: string, email?: string): Promise<Order[]> {
-  if (!adminDb) return []
-
   // Query by customerId (primary)
   const byIdSnapshot = await adminDb
     .collection('orders')
@@ -55,7 +46,7 @@ export async function getOrdersByUser(uid: string, email?: string): Promise<Orde
     .limit(50)
     .get()
 
-  const orders = byIdSnapshot.docs.map((doc) => docToOrder(doc.id, doc.data()))
+  const orders = byIdSnapshot.docs.map(docToOrder)
 
   // Also find orders by email where customerId was empty (guest checkout fallback)
   if (email) {
@@ -70,11 +61,10 @@ export async function getOrdersByUser(uid: string, email?: string): Promise<Orde
     const existingIds = new Set(orders.map((o) => o.id))
     for (const doc of byEmailSnapshot.docs) {
       if (!existingIds.has(doc.id)) {
-        orders.push(docToOrder(doc.id, doc.data()))
+        orders.push(docToOrder(doc))
       }
     }
 
-    // Sort merged results
     orders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
   }
 
@@ -82,9 +72,7 @@ export async function getOrdersByUser(uid: string, email?: string): Promise<Orde
 }
 
 export async function getOrderById(orderId: string): Promise<Order | null> {
-  if (!adminDb) return null
-
   const doc = await adminDb.collection('orders').doc(orderId).get()
   if (!doc.exists) return null
-  return docToOrder(doc.id, doc.data()!)
+  return docToOrder(doc)
 }

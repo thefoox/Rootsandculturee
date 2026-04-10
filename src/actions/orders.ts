@@ -6,10 +6,12 @@ import { verifySession } from '@/lib/dal'
 import { revalidateTag } from 'next/cache'
 import { getOrders as _getCachedOrders } from '@/lib/data/orders'
 import type { Order, OrderStatus, ShippingAddress, OrderNote } from '@/types'
+import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
 
-function docToOrder(id: string, data: Record<string, unknown>): Order {
+function docToOrder(doc: FirestoreDoc): Order {
+  const data = doc.data()
   return {
-    id,
+    id: doc.id,
     stripeSessionId: (data.stripeSessionId as string) || '',
     stripePaymentIntentId: (data.stripePaymentIntentId as string) || '',
     customerId: (data.customerId as string) || null,
@@ -20,23 +22,15 @@ function docToOrder(id: string, data: Record<string, unknown>): Order {
     subtotal: (data.subtotal as number) || 0,
     shippingCost: (data.shippingCost as number) || 0,
     total: (data.total as number) || 0,
-    createdAt: data.createdAt
-      ? new Date((data.createdAt as { _seconds: number })._seconds * 1000)
-      : new Date(),
-    paidAt: data.paidAt
-      ? new Date((data.paidAt as { _seconds: number })._seconds * 1000)
-      : null,
-    fulfilledAt: data.fulfilledAt
-      ? new Date((data.fulfilledAt as { _seconds: number })._seconds * 1000)
-      : null,
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    paidAt: data.paidAt instanceof Date ? data.paidAt : null,
+    fulfilledAt: data.fulfilledAt instanceof Date ? data.fulfilledAt : null,
   }
 }
 
 export async function getOrderByStripePaymentIntent(
   paymentIntentId: string
 ): Promise<Order | null> {
-  if (!adminDb) return null
-
   const snapshot = await adminDb
     .collection('orders')
     .where('stripePaymentIntentId', '==', paymentIntentId)
@@ -44,16 +38,13 @@ export async function getOrderByStripePaymentIntent(
     .get()
 
   if (snapshot.empty) return null
-  const doc = snapshot.docs[0]
-  return docToOrder(doc.id, doc.data())
+  return docToOrder(snapshot.docs[0])
 }
 
 export async function getOrderById(orderId: string): Promise<Order | null> {
-  if (!adminDb) return null
-
   const doc = await adminDb.collection('orders').doc(orderId).get()
   if (!doc.exists) return null
-  return docToOrder(doc.id, doc.data()!)
+  return docToOrder(doc)
 }
 
 export async function getOrders(): Promise<Order[]> {
@@ -64,26 +55,20 @@ export async function updateOrderStatus(
   orderId: string,
   status: OrderStatus
 ): Promise<void> {
-  if (!adminDb) return
-
   await adminDb.collection('orders').doc(orderId).update({
     status,
     ...(status === 'shipped' ? { fulfilledAt: new Date() } : {}),
   })
-
   revalidateTag('orders', 'max')
 }
 
 export async function createOrder(
   data: Omit<Order, 'id' | 'createdAt'>
 ): Promise<string> {
-  if (!adminDb) throw new Error('Database ikke tilgjengelig.')
-
   const docRef = await adminDb.collection('orders').add({
     ...data,
     createdAt: new Date(),
   })
-
   revalidateTag('orders', 'max')
   return docRef.id
 }
@@ -96,7 +81,6 @@ export async function updateOrderShipping(
   if (!session || session.role !== 'admin') {
     return { success: false, error: 'Ingen tilgang.' }
   }
-  if (!adminDb) return { success: false, error: 'Database ikke tilgjengelig.' }
 
   try {
     await adminDb.collection('orders').doc(orderId).update({ shipping })
@@ -115,14 +99,11 @@ export async function addOrderNote(
   if (!session || session.role !== 'admin') {
     return { success: false, error: 'Ingen tilgang.' }
   }
-  if (!adminDb) return { success: false, error: 'Database ikke tilgjengelig.' }
   if (!text.trim()) return { success: false, error: 'Notatet kan ikke være tomt.' }
 
   try {
     await adminDb
-      .collection('orders')
-      .doc(orderId)
-      .collection('notes')
+      .collection(`orders/${orderId}/notes`)
       .add({
         text: text.trim(),
         createdBy: session.email,
@@ -137,12 +118,9 @@ export async function addOrderNote(
 export async function getOrderNotes(orderId: string): Promise<OrderNote[]> {
   const session = await verifySession()
   if (!session || session.role !== 'admin') return []
-  if (!adminDb) return []
 
   const snapshot = await adminDb
-    .collection('orders')
-    .doc(orderId)
-    .collection('notes')
+    .collection(`orders/${orderId}/notes`)
     .orderBy('createdAt', 'desc')
     .limit(50)
     .get()
@@ -153,9 +131,7 @@ export async function getOrderNotes(orderId: string): Promise<OrderNote[]> {
       id: doc.id,
       text: (data.text as string) || '',
       createdBy: (data.createdBy as string) || '',
-      createdAt: data.createdAt
-        ? new Date((data.createdAt as { _seconds: number })._seconds * 1000)
-        : new Date(),
+      createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
     }
   })
 }
@@ -165,10 +141,6 @@ async function getFirestoreOrderStats(): Promise<{
   totalRevenue: number
   averageOrder: number
 }> {
-  if (!adminDb) {
-    return { orderCount: 0, totalRevenue: 0, averageOrder: 0 }
-  }
-
   const ordersSnap = await adminDb
     .collection('orders')
     .orderBy('createdAt', 'desc')
@@ -197,7 +169,6 @@ async function getStripeOrderStats(): Promise<{
   }
 
   try {
-    // Note: Stripe list is limited to 100. For accurate revenue, use getFirestoreOrderStats.
     const paymentIntents = await stripe.paymentIntents.list({ limit: 100 })
     const succeeded = paymentIntents.data.filter((pi) => pi.status === 'succeeded')
 
@@ -245,17 +216,12 @@ export async function getOrderStats(): Promise<{
   bookingCount: number
   customerCount: number
 }> {
-  if (!adminDb) {
-    return { orderCount: 0, totalRevenue: 0, averageOrder: 0, bookingCount: 0, customerCount: 0 }
-  }
-
-  const [stripeStats, bookingsSnap, usersSnap] = await Promise.all([
+  const [stripeStats, bookingCount, customerCount] = await Promise.all([
     getStripeOrderStats(),
-    adminDb.collection('bookings').count().get(),
-    adminDb.collection('users').count().get(),
+    adminDb.collection('bookings').count().then((r) => r.data().count),
+    adminDb.collection('users').count().then((r) => r.data().count),
   ])
 
-  // Use Stripe data for revenue/orders if available, fall back to Firestore
   const { orderCount, totalRevenue, averageOrder } = stripeStats
     ?? await getFirestoreOrderStats()
 
@@ -263,7 +229,7 @@ export async function getOrderStats(): Promise<{
     orderCount,
     totalRevenue,
     averageOrder,
-    bookingCount: bookingsSnap.data().count,
-    customerCount: usersSnap.data().count,
+    bookingCount,
+    customerCount,
   }
 }

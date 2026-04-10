@@ -56,50 +56,36 @@ export async function GET(request: NextRequest) {
 
     const userInfo = await userInfoResponse.json()
 
-    // 3. Determine role
-    // Fallback: check env var ADMIN_EMAILS (comma-separated) since firebase-admin may not load on Vercel
-    const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase())
+    // 3. Determine role — check ADMIN_EMAILS env var, then Firestore user doc
+    const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim().toLowerCase())
     let role: 'admin' | 'customer' = adminEmails.includes(userInfo.email?.toLowerCase()) ? 'admin' : 'customer'
 
     try {
-      const { adminDb, adminAuth } = await import('@/lib/firebase/admin')
+      const { adminDb } = await import('@/lib/firebase/admin')
 
-      // Try to get role from Firebase Custom Claims via Admin Auth
-      if (adminAuth) {
-        try {
-          const firebaseUser = await adminAuth.getUserByEmail(userInfo.email)
-          if (firebaseUser.customClaims?.admin === true) {
-            role = 'admin'
-          }
-        } catch {
-          // User may not exist in Firebase Auth (Google OAuth only)
-        }
+      // Create/update user doc in Firestore and check stored role
+      const userDoc = await adminDb.collection('users').doc(userInfo.sub).get()
+      if (!userDoc.exists) {
+        await adminDb.collection('users').doc(userInfo.sub).set({
+          uid: userInfo.sub,
+          email: userInfo.email || '',
+          displayName: userInfo.name || '',
+          address: '',
+          role,
+          createdAt: new Date(),
+          lastLoginAt: new Date(),
+        })
+      } else {
+        // Use role from existing doc if it says admin
+        const existingRole = userDoc.data().role
+        if (existingRole === 'admin') role = 'admin'
+        await adminDb.collection('users').doc(userInfo.sub).update({
+          lastLoginAt: new Date(),
+        })
       }
-
-      // Create/update user doc in Firestore
-      if (adminDb) {
-        const userDoc = await adminDb.collection('users').doc(userInfo.sub).get()
-        if (!userDoc.exists) {
-          await adminDb.collection('users').doc(userInfo.sub).set({
-            uid: userInfo.sub,
-            email: userInfo.email || '',
-            displayName: userInfo.name || '',
-            address: '',
-            role,
-            createdAt: new Date(),
-            lastLoginAt: new Date(),
-          })
-        } else {
-          // Use role from existing doc if available
-          const existingRole = userDoc.data()?.role
-          if (existingRole === 'admin') role = 'admin'
-          await adminDb.collection('users').doc(userInfo.sub).update({
-            lastLoginAt: new Date(),
-          })
-        }
-      }
-    } catch {
-      // firebase-admin not available — role stays 'customer'
+    } catch (err) {
+      console.warn('Firestore user doc update failed (non-fatal):', err)
+      // Role stays as determined from ADMIN_EMAILS
     }
 
     // 4. Create session cookie

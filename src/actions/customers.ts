@@ -10,20 +10,11 @@ export async function getCustomerList(): Promise<CustomerSummary[]> {
   if (!session || session.role !== 'admin') return []
 
   const users = await getAllUsers()
-  if (!adminDb || users.length === 0) {
-    return users.map((u) => ({
-      uid: u.uid,
-      email: u.email,
-      displayName: u.displayName,
-      orderCount: 0,
-      bookingCount: 0,
-      totalSpent: 0,
-      lastOrderDate: null,
-      createdAt: u.createdAt,
-    }))
+  if (users.length === 0) {
+    return []
   }
 
-  // Batch-fetch order/booking aggregates per customer
+  // Build base map from users
   const customerMap = new Map<string, CustomerSummary>()
   for (const u of users) {
     customerMap.set(u.uid, {
@@ -53,9 +44,7 @@ export async function getCustomerList(): Promise<CustomerSummary[]> {
     customer.orderCount++
     customer.totalSpent += (data.total as number) || 0
 
-    const createdAt = data.createdAt
-      ? new Date((data.createdAt as { _seconds: number })._seconds * 1000)
-      : null
+    const createdAt = data.createdAt instanceof Date ? data.createdAt : null
     if (createdAt && (!customer.lastOrderDate || createdAt > customer.lastOrderDate)) {
       customer.lastOrderDate = createdAt
     }
@@ -85,7 +74,6 @@ export async function getCustomerDetail(uid: string): Promise<{
 } | null> {
   const session = await verifySession()
   if (!session || session.role !== 'admin') return null
-  if (!adminDb) return null
 
   const { getUserProfile } = await import('@/lib/data/users')
   const { getOrdersByUser } = await import('@/lib/data/orders')

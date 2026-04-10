@@ -4,28 +4,28 @@ import { mockPageContent } from '@/lib/data/mock-data'
 import { verifySession } from '@/lib/dal'
 
 export async function GET() {
-  if (!adminDb) {
+  try {
+    const snapshot = await adminDb.collection('pageContent').get()
+    const pages = snapshot.docs
+      .map((doc) => {
+        const data = doc.data()
+        return {
+          id: doc.id,
+          title: (data.title as string) || '',
+          slug: (data.slug as string) || doc.id,
+          isPublished: (data.isPublished as boolean) ?? true,
+          showInNavigation: (data.showInNavigation as boolean) ?? false,
+          navigationOrder: (data.navigationOrder as number) ?? 0,
+          sections: (data.sections as unknown[]) || [],
+          updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
+        }
+      })
+      .filter((page) => page.isPublished !== false)
+    return NextResponse.json(pages)
+  } catch {
     const pages = Array.from(mockPageContent.values()).filter((p) => p.isPublished !== false)
     return NextResponse.json(pages)
   }
-
-  const snapshot = await adminDb.collection('pageContent').get()
-  const pages = snapshot.docs
-    .map((doc) => {
-      const data = doc.data()
-      return {
-        id: doc.id,
-        title: data.title || '',
-        slug: data.slug || doc.id,
-        isPublished: data.isPublished ?? true,
-        showInNavigation: data.showInNavigation ?? false,
-        navigationOrder: data.navigationOrder ?? 0,
-        sections: data.sections || [],
-        updatedAt: data.updatedAt?.toDate() ?? new Date(),
-      }
-    })
-    .filter((page) => page.isPublished !== false)
-  return NextResponse.json(pages)
 }
 
 export async function POST(request: Request) {
@@ -43,24 +43,24 @@ export async function POST(request: Request) {
 
   const pageId = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')
 
-  if (!adminDb) {
-    return NextResponse.json({ success: true, mock: true, id: pageId })
+  try {
+    const existing = await adminDb.collection('pageContent').doc(pageId).get()
+    if (existing.exists) {
+      return NextResponse.json({ error: 'En side med denne ID-en finnes allerede' }, { status: 409 })
+    }
+
+    await adminDb.collection('pageContent').doc(pageId).set({
+      title,
+      slug,
+      isPublished: false,
+      showInNavigation: false,
+      navigationOrder: 0,
+      sections: [],
+      updatedAt: new Date(),
+    })
+
+    return NextResponse.json({ success: true, id: pageId })
+  } catch {
+    return NextResponse.json({ error: 'Kunne ikke opprette siden.' }, { status: 500 })
   }
-
-  const existing = await adminDb.collection('pageContent').doc(pageId).get()
-  if (existing.exists) {
-    return NextResponse.json({ error: 'En side med denne ID-en finnes allerede' }, { status: 409 })
-  }
-
-  await adminDb.collection('pageContent').doc(pageId).set({
-    title,
-    slug,
-    isPublished: false,
-    showInNavigation: false,
-    navigationOrder: 0,
-    sections: [],
-    updatedAt: new Date(),
-  })
-
-  return NextResponse.json({ success: true, id: pageId })
 }

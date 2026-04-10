@@ -6,13 +6,6 @@ import { adminDb } from '@/lib/firebase/admin'
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: Request) {
-  if (!adminDb) {
-    return NextResponse.json(
-      { error: 'Server ikke konfigurert.' },
-      { status: 500 }
-    )
-  }
-
   const webhookSecret = process.env.RESEND_WEBHOOK_SECRET
   if (!webhookSecret) {
     console.error('RESEND_WEBHOOK_SECRET is not set')
@@ -54,7 +47,7 @@ export async function POST(req: Request) {
 
   try {
     await adminDb.collection('emailEvents').add({
-      type: payload.type || 'unknown',
+      type: (payload.type as string) || 'unknown',
       emailId: (payload.data as Record<string, unknown>)?.email_id || '',
       to: (payload.data as Record<string, unknown>)?.to || [],
       subject: (payload.data as Record<string, unknown>)?.subject || '',
@@ -62,7 +55,7 @@ export async function POST(req: Request) {
         ? new Date(payload.created_at as string)
         : new Date(),
       loggedAt: new Date(),
-      data: payload.data || {},
+      data: (payload.data as Record<string, unknown>) || {},
     })
   } catch (err) {
     console.error('Failed to log email event:', err)

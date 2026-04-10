@@ -2,6 +2,7 @@ import 'server-only'
 import crypto from 'crypto'
 import { adminDb } from '@/lib/firebase/admin'
 import type { GiftCard } from '@/types'
+import type { FirestoreDoc, DocRef } from '@/lib/firebase/firestore-rest'
 
 function generateGiftCardCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // Excludes ambiguous chars (0/O, 1/I)
@@ -15,22 +16,22 @@ function generateGiftCardCode(): string {
   return `RC-${part1}-${part2}`
 }
 
-function mapGiftCard(doc: FirebaseFirestore.DocumentSnapshot): GiftCard {
-  const data = doc.data()!
+function mapGiftCard(doc: FirestoreDoc): GiftCard {
+  const data = doc.data()
   return {
     id: doc.id,
-    code: data.code,
-    amount: data.amount,
-    remainingBalance: data.remainingBalance,
-    purchasedBy: data.purchasedBy ?? null,
-    purchaserEmail: data.purchaserEmail,
-    recipientName: data.recipientName,
-    recipientEmail: data.recipientEmail,
-    message: data.message || '',
-    status: data.status,
-    createdAt: data.createdAt?.toDate() ?? new Date(),
-    usedAt: data.usedAt?.toDate() ?? null,
-    expiresAt: data.expiresAt?.toDate() ?? new Date(),
+    code: data.code as string,
+    amount: data.amount as number,
+    remainingBalance: data.remainingBalance as number,
+    purchasedBy: (data.purchasedBy as string) ?? null,
+    purchaserEmail: data.purchaserEmail as string,
+    recipientName: data.recipientName as string,
+    recipientEmail: data.recipientEmail as string,
+    message: (data.message as string) || '',
+    status: data.status as GiftCard['status'],
+    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+    usedAt: data.usedAt instanceof Date ? data.usedAt : null,
+    expiresAt: data.expiresAt instanceof Date ? data.expiresAt : new Date(),
   }
 }
 
@@ -42,8 +43,6 @@ export async function createGiftCard(params: {
   recipientEmail: string
   message: string
 }): Promise<GiftCard | null> {
-  if (!adminDb) return null
-
   // Generate unique code with retry
   let code = generateGiftCardCode()
   let attempts = 0
@@ -79,14 +78,12 @@ export async function createGiftCard(params: {
 }
 
 export async function getGiftCardByCode(code: string): Promise<GiftCard | null> {
-  if (!adminDb) return null
   const doc = await adminDb.collection('giftCards').doc(code).get()
   if (!doc.exists) return null
   return mapGiftCard(doc)
 }
 
 export async function getAllGiftCards(): Promise<GiftCard[]> {
-  if (!adminDb) return []
   const snapshot = await adminDb
     .collection('giftCards')
     .orderBy('createdAt', 'desc')
@@ -97,50 +94,48 @@ export async function getAllGiftCards(): Promise<GiftCard[]> {
 export async function validateGiftCard(
   code: string
 ): Promise<{ valid: true; balance: number } | { valid: false; error: string }> {
-  if (!adminDb) return { valid: false, error: 'Systemet er ikke tilgjengelig.' }
-
   const doc = await adminDb.collection('giftCards').doc(code).get()
   if (!doc.exists) {
     return { valid: false, error: 'Ugyldig gavekort-kode.' }
   }
 
-  const data = doc.data()!
+  const data = doc.data()
   if (data.status === 'used') {
     return { valid: false, error: 'Gavekortet er allerede brukt opp.' }
   }
-  if (data.status === 'expired' || (data.expiresAt && data.expiresAt.toDate() < new Date())) {
+  const expiresAt = data.expiresAt instanceof Date ? data.expiresAt : null
+  if (data.status === 'expired' || (expiresAt && expiresAt < new Date())) {
     return { valid: false, error: 'Gavekortet har utlopt.' }
   }
-  if (data.remainingBalance <= 0) {
+  if ((data.remainingBalance as number) <= 0) {
     return { valid: false, error: 'Gavekortet har ingen gjenstaaende saldo.' }
   }
 
-  return { valid: true, balance: data.remainingBalance }
+  return { valid: true, balance: data.remainingBalance as number }
 }
 
 export async function redeemGiftCard(
   code: string,
   amount: number
 ): Promise<{ success: true; newBalance: number } | { success: false; error: string }> {
-  if (!adminDb) return { success: false, error: 'Systemet er ikke tilgjengelig.' }
+  const docRef = adminDb.collection('giftCards').doc(code) as unknown as DocRef
 
-  const docRef = adminDb.collection('giftCards').doc(code)
-
-  return adminDb.runTransaction(async (transaction) => {
-    const doc = await transaction.get(docRef)
+  return adminDb.runTransaction(async (tx) => {
+    const doc = await tx.get(docRef)
     if (!doc.exists) {
       return { success: false as const, error: 'Ugyldig gavekort-kode.' }
     }
 
-    const data = doc.data()!
+    const data = doc.data()
     if (data.status !== 'active') {
       return { success: false as const, error: 'Gavekortet er ikke aktivt.' }
     }
-    if (data.expiresAt && data.expiresAt.toDate() < new Date()) {
+    const expiresAt = data.expiresAt instanceof Date ? data.expiresAt : null
+    if (expiresAt && expiresAt < new Date()) {
       return { success: false as const, error: 'Gavekortet har utlopt.' }
     }
 
-    const currentBalance = data.remainingBalance
+    const currentBalance = data.remainingBalance as number
     if (currentBalance <= 0) {
       return { success: false as const, error: 'Gavekortet har ingen saldo.' }
     }
@@ -149,7 +144,7 @@ export async function redeemGiftCard(
     const newBalance = currentBalance - deduction
     const newStatus = newBalance <= 0 ? 'used' : 'active'
 
-    transaction.update(docRef, {
+    tx.update(docRef, {
       remainingBalance: newBalance,
       status: newStatus,
       usedAt: newBalance <= 0 ? new Date() : null,
@@ -160,11 +155,9 @@ export async function redeemGiftCard(
 }
 
 export async function deactivateGiftCard(code: string): Promise<boolean> {
-  if (!adminDb) return false
-  const docRef = adminDb.collection('giftCards').doc(code)
-  const doc = await docRef.get()
+  const doc = await adminDb.collection('giftCards').doc(code).get()
   if (!doc.exists) return false
 
-  await docRef.update({ status: 'expired' })
+  await adminDb.collection('giftCards').doc(code).update({ status: 'expired' })
   return true
 }
