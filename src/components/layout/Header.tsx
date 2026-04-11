@@ -39,6 +39,7 @@ export function Header() {
   const isHeroPage = heroPages.includes(pathname) || pathname.startsWith('/opplevelser/') && !pathname.includes('/opplevelser/retreat') && !pathname.includes('/opplevelser/kurs') && !pathname.includes('/opplevelser/matopplevelse') && pathname !== '/opplevelser'
   // Simplify: any /opplevelser/* detail page also has hero
   const isTransparent = heroPages.includes(pathname) || (pathname.startsWith('/opplevelser/') && pathname.split('/').length === 3)
+  const showDarkHeader = isTransparent && !isScrolled
 
   useEffect(() => {
     fetch('/api/auth/session')
@@ -108,15 +109,10 @@ export function Header() {
         className={cn(
           'fixed z-50 flex h-20 items-center justify-center motion-safe:transition-all motion-safe:duration-300',
           isScrolled
-            ? 'top-3 left-4 right-4 lg:left-6 lg:right-6 rounded-2xl shadow-lg'
-            : 'top-0 left-0 right-0',
-          isTransparent
-            ? isScrolled
-              ? 'bg-forest text-cream'
-              : 'bg-transparent'
-            : isScrolled
-              ? 'bg-cream'
-              : 'bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)]'
+            ? 'top-3 left-4 right-4 lg:left-6 lg:right-6 rounded-2xl shadow-lg bg-cream/95 backdrop-blur-md'
+            : isTransparent
+              ? 'top-0 left-0 right-0 bg-transparent'
+              : 'top-0 left-0 right-0 bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)]'
         )}
       >
       <div className="flex w-full max-w-[1200px] items-center px-6 lg:px-8">
@@ -130,14 +126,14 @@ export function Header() {
             alt="Roots & Culture"
             width={48}
             height={48}
-            className={`h-12 w-12 ${isTransparent ? 'brightness-0 invert' : ''}`}
+            className={`h-12 w-12 ${showDarkHeader ? 'brightness-0 invert' : ''}`}
             priority
           />
         </Link>
 
         {/* Desktop nav -- centered, hidden on mobile */}
         <nav className="hidden lg:flex" aria-label="Hovednavigasjon">
-          <MegaMenuNav transparent={isTransparent} items={navItems} />
+          <MegaMenuNav transparent={showDarkHeader} items={navItems} />
         </nav>
 
         {/* Right section: cart icon + auth trigger (desktop) */}
@@ -145,7 +141,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setCartOpen(true)}
-            className={`relative flex h-11 w-11 items-center justify-center rounded hover:opacity-85 ${isTransparent ? 'text-cream' : 'text-forest'}`}
+            className={`relative flex h-11 w-11 items-center justify-center rounded hover:opacity-85 ${showDarkHeader ? 'text-cream' : 'text-forest'}`}
             aria-label={cartLabel}
           >
             <ShoppingBag className="h-5 w-5" aria-hidden="true" />
@@ -186,7 +182,7 @@ export function Header() {
             <button
               type="button"
               className={`rounded-full px-4 py-2 text-body font-medium motion-safe:transition-colors motion-safe:duration-150 ${
-                isTransparent
+                showDarkHeader
                   ? 'bg-cream/20 text-cream hover:bg-cream/30'
                   : 'bg-forest text-cream hover:bg-forest/80'
               }`}
@@ -206,7 +202,7 @@ export function Header() {
             className="relative flex h-11 w-11 items-center justify-center"
             aria-label={cartLabel}
           >
-            <ShoppingBag className={`h-5 w-5 ${isTransparent ? 'text-cream' : 'text-forest'}`} aria-hidden="true" />
+            <ShoppingBag className={`h-5 w-5 ${showDarkHeader ? 'text-cream' : 'text-forest'}`} aria-hidden="true" />
             <CartBadge />
           </button>
 
@@ -217,7 +213,7 @@ export function Header() {
             aria-label="Åpne meny"
             aria-expanded={mobileOpen}
           >
-            <Menu className={`h-6 w-6 ${isTransparent ? 'text-cream' : 'text-forest'}`} aria-hidden="true" />
+            <Menu className={`h-6 w-6 ${showDarkHeader ? 'text-cream' : 'text-forest'}`} aria-hidden="true" />
           </button>
         </div>
       </div>
