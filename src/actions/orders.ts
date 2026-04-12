@@ -76,6 +76,10 @@ export async function updateOrderStatus(
 export async function createOrder(
   data: Omit<Order, 'id' | 'createdAt'>
 ): Promise<string> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') {
+    throw new Error('Ikke autorisert.')
+  }
   const docRef = await adminDb.collection('orders').add({
     ...data,
     createdAt: new Date(),
