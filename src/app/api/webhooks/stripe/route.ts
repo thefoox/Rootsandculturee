@@ -107,9 +107,19 @@ export async function POST(req: Request) {
       let bookingItems: BookingMetaItem[] = []
       let giftCardItems: GiftCardMetaItem[] = []
 
-      try { orderItems = JSON.parse(metadata.orderItems || '[]') } catch { /* empty */ }
-      try { bookingItems = JSON.parse(metadata.bookingItems || '[]') } catch { /* empty */ }
-      try { giftCardItems = JSON.parse(metadata.giftCardItems || '[]') } catch { /* empty */ }
+      try { orderItems = JSON.parse(metadata.orderItems || '[]') } catch (e) {
+        console.error('Failed to parse orderItems metadata:', e)
+      }
+      try { bookingItems = JSON.parse(metadata.bookingItems || '[]') } catch (e) {
+        console.error('Failed to parse bookingItems metadata:', e)
+      }
+      try { giftCardItems = JSON.parse(metadata.giftCardItems || '[]') } catch (e) {
+        console.error('Failed to parse giftCardItems metadata:', e)
+      }
+
+      if (orderItems.length === 0 && bookingItems.length === 0 && giftCardItems.length === 0) {
+        console.error('No items found in payment metadata:', paymentIntent.id)
+      }
 
       const giftCardCodeUsed = metadata.giftCardCode || ''
       const giftCardDeduction = parseInt(metadata.giftCardDeduction || '0', 10)
