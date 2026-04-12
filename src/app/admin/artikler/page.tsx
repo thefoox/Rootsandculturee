@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { DataTable, type Column } from '@/components/admin/DataTable'
@@ -18,7 +19,7 @@ export default function ArticlesListPage() {
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
-    getAllArticles().then(setArticles)
+    getAllArticles().then(setArticles).catch(() => toast.error('Kunne ikke laste artikler.'))
   }, [])
 
   const handleDelete = async () => {
@@ -41,9 +42,11 @@ export default function ArticlesListPage() {
       width: '64px',
       accessor: (row) =>
         row.coverImage?.url ? (
-          <img
+          <Image
             src={row.coverImage.url}
             alt={row.coverImage.alt}
+            width={48}
+            height={48}
             className="h-12 w-12 rounded object-cover"
           />
         ) : (

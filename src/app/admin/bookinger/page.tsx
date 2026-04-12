@@ -21,7 +21,7 @@ export default function BookingsListPage() {
   const [selectedDateId, setSelectedDateId] = useState('')
 
   useEffect(() => {
-    getBookingsFiltered().then(setBookings)
+    getBookingsFiltered().then(setBookings).catch(() => toast.error('Kunne ikke laste bookinger.'))
   }, [])
 
   // Derive unique experiences from bookings for filter
@@ -129,7 +129,7 @@ export default function BookingsListPage() {
           {row.status !== 'cancelled' && (
             <button
               onClick={() => setCancelTarget(row)}
-              className="rounded-md px-2 py-1 text-label text-body hover:text-[#C0392B]"
+              className="rounded-md px-2 py-1 text-label text-body hover:text-refund"
               aria-label={`Kanseller booking ${row.confirmationCode}`}
             >
               Kanseller

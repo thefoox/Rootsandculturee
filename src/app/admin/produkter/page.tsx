@@ -24,7 +24,7 @@ export default function ProductsListPage() {
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
-    getAllProducts().then(setProducts)
+    getAllProducts().then(setProducts).catch(() => toast.error('Kunne ikke laste produkter.'))
   }, [])
 
   const handleDelete = async () => {
@@ -47,9 +47,11 @@ export default function ProductsListPage() {
       width: '64px',
       accessor: (row) =>
         row.images[0] ? (
-          <img
+          <Image
             src={row.images[0].url}
             alt={row.images[0].alt}
+            width={48}
+            height={48}
             className="h-12 w-12 rounded object-cover"
           />
         ) : (

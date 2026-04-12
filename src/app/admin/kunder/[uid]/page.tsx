@@ -10,6 +10,7 @@ import { BookingStatusBadge } from '@/components/admin/BookingStatusBadge'
 import { SendEmailModal } from '@/components/admin/SendEmailModal'
 import { getCustomerDetail } from '@/actions/customers'
 import { formatPrice, formatDateMedium } from '@/lib/format'
+import { toast } from 'sonner'
 import type { CustomerSummary, Order, Booking } from '@/types'
 
 export default function CustomerDetailPage() {
@@ -27,7 +28,7 @@ export default function CustomerDetailPage() {
           setOrders(result.orders)
           setBookings(result.bookings)
         }
-      })
+      }).catch(() => toast.error('Kunne ikke laste kundedetaljer.'))
     }
   }, [params.uid])
 

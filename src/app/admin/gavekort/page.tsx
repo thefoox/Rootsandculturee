@@ -29,6 +29,9 @@ export default function AdminGavekortPage() {
     getGiftCardsAdmin().then((cards) => {
       setGiftCards(cards)
       setLoading(false)
+    }).catch(() => {
+      setLoading(false)
+      toast.error('Kunne ikke laste gavekort.')
     })
   }, [])
 

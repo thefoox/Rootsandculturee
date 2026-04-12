@@ -59,6 +59,10 @@
   --color-badge-warning-bg: #FEF3C7;
   --color-badge-error: #991B1B;
   --color-badge-error-bg: #FEE2E2;
+
+  /* Refund/danger status colors */
+  --color-refund: #C0392B;
+  --color-refund-bg: #FDECEA;
 }
 
 /* Global base styles */
