@@ -78,12 +78,12 @@ export default function OrderDetailPage() {
   async function handleUpdateStatus() {
     if (!order) return
     setIsUpdating(true)
-    try {
-      await updateOrderStatus(order.id, selectedStatus)
+    const result = await updateOrderStatus(order.id, selectedStatus)
+    if (result.success) {
       setOrder({ ...order, status: selectedStatus })
       toast.success('Ordrestatus oppdatert.')
-    } catch {
-      toast.error('Kunne ikke oppdatere status. Prøv igjen.')
+    } else {
+      toast.error(result.error || 'Kunne ikke oppdatere status. Prøv igjen.')
     }
     setIsUpdating(false)
   }
