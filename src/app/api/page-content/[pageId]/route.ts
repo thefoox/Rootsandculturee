@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { revalidateTag } from 'next/cache'
+import { revalidateTag, revalidatePath } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import { verifySession } from '@/lib/dal'
 import { mockPageContent } from '@/lib/data/mock-data'
@@ -65,6 +65,12 @@ export async function PUT(
     )
 
     revalidateTag('page-content', 'max')
+
+    // Purge the full-page CDN cache for the specific public page.
+    // slug "forside" maps to "/", all others map to "/{slug}".
+    const publicPath = slug === 'forside' ? '/' : `/${slug}`
+    revalidatePath(publicPath)
+
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ error: 'Kunne ikke oppdatere siden.' }, { status: 500 })
@@ -83,8 +89,16 @@ export async function DELETE(
   const { pageId } = await params
 
   try {
+    // Read slug before deleting so we can purge the public page cache
+    const doc = await adminDb.collection('pageContent').doc(pageId).get()
+    const slug = doc.exists ? (doc.data().slug as string) || pageId : pageId
+
     await adminDb.collection('pageContent').doc(pageId).delete()
     revalidateTag('page-content', 'max')
+
+    const publicPath = slug === 'forside' ? '/' : `/${slug}`
+    revalidatePath(publicPath)
+
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ error: 'Kunne ikke slette siden.' }, { status: 500 })
