@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { X, ShoppingBag } from 'lucide-react'
 import { useCart, getItemKey } from './CartProvider'
 import { CartItem } from './CartItem'
-import { OrderSummaryPanel } from './OrderSummaryPanel'
-import { Button } from '@/components/ui/Button'
+import { formatPrice } from '@/lib/format'
 
 interface CartDrawerProps {
   isOpen: boolean
@@ -123,20 +122,39 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           )}
         </div>
 
-        {/* Footer */}
+        {/* Footer — compact totals + CTA (no item duplication) */}
         {items.length > 0 && (
-          <div className="border-t border-forest/12 p-4 space-y-3">
-            <OrderSummaryPanel
-              items={items}
-              subtotal={subtotal}
-              shippingCost={shippingCost}
-              ctaText="Gå til betaling"
-              ctaHref="/checkout"
-            />
-            <Link href="/handlekurv" onClick={onClose} className="block">
-              <Button variant="ghost" className="w-full">
-                Se full handlekurv
-              </Button>
+          <div className="border-t border-forest/12 px-4 py-4">
+            <div className="space-y-1.5 text-[14px]">
+              <div className="flex justify-between">
+                <span className="text-body/70">Delsum</span>
+                <span className="font-medium text-forest">{formatPrice(subtotal)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-body/70">Frakt</span>
+                <span className="font-medium text-forest">
+                  {shippingCost > 0 ? formatPrice(shippingCost) : 'Gratis'}
+                </span>
+              </div>
+              <div className="flex justify-between border-t border-forest/10 pt-2 mt-2">
+                <span className="text-[15px] font-bold text-forest">Totalt</span>
+                <span className="text-[15px] font-bold text-forest">{formatPrice(subtotal + shippingCost)}</span>
+              </div>
+            </div>
+
+            <Link
+              href="/checkout"
+              onClick={onClose}
+              className="mt-4 flex min-h-[48px] w-full items-center justify-center rounded-lg bg-forest text-[15px] font-semibold text-cream hover:bg-[#153a2a] motion-safe:transition-colors"
+            >
+              Gå til betaling
+            </Link>
+            <Link
+              href="/handlekurv"
+              onClick={onClose}
+              className="mt-2 block text-center text-[13px] text-forest/60 hover:text-forest"
+            >
+              Se full handlekurv
             </Link>
           </div>
         )}
