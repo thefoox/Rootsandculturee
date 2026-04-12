@@ -19,6 +19,11 @@ export interface AuthResult {
   error?: string
 }
 
+// Unified action result for CRUD mutations
+export type ActionResult<T = void> =
+  | ({ success: true } & (T extends void ? {} : { data: T }))
+  | { success: false; error?: string; errors?: Record<string, string> }
+
 // Phase 2: Product types
 
 export type ProductCategory = 'drikke' | 'kaffe-te' | 'naturprodukter'
