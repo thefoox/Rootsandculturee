@@ -85,5 +85,7 @@ export async function getBookingsFiltered(
 export async function getBookingsByPaymentIntentAction(
   paymentIntentId: string
 ): Promise<Booking[]> {
+  const session = await verifySession()
+  if (!session) return []
   return getBookingsByPaymentIntent(paymentIntentId)
 }
