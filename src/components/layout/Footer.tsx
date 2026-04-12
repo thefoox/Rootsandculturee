@@ -5,7 +5,7 @@ import { NewsletterSignup } from './NewsletterSignup'
 
 export function Footer() {
   return (
-    <footer className="border-t border-forest/10 bg-card px-6 py-14 lg:px-8">
+    <footer className="border-t border-forest/10 bg-white px-6 py-14 lg:px-8">
       <div className="mx-auto max-w-[1200px]">
         {/* Logo + columns */}
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-5">
