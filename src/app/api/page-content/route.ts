@@ -25,7 +25,6 @@ export async function GET() {
           updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
         }
       })
-      .filter((page) => page.isPublished !== false)
     return NextResponse.json(pages)
   } catch (error) {
     console.error('Feil ved henting av sider:', error)
