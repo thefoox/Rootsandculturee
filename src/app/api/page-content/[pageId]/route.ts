@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { revalidatePath } from 'next/cache'
+import { revalidateTag, revalidatePath } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import { verifySession } from '@/lib/dal'
 import { mockPageContent } from '@/lib/data/mock-data'
@@ -64,7 +64,8 @@ export async function PUT(
       true // merge: DocRef.set() second arg is a boolean (see firestore-rest.ts)
     )
 
-    // Purge the page-level ISR cache (the only cache layer now).
+    // Invalidate data cache + page CDN cache
+    revalidateTag('page-content', 'max')
     const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
     if (publicPath !== '/') revalidatePath('/')
@@ -93,6 +94,7 @@ export async function DELETE(
 
     await adminDb.collection('pageContent').doc(pageId).delete()
 
+    revalidateTag('page-content', 'max')
     const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
 
