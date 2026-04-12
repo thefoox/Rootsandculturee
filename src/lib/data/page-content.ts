@@ -1,5 +1,4 @@
 import 'server-only'
-import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import { mockPageContent } from '@/lib/data/mock-data'
 import type { PageContent, PageSection } from '@/types'
@@ -33,19 +32,15 @@ function mapPageContent(doc: FirestoreDoc): PageContent {
   }
 }
 
-const _getPageContent = unstable_cache(
-  async (pageId: string): Promise<PageContent | null> => {
-    const doc = await adminDb.collection('pageContent').doc(pageId).get()
-    if (!doc.exists) return mockPageContent.get(pageId) ?? null
-    return mapPageContent(doc)
-  },
-  ['page-content'],
-  { revalidate: 3600, tags: ['page-content'] }
-)
+// Direct Firestore queries — no unstable_cache.
+// Page-level ISR (export const revalidate) handles caching.
+// revalidatePath in the PUT handler handles on-demand invalidation.
 
 export async function getPageContent(pageId: string): Promise<PageContent | null> {
   try {
-    return await _getPageContent(pageId)
+    const doc = await adminDb.collection('pageContent').doc(pageId).get()
+    if (!doc.exists) return mockPageContent.get(pageId) ?? null
+    return mapPageContent(doc)
   } catch (e) {
     console.warn('getPageContent failed:', e)
     return mockPageContent.get(pageId) ?? null
@@ -62,35 +57,23 @@ function getMockNavigationPages(): PageContent[] {
     .sort((a, b) => a.navigationOrder - b.navigationOrder)
 }
 
-const _getNavigationPages = unstable_cache(
-  async (): Promise<PageContent[]> => {
-    try {
-      const snapshot = await adminDb
-        .collection('pageContent')
-        .where('showInNavigation', '==', true)
-        .orderBy('navigationOrder', 'asc')
-        .get()
-      if (snapshot.empty) return getMockNavigationPages()
-      return snapshot.docs.map(mapPageContent)
-    } catch {
-      return getMockNavigationPages()
-    }
-  },
-  ['navigation-pages'],
-  { revalidate: 3600, tags: ['page-content'] }
-)
-
 export async function getNavigationPages(): Promise<PageContent[]> {
   try {
-    return await _getNavigationPages()
+    const snapshot = await adminDb
+      .collection('pageContent')
+      .where('showInNavigation', '==', true)
+      .orderBy('navigationOrder', 'asc')
+      .get()
+    if (snapshot.empty) return getMockNavigationPages()
+    return snapshot.docs.map(mapPageContent)
   } catch (e) {
     console.warn('getNavigationPages failed:', e)
     return getMockNavigationPages()
   }
 }
 
-const _getPageContentBySlug = unstable_cache(
-  async (slug: string): Promise<PageContent | null> => {
+export async function getPageContentBySlug(slug: string): Promise<PageContent | null> {
+  try {
     const snapshot = await adminDb
       .collection('pageContent')
       .where('slug', '==', slug)
@@ -100,14 +83,6 @@ const _getPageContentBySlug = unstable_cache(
       return Array.from(mockPageContent.values()).find((p) => p.slug === slug) ?? null
     }
     return mapPageContent(snapshot.docs[0])
-  },
-  ['page-content-by-slug'],
-  { revalidate: 3600, tags: ['page-content'] }
-)
-
-export async function getPageContentBySlug(slug: string): Promise<PageContent | null> {
-  try {
-    return await _getPageContentBySlug(slug)
   } catch (e) {
     console.warn('getPageContentBySlug failed:', e)
     return Array.from(mockPageContent.values()).find((p) => p.slug === slug) ?? null

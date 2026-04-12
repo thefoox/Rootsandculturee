@@ -24,7 +24,7 @@ export async function ExperiencesGridSection({ section }: { section: PageSection
         description: experience.description,
         basePrice: experience.basePrice,
         image: experience.images[0] || null,
-        nextDate: nextDate ? { date: nextDate.date.toISOString() } : null,
+        nextDate: nextDate ? { date: nextDate.date instanceof Date ? nextDate.date.toISOString() : String(nextDate.date) } : null,
       }))}
     />
   )

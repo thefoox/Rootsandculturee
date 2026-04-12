@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { revalidateTag, revalidatePath } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import { verifySession } from '@/lib/dal'
 import { mockPageContent } from '@/lib/data/mock-data'
@@ -64,13 +64,9 @@ export async function PUT(
       true // merge: DocRef.set() second arg is a boolean (see firestore-rest.ts)
     )
 
-    revalidateTag('page-content', 'max')
-
-    // Purge the full-page CDN cache for the specific public page.
-    // slug can be "forside", "/" or a normal slug like "om-oss".
+    // Purge the page-level ISR cache (the only cache layer now).
     const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
-    // Also revalidate homepage explicitly since CMS sections can appear on any page
     if (publicPath !== '/') revalidatePath('/')
 
     return NextResponse.json({ success: true })
@@ -96,9 +92,8 @@ export async function DELETE(
     const slug = doc.exists ? (doc.data().slug as string) || pageId : pageId
 
     await adminDb.collection('pageContent').doc(pageId).delete()
-    revalidateTag('page-content', 'max')
 
-    const publicPath = slug === 'forside' ? '/' : `/${slug}`
+    const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
 
     return NextResponse.json({ success: true })
