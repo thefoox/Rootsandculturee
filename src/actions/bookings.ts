@@ -56,8 +56,8 @@ export async function cancelBooking(
       }
     })
 
-    revalidateTag('bookings', 'max')
-    revalidateTag('experience-dates', 'max')
+    revalidateTag('bookings')
+    revalidateTag('experience-dates')
     return { success: true }
   } catch {
     return { success: false, error: 'Kunne ikke kansellere. Prøv igjen.' }

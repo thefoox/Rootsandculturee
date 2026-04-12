@@ -67,7 +67,7 @@ export async function createRefund(
       })
     }
 
-    revalidateTag('orders', 'max')
+    revalidateTag('orders')
     return { success: true }
   } catch (err) {
     console.error('Refund error:', err)

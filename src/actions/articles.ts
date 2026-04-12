@@ -92,7 +92,7 @@ export async function createArticle(formData: FormData) {
       updatedAt: now,
     })
 
-    revalidateTag('articles', 'max')
+    revalidateTag('articles')
     return { success: true, id: docRef.id }
   } catch (err) {
     console.error('[createArticle] Firestore write failed:', err)
@@ -146,7 +146,7 @@ export async function updateArticle(id: string, formData: FormData) {
     updatedAt: now,
   })
 
-  revalidateTag('articles', 'max')
+  revalidateTag('articles')
   return { success: true }
 }
 
@@ -157,6 +157,6 @@ export async function deleteArticle(id: string) {
   }
 
   await adminDb.collection('articles').doc(id).delete()
-  revalidateTag('articles', 'max')
+  revalidateTag('articles')
   return { success: true }
 }

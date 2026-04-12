@@ -137,8 +137,8 @@ export async function createExperience(formData: FormData) {
     await batch.commit()
   }
 
-  revalidateTag('experiences', 'max')
-  revalidateTag('experience-dates', 'max')
+  revalidateTag('experiences')
+  revalidateTag('experience-dates')
   return { success: true, id: docRef.id }
 }
 
@@ -254,8 +254,8 @@ export async function updateExperience(id: string, formData: FormData) {
     await batch.commit()
   }
 
-  revalidateTag('experiences', 'max')
-  revalidateTag('experience-dates', 'max')
+  revalidateTag('experiences')
+  revalidateTag('experience-dates')
   return { success: true }
 }
 
@@ -275,7 +275,7 @@ export async function deleteExperience(id: string) {
 
   // Delete main doc
   await adminDb.collection('experiences').doc(id).delete()
-  revalidateTag('experiences', 'max')
-  revalidateTag('experience-dates', 'max')
+  revalidateTag('experiences')
+  revalidateTag('experience-dates')
   return { success: true }
 }

@@ -59,7 +59,7 @@ export async function updateOrderStatus(
     status,
     ...(status === 'shipped' ? { fulfilledAt: new Date() } : {}),
   })
-  revalidateTag('orders', 'max')
+  revalidateTag('orders')
 }
 
 export async function createOrder(
@@ -69,7 +69,7 @@ export async function createOrder(
     ...data,
     createdAt: new Date(),
   })
-  revalidateTag('orders', 'max')
+  revalidateTag('orders')
   return docRef.id
 }
 
@@ -84,7 +84,7 @@ export async function updateOrderShipping(
 
   try {
     await adminDb.collection('orders').doc(orderId).update({ shipping })
-    revalidateTag('orders', 'max')
+    revalidateTag('orders')
     return { success: true }
   } catch {
     return { success: false, error: 'Kunne ikke oppdatere leveringsadresse.' }

@@ -98,7 +98,7 @@ export async function createProduct(formData: FormData) {
     updatedAt: now,
   })
 
-  revalidateTag('products', 'max')
+  revalidateTag('products')
   return { success: true, id: docRef.id }
 }
 
@@ -157,7 +157,7 @@ export async function updateProduct(id: string, formData: FormData) {
     updatedAt: now,
   })
 
-  revalidateTag('products', 'max')
+  revalidateTag('products')
   return { success: true }
 }
 
@@ -168,6 +168,6 @@ export async function deleteProduct(id: string) {
   }
 
   await adminDb.collection('products').doc(id).delete()
-  revalidateTag('products', 'max')
+  revalidateTag('products')
   return { success: true }
 }
