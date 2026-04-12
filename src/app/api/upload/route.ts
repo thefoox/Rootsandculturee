@@ -56,7 +56,7 @@ async function getStorageAccessToken(): Promise<string> {
 
 export async function POST(request: Request) {
   const session = await verifySession()
-  if (!session) {
+  if (!session || session.role !== 'admin') {
     return NextResponse.json({ error: 'Ikke autorisert.' }, { status: 401 })
   }
 
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
   // Validate size
   if (file.size > MAX_FILE_SIZE) {
     return NextResponse.json(
-      { error: 'Filen er for stor (maks 5 MB).' },
+      { error: 'Filen er for stor (maks 10 MB).' },
       { status: 400 }
     )
   }
