@@ -50,7 +50,7 @@ export async function createRefund(
     }
 
     const refund = await stripe.refunds.create(refundParams, {
-      idempotencyKey: `refund-${orderId}-${Date.now()}`,
+      idempotencyKey: `refund-${orderId}-${amount || 'full'}-${reason || 'none'}`,
     })
 
     const orderTotal = (orderData.total as number) || 0
