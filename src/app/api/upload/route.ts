@@ -84,6 +84,17 @@ export async function POST(request: Request) {
     )
   }
 
+  // Validate MIME type to prevent extension spoofing
+  const ALLOWED_MIME_TYPES = [
+    'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml',
+  ]
+  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    return NextResponse.json(
+      { error: 'Ugyldig filtype.' },
+      { status: 400 }
+    )
+  }
+
   // Validate size
   if (file.size > MAX_FILE_SIZE) {
     return NextResponse.json(
