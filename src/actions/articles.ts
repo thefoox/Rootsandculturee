@@ -77,19 +77,25 @@ export async function createArticle(formData: FormData) {
   const excerpt = data.excerpt || stripHtml(data.body).slice(0, 200)
   const now = new Date()
 
-  const docRef = await adminDb.collection('articles').add({
-    ...data,
-    excerpt,
-    author: session.email,
-    tags: [],
-    status: publish ? 'published' : 'draft',
-    publishedAt: publish ? now : null,
-    createdAt: now,
-    updatedAt: now,
-  })
+  try {
+    const docRef = await adminDb.collection('articles').add({
+      ...data,
+      coverImage: data.coverImage?.url ? data.coverImage : null,
+      excerpt,
+      author: session.email,
+      tags: [],
+      status: publish ? 'published' : 'draft',
+      publishedAt: publish ? now : null,
+      createdAt: now,
+      updatedAt: now,
+    })
 
-  revalidateTag('articles', 'max')
-  return { success: true, id: docRef.id }
+    revalidateTag('articles', 'max')
+    return { success: true, id: docRef.id }
+  } catch (err) {
+    console.error('[createArticle] Firestore write failed:', err)
+    return { success: false, errors: { _form: 'Kunne ikke opprette artikkelen. Prøv igjen.' } }
+  }
 }
 
 export async function updateArticle(id: string, formData: FormData) {

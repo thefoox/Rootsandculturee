@@ -149,7 +149,7 @@ export function RegisterForm({ onSwitchToLogin, onSuccess }: RegisterFormProps) 
           onChange={(e) => setNewsletterConsent(e.target.checked)}
           className="mt-0.5 h-4 w-4 rounded border-forest/20"
         />
-        Ja, send meg nyheter og tilbud pa e-post
+        Ja, send meg nyheter og tilbud på e-post
       </label>
 
       <Button

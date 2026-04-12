@@ -64,7 +64,7 @@ export function PasswordResetForm({ onSwitchToLogin }: PasswordResetFormProps) {
   return (
     <form onSubmit={handleSubmit} noValidate>
       <p className="mb-4 text-body">
-        Oppgi e-postadressen din, sa sender vi deg en lenke for a tilbakestille passordet.
+        Oppgi e-postadressen din, så sender vi deg en lenke for å tilbakestille passordet.
       </p>
 
       {formError && (

@@ -8,10 +8,10 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Kontakt oss — Roots & Culture',
   description:
-    'Ta kontakt med Roots & Culture. Vi hjelper deg gjerne med sporsmal om produkter, opplevelser og bestillinger.',
+    'Ta kontakt med Roots & Culture. Vi hjelper deg gjerne med spørsmål om produkter, opplevelser og bestillinger.',
   openGraph: {
     title: 'Kontakt oss — Roots & Culture',
-    description: 'Ta kontakt med oss. Vi horer gjerne fra deg.',
+    description: 'Ta kontakt med oss. Vi hører gjerne fra deg.',
   },
 }
 
@@ -49,14 +49,14 @@ export default async function KontaktPage() {
                 Send oss en melding
               </h2>
               <p className="mt-3 text-[0.9375rem] leading-[1.65]">
-                Fortell oss hva du lurer pa, sa svarer vi sa raskt vi kan. Vi
-                elsker a hore fra folk som deler var lidenskap for norsk natur.
+                Fortell oss hva du lurer på, så svarer vi så raskt vi kan. Vi
+                elsker å høre fra folk som deler vår lidenskap for norsk natur.
               </p>
               <div className="mt-6 rounded-xl bg-card p-5 text-[0.875rem] leading-[1.6]">
                 <strong className="text-forest">Bedriftsarrangementer?</strong>
                 <br />
                 Vi skreddersyr opplevelser for grupper og bedrifter. Fortell oss
-                om onskene deres i skjemaet, sa lager vi et uforpliktende
+                om ønskene deres i skjemaet, så lager vi et uforpliktende
                 tilbud.
               </div>
             </div>

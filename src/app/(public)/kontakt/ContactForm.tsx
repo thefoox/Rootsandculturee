@@ -23,7 +23,7 @@ export function ContactForm() {
   const prevSuccess = useRef(false)
   useEffect(() => {
     if (state?.success && !prevSuccess.current) {
-      toast.success('Melding sendt! Vi svarer deg sa snart vi kan.')
+      toast.success('Melding sendt! Vi svarer deg så snart vi kan.')
       formRef.current?.reset()
       prevSuccess.current = true
     }

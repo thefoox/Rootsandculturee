@@ -11,11 +11,11 @@ import type { ProductCategory } from '@/types'
 export const metadata: Metadata = {
   title: 'Produkter — Roots & Culture',
   description:
-    'Utforsk vart utvalg av autentiske norske produkter — drikke, kaffe, te og naturprodukter.',
+    'Utforsk vårt utvalg av autentiske norske produkter — drikke, kaffe, te og naturprodukter.',
   openGraph: {
     title: 'Produkter',
     description:
-      'Utforsk vart utvalg av autentiske norske produkter — drikke, kaffe, te og naturprodukter.',
+      'Utforsk vårt utvalg av autentiske norske produkter — drikke, kaffe, te og naturprodukter.',
   },
 }
 
@@ -57,7 +57,7 @@ export default async function ProdukterPage({ searchParams }: PageProps) {
             Produkter
           </h1>
           <p className="mt-2 text-body">
-            Utforsk vart handplukkede utvalg av autentiske norske produkter.
+            Utforsk vårt håndplukkede utvalg av autentiske norske produkter.
           </p>
         </div>
         {products.length > 0 ? (

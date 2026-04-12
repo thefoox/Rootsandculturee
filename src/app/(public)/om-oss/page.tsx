@@ -7,11 +7,11 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'Om oss — Roots & Culture',
   description:
-    'Forankret i norsk natur og kulturarv. Vi bringer deg naermere det ekte. Les om var historie, vare verdier og menneskene bak Roots & Culture.',
+    'Forankret i norsk natur og kulturarv. Vi bringer deg nærmere det ekte. Les om vår historie, våre verdier og menneskene bak Roots & Culture.',
   openGraph: {
     title: 'Om oss — Roots & Culture',
     description:
-      'Forankret i norsk natur og kulturarv. Vi bringer deg naermere det ekte.',
+      'Forankret i norsk natur og kulturarv. Vi bringer deg nærmere det ekte.',
   },
 }
 

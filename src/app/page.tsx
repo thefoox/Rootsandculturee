@@ -5,7 +5,7 @@ import { SectionRenderer } from '@/components/sections/SectionRenderer'
 export const metadata: Metadata = {
   title: 'Roots & Culture — Norske natur- og kulturopplevelser',
   description:
-    'Oppdag autentiske norske naturopplevelser, kurs og matkultur. Kjop produkter fra norsk natur og bestill din neste opplevelse.',
+    'Oppdag autentiske norske naturopplevelser, kurs og matkultur. Kjøp produkter fra norsk natur og bestill din neste opplevelse.',
   openGraph: {
     title: 'Roots & Culture',
     description:

@@ -117,7 +117,7 @@ export async function createPaymentIntent(
       }
       const dateData = dateDoc.data()
       if (!dateData.isActive || (dateData.availableSeats as number) < item.quantity) {
-        return { error: `Ingen ledige plasser for "${item.name}" pa valgt dato.` }
+        return { error: `Ingen ledige plasser for "${item.name}" på valgt dato.` }
       }
       const now = new Date()
       let verifiedPrice = (dateData.priceOverride as number | null) ?? (expDoc.data().basePrice as number) ?? item.price
@@ -315,7 +315,7 @@ export async function updatePaymentIntentMetadata(
       }
       const dateData = dateDoc.data()
       if (!dateData.isActive || (dateData.availableSeats as number) < item.quantity) {
-        return { error: `Ingen ledige plasser for "${item.name}" pa valgt dato.` }
+        return { error: `Ingen ledige plasser for "${item.name}" på valgt dato.` }
       }
       const now = new Date()
       let verifiedPrice = (dateData.priceOverride as number | null) ?? (expDoc.data().basePrice as number) ?? item.price

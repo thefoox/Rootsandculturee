@@ -102,7 +102,7 @@ export function ImageUpload({
           Last opp bilde
         </p>
         <p className="mt-2 text-body">
-          Slipp bilder her eller klikk for a velge
+          Slipp bilder her eller klikk for å velge
         </p>
         <p className="mt-1 text-label text-body/60">
           Maks 5 MB per bilde. JPG, PNG, WebP.
