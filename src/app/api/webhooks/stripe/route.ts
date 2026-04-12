@@ -80,16 +80,17 @@ export async function POST(req: Request) {
     )
   }
 
-  // Idempotency check: prevent double-processing
+  // Idempotency check: only skip events that completed successfully
   const eventDoc = await adminDb.collection('stripeEvents').doc(event.id).get()
-  if (eventDoc.exists) {
+  if (eventDoc.exists && eventDoc.data()?.status === 'completed') {
     return NextResponse.json({ received: true }, { status: 200 })
   }
 
   // Mark event as processing before handling
   await adminDb.collection('stripeEvents').doc(event.id).set({
     type: event.type,
-    processedAt: new Date(),
+    status: 'processing',
+    startedAt: new Date(),
   })
 
   try {
@@ -476,6 +477,12 @@ export async function POST(req: Request) {
       { status: 500 }
     )
   }
+
+  // Mark event as completed after successful processing
+  await adminDb.collection('stripeEvents').doc(event.id).update({
+    status: 'completed',
+    processedAt: new Date(),
+  })
 
   return NextResponse.json({ received: true }, { status: 200 })
 }
