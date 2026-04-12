@@ -276,7 +276,10 @@ export async function POST(req: Request) {
         })
       }
 
-      // Invalidate bookings cache so admin page shows new bookings
+      // Invalidate caches so admin pages show new data
+      if (orderId) {
+        revalidateTag('orders', 'max')
+      }
       if (bookingItems.length > 0) {
         revalidateTag('bookings', 'max')
         revalidateTag('experience-dates', 'max')
