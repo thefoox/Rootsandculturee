@@ -48,6 +48,6 @@ export async function updateSiteContent(formData: FormData) {
     true // merge
   )
 
-  revalidateTag('site-content', 'max')
+  revalidateTag('site-content')
   return { success: true }
 }

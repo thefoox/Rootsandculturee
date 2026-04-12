@@ -52,8 +52,13 @@ export async function createArticle(formData: FormData) {
   }
 
   const rawCoverImage = formData.get('coverImage') as string
-  const parsedImage = rawCoverImage ? JSON.parse(rawCoverImage) : null
-  const coverImageValue = parsedImage?.url ? parsedImage : undefined
+  let parsedImage: unknown
+  try {
+    parsedImage = rawCoverImage ? JSON.parse(rawCoverImage) : null
+  } catch {
+    return { success: false, errors: { coverImage: 'Ugyldig bildedata.' } }
+  }
+  const coverImageValue = (parsedImage as Record<string, unknown>)?.url ? parsedImage : undefined
 
   const parsed = articleSchema.safeParse({
     title: formData.get('title'),
@@ -92,7 +97,7 @@ export async function createArticle(formData: FormData) {
       updatedAt: now,
     })
 
-    revalidateTag('articles', 'max')
+    revalidateTag('articles')
     return { success: true, id: docRef.id }
   } catch (err) {
     console.error('[createArticle] Firestore write failed:', err)
@@ -107,8 +112,13 @@ export async function updateArticle(id: string, formData: FormData) {
   }
 
   const rawCoverImage = formData.get('coverImage') as string
-  const parsedImage = rawCoverImage ? JSON.parse(rawCoverImage) : null
-  const coverImageValue = parsedImage?.url ? parsedImage : undefined
+  let parsedImage: unknown
+  try {
+    parsedImage = rawCoverImage ? JSON.parse(rawCoverImage) : null
+  } catch {
+    return { success: false, errors: { coverImage: 'Ugyldig bildedata.' } }
+  }
+  const coverImageValue = (parsedImage as Record<string, unknown>)?.url ? parsedImage : undefined
 
   const parsed = articleSchema.safeParse({
     title: formData.get('title'),
@@ -146,7 +156,7 @@ export async function updateArticle(id: string, formData: FormData) {
     updatedAt: now,
   })
 
-  revalidateTag('articles', 'max')
+  revalidateTag('articles')
   return { success: true }
 }
 
@@ -157,6 +167,6 @@ export async function deleteArticle(id: string) {
   }
 
   await adminDb.collection('articles').doc(id).delete()
-  revalidateTag('articles', 'max')
+  revalidateTag('articles')
   return { success: true }
 }

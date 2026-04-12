@@ -78,19 +78,33 @@ export async function createExperience(formData: FormData) {
   const priceNOK = Number(formData.get('basePrice'))
   const whatIsIncludedRaw = (formData.get('whatIsIncluded') as string) || ''
 
+  let parsedImages: unknown[]
+  try {
+    parsedImages = rawImages ? JSON.parse(rawImages) : []
+  } catch {
+    return { success: false, errors: { images: 'Ugyldig bildedata.' } }
+  }
+
+  let parsedDates: unknown[]
+  try {
+    parsedDates = rawDates ? JSON.parse(rawDates) : []
+  } catch {
+    return { success: false, errors: { dates: 'Ugyldig datodata.' } }
+  }
+
   const parsed = experienceSchema.safeParse({
     name: formData.get('name'),
     slug: formData.get('slug'),
     description: formData.get('description'),
     category: formData.get('category'),
-    images: rawImages ? JSON.parse(rawImages) : [],
+    images: parsedImages,
     basePrice: Math.round(priceNOK * 100),
     location: formData.get('location'),
     durationText: formData.get('durationText'),
     whatIsIncluded: whatIsIncludedRaw,
     cancellationPolicy: (formData.get('cancellationPolicy') as string) || '',
     whatToBring: (formData.get('whatToBring') as string) || '',
-    dates: rawDates ? JSON.parse(rawDates) : [],
+    dates: parsedDates,
     publish: formData.get('publish') === 'true',
   })
 
@@ -137,8 +151,8 @@ export async function createExperience(formData: FormData) {
     await batch.commit()
   }
 
-  revalidateTag('experiences', 'max')
-  revalidateTag('experience-dates', 'max')
+  revalidateTag('experiences')
+  revalidateTag('experience-dates')
   return { success: true, id: docRef.id }
 }
 
@@ -153,19 +167,33 @@ export async function updateExperience(id: string, formData: FormData) {
   const priceNOK = Number(formData.get('basePrice'))
   const whatIsIncludedRaw = (formData.get('whatIsIncluded') as string) || ''
 
+  let parsedImages: unknown[]
+  try {
+    parsedImages = rawImages ? JSON.parse(rawImages) : []
+  } catch {
+    return { success: false, errors: { images: 'Ugyldig bildedata.' } }
+  }
+
+  let parsedDates: unknown[]
+  try {
+    parsedDates = rawDates ? JSON.parse(rawDates) : []
+  } catch {
+    return { success: false, errors: { dates: 'Ugyldig datodata.' } }
+  }
+
   const parsed = experienceSchema.safeParse({
     name: formData.get('name'),
     slug: formData.get('slug'),
     description: formData.get('description'),
     category: formData.get('category'),
-    images: rawImages ? JSON.parse(rawImages) : [],
+    images: parsedImages,
     basePrice: Math.round(priceNOK * 100),
     location: formData.get('location'),
     durationText: formData.get('durationText'),
     whatIsIncluded: whatIsIncludedRaw,
     cancellationPolicy: (formData.get('cancellationPolicy') as string) || '',
     whatToBring: (formData.get('whatToBring') as string) || '',
-    dates: rawDates ? JSON.parse(rawDates) : [],
+    dates: parsedDates,
     publish: formData.get('publish') === 'true',
   })
 
@@ -254,8 +282,8 @@ export async function updateExperience(id: string, formData: FormData) {
     await batch.commit()
   }
 
-  revalidateTag('experiences', 'max')
-  revalidateTag('experience-dates', 'max')
+  revalidateTag('experiences')
+  revalidateTag('experience-dates')
   return { success: true }
 }
 
@@ -275,7 +303,7 @@ export async function deleteExperience(id: string) {
 
   // Delete main doc
   await adminDb.collection('experiences').doc(id).delete()
-  revalidateTag('experiences', 'max')
-  revalidateTag('experience-dates', 'max')
+  revalidateTag('experiences')
+  revalidateTag('experience-dates')
   return { success: true }
 }

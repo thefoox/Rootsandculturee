@@ -278,11 +278,11 @@ export async function POST(req: Request) {
 
       // Invalidate caches so admin pages show new data
       if (orderId) {
-        revalidateTag('orders', 'max')
+        revalidateTag('orders')
       }
       if (bookingItems.length > 0) {
-        revalidateTag('bookings', 'max')
-        revalidateTag('experience-dates', 'max')
+        revalidateTag('bookings')
+        revalidateTag('experience-dates')
       }
 
       // Process gift card purchases

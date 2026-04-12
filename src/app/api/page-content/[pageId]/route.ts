@@ -73,7 +73,7 @@ export async function PUT(
     )
 
     // Invalidate data cache + page CDN cache
-    revalidateTag('page-content', 'max')
+    revalidateTag('page-content')
     const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
     if (publicPath !== '/') revalidatePath('/')
@@ -102,7 +102,7 @@ export async function DELETE(
 
     await adminDb.collection('pageContent').doc(pageId).delete()
 
-    revalidateTag('page-content', 'max')
+    revalidateTag('page-content')
     const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
 

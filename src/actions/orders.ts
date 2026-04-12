@@ -54,12 +54,23 @@ export async function getOrders(): Promise<Order[]> {
 export async function updateOrderStatus(
   orderId: string,
   status: OrderStatus
-): Promise<void> {
-  await adminDb.collection('orders').doc(orderId).update({
-    status,
-    ...(status === 'shipped' ? { fulfilledAt: new Date() } : {}),
-  })
-  revalidateTag('orders', 'max')
+): Promise<{ success: boolean; error?: string }> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') {
+    return { success: false, error: 'Ingen tilgang.' }
+  }
+
+  try {
+    await adminDb.collection('orders').doc(orderId).update({
+      status,
+      ...(status === 'shipped' ? { fulfilledAt: new Date() } : {}),
+    })
+    revalidateTag('orders')
+    return { success: true }
+  } catch (error) {
+    console.error('Feil ved oppdatering av ordrestatus:', error)
+    return { success: false, error: 'Kunne ikke oppdatere ordrestatus.' }
+  }
 }
 
 export async function createOrder(
@@ -69,7 +80,7 @@ export async function createOrder(
     ...data,
     createdAt: new Date(),
   })
-  revalidateTag('orders', 'max')
+  revalidateTag('orders')
   return docRef.id
 }
 
@@ -84,7 +95,7 @@ export async function updateOrderShipping(
 
   try {
     await adminDb.collection('orders').doc(orderId).update({ shipping })
-    revalidateTag('orders', 'max')
+    revalidateTag('orders')
     return { success: true }
   } catch {
     return { success: false, error: 'Kunne ikke oppdatere leveringsadresse.' }

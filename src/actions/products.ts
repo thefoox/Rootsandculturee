@@ -57,17 +57,31 @@ export async function createProduct(formData: FormData) {
   const priceNOK = Number(formData.get('price'))
   const rawVariants = formData.get('variants') as string
 
+  let parsedImages: unknown[]
+  try {
+    parsedImages = rawImages ? JSON.parse(rawImages) : []
+  } catch {
+    return { success: false, errors: { images: 'Ugyldig bildedata.' } }
+  }
+
+  let parsedVariants: unknown[]
+  try {
+    parsedVariants = rawVariants ? JSON.parse(rawVariants) : []
+  } catch {
+    return { success: false, errors: { variants: 'Ugyldig variantdata.' } }
+  }
+
   const parsed = productSchema.safeParse({
     name: formData.get('name'),
     slug: formData.get('slug'),
     description: formData.get('description'),
     price: Math.round(priceNOK * 100),
     category: formData.get('category'),
-    images: rawImages ? JSON.parse(rawImages) : [],
+    images: parsedImages,
     stockCount: Number(formData.get('stockCount')),
     shippingCost: Math.round(Number(formData.get('shippingCost') || '0') * 100),
     publish: formData.get('publish') === 'true',
-    variants: rawVariants ? JSON.parse(rawVariants) : [],
+    variants: parsedVariants,
   })
 
   if (!parsed.success) {
@@ -98,7 +112,7 @@ export async function createProduct(formData: FormData) {
     updatedAt: now,
   })
 
-  revalidateTag('products', 'max')
+  revalidateTag('products')
   return { success: true, id: docRef.id }
 }
 
@@ -112,17 +126,31 @@ export async function updateProduct(id: string, formData: FormData) {
   const priceNOK = Number(formData.get('price'))
   const rawVariants = formData.get('variants') as string
 
+  let parsedImages: unknown[]
+  try {
+    parsedImages = rawImages ? JSON.parse(rawImages) : []
+  } catch {
+    return { success: false, errors: { images: 'Ugyldig bildedata.' } }
+  }
+
+  let parsedVariants: unknown[]
+  try {
+    parsedVariants = rawVariants ? JSON.parse(rawVariants) : []
+  } catch {
+    return { success: false, errors: { variants: 'Ugyldig variantdata.' } }
+  }
+
   const parsed = productSchema.safeParse({
     name: formData.get('name'),
     slug: formData.get('slug'),
     description: formData.get('description'),
     price: Math.round(priceNOK * 100),
     category: formData.get('category'),
-    images: rawImages ? JSON.parse(rawImages) : [],
+    images: parsedImages,
     stockCount: Number(formData.get('stockCount')),
     shippingCost: Math.round(Number(formData.get('shippingCost') || '0') * 100),
     publish: formData.get('publish') === 'true',
-    variants: rawVariants ? JSON.parse(rawVariants) : [],
+    variants: parsedVariants,
   })
 
   if (!parsed.success) {
@@ -157,7 +185,7 @@ export async function updateProduct(id: string, formData: FormData) {
     updatedAt: now,
   })
 
-  revalidateTag('products', 'max')
+  revalidateTag('products')
   return { success: true }
 }
 
@@ -168,6 +196,6 @@ export async function deleteProduct(id: string) {
   }
 
   await adminDb.collection('products').doc(id).delete()
-  revalidateTag('products', 'max')
+  revalidateTag('products')
   return { success: true }
 }
