@@ -44,7 +44,7 @@ const SECTION_TYPE_LABELS: Record<SectionType, string> = {
   location: 'Lokasjon',
   testimonials: 'Omtaler',
   newsletter: 'Nyhetsbrev',
-  categories: 'Kategorikort',
+  categories: 'Opplevelseskategorier (auto)',
   video: 'Video',
   stats: 'Tall i fokus',
   'logo-bar': 'Partnere / Omtalt i',
