@@ -47,37 +47,34 @@ export function ConfirmationModal({
 
     async function poll() {
       while (!cancelled && attempts < maxAttempts) {
-        try {
-          const [orderResult, bookingResults] = await Promise.all([
-            getOrderByStripePaymentIntent(paymentIntentId),
-            getBookingsByPaymentIntentAction(paymentIntentId),
-          ])
+        // Query order and bookings independently so one failing
+        // doesn't block the other from resolving the poll.
+        const orderResult = await getOrderByStripePaymentIntent(paymentIntentId).catch(() => null)
+        const bookingResults = await getBookingsByPaymentIntentAction(paymentIntentId).catch(() => [])
 
-          if (orderResult) {
-            setOrder(orderResult)
-          }
-
-          if (bookingResults.length > 0) {
-            setPolledBookings(
-              bookingResults.map((b) => ({
-                confirmationCode: b.confirmationCode,
-                experienceName: b.experienceName,
-                date: b.date instanceof Date ? b.date.toISOString() : String(b.date),
-                whatToBring: b.whatToBring,
-                total: b.total,
-                isEarlybird: b.isEarlybird ?? false,
-              }))
-            )
-          }
-
-          // Stop polling when we have at least one result (order or bookings)
-          if (orderResult || bookingResults.length > 0) {
-            setLoading(false)
-            return
-          }
-        } catch {
-          // retry
+        if (orderResult) {
+          setOrder(orderResult)
         }
+
+        if (bookingResults.length > 0) {
+          setPolledBookings(
+            bookingResults.map((b) => ({
+              confirmationCode: b.confirmationCode,
+              experienceName: b.experienceName,
+              date: b.date instanceof Date ? b.date.toISOString() : String(b.date),
+              whatToBring: b.whatToBring,
+              total: b.total,
+              isEarlybird: b.isEarlybird ?? false,
+            }))
+          )
+        }
+
+        // Stop polling when we have at least one result
+        if (orderResult || bookingResults.length > 0) {
+          setLoading(false)
+          return
+        }
+
         attempts++
         await new Promise((r) => setTimeout(r, 2000))
       }
