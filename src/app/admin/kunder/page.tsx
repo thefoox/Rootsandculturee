@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/shared/EmptyState'
 import { SendEmailModal } from '@/components/admin/SendEmailModal'
 import { getCustomerList } from '@/actions/customers'
 import { formatPrice, formatDateMedium } from '@/lib/format'
+import { toast } from 'sonner'
 import type { CustomerSummary } from '@/types'
 
 export default function CustomersListPage() {
@@ -16,7 +17,7 @@ export default function CustomersListPage() {
   const [emailTarget, setEmailTarget] = useState<string | null>(null)
 
   useEffect(() => {
-    getCustomerList().then(setCustomers)
+    getCustomerList().then(setCustomers).catch(() => toast.error('Kunne ikke laste kunder.'))
   }, [])
 
   const columns: Column<CustomerSummary>[] = [

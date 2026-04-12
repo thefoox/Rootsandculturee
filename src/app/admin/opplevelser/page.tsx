@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { DataTable, type Column } from '@/components/admin/DataTable'
@@ -17,7 +18,7 @@ export default function ExperiencesListPage() {
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
-    getAllExperiences().then(setExperiences)
+    getAllExperiences().then(setExperiences).catch(() => toast.error('Kunne ikke laste opplevelser.'))
   }, [])
 
   const handleDelete = async () => {
@@ -42,9 +43,11 @@ export default function ExperiencesListPage() {
       width: '64px',
       accessor: (row) =>
         row.images[0] ? (
-          <img
+          <Image
             src={row.images[0].url}
             alt={row.images[0].alt}
+            width={48}
+            height={48}
             className="h-12 w-12 rounded object-cover"
           />
         ) : (

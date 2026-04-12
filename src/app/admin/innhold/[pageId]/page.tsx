@@ -389,7 +389,10 @@ export default function EditPageContentPage() {
         }
         setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch(() => {
+        setLoading(false)
+        toast.error('Kunne ikke laste sideinnhold.')
+      })
   }, [pageId])
 
   function handleDragEnd(event: DragEndEvent) {

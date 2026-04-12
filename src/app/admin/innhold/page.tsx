@@ -24,6 +24,10 @@ export default function SiteContentPage() {
         setPages(data)
         setLoading(false)
       })
+      .catch(() => {
+        setLoading(false)
+        toast.error('Kunne ikke laste sider.')
+      })
   }, [])
 
   async function handleCreate() {

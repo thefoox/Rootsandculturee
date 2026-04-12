@@ -67,11 +67,11 @@ export default function OrderDetailPage() {
           }
           // Fetch refunds
           if (o.stripePaymentIntentId) {
-            getRefundsForOrder(o.stripePaymentIntentId).then(setRefunds)
+            getRefundsForOrder(o.stripePaymentIntentId).then(setRefunds).catch(() => toast.error('Kunne ikke laste refusjoner.'))
           }
         }
-      })
-      getOrderNotes(params.id).then(setNotes)
+      }).catch(() => toast.error('Kunne ikke laste ordredetaljer.'))
+      getOrderNotes(params.id).then(setNotes).catch(() => toast.error('Kunne ikke laste notater.'))
     }
   }, [params.id])
 
@@ -112,7 +112,7 @@ export default function OrderDetailPage() {
     if (result.success) {
       setNewNote('')
       // Refresh notes
-      getOrderNotes(order.id).then(setNotes)
+      getOrderNotes(order.id).then(setNotes).catch(() => {})
       toast.success('Notat lagt til.')
     } else {
       toast.error(result.error || 'Kunne ikke legge til notat.')
@@ -122,7 +122,7 @@ export default function OrderDetailPage() {
   function handleRefunded() {
     // Refresh refunds and order
     if (order?.stripePaymentIntentId) {
-      getRefundsForOrder(order.stripePaymentIntentId).then(setRefunds)
+      getRefundsForOrder(order.stripePaymentIntentId).then(setRefunds).catch(() => {})
     }
     if (order?.id) {
       getOrderById(order.id).then((o) => {
@@ -130,7 +130,7 @@ export default function OrderDetailPage() {
           setOrder(o)
           setSelectedStatus(o.status)
         }
-      })
+      }).catch(() => {})
     }
   }
 
