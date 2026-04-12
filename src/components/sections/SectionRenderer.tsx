@@ -13,6 +13,12 @@ import { ArticlesGridSection } from './ArticlesGridSection'
 import { ProductsGridSection } from './ProductsGridSection'
 import { TrustBarSection } from './TrustBarSection'
 import { LocationSection } from './LocationSection'
+import { TestimonialsSection } from './TestimonialsSection'
+import { NewsletterSection } from './NewsletterSection'
+import { CategoriesSection } from './CategoriesSection'
+import { VideoSection } from './VideoSection'
+import { StatsSection } from './StatsSection'
+import { LogoBarSection } from './LogoBarSection'
 
 export function SectionRenderer({ section }: { section: PageSection }) {
   switch (section.type) {
@@ -44,6 +50,18 @@ export function SectionRenderer({ section }: { section: PageSection }) {
       return <TrustBarSection section={section} />
     case 'location':
       return <LocationSection section={section} />
+    case 'testimonials':
+      return <TestimonialsSection section={section} />
+    case 'newsletter':
+      return <NewsletterSection section={section} />
+    case 'categories':
+      return <CategoriesSection section={section} />
+    case 'video':
+      return <VideoSection section={section} />
+    case 'stats':
+      return <StatsSection section={section} />
+    case 'logo-bar':
+      return <LogoBarSection section={section} />
     default:
       return null
   }

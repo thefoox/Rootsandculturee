@@ -42,6 +42,12 @@ const SECTION_TYPE_LABELS: Record<SectionType, string> = {
   'products-grid': 'Produkter (auto)',
   'trust-bar': 'Tillitsbar',
   location: 'Lokasjon',
+  testimonials: 'Omtaler',
+  newsletter: 'Nyhetsbrev',
+  categories: 'Kategorikort',
+  video: 'Video',
+  stats: 'Tall i fokus',
+  'logo-bar': 'Partnere / Omtalt i',
 }
 
 const ALL_SECTION_TYPES = Object.keys(SECTION_TYPE_LABELS) as SectionType[]
@@ -60,11 +66,18 @@ function createDefaultSection(type: SectionType, order: number): PageSection {
   if (['text', 'text-image'].includes(type)) {
     base.body = ''
   }
-  if (['hero', 'text', 'cta', 'experiences-grid', 'articles-grid', 'products-grid'].includes(type)) {
+  if (['text', 'text-image', 'video'].includes(type)) {
+    base.body = ''
+  }
+  if (['hero', 'text', 'cta', 'experiences-grid', 'articles-grid', 'products-grid', 'testimonials', 'newsletter', 'stats'].includes(type)) {
     base.subheading = ''
   }
-  if (['faq', 'values', 'team', 'gallery', 'contact-info', 'trust-bar'].includes(type)) {
+  if (['faq', 'values', 'team', 'gallery', 'contact-info', 'trust-bar', 'testimonials', 'categories', 'stats', 'logo-bar'].includes(type)) {
     base.items = []
+  }
+  if (['newsletter'].includes(type)) {
+    base.ctaText = ''
+    base.ctaLink = ''
   }
   return base
 }
@@ -98,11 +111,11 @@ function SortableSection({
     opacity: isDragging ? 0.5 : 1,
   }
 
-  const hasSubheading = ['hero', 'text', 'cta', 'experiences-grid', 'articles-grid', 'products-grid'].includes(section.type)
-  const hasBody = section.type === 'text-image' || section.type === 'text'
+  const hasSubheading = ['hero', 'text', 'cta', 'experiences-grid', 'articles-grid', 'products-grid', 'testimonials', 'newsletter', 'stats'].includes(section.type)
+  const hasBody = ['text-image', 'text', 'video'].includes(section.type)
   const hasImage = ['hero', 'text-image', 'cta', 'contact-info'].includes(section.type)
-  const hasCta = ['hero', 'cta', 'text-image'].includes(section.type)
-  const hasItems = ['faq', 'values', 'team', 'gallery', 'contact-info', 'trust-bar'].includes(section.type)
+  const hasCta = ['hero', 'cta', 'text-image', 'newsletter'].includes(section.type)
+  const hasItems = ['faq', 'values', 'team', 'gallery', 'contact-info', 'trust-bar', 'testimonials', 'categories', 'stats', 'logo-bar'].includes(section.type)
   const hasImagePosition = section.type === 'text-image'
   const isDataSection = ['experiences-grid', 'articles-grid', 'products-grid'].includes(section.type)
 
@@ -170,7 +183,14 @@ function SortableSection({
             </div>
           )}
 
-          {hasBody && (
+          {hasBody && section.type === 'video' ? (
+            <Input
+              label="Video-URL (YouTube eller Vimeo)"
+              value={section.body || ''}
+              onChange={(e) => onUpdate({ body: e.target.value })}
+              placeholder="https://www.youtube.com/watch?v=..."
+            />
+          ) : hasBody ? (
             <div>
               <label className="mb-1 block text-label font-medium text-forest">Brødtekst</label>
               <TiptapEditor
@@ -178,7 +198,7 @@ function SortableSection({
                 onChange={(html) => onUpdate({ body: html })}
               />
             </div>
-          )}
+          ) : null}
 
           {hasImage && (
             <CmsImageUpload
@@ -244,17 +264,17 @@ function SortableSection({
                         Slett
                       </button>
                     </div>
-                    {section.type !== 'gallery' && (
+                    {section.type !== 'gallery' && section.type !== 'logo-bar' && (
                       <Input
-                        label={section.type === 'faq' ? 'Spørsmål' : 'Tittel'}
+                        label={section.type === 'faq' ? 'Spørsmål' : section.type === 'testimonials' ? 'Forfatter' : section.type === 'stats' ? 'Tall (f.eks. 500+)' : 'Tittel'}
                         value={item.title}
                         onChange={(e) => onUpdateItem(i, { title: e.target.value })}
                       />
                     )}
-                    {section.type !== 'gallery' && (
+                    {section.type !== 'gallery' && section.type !== 'logo-bar' && (
                       <div>
                         <label className="mb-1 block text-label font-medium text-forest">
-                          {section.type === 'faq' ? 'Svar' : 'Beskrivelse'}
+                          {section.type === 'faq' ? 'Svar' : section.type === 'testimonials' ? 'Sitat' : section.type === 'stats' ? 'Beskrivelse (f.eks. Fornøyde gjester)' : 'Beskrivelse'}
                         </label>
                         <textarea
                           className="w-full rounded-md border border-forest/15 bg-cream px-3 py-2 text-body text-forest min-h-[60px]"
@@ -263,7 +283,7 @@ function SortableSection({
                         />
                       </div>
                     )}
-                    {(section.type === 'team' || section.type === 'gallery') && (
+                    {(section.type === 'team' || section.type === 'gallery' || section.type === 'categories' || section.type === 'logo-bar') && (
                       <CmsImageUpload
                         image={item.image}
                         onChange={(img) => onUpdateItem(i, { image: img ?? undefined })}
@@ -296,6 +316,20 @@ function SortableSection({
                         label="Ikon (lucide-navn, f.eks. Leaf)"
                         value={item.icon || ''}
                         onChange={(e) => onUpdateItem(i, { icon: e.target.value })}
+                      />
+                    )}
+                    {section.type === 'testimonials' && (
+                      <Input
+                        label="Rolle (f.eks. Kunde siden 2024)"
+                        value={item.icon || ''}
+                        onChange={(e) => onUpdateItem(i, { icon: e.target.value })}
+                      />
+                    )}
+                    {section.type === 'categories' && (
+                      <Input
+                        label="Lenke (f.eks. /opplevelser/retreat)"
+                        value={item.href || ''}
+                        onChange={(e) => onUpdateItem(i, { href: e.target.value })}
                       />
                     )}
                   </div>

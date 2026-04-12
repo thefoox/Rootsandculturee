@@ -119,7 +119,7 @@ export interface SiteContent {
 
 // CMS Page Content
 
-export type SectionType = 'hero' | 'text-image' | 'text' | 'values' | 'team' | 'faq' | 'cta' | 'gallery' | 'contact-info' | 'experiences-grid' | 'articles-grid' | 'products-grid' | 'trust-bar' | 'location'
+export type SectionType = 'hero' | 'text-image' | 'text' | 'values' | 'team' | 'faq' | 'cta' | 'gallery' | 'contact-info' | 'experiences-grid' | 'articles-grid' | 'products-grid' | 'trust-bar' | 'location' | 'testimonials' | 'newsletter' | 'categories' | 'video' | 'stats' | 'logo-bar'
 
 export interface SectionItem {
   title: string
