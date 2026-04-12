@@ -1,4 +1,5 @@
 import 'server-only'
+import { unstable_noStore as noStore } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import { mockPageContent } from '@/lib/data/mock-data'
 import type { PageContent, PageSection } from '@/types'
@@ -37,6 +38,7 @@ function mapPageContent(doc: FirestoreDoc): PageContent {
 // revalidatePath in the PUT handler handles on-demand invalidation.
 
 export async function getPageContent(pageId: string): Promise<PageContent | null> {
+  noStore()
   try {
     const doc = await adminDb.collection('pageContent').doc(pageId).get()
     if (!doc.exists) return mockPageContent.get(pageId) ?? null
@@ -58,6 +60,7 @@ function getMockNavigationPages(): PageContent[] {
 }
 
 export async function getNavigationPages(): Promise<PageContent[]> {
+  noStore()
   try {
     const snapshot = await adminDb
       .collection('pageContent')
@@ -73,6 +76,7 @@ export async function getNavigationPages(): Promise<PageContent[]> {
 }
 
 export async function getPageContentBySlug(slug: string): Promise<PageContent | null> {
+  noStore()
   try {
     const snapshot = await adminDb
       .collection('pageContent')
