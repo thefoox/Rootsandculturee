@@ -118,7 +118,7 @@ export const pageContentCreateSchema = z.object({
 
 export const pageContentUpdateSchema = z.object({
   title: z.string().min(1, 'Tittel er påkrevd.').max(200),
-  slug: z.string().min(1, 'Slug er påkrevd.'),
+  slug: z.string().min(1, 'Slug er påkrevd.').regex(/^[a-z0-9-/]+$/, 'Slug kan kun inneholde små bokstaver, tall, bindestreker og skråstrek.'),
   isPublished: z.boolean(),
   showInNavigation: z.boolean(),
   navigationOrder: z.number().int().min(0),
