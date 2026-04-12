@@ -15,7 +15,7 @@ export function NewsletterSection({ section }: { section: PageSection }) {
           </p>
         )}
         <form
-          className="mx-auto mt-7 flex max-w-[480px] gap-3 rounded-xl border border-cream/10 bg-cream/8 p-1.5"
+          className="mx-auto mt-7 flex max-w-[480px] flex-col gap-3 rounded-xl border border-cream/10 bg-cream/8 p-1.5 sm:flex-row"
           onSubmit={(e) => e.preventDefault()}
         >
           <input

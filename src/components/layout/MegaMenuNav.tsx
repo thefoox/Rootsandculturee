@@ -114,7 +114,7 @@ export function MegaMenuNav({ transparent = true, items }: { transparent?: boole
             {/* Dropdown panel -- multi-column with icon areas per D-15 and UI-SPEC */}
             {hasChildren && isOpen && (
               <div
-                className="absolute left-0 top-full z-50 mt-0 w-[520px] rounded-b-lg border border-forest/15 bg-cream shadow-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:animate-[fadeInDown_200ms_ease-out]"
+                className="absolute left-0 top-full z-50 mt-0 w-[520px] max-w-[calc(100vw-2rem)] rounded-b-lg border border-forest/15 bg-cream shadow-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:animate-[fadeInDown_200ms_ease-out]"
                 role="menu"
               >
                 <ul className="grid grid-cols-2 gap-1 p-4">

@@ -33,7 +33,7 @@ export function TrustBarSection({ section }: { section: PageSection }) {
   return (
     <section className="bg-forest py-7 border-t border-cream/5">
       <div className="mx-auto max-w-[1200px] px-6">
-        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 max-md:justify-start max-md:gap-x-5 max-md:px-0">
+        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 max-md:justify-start max-md:gap-x-5 max-sm:gap-x-3 max-md:px-0">
           {items.map(({ icon, label }) => {
             const Icon = getIcon(icon)
             return (

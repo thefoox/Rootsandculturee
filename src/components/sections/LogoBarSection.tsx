@@ -13,7 +13,7 @@ export function LogoBarSection({ section }: { section: PageSection }) {
           </div>
         )}
         {section.items && section.items.length > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 lg:gap-16">
             {section.items.map((item, i) =>
               item.image ? (
                 <div
