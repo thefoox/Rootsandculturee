@@ -16,8 +16,8 @@ export function CmsImageUpload({ image, onChange, label = 'Bilde' }: CmsImageUpl
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFile = useCallback(async (file: File) => {
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Bildet er for stort. Maks 5 MB.')
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Bildet er for stort. Maks 10 MB.')
       return
     }
 

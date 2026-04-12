@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server'
 import { verifySession } from '@/lib/dal'
 import { importPKCS8, SignJWT } from 'jose'
+import sharp from 'sharp'
 import path from 'path'
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg']
-const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10 MB (raw upload limit — optimized before storage)
+const MAX_DIMENSION = 2048 // Max width or height in pixels
+const WEBP_QUALITY = 80
 
 /**
  * Get a Google OAuth2 access token with storage scope.
@@ -91,9 +94,34 @@ export async function POST(request: Request) {
 
   try {
     const token = await getStorageAccessToken()
-    const filename = `uploads/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`
+    const rawBuffer = Buffer.from(await file.arrayBuffer())
+
+    // Optimize raster images with Sharp (skip SVG and GIF)
+    const isRaster = ['.jpg', '.jpeg', '.png', '.webp'].includes(ext)
+    let uploadBuffer: Buffer
+    let uploadContentType: string
+    let uploadExt: string
+
+    if (isRaster) {
+      uploadBuffer = await sharp(rawBuffer)
+        .resize(MAX_DIMENSION, MAX_DIMENSION, {
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
+        .webp({ quality: WEBP_QUALITY })
+        .toBuffer()
+      uploadContentType = 'image/webp'
+      uploadExt = '.webp'
+    } else {
+      // SVG and GIF pass through unchanged
+      uploadBuffer = rawBuffer
+      uploadContentType = file.type || 'application/octet-stream'
+      uploadExt = ext
+    }
+
+    const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_')
+    const filename = `uploads/${Date.now()}-${baseName}${uploadExt}`
     const encodedFilename = encodeURIComponent(filename)
-    const buffer = Buffer.from(await file.arrayBuffer())
 
     // Upload via GCS JSON API with cloud-platform scope
     const uploadUrl = `https://storage.googleapis.com/upload/storage/v1/b/${bucketName}/o?uploadType=media&name=${encodedFilename}`
@@ -102,9 +130,9 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': file.type || 'application/octet-stream',
+        'Content-Type': uploadContentType,
       },
-      body: buffer,
+      body: new Uint8Array(uploadBuffer),
     })
 
     if (!uploadRes.ok) {
