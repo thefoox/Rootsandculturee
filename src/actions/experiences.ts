@@ -208,6 +208,9 @@ export async function updateExperience(id: string, formData: FormData) {
 
   const { publish, dates, ...data } = parsed.data
   const existingDoc = await adminDb.collection('experiences').doc(id).get()
+  if (!existingDoc.exists) {
+    return { success: false, errors: { _form: 'Opplevelsen ble ikke funnet.' } }
+  }
   const existing = existingDoc.data()
   const now = new Date()
 

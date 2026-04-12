@@ -142,6 +142,9 @@ export async function updateArticle(id: string, formData: FormData) {
 
   const { publish, ...data } = parsed.data
   const existingDoc = await adminDb.collection('articles').doc(id).get()
+  if (!existingDoc.exists) {
+    return { success: false, errors: { _form: 'Artikkelen ble ikke funnet.' } }
+  }
   const existing = existingDoc.data()
   const excerpt = data.excerpt || stripHtml(data.body).slice(0, 200)
   const now = new Date()

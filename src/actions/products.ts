@@ -172,6 +172,9 @@ export async function updateProduct(id: string, formData: FormData) {
   }))
 
   const existingDoc = await adminDb.collection('products').doc(id).get()
+  if (!existingDoc.exists) {
+    return { success: false, errors: { _form: 'Produktet ble ikke funnet.' } }
+  }
   const existing = existingDoc.data()
   const now = new Date()
 
