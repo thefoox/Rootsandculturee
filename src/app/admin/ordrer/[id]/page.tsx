@@ -361,7 +361,7 @@ export default function OrderDetailPage() {
           {totalRefunded > 0 && (
             <p>
               <span className="text-body">Refundert: </span>
-              <span className="text-[#C0392B]">
+              <span className="text-refund">
                 {formatPrice(totalRefunded)}
               </span>
             </p>
@@ -393,7 +393,7 @@ export default function OrderDetailPage() {
           <div className="mt-4">
             <Button
               variant="secondary"
-              className="border-[#C0392B] text-[#C0392B] hover:bg-[#C0392B]/5"
+              className="border-refund text-refund hover:bg-refund/5"
               onClick={() => setShowRefund(true)}
             >
               Refunder
@@ -414,7 +414,7 @@ export default function OrderDetailPage() {
                   className="flex items-center justify-between font-body text-label"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-[#C0392B]">
+                    <span className="text-refund">
                       -{formatPrice(r.amount)}
                     </span>
                     <span className="text-body">
@@ -431,8 +431,8 @@ export default function OrderDetailPage() {
                     <span
                       className={`rounded-full px-2 py-0.5 text-label ${
                         r.status === 'succeeded'
-                          ? 'bg-[#DCFCE7] text-[#166534]'
-                          : 'bg-[#FEF3C7] text-[#92400E]'
+                          ? 'bg-success-bg text-success'
+                          : 'bg-badge-warning-bg text-badge-warning'
                       }`}
                     >
                       {r.status === 'succeeded' ? 'Fullfort' : r.status}
