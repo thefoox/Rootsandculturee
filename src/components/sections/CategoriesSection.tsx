@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getExperiences } from '@/lib/data/experiences'
 import type { PageSection } from '@/types'
 
 const CATEGORIES = [
@@ -8,32 +7,23 @@ const CATEGORIES = [
     title: 'Naturretreater',
     description: 'Koble av i naturen med guidede retreater og meditasjonsopplevelser.',
     href: '/opplevelser/retreat',
-    category: 'retreat' as const,
+    image: '/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-20-desktop.webp',
   },
   {
     title: 'Kurs',
     description: 'Lær å bruke urter, lage mat og oppleve naturen på nært hold.',
     href: '/opplevelser/kurs',
-    category: 'kurs' as const,
+    image: '/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-01-desktop.webp',
   },
   {
     title: 'Matopplevelser',
     description: 'Smak på norske mattradisjoner med lokale råvarer fra gård og natur.',
     href: '/opplevelser/matopplevelse',
-    category: 'matopplevelse' as const,
+    image: '/bilder-brukt-paa-sidene/opplevelser-catering/catering-06-desktop.webp',
   },
 ]
 
-export async function CategoriesSection({ section }: { section: PageSection }) {
-  // Auto-populate: fetch first experience image per category
-  const experiences = await getExperiences()
-
-  const cards = CATEGORIES.map((cat) => {
-    const match = experiences.find((e) => e.category === cat.category)
-    const image = match?.images?.[0] || null
-    return { ...cat, image }
-  })
-
+export function CategoriesSection({ section }: { section: PageSection }) {
   return (
     <section className="bg-cream py-20">
       <div className="mx-auto max-w-[1200px] px-6 md:px-8">
@@ -50,23 +40,21 @@ export async function CategoriesSection({ section }: { section: PageSection }) {
           </div>
         )}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-          {cards.map((card) => (
+          {CATEGORIES.map((card) => (
             <Link
-              key={card.category}
+              key={card.href}
               href={card.href}
               className="group overflow-hidden rounded-xl bg-white shadow-sm motion-safe:transition-shadow motion-safe:duration-200 hover:shadow-md"
             >
-              {card.image && (
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={card.image.url}
-                    alt={card.image.alt || card.title}
-                    fill
-                    className="object-cover motion-safe:transition-transform motion-safe:duration-500 group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                  />
-                </div>
-              )}
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  fill
+                  className="object-cover motion-safe:transition-transform motion-safe:duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                />
+              </div>
               <div className="p-5">
                 <h3 className="font-heading text-[17px] font-bold text-forest">
                   {card.title}
