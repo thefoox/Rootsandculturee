@@ -4,34 +4,8 @@ import { revalidateTag } from 'next/cache'
 import { verifySession } from '@/lib/dal'
 import { adminDb } from '@/lib/firebase/admin'
 import { productSchema } from '@/lib/validations'
-import type { Product } from '@/types'
-import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
-
-function mapProduct(doc: FirestoreDoc): Product {
-  const data = doc.data()
-  return {
-    id: doc.id,
-    slug: data.slug as string,
-    name: data.name as string,
-    description: data.description as string,
-    price: data.price as number,
-    category: data.category as Product['category'],
-    images: (data.images as Product['images']) || [],
-    inStock: data.inStock as boolean,
-    stockCount: data.stockCount as number,
-    shippingCost: (data.shippingCost as number) ?? 0,
-    variants: ((data.variants as Product['variants']) || []).map((v) => ({
-      id: v.id,
-      label: v.label,
-      price: v.price,
-      inStock: v.inStock,
-      stockCount: v.stockCount,
-    })),
-    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
-    updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
-    publishedAt: data.publishedAt instanceof Date ? data.publishedAt : null,
-  }
-}
+import { mapProduct } from '@/lib/mappers/products'
+import type { ActionResult, Product } from '@/types'
 
 export async function getAllProducts(): Promise<Product[]> {
   const snapshot = await adminDb
@@ -47,7 +21,7 @@ export async function getProductById(id: string): Promise<Product | null> {
   return mapProduct(doc)
 }
 
-export async function createProduct(formData: FormData) {
+export async function createProduct(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
@@ -113,10 +87,10 @@ export async function createProduct(formData: FormData) {
   })
 
   revalidateTag('products')
-  return { success: true, id: docRef.id }
+  return { success: true, data: { id: docRef.id } }
 }
 
-export async function updateProduct(id: string, formData: FormData) {
+export async function updateProduct(id: string, formData: FormData): Promise<ActionResult> {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
@@ -192,7 +166,7 @@ export async function updateProduct(id: string, formData: FormData) {
   return { success: true }
 }
 
-export async function deleteProduct(id: string) {
+export async function deleteProduct(id: string): Promise<ActionResult> {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, error: 'Ikke autorisert.' }

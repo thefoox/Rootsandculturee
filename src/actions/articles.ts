@@ -4,28 +4,8 @@ import { revalidateTag } from 'next/cache'
 import { verifySession } from '@/lib/dal'
 import { adminDb } from '@/lib/firebase/admin'
 import { articleSchema } from '@/lib/validations'
-import type { Article } from '@/types'
-import type { FirestoreDoc } from '@/lib/firebase/firestore-rest'
-
-function mapArticle(doc: FirestoreDoc): Article {
-  const data = doc.data()
-  return {
-    id: doc.id,
-    slug: data.slug as string,
-    title: data.title as string,
-    excerpt: (data.excerpt as string) || '',
-    body: data.body as string,
-    coverImage: (data.coverImage as Article['coverImage']) || { url: '', alt: '' },
-    author: (data.author as string) || '',
-    tags: (data.tags as string[]) || [],
-    status: data.status as Article['status'],
-    metaTitle: (data.metaTitle as string) || (data.title as string),
-    metaDescription: (data.metaDescription as string) || (data.excerpt as string) || '',
-    createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
-    updatedAt: data.updatedAt instanceof Date ? data.updatedAt : new Date(),
-    publishedAt: data.publishedAt instanceof Date ? data.publishedAt : null,
-  }
-}
+import { mapArticle } from '@/lib/mappers/articles'
+import type { ActionResult, Article } from '@/types'
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
@@ -45,7 +25,7 @@ export async function getArticleById(id: string): Promise<Article | null> {
   return mapArticle(doc)
 }
 
-export async function createArticle(formData: FormData) {
+export async function createArticle(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
@@ -98,14 +78,14 @@ export async function createArticle(formData: FormData) {
     })
 
     revalidateTag('articles')
-    return { success: true, id: docRef.id }
+    return { success: true, data: { id: docRef.id } }
   } catch (err) {
     console.error('[createArticle] Firestore write failed:', err)
     return { success: false, errors: { _form: 'Kunne ikke opprette artikkelen. Prøv igjen.' } }
   }
 }
 
-export async function updateArticle(id: string, formData: FormData) {
+export async function updateArticle(id: string, formData: FormData): Promise<ActionResult> {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, errors: { _form: 'Ikke autorisert.' } }
@@ -163,7 +143,7 @@ export async function updateArticle(id: string, formData: FormData) {
   return { success: true }
 }
 
-export async function deleteArticle(id: string) {
+export async function deleteArticle(id: string): Promise<ActionResult> {
   const session = await verifySession()
   if (!session || session.role !== 'admin') {
     return { success: false, error: 'Ikke autorisert.' }
