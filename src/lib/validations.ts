@@ -95,7 +95,7 @@ const sectionTypeValues = [
 
 export const pageSectionSchema = z.object({
   id: z.string().min(1, 'Seksjons-ID er påkrevd.'),
-  type: z.enum(sectionTypeValues, { errorMap: () => ({ message: 'Ugyldig seksjonstype.' }) }),
+  type: z.enum(sectionTypeValues, { message: 'Ugyldig seksjonstype.' }),
   heading: z.string().optional(),
   subheading: z.string().optional(),
   body: z.string().optional(),

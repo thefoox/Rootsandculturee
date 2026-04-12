@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server'
 import { adminDb } from '@/lib/firebase/admin'
-import { mockPageContent } from '@/lib/data/mock-data'
 import { verifySession } from '@/lib/dal'
+import { pageContentCreateSchema } from '@/lib/validations'
 
 export async function GET() {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') {
+    return NextResponse.json({ error: 'Ikke autorisert.' }, { status: 401 })
+  }
+
   try {
     const snapshot = await adminDb.collection('pageContent').get()
     const pages = snapshot.docs
@@ -22,9 +27,9 @@ export async function GET() {
       })
       .filter((page) => page.isPublished !== false)
     return NextResponse.json(pages)
-  } catch {
-    const pages = Array.from(mockPageContent.values()).filter((p) => p.isPublished !== false)
-    return NextResponse.json(pages)
+  } catch (error) {
+    console.error('Feil ved henting av sider:', error)
+    return NextResponse.json({ error: 'Kunne ikke hente sider.' }, { status: 500 })
   }
 }
 
@@ -35,11 +40,12 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  const { title, slug } = body
-
-  if (!title || !slug) {
-    return NextResponse.json({ error: 'Tittel og slug er påkrevd' }, { status: 400 })
+  const result = pageContentCreateSchema.safeParse(body)
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors
+    return NextResponse.json({ error: 'Valideringsfeil', errors }, { status: 400 })
   }
+  const { title, slug } = result.data
 
   const pageId = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')
 
