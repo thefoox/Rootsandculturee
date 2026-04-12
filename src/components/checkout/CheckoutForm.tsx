@@ -211,7 +211,7 @@ export function CheckoutForm({
         {/* Connector 1 */}
         <div
           className={cn(
-            'mx-4 h-0 w-20 border-t-[1.5px]',
+            'mx-2 h-0 w-10 flex-1 border-t-[1.5px] sm:mx-4 sm:w-20 sm:flex-none',
             step > 1 ? 'border-solid border-forest' : 'border-dashed border-forest/20'
           )}
         />
@@ -245,7 +245,7 @@ export function CheckoutForm({
         </div>
 
         {/* Connector 2 — always dashed (step 3 is never reached in this form) */}
-        <div className="mx-4 h-0 w-20 border-t-[1.5px] border-dashed border-forest/20" />
+        <div className="mx-2 h-0 w-10 flex-1 border-t-[1.5px] border-dashed border-forest/20 sm:mx-4 sm:w-20 sm:flex-none" />
 
         {/* Step 3: Bekreftelse (visual only) */}
         <div className="flex items-center gap-2.5">
@@ -341,7 +341,7 @@ export function CheckoutForm({
                   placeholder="Storgata 1"
                   required
                 />
-                <div className="grid grid-cols-[160px_1fr] gap-6">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-[160px_1fr]">
                   <Input
                     variant="underline"
                     label="Postnummer"
