@@ -61,7 +61,7 @@ export async function PUT(
         sections,
         updatedAt: new Date(),
       },
-      true // merge
+      true // merge: DocRef.set() second arg is a boolean (see firestore-rest.ts)
     )
 
     revalidateTag('page-content', 'max')

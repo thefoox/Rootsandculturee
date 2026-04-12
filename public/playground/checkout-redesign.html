@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout Redesign — Roots & Culture</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1B4332;
+    --cream: #FEFCF3;
+    --card: #F5F0E8;
+    --bark: #5C3D1E;
+    --rust: #A0440B;
+    --body: #374740;
+    --destructive: #6B3A2A;
+    --success: #166534;
+    --success-bg: #DCFCE7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--body);
+    min-height: 100vh;
+  }
+
+  /* ===== CHECKOUT LAYOUT ===== */
+  .checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    min-height: 100vh;
+  }
+
+  /* ===== FORM SIDE ===== */
+  .checkout-form-area {
+    padding: 48px 64px 64px;
+    max-width: 640px;
+    margin-left: auto;
+  }
+
+  .checkout-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--body);
+    text-decoration: none;
+    margin-bottom: 40px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .checkout-back:hover { opacity: 1; }
+  .checkout-back svg { width: 16px; height: 16px; }
+
+  /* Progress bar */
+  .progress-track {
+    width: 100%;
+    height: 2px;
+    background: var(--forest);
+    opacity: 0.08;
+    border-radius: 1px;
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .progress-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: var(--forest);
+    border-radius: 1px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    margin-bottom: 48px;
+  }
+  .progress-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--body);
+    opacity: 0.4;
+    transition: all 0.3s;
+  }
+  .progress-label.active {
+    opacity: 1;
+    color: var(--forest);
+    font-weight: 700;
+  }
+  .progress-label.done {
+    opacity: 0.6;
+    color: var(--forest);
+  }
+
+  /* Section with large background number */
+  .form-section {
+    position: relative;
+    margin-bottom: 48px;
+  }
+
+  .section-number {
+    position: absolute;
+    top: -20px;
+    left: -16px;
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 96px;
+    font-weight: 700;
+    color: var(--forest);
+    opacity: 0.04;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .section-heading {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  /* Form fields — underline style */
+  .field-group {
+    margin-bottom: 28px;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--body);
+    opacity: 0.6;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .field-input {
+    width: 100%;
+    padding: 12px 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    color: var(--forest);
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid rgba(27, 67, 50, 0.15);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field-input:focus {
+    border-bottom-color: var(--forest);
+  }
+  .field-input::placeholder {
+    color: var(--body);
+    opacity: 0.3;
+  }
+
+  .field-input.prefilled {
+    color: var(--forest);
+    opacity: 0.7;
+    cursor: default;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--body);
+    opacity: 0.5;
+    margin-top: 4px;
+  }
+
+  /* CTA button */
+  .checkout-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 18px 32px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--cream);
+    background: var(--forest);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 40px;
+  }
+  .checkout-cta:hover {
+    background: #153a2a;
+    box-shadow: 0 4px 20px rgba(27, 67, 50, 0.25);
+    transform: translateY(-1px);
+  }
+  .checkout-cta svg { width: 18px; height: 18px; }
+
+  /* Step 2 recap */
+  .recap-card {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .recap-info p {
+    font-size: 14px;
+    color: var(--forest);
+    line-height: 1.6;
+  }
+  .recap-info p:first-child {
+    font-weight: 700;
+  }
+  .recap-edit {
+    font-size: 12px;
+    color: var(--forest);
+    opacity: 0.5;
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-left: 24px;
+    background: none;
+    border: none;
+    padding: 4px 0;
+  }
+  .recap-edit:hover { opacity: 0.8; }
+
+  /* Payment area */
+  .stripe-container {
+    border: 1.5px solid rgba(27, 67, 50, 0.12);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+    background: white;
+  }
+  .stripe-placeholder {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--body);
+    opacity: 0.3;
+    font-size: 14px;
+  }
+
+  .security-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--body);
+    opacity: 0.5;
+    margin-bottom: 24px;
+  }
+  .security-note svg { width: 14px; height: 14px; opacity: 0.6; }
+
+  /* ===== DARK SUMMARY SIDEBAR ===== */
+  .checkout-summary {
+    background: var(--forest);
+    color: var(--cream);
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .summary-header {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 32px;
+  }
+
+  .summary-items {
+    flex: 1;
+  }
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(254, 252, 243, 0.08);
+  }
+  .summary-item:last-child { border-bottom: none; }
+
+  .item-name {
+    font-size: 15px;
+    color: var(--cream);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+  .item-variant {
+    font-size: 12px;
+    opacity: 0.5;
+    margin-top: 2px;
+  }
+  .item-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cream);
+    white-space: nowrap;
+    margin-left: 24px;
+  }
+
+  .summary-divider {
+    height: 1px;
+    background: rgba(254, 252, 243, 0.1);
+    margin: 24px 0;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+  .summary-row .label { opacity: 0.6; }
+  .summary-row .value { font-weight: 500; }
+
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 20px 0 0;
+    margin-top: 8px;
+    border-top: 1px solid rgba(254, 252, 243, 0.15);
+  }
+  .total-label {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .total-price {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: clamp(1.5rem, 1.3rem + 0.6vw, 1.875rem);
+    font-weight: 700;
+  }
+
+  /* Gift card in sidebar */
+  .sidebar-giftcard {
+    margin-top: auto;
+    padding-top: 32px;
+  }
+  .giftcard-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--cream);
+    opacity: 0.5;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 0;
+    width: 100%;
+    text-align: left;
+    transition: opacity 0.2s;
+  }
+  .giftcard-toggle:hover { opacity: 0.8; }
+  .giftcard-toggle svg { width: 14px; height: 14px; }
+
+  .giftcard-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .giftcard-field {
+    flex: 1;
+    padding: 10px 14px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--cream);
+    background: rgba(254, 252, 243, 0.08);
+    border: 1px solid rgba(254, 252, 243, 0.15);
+    border-radius: 4px;
+    outline: none;
+  }
+  .giftcard-field::placeholder { color: rgba(254, 252, 243, 0.3); }
+  .giftcard-field:focus { border-color: rgba(254, 252, 243, 0.4); }
+  .giftcard-btn {
+    padding: 10px 16px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--forest);
+    background: var(--cream);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .giftcard-btn:hover { opacity: 0.9; }
+
+  /* Decorative leaf pattern on sidebar */
+  .sidebar-decoration {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
+  /* ===== LOADING SKELETON ===== */
+  .skeleton-bar {
+    height: 14px;
+    background: linear-gradient(90deg, var(--card) 25%, rgba(27,67,50,0.06) 50%, var(--card) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .skeleton-bar.w-80 { width: 80%; }
+  .skeleton-bar.w-60 { width: 60%; }
+  .skeleton-bar.w-40 { width: 40%; }
+  .skeleton-bar.h-48 { height: 48px; border-radius: 6px; width: 100%; }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 1023px) {
+    .checkout-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .checkout-form-area {
+      padding: 24px 20px 32px;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    .checkout-summary {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: auto;
+      max-height: 70vh;
+      border-radius: 20px 20px 0 0;
+      padding: 0;
+      z-index: 50;
+      transform: translateY(calc(100% - 72px));
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 -8px 40px rgba(27, 67, 50, 0.15);
+    }
+    .checkout-summary.expanded {
+      transform: translateY(0);
+    }
+
+    .mobile-summary-handle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      cursor: pointer;
+    }
+    .mobile-summary-handle .handle-bar {
+      width: 36px;
+      height: 3px;
+      background: rgba(254, 252, 243, 0.3);
+      border-radius: 2px;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .mobile-summary-handle .handle-total {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .mobile-summary-handle .handle-label {
+      font-size: 12px;
+      opacity: 0.5;
+    }
+    .mobile-summary-handle .handle-chevron {
+      width: 20px;
+      height: 20px;
+      opacity: 0.5;
+      transition: transform 0.3s;
+    }
+    .checkout-summary.expanded .handle-chevron {
+      transform: rotate(180deg);
+    }
+
+    .mobile-summary-content {
+      padding: 0 24px 24px;
+      overflow-y: auto;
+      max-height: calc(70vh - 72px);
+    }
+
+    .section-number { font-size: 64px; top: -14px; left: -8px; }
+    .field-row { gap: 20px; }
+
+    /* Add padding at bottom for mobile summary bar */
+    .checkout-form-area { padding-bottom: 100px; }
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-summary-handle { display: none; }
+  }
+
+  /* ===== STEP TRANSITION ===== */
+  .step-enter { animation: stepIn 0.4s ease-out; }
+  @keyframes stepIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Earlybird badge */
+  .earlybird-badge {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: rgba(160, 68, 11, 0.15);
+    color: #d4763b;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="checkout-layout">
+  <!-- LEFT: Form Area -->
+  <div class="checkout-form-area">
+    <a href="/handlekurv" class="checkout-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Tilbake til handlekurv
+    </a>
+
+    <!-- Progress bar -->
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 50%"></div>
+    </div>
+    <div class="progress-labels">
+      <span class="progress-label active">01 Kontakt</span>
+      <span class="progress-label">02 Betaling</span>
+    </div>
+
+    <!-- ===== STEP 1: Contact ===== -->
+    <div class="step-enter" id="step1">
+      <div class="form-section">
+        <div class="section-number">01</div>
+        <h2 class="section-heading">Kontaktinformasjon</h2>
+
+        <div class="field-group">
+          <label class="field-label">E-post</label>
+          <input class="field-input prefilled" type="email" value="admin@rootsandculture.com" readonly>
+          <div class="field-hint">Innlogget som admin@rootsandculture.com</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Fullt navn</label>
+          <input class="field-input" type="text" placeholder="Ola Nordmann" autocomplete="name">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Telefon</label>
+          <input class="field-input" type="tel" placeholder="+47 000 00 000" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-heading">Leveringsadresse</h2>
+
+        <div class="field-group">
+          <label class="field-label">Adresse</label>
+          <input class="field-input" type="text" placeholder="Gateadresse" autocomplete="street-address">
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Postnummer</label>
+            <input class="field-input" type="text" placeholder="0000" maxlength="4" inputmode="numeric">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Sted</label>
+            <input class="field-input" type="text" placeholder="Oslo" autocomplete="address-level2">
+          </div>
+        </div>
+      </div>
+
+      <button class="checkout-cta">
+        Ga til betaling
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- ===== STEP 2: Payment (hidden by default, toggle with JS) ===== -->
+    <div id="step2" style="display: none;">
+      <div class="form-section step-enter">
+        <div class="section-number">02</div>
+
+        <!-- Recap of step 1 -->
+        <div class="recap-card">
+          <div class="recap-info">
+            <p>Ola Nordmann</p>
+            <p>admin@rootsandculture.com</p>
+            <p>+47 912 34 567</p>
+            <p style="margin-top: 4px; opacity: 0.6;">Parkveien 12, 0350 Oslo</p>
+          </div>
+          <button class="recap-edit" onclick="showStep(1)">Endre</button>
+        </div>
+
+        <h2 class="section-heading">Betaling</h2>
+
+        <div class="security-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Kryptert betaling via Stripe
+        </div>
+
+        <div class="stripe-container">
+          <div class="stripe-placeholder">Stripe PaymentElement laster her</div>
+        </div>
+
+        <button class="checkout-cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Betal na
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Dark Summary Sidebar -->
+  <div class="checkout-summary" id="summaryPanel">
+    <!-- Mobile handle -->
+    <div class="mobile-summary-handle" onclick="toggleMobileSummary()">
+      <div class="handle-bar"></div>
+      <div>
+        <div class="handle-label">Totalt</div>
+        <div class="handle-total">278 kr</div>
+      </div>
+      <svg class="handle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+    </div>
+
+    <div class="mobile-summary-content">
+      <div class="summary-header">Din bestilling</div>
+
+      <div class="summary-items">
+        <div class="summary-item">
+          <div>
+            <div class="item-name">Grankvist-sirup</div>
+            <div class="item-variant">250 ml flaske</div>
+          </div>
+          <div class="item-price">99 kr</div>
+        </div>
+        <div class="summary-item">
+          <div>
+            <div class="item-name">Tidlig Var — retreat med ville vekster</div>
+            <div class="item-variant">17. april 2026 · 1 plass</div>
+            <div class="earlybird-badge">earlybird</div>
+          </div>
+          <div class="item-price">3 250 kr</div>
+        </div>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-row">
+        <span class="label">Subtotal</span>
+        <span class="value">3 349 kr</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Frakt</span>
+        <span class="value">99 kr</span>
+      </div>
+
+      <div class="summary-total">
+        <span class="total-label">Totalt</span>
+        <span class="total-price">3 448 kr</span>
+      </div>
+
+      <!-- Gift card in sidebar -->
+      <div class="sidebar-giftcard">
+        <button class="giftcard-toggle" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'flex' : 'none'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M12 5v14M2 10h20"/></svg>
+          Har du et gavekort?
+        </button>
+        <div class="giftcard-input-row" style="display: none;">
+          <input class="giftcard-field" placeholder="RC-XXXX-XXXX">
+          <button class="giftcard-btn">Bruk</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showStep(n) {
+  document.getElementById('step1').style.display = n === 1 ? 'block' : 'none';
+  document.getElementById('step2').style.display = n === 2 ? 'block' : 'none';
+
+  const labels = document.querySelectorAll('.progress-label');
+  const fill = document.querySelector('.progress-fill');
+
+  if (n === 1) {
+    fill.style.width = '50%';
+    labels[0].className = 'progress-label active';
+    labels[1].className = 'progress-label';
+  } else {
+    fill.style.width = '100%';
+    labels[0].className = 'progress-label done';
+    labels[1].className = 'progress-label active';
+  }
+}
+
+// Wire up "Ga til betaling" button
+document.querySelector('.checkout-cta').addEventListener('click', () => showStep(2));
+
+function toggleMobileSummary() {
+  document.getElementById('summaryPanel').classList.toggle('expanded');
+}
+</script>
+
+</body>
+</html>

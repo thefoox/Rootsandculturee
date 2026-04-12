@@ -21,7 +21,7 @@ function FullscreenHero({ section }: { section: PageSection }) {
 
   return (
     <section className="relative flex min-h-screen items-end overflow-hidden">
-      {section.image && (
+      {section.image?.url && (
         <div className="absolute inset-0">
           <Image
             src={section.image.url}
@@ -31,12 +31,11 @@ function FullscreenHero({ section }: { section: PageSection }) {
             priority
             sizes="100vw"
           />
-          {/* Gradient overlay matching forside-v4 prototype */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                'linear-gradient(180deg, rgba(27,67,50,0.2) 0%, rgba(27,67,50,0.5) 60%, rgba(27,67,50,0.75) 100%)',
+                'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.65) 100%)',
             }}
           />
         </div>
@@ -87,20 +86,18 @@ function FullscreenHero({ section }: { section: PageSection }) {
   )
 }
 
-/** Compact hero (kontakt-v2 / om-oss): forest bg, centered text, optional bg image */
+/** Compact hero (kontakt-v2 / om-oss): centered text, optional bg image */
 function CompactHero({ section }: { section: PageSection }) {
-  // om-oss style: min-h-[70vh] centered with optional bg image
-  // kontakt style: padded, no image usually
-  const hasImage = Boolean(section.image)
+  const hasImage = Boolean(section.image?.url)
 
   return (
     <section
-      className={`relative flex items-center justify-center overflow-hidden bg-forest text-center ${
-        hasImage ? 'min-h-[70vh]' : 'pb-20 pt-40'
+      className={`relative flex items-center justify-center overflow-hidden text-center ${
+        hasImage ? 'min-h-[70vh]' : 'bg-white pb-20 pt-40'
       }`}
     >
-      {section.image && (
-        <div className="absolute inset-0 opacity-30">
+      {hasImage && section.image && (
+        <div className="absolute inset-0">
           <Image
             src={section.image.url}
             alt={section.image.alt || ''}
@@ -109,19 +106,24 @@ function CompactHero({ section }: { section: PageSection }) {
             priority
             sizes="100vw"
           />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
       )}
       <div className="relative z-[1] max-w-[640px] px-6">
         {section.heading && (
           <h1
-            className="font-heading font-bold leading-[1.1] tracking-[-0.02em] text-cream"
+            className={`font-heading font-bold leading-[1.1] tracking-[-0.02em] ${
+              hasImage ? 'text-cream' : 'text-forest'
+            }`}
             style={{ fontSize: 'clamp(2.25rem, 1.8rem + 1.5vw, 3rem)' }}
           >
             {section.heading}
           </h1>
         )}
         {section.subheading && (
-          <p className="mt-3 font-heading text-lg font-light italic leading-relaxed text-cream/80 md:mt-4 md:text-[1.0625rem]">
+          <p className={`mt-3 font-heading text-lg font-light italic leading-relaxed md:mt-4 md:text-[1.0625rem] ${
+            hasImage ? 'text-cream/80' : 'text-forest/70'
+          }`}>
             {section.subheading}
           </p>
         )}

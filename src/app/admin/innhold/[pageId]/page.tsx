@@ -183,7 +183,7 @@ function SortableSection({
           {hasImage && (
             <CmsImageUpload
               image={section.image}
-              onChange={(img) => onUpdate({ image: img })}
+              onChange={(img) => onUpdate({ image: img ?? undefined })}
             />
           )}
 
@@ -266,7 +266,7 @@ function SortableSection({
                     {(section.type === 'team' || section.type === 'gallery') && (
                       <CmsImageUpload
                         image={item.image}
-                        onChange={(img) => onUpdateItem(i, { image: img })}
+                        onChange={(img) => onUpdateItem(i, { image: img ?? undefined })}
                         label="Bilde"
                       />
                     )}

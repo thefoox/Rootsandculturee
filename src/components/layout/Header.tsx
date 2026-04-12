@@ -109,7 +109,7 @@ export function Header() {
         className={cn(
           'fixed z-50 flex h-20 items-center justify-center motion-safe:transition-all motion-safe:duration-300',
           isScrolled
-            ? 'top-3 left-4 right-4 lg:left-6 lg:right-6 rounded-2xl shadow-lg bg-cream/95 backdrop-blur-md'
+            ? 'top-3 left-6 right-6 mx-auto max-w-[1200px] rounded-full shadow-lg bg-cream/95 backdrop-blur-md'
             : isTransparent
               ? 'top-0 left-0 right-0 bg-transparent'
               : 'top-0 left-0 right-0 bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)]'
@@ -124,9 +124,9 @@ export function Header() {
           <Image
             src="/logo_black.png"
             alt="Roots & Culture"
-            width={48}
-            height={48}
-            className={`h-12 w-12 ${showDarkHeader ? 'brightness-0 invert' : ''}`}
+            width={72}
+            height={72}
+            className={`h-[72px] w-[72px] ${showDarkHeader ? 'brightness-0 invert' : ''}`}
             priority
           />
         </Link>

@@ -6,7 +6,7 @@ import type { ProductImage } from '@/types'
 
 interface CmsImageUploadProps {
   image: ProductImage | null | undefined
-  onChange: (image: ProductImage) => void
+  onChange: (image: ProductImage | null) => void
   label?: string
 }
 
@@ -57,7 +57,7 @@ export function CmsImageUpload({ image, onChange, label = 'Bilde' }: CmsImageUpl
           <img src={image.url} alt={image.alt || ''} className="h-48 w-full object-cover" />
           <button
             type="button"
-            onClick={() => onChange({ url: '', alt: '' })}
+            onClick={() => onChange(null)}
             className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-forest/70 text-cream hover:bg-forest"
             aria-label="Fjern bilde"
           >

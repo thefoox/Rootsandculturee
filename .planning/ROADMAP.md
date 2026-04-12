@@ -101,9 +101,9 @@ Plans:
 **Goal**: Implementer godkjent checkout-prototype (3-stegs ikon-indikator, bottom-border inputs, delt navn, produktbilder i sammendrag, gavekort i sidebar, mobil bottom sheet) og legg til floating pill header med bruker-initialer avatar.
 **Requirements**: UI-SPEC (visual design contract)
 **Depends on**: Phase 16
-**Plans:** 0/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
-- [ ] 17-01-PLAN.md — Input underline variant + CheckoutForm redesign: 3-step icon indicator, split Fornavn/Etternavn, bottom-border inputs, section descriptions, recap card, premium CTA
-- [ ] 17-02-PLAN.md — OrderSummaryPanel white card with product images, earlybird tags, legal text + GiftCardInput collapsible sidebar disclosure
-- [ ] 17-03-PLAN.md — Checkout page grid layout (1120px, 1fr+380px), GiftCardInput in sidebar, mobile bottom sheet with peek bar + Header floating pill + user initials avatar
+- [x] 17-01-PLAN.md — Input underline variant + CheckoutForm redesign: 3-step icon indicator, split Fornavn/Etternavn, bottom-border inputs, section descriptions, recap card, premium CTA
+- [x] 17-02-PLAN.md — OrderSummaryPanel white card with product images, earlybird tags, legal text + GiftCardInput collapsible sidebar disclosure
+- [x] 17-03-PLAN.md — Checkout page grid layout (1120px, 1fr+380px), GiftCardInput in sidebar, mobile bottom sheet with peek bar + Header floating pill + user initials avatar

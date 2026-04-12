@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kasse — Roots & Culture</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1B4332;
+    --cream: #FEFCF3;
+    --card: #F5F0E8;
+    --bark: #5C3D1E;
+    --rust: #A0440B;
+    --body: #374740;
+    --border: #d4cfc5;
+    --border-light: #e8e3da;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--body);
+    min-height: 100vh;
+  }
+
+  /* ===== PAGE LAYOUT ===== */
+  .checkout-page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .page-title {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2rem);
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 40px;
+  }
+
+  /* ===== STEP INDICATOR ===== */
+  .steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 48px;
+    padding: 0 20px;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+
+  .step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+  .step-icon svg { width: 18px; height: 18px; }
+
+  .step.active .step-icon {
+    background: var(--forest);
+    color: var(--cream);
+  }
+  .step.upcoming .step-icon {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--border);
+  }
+  .step.done .step-icon {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .step-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--body);
+    transition: all 0.3s;
+  }
+  .step.active .step-label { color: var(--forest); font-weight: 600; }
+  .step.upcoming .step-label { color: var(--border); }
+  .step.done .step-label { color: var(--forest); }
+
+  .step-connector {
+    width: 80px;
+    height: 0;
+    border-top: 1.5px dashed var(--border);
+    margin: 0 16px;
+    flex-shrink: 0;
+  }
+  .step-connector.done {
+    border-top-style: solid;
+    border-top-color: var(--forest);
+  }
+
+  /* ===== MAIN GRID ===== */
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 56px;
+    align-items: start;
+  }
+
+  /* ===== FORM AREA ===== */
+  .form-area {}
+
+  .section-heading {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 6px;
+  }
+
+  .section-desc {
+    font-size: 14px;
+    color: var(--body);
+    opacity: 0.6;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .form-section {
+    margin-bottom: 40px;
+  }
+
+  /* Form fields — bottom border */
+  .field-group {
+    margin-bottom: 24px;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--forest);
+    margin-bottom: 6px;
+  }
+  .field-label .required {
+    color: var(--rust);
+    margin-left: 2px;
+  }
+
+  .field-input {
+    width: 100%;
+    padding: 12px 12px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    color: var(--forest);
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    border-radius: 0;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field-input:focus {
+    border-bottom-color: var(--forest);
+  }
+  .field-input::placeholder {
+    color: var(--body);
+    opacity: 0.35;
+  }
+  .field-input:read-only {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .field-error {
+    font-size: 12px;
+    color: #c53030;
+    margin-top: 4px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .field-row-3 {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 24px;
+  }
+
+  /* CTA */
+  .checkout-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 32px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cream);
+    background: var(--forest);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 8px;
+    min-height: 52px;
+  }
+  .checkout-cta:hover {
+    background: #153a2a;
+    box-shadow: 0 2px 12px rgba(27, 67, 50, 0.2);
+  }
+  .checkout-cta:active { transform: scale(0.99); }
+  .checkout-cta svg { width: 18px; height: 18px; }
+
+  /* ===== ORDER SUMMARY SIDEBAR ===== */
+  .order-summary {
+    position: sticky;
+    top: 32px;
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 28px;
+  }
+
+  .summary-title {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 24px;
+  }
+
+  /* Product items with images */
+  .summary-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .summary-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .item-image {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--card);
+    flex-shrink: 0;
+  }
+
+  .item-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .item-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--forest);
+    line-height: 1.4;
+  }
+
+  .item-meta {
+    font-size: 13px;
+    color: var(--body);
+    opacity: 0.6;
+    margin-top: 2px;
+  }
+
+  .item-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--forest);
+    white-space: nowrap;
+  }
+
+  .earlybird-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: rgba(160, 68, 11, 0.1);
+    color: var(--rust);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+
+  .summary-divider {
+    height: 1px;
+    background: var(--border-light);
+    margin: 4px 0 16px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+  .summary-row .label { color: var(--body); opacity: 0.7; }
+  .summary-row .value { font-weight: 500; color: var(--forest); }
+
+  .summary-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 16px;
+    margin-top: 12px;
+    border-top: 1.5px solid var(--forest);
+  }
+  .summary-total-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--forest);
+  }
+  .summary-total-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--forest);
+  }
+
+  .summary-legal {
+    font-size: 12px;
+    color: var(--body);
+    opacity: 0.5;
+    line-height: 1.6;
+    margin-top: 20px;
+  }
+  .summary-legal a {
+    color: var(--forest);
+    text-decoration: underline;
+  }
+
+  /* Gift card in sidebar */
+  .sidebar-giftcard {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-light);
+  }
+  .giftcard-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--forest);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    width: 100%;
+    text-align: left;
+  }
+  .giftcard-trigger:hover { opacity: 1; }
+  .giftcard-trigger svg { width: 16px; height: 16px; }
+  .giftcard-trigger .chevron {
+    margin-left: auto;
+    width: 14px; height: 14px;
+    transition: transform 0.2s;
+  }
+
+  .giftcard-panel {
+    display: none;
+    margin-top: 12px;
+  }
+  .giftcard-panel.open { display: block; }
+
+  .giftcard-row {
+    display: flex;
+    gap: 8px;
+  }
+  .giftcard-input {
+    flex: 1;
+    padding: 10px 12px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--forest);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+  }
+  .giftcard-input:focus { border-color: var(--forest); }
+  .giftcard-input::placeholder { opacity: 0.4; }
+  .giftcard-submit {
+    padding: 10px 16px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cream);
+    background: var(--forest);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .giftcard-submit:hover { background: #153a2a; }
+
+  /* ===== STEP 2: RECAP + PAYMENT ===== */
+  .recap-card {
+    background: var(--cream);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .recap-info { line-height: 1.7; }
+  .recap-info .name { font-weight: 600; color: var(--forest); font-size: 15px; }
+  .recap-info .detail { font-size: 14px; color: var(--body); opacity: 0.7; }
+  .recap-edit {
+    font-size: 13px;
+    color: var(--forest);
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 4px;
+    flex-shrink: 0;
+  }
+  .recap-edit:hover { opacity: 1; }
+
+  .security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--body);
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+  .security-badge svg { width: 14px; height: 14px; }
+
+  .stripe-box {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    background: white;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--body);
+    opacity: 0.3;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 1023px) {
+    .checkout-page { padding: 24px 16px 120px; }
+    .page-title { margin-bottom: 24px; font-size: 1.5rem; }
+
+    .steps { gap: 0; margin-bottom: 32px; padding: 0; }
+    .step-connector { width: 40px; margin: 0 8px; }
+    .step-label { display: none; }
+
+    .checkout-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .order-summary {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 24px rgba(27, 67, 50, 0.1);
+      z-index: 50;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .mobile-peek {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      cursor: pointer;
+    }
+    .mobile-peek .peek-label { font-size: 13px; opacity: 0.6; }
+    .mobile-peek .peek-total {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--forest);
+    }
+    .mobile-peek .peek-chevron {
+      width: 20px; height: 20px;
+      color: var(--forest);
+      opacity: 0.5;
+      transition: transform 0.3s;
+    }
+
+    .mobile-expandable { display: none; }
+    .order-summary.expanded .mobile-expandable { display: block; padding: 0 24px 24px; }
+    .order-summary.expanded .mobile-peek .peek-chevron { transform: rotate(180deg); }
+
+    .field-row, .field-row-3 { grid-template-columns: 1fr; gap: 0; }
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-peek { display: none; }
+  }
+
+  /* Step animation */
+  .fade-in { animation: fadeUp 0.35s ease-out; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="checkout-page">
+  <h1 class="page-title">Kasse</h1>
+
+  <!-- Step indicator with icons -->
+  <div class="steps">
+    <div class="step active" id="step-1-indicator">
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <span class="step-label">Kontakt</span>
+    </div>
+
+    <div class="step-connector" id="conn-1"></div>
+
+    <div class="step upcoming" id="step-2-indicator">
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+      </div>
+      <span class="step-label">Betaling</span>
+    </div>
+
+    <div class="step-connector" id="conn-2"></div>
+
+    <div class="step upcoming" id="step-3-indicator">
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <span class="step-label">Bekreftelse</span>
+    </div>
+  </div>
+
+  <div class="checkout-grid">
+    <!-- LEFT: Form -->
+    <div class="form-area">
+
+      <!-- STEP 1 -->
+      <div id="step1-content" class="fade-in">
+        <div class="form-section">
+          <h2 class="section-heading">Kontaktinformasjon</h2>
+          <p class="section-desc">Vi trenger din kontaktinformasjon for ordrebekreftelse</p>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Fornavn <span class="required">*</span></label>
+              <input class="field-input" type="text" placeholder="Ola" autocomplete="given-name">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Etternavn <span class="required">*</span></label>
+              <input class="field-input" type="text" placeholder="Nordmann" autocomplete="family-name">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">E-post <span class="required">*</span></label>
+            <input class="field-input" type="email" placeholder="ola@eksempel.no" autocomplete="email">
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Telefon <span class="required">*</span></label>
+            <input class="field-input" type="tel" placeholder="+47 123 45 678" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2 class="section-heading">Leveringsadresse</h2>
+          <p class="section-desc">Oppgi adressen produktene skal sendes til</p>
+
+          <div class="field-group">
+            <label class="field-label">Gateadresse <span class="required">*</span></label>
+            <input class="field-input" type="text" placeholder="Storgata 1" autocomplete="address-line1">
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Gateadresse 2</label>
+            <input class="field-input" type="text" placeholder="Leil. 3B" autocomplete="address-line2">
+          </div>
+
+          <div class="field-row-3">
+            <div class="field-group">
+              <label class="field-label">Postnummer <span class="required">*</span></label>
+              <input class="field-input" type="text" placeholder="0150" maxlength="4" inputmode="numeric" autocomplete="postal-code">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Sted <span class="required">*</span></label>
+              <input class="field-input" type="text" placeholder="Oslo" autocomplete="address-level2">
+            </div>
+          </div>
+        </div>
+
+        <button class="checkout-cta" onclick="showStep(2)">
+          Ga til betaling
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="step2-content" style="display:none;">
+        <div class="fade-in">
+          <div class="recap-card">
+            <div class="recap-info">
+              <div class="name">Ola Nordmann</div>
+              <div class="detail">ola@eksempel.no</div>
+              <div class="detail">+47 123 45 678</div>
+              <div class="detail" style="margin-top:4px;">Storgata 1, 0150 Oslo</div>
+            </div>
+            <button class="recap-edit" onclick="showStep(1)">Endre</button>
+          </div>
+
+          <div class="form-section">
+            <h2 class="section-heading">Betaling</h2>
+            <p class="section-desc">Alle transaksjoner er kryptert og sikret av Stripe</p>
+
+            <div class="security-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              Sikret med SSL-kryptering
+            </div>
+
+            <div class="stripe-box">
+              Stripe PaymentElement
+            </div>
+
+            <button class="checkout-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              Fullfør betaling
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Order Summary -->
+    <div class="order-summary" id="orderSummary">
+      <!-- Mobile peek bar -->
+      <div class="mobile-peek" onclick="this.closest('.order-summary').classList.toggle('expanded')">
+        <div>
+          <div class="peek-label">Din bestilling</div>
+          <div class="peek-total">3 448 kr</div>
+        </div>
+        <svg class="peek-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+      </div>
+
+      <div class="mobile-expandable" style="display:block;">
+        <h2 class="summary-title">Din bestilling</h2>
+
+        <div class="summary-items">
+          <div class="summary-item">
+            <img class="item-image" src="/bilder-brukt-paa-sidene/forside/catering-05-desktop.webp" alt="Grankvist-sirup">
+            <div class="item-details">
+              <div class="item-name">Grankvist-sirup</div>
+              <div class="item-meta">1 x 99 kr</div>
+            </div>
+            <div class="item-price">99 kr</div>
+          </div>
+
+          <div class="summary-item">
+            <img class="item-image" src="/bilder-brukt-paa-sidene/opplevelser-retreat/retreat-14-desktop.webp" alt="Tidlig Var retreat">
+            <div class="item-details">
+              <div class="item-name">Tidlig Var — retreat med ville vekster</div>
+              <div class="item-meta">17. april 2026 · 1 plass</div>
+              <div class="earlybird-tag">earlybird</div>
+            </div>
+            <div class="item-price">3 250 kr</div>
+          </div>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row">
+          <span class="label">Delsum</span>
+          <span class="value">3 349 kr</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Frakt</span>
+          <span class="value">99 kr</span>
+        </div>
+
+        <div class="summary-total-row">
+          <span class="summary-total-label">Totalt</span>
+          <span class="summary-total-price">3 448 kr</span>
+        </div>
+
+        <p class="summary-legal">
+          Priser inkl. mva. Ved a fullfore kjopet godtar du vare
+          <a href="/vilkar">vilkar</a> og
+          <a href="/personvern">personvernerklaering</a>.
+        </p>
+
+        <!-- Gift card -->
+        <div class="sidebar-giftcard">
+          <button class="giftcard-trigger" onclick="document.querySelector('.giftcard-panel').classList.toggle('open'); this.querySelector('.chevron').style.transform = document.querySelector('.giftcard-panel').classList.contains('open') ? 'rotate(180deg)' : ''">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M12 5v14M2 10h20"/></svg>
+            Har du et gavekort?
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="giftcard-panel">
+            <div class="giftcard-row">
+              <input class="giftcard-input" placeholder="RC-XXXX-XXXX">
+              <button class="giftcard-submit">Bruk</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showStep(n) {
+  document.getElementById('step1-content').style.display = n === 1 ? 'block' : 'none';
+  document.getElementById('step2-content').style.display = n === 2 ? 'block' : 'none';
+
+  // Update step indicators
+  const s1 = document.getElementById('step-1-indicator');
+  const s2 = document.getElementById('step-2-indicator');
+  const s3 = document.getElementById('step-3-indicator');
+  const c1 = document.getElementById('conn-1');
+
+  if (n === 1) {
+    s1.className = 'step active';
+    s2.className = 'step upcoming';
+    c1.className = 'step-connector';
+  } else {
+    s1.className = 'step done';
+    s2.className = 'step active';
+    c1.className = 'step-connector done';
+  }
+}
+</script>
+
+</body>
+</html>

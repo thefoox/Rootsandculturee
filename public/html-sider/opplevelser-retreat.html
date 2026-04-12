@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retreats — Roots & Culture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: #1a1a1a;
+      background: #FFFDFA;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { text-decoration: none; color: inherit; }
+    button { border: none; background: none; cursor: pointer; font: inherit; }
+
+    /* ===== VARIABLES ===== */
+    :root {
+      --primary: #1A4D2E;
+      --primary-fg: #fff;
+      --heading-color: #273430;
+      --foreground: #1a1a1a;
+      --muted-fg: #3d4654;
+      --pine: #1a2921;
+      --pine-light: #2a3f33;
+      --sage: #8a9a7e;
+      --sage-light: #c4cfba;
+      --sage-mist: #e8ede4;
+      --parchment: #FFFDFA;
+      --parchment-warm: #F3EFEB;
+      --amber: #b8895a;
+      --amber-light: #d4b896;
+      --charcoal: #2c2c2c;
+      --charcoal-muted: #5c5c5c;
+      --charcoal-light: #8a8a8a;
+      --font-serif: 'Merriweather', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --serif: var(--font-serif);
+      --sans: var(--font-sans);
+      --max-w: 1280px;
+      --transition: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 1rem;
+      left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: center;
+      padding: 0 1rem;
+    }
+    .navbar-island {
+      width: 100%;
+      max-width: var(--max-w);
+      border-radius: 9999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 15px rgba(0,0,0,0.07);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.8);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.5s;
+    }
+    @media (min-width: 768px) {
+      .navbar-island { padding: 1rem 2rem; }
+    }
+    .navbar-logo {
+      width: 90px; height: 90px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    @media (max-width: 767px) {
+      .navbar-logo { width: 50px; height: 50px; }
+    }
+    .navbar-links {
+      display: none;
+      gap: 2rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+    }
+    @media (min-width: 1024px) {
+      .navbar-links { display: flex; }
+    }
+    .navbar-links a {
+      color: var(--foreground);
+      transition: color 0.2s;
+    }
+    .navbar-links a:hover { color: var(--primary); }
+    .navbar-links a.active { color: var(--primary); }
+    .navbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .navbar-actions svg {
+      width: 22px; height: 22px;
+      color: var(--foreground);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      height: 90vh;
+      min-height: 500px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.08);
+      animation: heroZoom 20s ease-out forwards;
+    }
+    @keyframes heroZoom {
+      to { transform: scale(1); }
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(14, 22, 17, 0.92) 0%,
+        rgba(14, 22, 17, 0.6) 30%,
+        rgba(14, 22, 17, 0.2) 55%,
+        rgba(14, 22, 17, 0.08) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 4vw, 5rem) clamp(3rem, 8vh, 6rem);
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage-light);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--sage);
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 10vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: #fff;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+    }
+    @media (min-width: 768px) {
+      .hero-title { font-size: clamp(4rem, 8vw, 6rem); }
+    }
+    .hero-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--sage-light);
+    }
+    .hero-subtitle {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      font-weight: 300;
+      color: rgba(255,255,255,0.65);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .hero-meta-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+    .hero-meta-value {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50% { opacity: 0.3; transform: scaleY(0.6); }
+    }
+
+    /* ===== PHILOSOPHY SECTION ===== */
+    .philosophy {
+      padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 4vw, 5rem);
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 6vw, 8rem);
+      align-items: center;
+    }
+    .philosophy-left .section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--sage);
+    }
+    .philosophy-heading {
+      font-family: var(--font-serif);
+      font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--heading-color);
+      margin-bottom: 2rem;
+    }
+    .philosophy-heading em {
+      font-style: italic;
+      color: var(--sage);
+    }
+    .philosophy-text {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--muted-fg);
+      margin-bottom: 1.5rem;
+    }
+    .philosophy-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(138, 154, 126, 0.2);
+    }
+    .philosophy-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-number {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--heading-color);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--charcoal-light);
+      margin-top: 0.3rem;
+      letter-spacing: 0.03em;
+    }
+    .philosophy-right {
+      position: relative;
+    }
+    .philosophy-image-wrap {
+      position: relative;
+      border-radius: 2px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+    }
+    .philosophy-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s var(--transition);
+    }
+    .philosophy-image-wrap:hover img {
+      transform: scale(1.04);
+    }
+    .philosophy-image-accent {
+      position: absolute;
+      bottom: -1.5rem;
+      right: -1.5rem;
+      width: 200px;
+      height: 200px;
+      border: 1px solid var(--sage-light);
+      border-radius: 2px;
+      z-index: -1;
+    }
+
+    /* ===== RETREATS LISTING ===== */
+    .retreats-section {
+      padding: clamp(4rem, 8vh, 6rem) 0;
+      background: #F3EFEB;
+    }
+    .retreats-header {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 4vw, 5rem);
+      margin-bottom: clamp(3rem, 6vh, 5rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .retreats-header-left {}
+    .retreats-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.5rem);
+      font-weight: 700;
+      color: var(--heading-color);
+    }
+    .retreats-count {
+      font-size: 0.85rem;
+      color: var(--charcoal-light);
+      margin-top: 0.5rem;
+    }
+
+    /* Filter pills */
+    .filter-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-pill {
+      padding: 0.55rem 1.25rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border: 1px solid rgba(42, 63, 51, 0.15);
+      border-radius: 100px;
+      color: var(--charcoal-muted);
+      background: rgba(255,255,255,0.6);
+      transition: all 0.3s var(--transition);
+      cursor: pointer;
+    }
+    .filter-pill:hover,
+    .filter-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* ===== RETREAT CARD (EDITORIAL ALTERNATING) ===== */
+    .retreat-cards {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 4vw, 5rem);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(2.5rem, 5vh, 4rem);
+    }
+    .retreat-card {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 0;
+      background: #fff;
+      border-radius: 3px;
+      overflow: hidden;
+      min-height: 480px;
+      transition: box-shadow 0.5s var(--transition), transform 0.5s var(--transition);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      cursor: pointer;
+    }
+    .retreat-card:hover {
+      box-shadow: 0 20px 60px rgba(26, 41, 33, 0.1), 0 4px 16px rgba(26, 41, 33, 0.06);
+      transform: translateY(-3px);
+    }
+    .retreat-card:nth-child(even) {
+      grid-template-columns: 1fr 1.15fr;
+    }
+    .retreat-card:nth-child(even) .card-image-wrap {
+      order: 2;
+    }
+    .retreat-card:nth-child(even) .card-content {
+      order: 1;
+    }
+
+    .card-image-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1s var(--transition);
+    }
+    .retreat-card:hover .card-image-wrap img {
+      transform: scale(1.05);
+    }
+    .card-badge {
+      position: absolute;
+      top: 1.25rem;
+      left: 1.25rem;
+      padding: 0.4rem 1rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(26, 41, 33, 0.85);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      border-radius: 2px;
+    }
+    .card-badge.sold-out {
+      background: rgba(160, 80, 60, 0.9);
+    }
+    .card-badge.few-spots {
+      background: rgba(184, 137, 90, 0.9);
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(2rem, 4vw, 3.5rem);
+    }
+    .card-season {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 1.25rem + 0.9vw, 2rem);
+      font-weight: 700;
+      color: var(--heading-color);
+      line-height: 1.25;
+      margin-bottom: 0.5rem;
+    }
+    .card-location {
+      font-size: 0.85rem;
+      color: var(--charcoal-light);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .card-location::before {
+      content: '';
+      width: 3px;
+      height: 3px;
+      background: var(--sage);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .card-desc {
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--muted-fg);
+      margin-bottom: 2rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-details {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(138, 154, 126, 0.15);
+      flex-wrap: wrap;
+    }
+    .card-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .card-detail-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--charcoal-light);
+    }
+    .card-detail-value {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--heading-color);
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-price {
+      display: flex;
+      flex-direction: column;
+    }
+    .card-price-amount {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--heading-color);
+    }
+    .card-price-note {
+      font-size: 0.7rem;
+      color: var(--charcoal-light);
+    }
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.8rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--primary);
+      border-radius: 9999px;
+      transition: all 0.35s var(--transition);
+    }
+    .card-cta:hover {
+      opacity: 0.9;
+      gap: 1rem;
+    }
+    .card-cta svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.35s var(--transition);
+    }
+    .card-cta:hover svg {
+      transform: translateX(3px);
+    }
+
+    /* ===== EXPERIENCE SECTION ===== */
+    .experience-section {
+      padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 4vw, 5rem);
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+    .experience-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto clamp(3rem, 6vh, 5rem);
+    }
+    .experience-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.5rem);
+      font-weight: 700;
+      color: var(--heading-color);
+      margin-bottom: 1rem;
+    }
+    .experience-subtitle {
+      font-size: 1rem;
+      color: var(--muted-fg);
+      line-height: 1.7;
+    }
+    .experience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .exp-card {
+      position: relative;
+      aspect-ratio: 3/4;
+      border-radius: 3px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .exp-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s var(--transition);
+    }
+    .exp-card:hover img {
+      transform: scale(1.06);
+    }
+    .exp-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14, 22, 17, 0.8) 0%, rgba(14, 22, 17, 0.1) 50%, transparent 100%);
+      transition: background 0.5s var(--transition);
+    }
+    .exp-card:hover .exp-card-overlay {
+      background: linear-gradient(to top, rgba(14, 22, 17, 0.85) 0%, rgba(14, 22, 17, 0.2) 60%, transparent 100%);
+    }
+    .exp-card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.75rem;
+    }
+    .exp-card-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sage-light);
+      margin-bottom: 0.5rem;
+    }
+    .exp-card-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .exp-card-text {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.4s var(--transition);
+    }
+    .exp-card:hover .exp-card-text {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== SEASONAL TIMELINE ===== */
+    .season-section {
+      padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 4vw, 5rem);
+      background: var(--primary);
+      color: #fff;
+    }
+    .season-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+    .season-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: clamp(3rem, 6vh, 5rem);
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .season-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.5rem);
+      font-weight: 700;
+    }
+    .season-subtitle {
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.5);
+      max-width: 360px;
+      line-height: 1.6;
+    }
+    .season-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .season-card {
+      background: rgba(255,255,255,0.03);
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      transition: background 0.5s var(--transition);
+      cursor: pointer;
+    }
+    .season-card:hover {
+      background: rgba(255,255,255,0.08);
+    }
+    .season-card-name {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .season-card-months {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage-light);
+      margin-bottom: 1.5rem;
+    }
+    .season-card-desc {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 1.5rem;
+    }
+    .season-card-retreats {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber-light);
+    }
+
+    /* ===== TESTIMONIAL ===== */
+    .testimonial-section {
+      padding: clamp(5rem, 12vh, 9rem) clamp(1.5rem, 4vw, 5rem);
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .testimonial-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--heading-color);
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .testimonial-quote::before {
+      content: '"';
+      font-family: var(--font-serif);
+      font-size: 6rem;
+      font-weight: 300;
+      color: var(--sage-light);
+      position: absolute;
+      top: -2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: 1;
+      opacity: 0.5;
+    }
+    .testimonial-author {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--foreground);
+    }
+    .testimonial-role {
+      font-size: 0.78rem;
+      color: var(--muted-fg);
+      margin-top: 0.2rem;
+    }
+    .testimonial-stars {
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+      margin-bottom: 1.5rem;
+      color: var(--amber);
+      font-size: 0.9rem;
+    }
+
+    /* ===== CTA SECTION ===== */
+    .cta-section {
+      position: relative;
+      padding: clamp(6rem, 14vh, 10rem) clamp(1.5rem, 4vw, 5rem);
+      overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+    }
+    .cta-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .cta-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(14, 22, 17, 0.9) 0%,
+        rgba(14, 22, 17, 0.75) 50%,
+        rgba(14, 22, 17, 0.6) 100%
+      );
+    }
+    .cta-content {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cta-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage-light);
+      margin-bottom: 1.5rem;
+    }
+    .cta-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.5rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+    }
+    .cta-text {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      height: 3.5rem;
+      padding: 0 2.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--primary);
+      border: 1px solid var(--primary);
+      border-radius: 9999px;
+      transition: all 0.3s;
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      height: 3.5rem;
+      padding: 0 2.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 9999px;
+      transition: all 0.3s;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 4vw, 5rem) 2rem;
+      background: #0e1611;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-brand .logo {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .footer-brand p {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      max-width: 280px;
+    }
+    .footer-col-title {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 1.25rem;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .footer-links a {
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover {
+      color: rgba(255,255,255,0.85);
+    }
+    .footer-bottom {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+
+    /* ===== SCROLL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s var(--transition), transform 0.9s var(--transition);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .philosophy-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .philosophy-right {
+        order: -1;
+      }
+      .philosophy-image-wrap {
+        aspect-ratio: 16/9;
+      }
+      .philosophy-image-accent { display: none; }
+      .season-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-nav { display: none; }
+      .site-header { padding: 1rem 1.25rem; }
+      .site-header.scrolled { padding: 0.75rem 1.25rem; }
+
+      .hero { min-height: 500px; }
+      .hero-title { max-width: 100%; }
+      .hero-meta { gap: 1.25rem; }
+
+      .retreat-card {
+        grid-template-columns: 1fr !important;
+        min-height: auto;
+      }
+      .retreat-card:nth-child(even) .card-image-wrap { order: 0; }
+      .retreat-card:nth-child(even) .card-content { order: 0; }
+      .card-image-wrap {
+        aspect-ratio: 16/10;
+      }
+      .card-details {
+        gap: 1.25rem;
+      }
+      .card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+      }
+      .card-cta {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .experience-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .exp-card {
+        aspect-ratio: 4/3;
+      }
+      .exp-card-text {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .season-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+    }
+
+    /* ===== NOISE TEXTURE OVERLAY ===== */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" aria-label="Hovednavigasjon">
+    <div class="navbar-island">
+      <a href="/">
+        <img src="/logo_black-desktop.webp" alt="Roots & Culture" class="navbar-logo">
+      </a>
+      <div class="navbar-links">
+        <a href="/opplevelser">Opplevelser</a>
+        <a href="/opplevelser/retreat" class="active">Retreats</a>
+        <a href="/opplevelser/kurs">Kurs</a>
+        <a href="/opplevelser/catering">Catering</a>
+        <a href="/produkter">Butikk</a>
+        <a href="/om-rootsandculture">Om oss</a>
+        <a href="/kontakt">Kontakt</a>
+      </div>
+      <div class="navbar-actions">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="../public/Retreat/retreat-05-desktop.webp" alt="Norsk fjordlandskap ved soloppgang" loading="eager">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal">Roots & Culture Retreats</div>
+      <h1 class="hero-title reveal reveal-delay-1">
+        Finn roen<br>i <em>naturen</em>
+      </h1>
+      <p class="hero-subtitle reveal reveal-delay-2">
+        Våre retreats inviterer deg til å senke skuldrene, koble fra hverdagen og finne tilbake til det som betyr noe — omgitt av norsk natur.
+      </p>
+      <div class="hero-meta reveal reveal-delay-3">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Varighet</span>
+          <span class="hero-meta-value">3–7 dager</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Sesong</span>
+          <span class="hero-meta-value">April – Oktober</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Grupper</span>
+          <span class="hero-meta-value">6–16 deltakere</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Steder</span>
+          <span class="hero-meta-value">Vestland & Trøndelag</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Utforsk</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section class="philosophy">
+    <div class="philosophy-grid">
+      <div class="philosophy-left reveal">
+        <div class="section-label">Vår filosofi</div>
+        <h2 class="philosophy-heading">
+          Vi tror at naturen har<br>svarene vi <em>søker</em>
+        </h2>
+        <p class="philosophy-text">
+          Hvert retreat er skapt for å la deg fordype deg i naturens rytme. Vi kombinerer stillhet, bevegelse og fellesskap — i nøye utvalgte omgivelser som gir rom for refleksjon og fornyelse.
+        </p>
+        <p class="philosophy-text">
+          Små grupper, erfarne veiledere og en dyp respekt for landskapet rundt oss skaper en ramme der du kan oppleve ekte tilstedeværelse.
+        </p>
+        <div class="philosophy-stats">
+          <div class="philosophy-stat">
+            <span class="stat-number">96%</span>
+            <span class="stat-label">Anbefaler til venner</span>
+          </div>
+          <div class="philosophy-stat">
+            <span class="stat-number">12</span>
+            <span class="stat-label">Retreats i år</span>
+          </div>
+          <div class="philosophy-stat">
+            <span class="stat-number">5.0</span>
+            <span class="stat-label">Gjennomsnitt vurdering</span>
+          </div>
+        </div>
+      </div>
+      <div class="philosophy-right reveal reveal-delay-2">
+        <div class="philosophy-image-wrap">
+          <img src="../public/Retreat/retreat-12-desktop.webp" alt="Morgenstund ved fjorden">
+        </div>
+        <div class="philosophy-image-accent"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RETREAT LISTINGS -->
+  <section class="retreats-section">
+    <div class="retreats-header">
+      <div class="retreats-header-left reveal">
+        <h2 class="retreats-title">Kommende retreats</h2>
+        <p class="retreats-count">4 retreats tilgjengelig — sesongen 2026</p>
+      </div>
+      <div class="filter-pills reveal reveal-delay-1">
+        <button class="filter-pill active">Alle</button>
+        <button class="filter-pill">Stillhet</button>
+        <button class="filter-pill">Villmark</button>
+        <button class="filter-pill">Yoga</button>
+        <button class="filter-pill">Mat & Natur</button>
+      </div>
+    </div>
+
+    <div class="retreat-cards">
+
+      <!-- RETREAT 1 -->
+      <article class="retreat-card reveal">
+        <div class="card-image-wrap">
+          <img src="../public/Retreat/retreat-08-desktop.webp" alt="Fjordstille retreat ved vannet">
+          <div class="card-badge">Bestselger</div>
+        </div>
+        <div class="card-content">
+          <div class="card-season">Mai 2026 · Stillhet</div>
+          <h3 class="card-title">Fjordstille</h3>
+          <div class="card-location">Hardangerfjorden, Vestland</div>
+          <p class="card-desc">
+            Fem dager dedikert til stillhet og nærvær. Vær til stede ved Hardangerfjordens rolige vann, omgitt av epleblomstring og snøkledde fjelltopper. Yogaøkter ved vannet, vandringer i eldgammel skog og måltider laget av lokale råvarer.
+          </p>
+          <div class="card-details">
+            <div class="card-detail">
+              <span class="card-detail-label">Varighet</span>
+              <span class="card-detail-value">5 dager</span>
+            </div>
+            <div class="card-detail">
+              <span class="card-detail-label">Deltakere</span>
+              <span class="card-detail-value">Maks 12</span>
+            </div>
+            <div class="card-detail">
+              <span class="card-detail-label">Dato</span>
+              <span class="card-detail-value">15.–20. mai</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <span class="card-price-amount">kr 12 900</span>
+              <span class="card-price-note">per person, inkl. kost og losji</span>
+            </div>
+            <a href="/opplevelser/retreat/fjordstille" class="card-cta">
+              Se detaljer
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- RETREAT 2 -->
+      <article class="retreat-card reveal">
+        <div class="card-image-wrap">
+          <img src="../public/Retreat/retreat-15-desktop.webp" alt="Villmarksliv i norsk skog">
+          <div class="card-badge few-spots">3 plasser igjen</div>
+        </div>
+        <div class="card-content">
+          <div class="card-season">Juni 2026 · Villmark</div>
+          <h3 class="card-title">Villmarksliv</h3>
+          <div class="card-location">Trondheimfjorden, Trøndelag</div>
+          <p class="card-desc">
+            Sju dager i villmarken. Lær å orientere deg uten kart, tenne bål med kniv og flintstein, tilberede mat fra naturen og sove under åpen himmel. En uke som kobler deg til urferdigheter og gir deg en uventet følelse av frihet.
+          </p>
+          <div class="card-details">
+            <div class="card-detail">
+              <span class="card-detail-label">Varighet</span>
+              <span class="card-detail-value">7 dager</span>
+            </div>
+            <div class="card-detail">
+              <span class="card-detail-label">Deltakere</span>
+              <span class="card-detail-value">Maks 8</span>
+            </div>
+            <div class="card-detail">
+              <span class="card-detail-label">Dato</span>
+              <span class="card-detail-value">8.–15. juni</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <span class="card-price-amount">kr 15 500</span>
+              <span class="card-price-note">per person, inkl. alt utstyr</span>
+            </div>
+            <a href="/opplevelser/retreat/villmarksliv" class="card-cta">
+              Se detaljer
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- RETREAT 3 -->
+      <article class="retreat-card reveal">
+        <div class="card-image-wrap">
+          <img src="../public/Retreat/retreat-20-desktop.webp" alt="Skog og sjel retreated">
+        </div>
+        <div class="card-content">
+          <div class="card-season">August 2026 · Yoga & Meditasjon</div>
+          <h3 class="card-title">Skog & Sjel</h3>
+          <div class="card-location">Bymarka, Trøndelag</div>
+          <p class="card-desc">
+            Tre dager med skogbading, morgenyoga og meditasjonsøvelser i det stille skoglandskapet utenfor Trondheim. Et kompakt retreat perfekt for deg som vil lade batteriene uten å ta en hel uke fri.
+          </p>
+          <div class="card-details">
+            <div class="card-detail">
+              <span class="card-detail-label">Varighet</span>
+              <span class="card-detail-value">3 dager</span>
+            </div>
+            <div class="card-detail">
+              <span class="card-detail-label">Deltakere</span>
+              <span class="card-detail-value">Maks 16</span>
+            </div>
+            <div class="card-detail">
+              <span class="card-detail-label">Dato</span>
+              <span class="card-detail-value">21.–24. aug</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <span class="card-price-amount">kr 6 900</span>
+              <span class="card-price-note">per person, inkl. kost og losji</span>
+            </div>
+            <a href="/opplevelser/retreat/skog-sjel" class="card-cta">
+              Se detaljer
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- RETREAT 4 -->
+      <article class="retreat-card reveal">
+        <div class="card-image-wrap">
+          <img src="../public/Retreat/retreat-23-desktop.webp" alt="Høstretreat med matopplevelser">
+          <div class="card-badge">Nytt</div>
+        </div>
+        <div class="card-content">
+          <div class="card-season">September 2026 · Mat & Natur</div>
+          <h3 class="card-title">Høstens Grode</h3>
+          <div class="card-location">Aurlandsfjorden, Vestland</div>
+          <p class="card-desc">
+            Opplev høsten med alle sanser. Plukkede bær og sopp fra morgenvandringen blir til middagens hovedingrediens. Lokale kokker guider deg gjennom tradisjonsrike teknikker, mens fjordlandskapet kler seg i gull og rust.
+          </p>
+          <div class="card-details">
+            <div class="card-detail">
+              <span class="card-detail-label">Varighet</span>
+              <span class="card-detail-value">4 dager</span>
+            </div>
+            <div class="card-detail">
+              <span class="card-detail-label">Deltakere</span>
+              <span class="card-detail-value">Maks 10</span>
+            </div>
+            <div class="card-detail">
+              <span class="card-detail-label">Dato</span>
+              <span class="card-detail-value">12.–16. sep</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <span class="card-price-amount">kr 10 400</span>
+              <span class="card-price-note">per person, inkl. alle måltider</span>
+            </div>
+            <a href="/opplevelser/retreat/hostens-grode" class="card-cta">
+              Se detaljer
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- EXPERIENCE TYPES -->
+  <section class="experience-section">
+    <div class="experience-header reveal">
+      <div class="section-label" style="justify-content: center;">Hva vi tilbyr</div>
+      <h2 class="experience-title">Tre veier til ro</h2>
+      <p class="experience-subtitle">
+        Våre retreats er designet rundt tre kjerneopplevelser. Finn den som kaller på deg.
+      </p>
+    </div>
+    <div class="experience-grid">
+      <div class="exp-card reveal reveal-delay-1">
+        <img src="../public/Retreat/retreat-09-desktop.webp" alt="Stillhet og meditasjon">
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-card-label">Stillhet</div>
+          <h3 class="exp-card-title">Indre ro</h3>
+          <p class="exp-card-text">Meditasjon, yoga og digital detox i naturlige omgivelser som fremmer dyp hvile.</p>
+        </div>
+      </div>
+      <div class="exp-card reveal reveal-delay-2">
+        <img src="../public/Retreat/retreat-17-desktop.webp" alt="Villmarksliv">
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-card-label">Villmark</div>
+          <h3 class="exp-card-title">Urferdigheter</h3>
+          <p class="exp-card-text">Orientering, bålmat og overnatting under åpen himmel — tilbake til det grunnleggende.</p>
+        </div>
+      </div>
+      <div class="exp-card reveal reveal-delay-3">
+        <img src="../public/Retreat/retreat-13-desktop.webp" alt="Mat og natur">
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-card-label">Mat & Natur</div>
+          <h3 class="exp-card-title">Sanking & Smak</h3>
+          <p class="exp-card-text">Plukk, tilbered og nyt — lokale råvarer fra skog og fjord blir til unike måltider.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEASONAL TIMELINE -->
+  <section class="season-section">
+    <div class="season-inner">
+      <div class="season-header">
+        <div class="reveal">
+          <div class="section-label" style="color: var(--sage-light);">Årskalender</div>
+          <h2 class="season-title">Naturens egne sesonger</h2>
+        </div>
+        <p class="season-subtitle reveal reveal-delay-1">
+          Hvert retreat er tilpasset årstidens unike karakter og muligheter.
+        </p>
+      </div>
+      <div class="season-grid">
+        <div class="season-card reveal">
+          <div class="season-card-name">Vår</div>
+          <div class="season-card-months">April – Mai</div>
+          <p class="season-card-desc">Snøsmelting, de første villblomstene og fornyelse. Ideelt for stille retreats med fokus på nye begynnelser.</p>
+          <div class="season-card-retreats">2 retreats</div>
+        </div>
+        <div class="season-card reveal reveal-delay-1">
+          <div class="season-card-name">Sommer</div>
+          <div class="season-card-months">Juni – Juli</div>
+          <p class="season-card-desc">Midnattsol, uendelige dager og villmarksopplevelser. Lange turer, bading i fjorden og nattkjøkken under åpen himmel.</p>
+          <div class="season-card-retreats">4 retreats</div>
+        </div>
+        <div class="season-card reveal reveal-delay-2">
+          <div class="season-card-name">Høst</div>
+          <div class="season-card-months">August – Oktober</div>
+          <p class="season-card-desc">Farger, sopp og bær. Den rikeste sesongen for mat og sanking, med et landskap i forvandling.</p>
+          <div class="season-card-retreats">4 retreats</div>
+        </div>
+        <div class="season-card reveal reveal-delay-3">
+          <div class="season-card-name">Vinter</div>
+          <div class="season-card-months">November – Mars</div>
+          <p class="season-card-desc">Mørketid, nordlys og dypt snødekke. Stille retreats med fakkelvandringer, saunakultur og varm mat.</p>
+          <div class="season-card-retreats">2 retreats</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section class="testimonial-section reveal">
+    <div class="testimonial-stars">
+      <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+    </div>
+    <blockquote class="testimonial-quote">
+      Fjordstille-retreaten forandret mitt forhold til stillhet. Jeg kom hjem med en ro jeg ikke visste var mulig — og en lengsel etter å vende tilbake.
+    </blockquote>
+    <div class="testimonial-author">Mari Solberg</div>
+    <div class="testimonial-role">Deltaker, Fjordstille mai 2025</div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-bg">
+      <img src="../public/Retreat/retreat-25-desktop.webp" alt="Norsk landskap i solnedgang">
+      <div class="cta-bg-overlay"></div>
+    </div>
+    <div class="cta-content reveal">
+      <div class="cta-label">Klar for å finne roen?</div>
+      <h2 class="cta-title">Book ditt neste<br>retreat i dag</h2>
+      <p class="cta-text">
+        Plassene er begrenset og retreatene fylles raskt. Sikre din plass — eller ta kontakt for en uforpliktende samtale om hva som passer deg.
+      </p>
+      <div class="cta-buttons">
+        <a href="/opplevelser/retreat" class="btn-primary">
+          Se alle retreats
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/kontakt" class="btn-outline">Kontakt oss</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo">Roots & Culture</span>
+        <p>Norsk natur, tradisjon og kultur — fra jord til sjel.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Opplevelser</div>
+        <ul class="footer-links">
+          <li><a href="/opplevelser/retreat">Retreats</a></li>
+          <li><a href="/opplevelser/kurs">Kurs</a></li>
+          <li><a href="/opplevelser/catering">Matopplevelser</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Butikk</div>
+        <ul class="footer-links">
+          <li><a href="/produkter">Alle produkter</a></li>
+          <li><a href="/gavekort">Gavekort</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Info</div>
+        <ul class="footer-links">
+          <li><a href="/om-rootsandculture">Om oss</a></li>
+          <li><a href="/kontakt">Kontakt</a></li>
+          <li><a href="/vilkar">Vilkår</a></li>
+          <li><a href="/personvern">Personvern</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Roots & Culture. Alle rettigheter reservert.</span>
+      <span>Laget med kjærlighet i Norge</span>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // No header scroll needed - uses standard floating island navbar
+
+    // Parallax hero on scroll
+    const heroBg = document.querySelector('.hero-bg img');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY < window.innerHeight) {
+        heroBg.style.transform = `scale(${1.08 - window.scrollY * 0.00008}) translateY(${window.scrollY * 0.3}px)`;
+      }
+    }, { passive: true });
+
+    // Filter pills
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -20,7 +20,7 @@ function mapPageContent(doc: FirestoreDoc): PageContent {
       heading: (s.heading as string) || undefined,
       subheading: (s.subheading as string) || undefined,
       body: (s.body as string) || undefined,
-      image: s.image || undefined,
+      image: (s.image as { url?: string } | null)?.url ? s.image : undefined,
       imagePosition: (s.imagePosition as 'left' | 'right') || undefined,
       items: s.items || undefined,
       ctaText: (s.ctaText as string) || undefined,
