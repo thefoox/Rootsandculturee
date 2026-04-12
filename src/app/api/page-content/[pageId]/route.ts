@@ -67,9 +67,11 @@ export async function PUT(
     revalidateTag('page-content', 'max')
 
     // Purge the full-page CDN cache for the specific public page.
-    // slug "forside" maps to "/", all others map to "/{slug}".
-    const publicPath = slug === 'forside' ? '/' : `/${slug}`
+    // slug can be "forside", "/" or a normal slug like "om-oss".
+    const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
+    // Also revalidate homepage explicitly since CMS sections can appear on any page
+    if (publicPath !== '/') revalidatePath('/')
 
     return NextResponse.json({ success: true })
   } catch {
