@@ -137,6 +137,7 @@ export function CheckoutForm({
 
       // If gift card covers the full amount, skip Stripe payment
       if ('coveredByGiftCard' in updateResult && updateResult.coveredByGiftCard) {
+        setLoading(false)
         onPaymentSuccess(paymentIntentId, email)
         return
       }

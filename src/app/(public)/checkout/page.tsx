@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { ChevronUp } from 'lucide-react'
 import { useCart } from '@/components/cart/CartProvider'
 import { OrderSummaryPanel } from '@/components/cart/OrderSummaryPanel'
@@ -92,6 +92,7 @@ function MobileOrderSummary({
 
 export default function CheckoutPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { items, subtotal, mounted } = useCart()
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null)
@@ -101,6 +102,26 @@ export default function CheckoutPage() {
   const [initError, setInitError] = useState('')
   const [giftCardCode, setGiftCardCode] = useState<string | null>(null)
   const [giftCardBalance, setGiftCardBalance] = useState<number | null>(null)
+
+  // Handle Stripe redirect-return (mobile 3DS / wallet payments).
+  // When stripe.confirmPayment() triggers a redirect, Stripe appends
+  // ?payment_intent=pi_xxx&redirect_status=succeeded (or failed) to the return_url.
+  // Without this handler the page ignores the result and re-initialises indefinitely.
+  useEffect(() => {
+    const piFromUrl = searchParams.get('payment_intent')
+    const redirectStatus = searchParams.get('redirect_status')
+
+    if (!piFromUrl || !redirectStatus) return
+
+    if (redirectStatus === 'succeeded') {
+      setPaymentIntentId(piFromUrl)
+    } else {
+      // Payment failed or was cancelled — surface an error and strip the params
+      // so the form can be re-attempted cleanly.
+      setInitError('Betalingen mislyktes. Prøv igjen eller bruk en annen betalingsmetode.')
+      router.replace('/checkout')
+    }
+  }, [searchParams, router])
 
   const hasProducts = items.some((i) => i.type === 'product')
   const shippingCost = hasProducts ? FLAT_RATE_SHIPPING : 0
@@ -122,9 +143,11 @@ export default function CheckoutPage() {
     }
   }, [mounted, items.length, paymentIntentId, router])
 
-  // Create initial PaymentIntent for Stripe Elements
+  // Create initial PaymentIntent for Stripe Elements.
+  // Skip if we are handling a Stripe redirect-return (payment_intent param present).
   useEffect(() => {
     if (items.length === 0 || clientSecret) return
+    if (searchParams.get('payment_intent')) return
 
     async function initPayment() {
       try {
