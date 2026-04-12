@@ -84,6 +84,47 @@ export const siteContentSchema = z.object({
   aboutText: z.string().min(1, 'Dette feltet er påkrevd.'),
 })
 
+// -- Page Content schemas (CMS API validation) --
+
+const sectionTypeValues = [
+  'hero', 'text-image', 'text', 'values', 'team', 'faq', 'cta', 'gallery',
+  'contact-info', 'experiences-grid', 'articles-grid', 'products-grid',
+  'trust-bar', 'location', 'testimonials', 'newsletter', 'categories',
+  'video', 'stats', 'logo-bar',
+] as const
+
+export const pageSectionSchema = z.object({
+  id: z.string().min(1, 'Seksjons-ID er påkrevd.'),
+  type: z.enum(sectionTypeValues, { message: 'Ugyldig seksjonstype.' }),
+  heading: z.string().optional(),
+  subheading: z.string().optional(),
+  body: z.string().optional(),
+  image: imageSchema.optional(),
+  imagePosition: z.enum(['left', 'right']).optional(),
+  ctaText: z.string().optional(),
+  ctaLink: z.string().optional(),
+  items: z.array(z.object({
+    title: z.string().default(''),
+    description: z.string().default(''),
+    icon: z.string().optional(),
+    image: imageSchema.optional(),
+  })).optional(),
+})
+
+export const pageContentCreateSchema = z.object({
+  title: z.string().min(1, 'Tittel er påkrevd.').max(200),
+  slug: z.string().min(1, 'Slug er påkrevd.').regex(/^[a-z0-9-/]+$/, 'Slug kan kun inneholde små bokstaver, tall, bindestreker og skråstrek.'),
+})
+
+export const pageContentUpdateSchema = z.object({
+  title: z.string().min(1, 'Tittel er påkrevd.').max(200),
+  slug: z.string().min(1, 'Slug er påkrevd.'),
+  isPublished: z.boolean(),
+  showInNavigation: z.boolean(),
+  navigationOrder: z.number().int().min(0),
+  sections: z.array(pageSectionSchema),
+})
+
 // Auto-generate slug from name/title
 export function generateSlug(text: string): string {
   return text
