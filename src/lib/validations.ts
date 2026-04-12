@@ -72,7 +72,7 @@ export const articleSchema = z.object({
     .regex(/^[a-z0-9-]+$/, 'Kun bokstaver, tall og bindestreker.'),
   excerpt: z.string().max(300).optional(),
   body: z.string().min(1, 'Artikkelinnhold er påkrevd.'),
-  coverImage: imageSchema.optional().default({ url: '', alt: '' }),
+  coverImage: imageSchema.optional(),
   metaTitle: z.string().max(70).optional(),
   metaDescription: z.string().max(160).optional(),
   publish: z.boolean().optional(),

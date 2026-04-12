@@ -52,13 +52,15 @@ export async function createArticle(formData: FormData) {
   }
 
   const rawCoverImage = formData.get('coverImage') as string
+  const parsedImage = rawCoverImage ? JSON.parse(rawCoverImage) : null
+  const coverImageValue = parsedImage?.url ? parsedImage : undefined
 
   const parsed = articleSchema.safeParse({
     title: formData.get('title'),
     slug: formData.get('slug'),
     excerpt: (formData.get('excerpt') as string) || undefined,
     body: formData.get('body'),
-    coverImage: rawCoverImage ? JSON.parse(rawCoverImage) : { url: '', alt: '' },
+    coverImage: coverImageValue,
     metaTitle: (formData.get('metaTitle') as string) || undefined,
     metaDescription: (formData.get('metaDescription') as string) || undefined,
     publish: formData.get('publish') === 'true',
@@ -105,13 +107,15 @@ export async function updateArticle(id: string, formData: FormData) {
   }
 
   const rawCoverImage = formData.get('coverImage') as string
+  const parsedImage = rawCoverImage ? JSON.parse(rawCoverImage) : null
+  const coverImageValue = parsedImage?.url ? parsedImage : undefined
 
   const parsed = articleSchema.safeParse({
     title: formData.get('title'),
     slug: formData.get('slug'),
     excerpt: (formData.get('excerpt') as string) || undefined,
     body: formData.get('body'),
-    coverImage: rawCoverImage ? JSON.parse(rawCoverImage) : { url: '', alt: '' },
+    coverImage: coverImageValue,
     metaTitle: (formData.get('metaTitle') as string) || undefined,
     metaDescription: (formData.get('metaDescription') as string) || undefined,
     publish: formData.get('publish') === 'true',
