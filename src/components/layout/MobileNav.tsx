@@ -2,16 +2,20 @@
 
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { X } from 'lucide-react'
+import { X, User, ShoppingBag, CalendarDays, LogOut, Shield } from 'lucide-react'
 import { mainNavItems, type NavItem } from '@/lib/navigation'
 
 interface MobileNavProps {
   onClose: () => void
   onLoginClick?: () => void
   items?: NavItem[]
+  isLoggedIn?: boolean
+  userEmail?: string | null
+  isAdmin?: boolean
+  onLogout?: () => void
 }
 
-export function MobileNav({ onClose, onLoginClick, items }: MobileNavProps) {
+export function MobileNav({ onClose, onLoginClick, items, isLoggedIn, userEmail, isAdmin, onLogout }: MobileNavProps) {
   const navItems = items || mainNavItems
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const navRef = useRef<HTMLDivElement>(null)
@@ -113,15 +117,85 @@ export function MobileNav({ onClose, onLoginClick, items }: MobileNavProps) {
         </ul>
       </nav>
 
-      {/* Login button at bottom */}
+      {/* Bottom section: auth-aware */}
       <div className="px-8 pb-8">
-        <button
-          type="button"
-          className="w-full rounded-md bg-forest py-3 text-center font-body text-body font-medium text-cream"
-          onClick={onLoginClick || onClose}
-        >
-          Logg inn
-        </button>
+        {isLoggedIn ? (
+          <div className="space-y-4">
+            {/* User info */}
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream text-[14px] font-semibold text-forest">
+                {userEmail ? userEmail[0].toUpperCase() : '?'}
+              </div>
+              <span className="truncate text-[14px] text-cream/70">{userEmail}</span>
+            </div>
+
+            {/* Account links */}
+            <nav aria-label="Kontomeny">
+              <ul className="space-y-1">
+                <li>
+                  <Link
+                    href="/konto"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-body text-cream/80 hover:bg-cream/10 hover:text-cream"
+                    onClick={onClose}
+                  >
+                    <User className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    Min konto
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/konto/ordrer"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-body text-cream/80 hover:bg-cream/10 hover:text-cream"
+                    onClick={onClose}
+                  >
+                    <ShoppingBag className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    Mine ordrer
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/konto/bookinger"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-body text-cream/80 hover:bg-cream/10 hover:text-cream"
+                    onClick={onClose}
+                  >
+                    <CalendarDays className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    Mine bookinger
+                  </Link>
+                </li>
+                {isAdmin && (
+                  <li>
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-body text-cream/80 hover:bg-cream/10 hover:text-cream"
+                      onClick={onClose}
+                    >
+                      <Shield className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      Admin
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </nav>
+
+            {/* Logout */}
+            <button
+              type="button"
+              className="flex w-full items-center justify-center gap-2 rounded-md border border-cream/20 py-3 text-body font-medium text-cream/70 hover:border-cream/40 hover:text-cream"
+              onClick={() => { onLogout?.(); onClose() }}
+            >
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              Logg ut
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="w-full rounded-md bg-cream/15 py-3 text-center font-body text-body font-medium text-cream hover:bg-cream/25"
+            onClick={onLoginClick || onClose}
+          >
+            Logg inn
+          </button>
+        )}
       </div>
     </div>
   )

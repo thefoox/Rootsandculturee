@@ -28,6 +28,7 @@ export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [navItems, setNavItems] = useState<NavItem[]>(mainNavItems)
   const { itemCount } = useCart()
   const pathname = usePathname()
@@ -48,6 +49,9 @@ export function Header() {
         setIsLoggedIn(data.authenticated)
         if (data.authenticated && data.email) {
           setUserEmail(data.email)
+        }
+        if (data.authenticated && data.role === 'admin') {
+          setIsAdmin(true)
         }
       })
       .catch(() => setIsLoggedIn(false))
@@ -221,7 +225,15 @@ export function Header() {
 
       {/* Overlays rendered OUTSIDE header to avoid backdrop-blur containing block */}
       {mobileOpen && (
-        <MobileNav onClose={() => setMobileOpen(false)} onLoginClick={handleAuthOpen} items={navItems} />
+        <MobileNav
+          onClose={() => setMobileOpen(false)}
+          onLoginClick={handleAuthOpen}
+          onLogout={handleLogout}
+          items={navItems}
+          isLoggedIn={isLoggedIn}
+          userEmail={userEmail}
+          isAdmin={isAdmin}
+        />
       )}
 
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
