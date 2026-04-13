@@ -8,6 +8,9 @@ import { mapExperience, mapExperienceDate } from '@/lib/mappers/experiences'
 import type { ActionResult, Experience, ExperienceDate } from '@/types'
 
 export async function getAllExperiences(): Promise<Experience[]> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') return []
+
   const snapshot = await adminDb
     .collection('experiences')
     .orderBy('createdAt', 'desc')

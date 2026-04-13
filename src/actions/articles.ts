@@ -12,6 +12,9 @@ function stripHtml(html: string): string {
 }
 
 export async function getAllArticles(): Promise<Article[]> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') return []
+
   const snapshot = await adminDb
     .collection('articles')
     .orderBy('createdAt', 'desc')

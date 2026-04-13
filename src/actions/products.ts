@@ -8,6 +8,9 @@ import { mapProduct } from '@/lib/mappers/products'
 import type { ActionResult, Product } from '@/types'
 
 export async function getAllProducts(): Promise<Product[]> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') return []
+
   const snapshot = await adminDb
     .collection('products')
     .orderBy('createdAt', 'desc')
