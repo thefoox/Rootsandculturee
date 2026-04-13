@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import { Compass } from 'lucide-react'
+import { getPageContent } from '@/lib/data/page-content'
 import { getExperiences, getExperienceDates } from '@/lib/data/experiences'
+import { SectionRenderer } from '@/components/sections/SectionRenderer'
 import { ExperienceList } from '@/components/experiences/ExperienceList'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -15,9 +16,12 @@ export const metadata: Metadata = {
 export const revalidate = 3600
 
 export default async function KursPage() {
-  const allExperiences = await getExperiences()
-  const kurs = allExperiences.filter((e) => e.category === 'kurs')
+  const [page, allExperiences] = await Promise.all([
+    getPageContent('kurs'),
+    getExperiences(),
+  ])
 
+  const kurs = allExperiences.filter((e) => e.category === 'kurs')
   const kursWithDates: Array<Experience & { nextDate?: ExperienceDate }> =
     await Promise.all(
       kurs.map(async (experience) => {
@@ -26,58 +30,20 @@ export default async function KursPage() {
       })
     )
 
+  const sortedSections = page
+    ? [...page.sections].sort((a, b) => a.order - b.order)
+    : []
+
   return (
     <>
-      <section className="relative flex min-h-[50vh] items-end">
-        <Image
-          src="/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-01-desktop.webp"
-          alt=""
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-black/25" />
-        <div
-          className="absolute inset-x-0 top-0 h-32"
-          style={{
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.45), transparent)',
-          }}
-        />
-
-        <div className="relative mx-auto w-full max-w-[1200px] px-6 pb-14 md:px-8 md:pb-20">
-          <h1 className="max-w-xl font-heading text-h1 font-bold leading-[1.1] text-cream ">
-            Kurs
-          </h1>
-          <p className="mt-3 max-w-lg text-body leading-relaxed text-cream/85">
-            Lær å sanke, lage mat og opplev norsk natur på nært hold med erfarne guider.
-          </p>
-        </div>
-      </section>
+      {sortedSections.map((section) => (
+        <SectionRenderer key={section.id} section={section} />
+      ))}
 
       <div className="mx-auto max-w-[1200px] px-6 md:px-8">
         <div className="pt-6">
           <Breadcrumbs items={[{ label: 'Opplevelser', href: '/opplevelser' }, { label: 'Kurs' }]} />
         </div>
-
-        <section className="grid gap-10 py-12 md:grid-cols-5 md:items-start md:gap-16 md:py-16">
-          <div className="md:col-span-3">
-            <h2 className="font-heading text-h3 font-bold text-forest">Om våre kurs</h2>
-            <div className="mt-4 space-y-3 text-body leading-relaxed text-body">
-              <p>Våre kurs gir deg praktisk kunnskap om norsk natur og tradisjoner. Med erfarne guider og botanikere lærer du å identifisere ville urter, tilberede mat fra naturen, og forstå økosystemene rundt deg.</p>
-              <p>Kursene er tilpasset alle nivåer — fra nybegynnere til de som vil fordype seg. Alt utstyr og materialer er inkludert.</p>
-            </div>
-          </div>
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl md:col-span-2">
-            <Image
-              src="/bilder-brukt-paa-sidene/opplevelser-kurs/kurs-05-desktop.webp"
-              alt="Kurs i urtesamling"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 40vw"
-            />
-          </div>
-        </section>
 
         <section className="border-t border-forest/10 py-12 md:py-16">
           <h2 className="font-heading text-h3 font-bold text-forest">Tilgjengelige kurs</h2>
