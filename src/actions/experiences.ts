@@ -25,6 +25,9 @@ export async function getExperienceById(id: string): Promise<Experience | null> 
 }
 
 export async function getExperienceDatesAdmin(experienceId: string): Promise<ExperienceDate[]> {
+  const session = await verifySession()
+  if (!session || session.role !== 'admin') return []
+
   const snapshot = await adminDb
     .collection(`experiences/${experienceId}/dates`)
     .orderBy('date', 'asc')
