@@ -60,6 +60,16 @@ export async function createArticle(formData: FormData): Promise<ActionResult<{ 
     return { success: false, errors: fieldErrors }
   }
 
+  // Check slug uniqueness
+  const existingSlug = await adminDb
+    .collection('articles')
+    .where('slug', '==', parsed.data.slug)
+    .limit(1)
+    .get()
+  if (!existingSlug.empty) {
+    return { success: false, errors: { slug: 'Denne URL-adressen er allerede i bruk. Velg en annen.' } }
+  }
+
   const { publish, ...data } = parsed.data
   const excerpt = data.excerpt || stripHtml(data.body).slice(0, 200)
   const now = new Date()
@@ -118,6 +128,16 @@ export async function updateArticle(id: string, formData: FormData): Promise<Act
       fieldErrors[field] = issue.message
     }
     return { success: false, errors: fieldErrors }
+  }
+
+  // Check slug uniqueness (exclude current document)
+  const existingSlugUpdate = await adminDb
+    .collection('articles')
+    .where('slug', '==', parsed.data.slug)
+    .limit(1)
+    .get()
+  if (!existingSlugUpdate.empty && existingSlugUpdate.docs[0].id !== id) {
+    return { success: false, errors: { slug: 'Denne URL-adressen er allerede i bruk. Velg en annen.' } }
   }
 
   const { publish, ...data } = parsed.data

@@ -79,6 +79,16 @@ export async function createExperience(formData: FormData): Promise<ActionResult
     return { success: false, errors: fieldErrors }
   }
 
+  // Check slug uniqueness
+  const existingSlug = await adminDb
+    .collection('experiences')
+    .where('slug', '==', parsed.data.slug)
+    .limit(1)
+    .get()
+  if (!existingSlug.empty) {
+    return { success: false, errors: { slug: 'Denne URL-adressen er allerede i bruk. Velg en annen.' } }
+  }
+
   const { publish, dates, ...data } = parsed.data
   const now = new Date()
   const docRef = await adminDb.collection('experiences').add({
@@ -166,6 +176,16 @@ export async function updateExperience(id: string, formData: FormData): Promise<
       fieldErrors[field] = issue.message
     }
     return { success: false, errors: fieldErrors }
+  }
+
+  // Check slug uniqueness (exclude current document)
+  const existingSlugUpdate = await adminDb
+    .collection('experiences')
+    .where('slug', '==', parsed.data.slug)
+    .limit(1)
+    .get()
+  if (!existingSlugUpdate.empty && existingSlugUpdate.docs[0].id !== id) {
+    return { success: false, errors: { slug: 'Denne URL-adressen er allerede i bruk. Velg en annen.' } }
   }
 
   const { publish, dates, ...data } = parsed.data

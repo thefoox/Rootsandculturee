@@ -24,7 +24,7 @@ export const productSchema = z.object({
       z.object({
         id: z.string(),
         label: z.string().min(1, 'Variantnavn er påkrevd.'),
-        price: z.number().positive('Variantpris må være positiv.'),
+        price: z.number().positive('Variantpris må være positiv.').min(0.01, 'Prisen må være minst 0,01 kr.'),
         inStock: z.boolean().optional().default(true),
         stockCount: z.number().int().min(0).default(0),
       })

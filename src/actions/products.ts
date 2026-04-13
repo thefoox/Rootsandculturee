@@ -67,6 +67,16 @@ export async function createProduct(formData: FormData): Promise<ActionResult<{ 
     return { success: false, errors: fieldErrors }
   }
 
+  // Check slug uniqueness
+  const existingSlug = await adminDb
+    .collection('products')
+    .where('slug', '==', parsed.data.slug)
+    .limit(1)
+    .get()
+  if (!existingSlug.empty) {
+    return { success: false, errors: { slug: 'Denne URL-adressen er allerede i bruk. Velg en annen.' } }
+  }
+
   const { publish, variants, ...data } = parsed.data
   const mappedVariants = (variants || []).map((v) => ({
     id: v.id || `variant-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
@@ -134,6 +144,16 @@ export async function updateProduct(id: string, formData: FormData): Promise<Act
       fieldErrors[field] = issue.message
     }
     return { success: false, errors: fieldErrors }
+  }
+
+  // Check slug uniqueness (exclude current document)
+  const existingSlugUpdate = await adminDb
+    .collection('products')
+    .where('slug', '==', parsed.data.slug)
+    .limit(1)
+    .get()
+  if (!existingSlugUpdate.empty && existingSlugUpdate.docs[0].id !== id) {
+    return { success: false, errors: { slug: 'Denne URL-adressen er allerede i bruk. Velg en annen.' } }
   }
 
   const { publish, variants, ...data } = parsed.data
