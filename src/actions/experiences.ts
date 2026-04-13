@@ -211,7 +211,7 @@ export async function updateExperience(id: string, formData: FormData): Promise<
         .filter(Boolean),
       publishedAt: publish
         ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
-        : null,
+        : (existing.publishedAt instanceof Date ? existing.publishedAt : null),
       updatedAt: now,
     })
   } catch (err) {

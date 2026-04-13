@@ -185,7 +185,7 @@ export async function updateProduct(id: string, formData: FormData): Promise<Act
       inStock: data.stockCount > 0,
       publishedAt: publish
         ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
-        : null,
+        : (existing.publishedAt instanceof Date ? existing.publishedAt : null),
       updatedAt: now,
     })
 
