@@ -101,7 +101,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult<{ 
       updatedAt: now,
     })
 
-    revalidateTag('products')
+    revalidateTag('products', 'max')
     return { success: true, data: { id: docRef.id } }
   } catch (err) {
     console.error('[createProduct] Firestore write failed:', err)
@@ -192,7 +192,7 @@ export async function updateProduct(id: string, formData: FormData): Promise<Act
       updatedAt: now,
     })
 
-    revalidateTag('products')
+    revalidateTag('products', 'max')
     return { success: true }
   } catch (err) {
     console.error('[updateProduct] Firestore write failed:', err)
@@ -207,6 +207,6 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
   }
 
   await adminDb.collection('products').doc(id).delete()
-  revalidateTag('products')
+  revalidateTag('products', 'max')
   return { success: true }
 }

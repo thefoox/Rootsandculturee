@@ -90,7 +90,7 @@ export async function createArticle(formData: FormData): Promise<ActionResult<{ 
       updatedAt: now,
     })
 
-    revalidateTag('articles')
+    revalidateTag('articles', 'max')
     return { success: true, data: { id: docRef.id } }
   } catch (err) {
     console.error('[createArticle] Firestore write failed:', err)
@@ -163,7 +163,7 @@ export async function updateArticle(id: string, formData: FormData): Promise<Act
       updatedAt: now,
     })
 
-    revalidateTag('articles')
+    revalidateTag('articles', 'max')
     return { success: true }
   } catch (err) {
     console.error('[updateArticle] Firestore write failed:', err)
@@ -178,6 +178,6 @@ export async function deleteArticle(id: string): Promise<ActionResult> {
   }
 
   await adminDb.collection('articles').doc(id).delete()
-  revalidateTag('articles')
+  revalidateTag('articles', 'max')
   return { success: true }
 }

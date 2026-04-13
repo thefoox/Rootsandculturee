@@ -131,8 +131,8 @@ export async function createExperience(formData: FormData): Promise<ActionResult
       await batch.commit()
     }
 
-    revalidateTag('experiences')
-    revalidateTag('experience-dates')
+    revalidateTag('experiences', 'max')
+    revalidateTag('experience-dates', 'max')
     return { success: true, data: { id: docRef.id } }
   } catch (err) {
     console.error('[createExperience] Firestore write failed:', err)
@@ -284,8 +284,8 @@ export async function updateExperience(id: string, formData: FormData): Promise<
     await batch.commit()
   }
 
-  revalidateTag('experiences')
-  revalidateTag('experience-dates')
+  revalidateTag('experiences', 'max')
+  revalidateTag('experience-dates', 'max')
   return { success: true }
 }
 
@@ -305,7 +305,7 @@ export async function deleteExperience(id: string): Promise<ActionResult> {
 
   // Delete main doc
   await adminDb.collection('experiences').doc(id).delete()
-  revalidateTag('experiences')
-  revalidateTag('experience-dates')
+  revalidateTag('experiences', 'max')
+  revalidateTag('experience-dates', 'max')
   return { success: true }
 }
