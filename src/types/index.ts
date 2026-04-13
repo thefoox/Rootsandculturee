@@ -118,6 +118,8 @@ export interface Article {
 
 export type SectionType = 'hero' | 'text-image' | 'text' | 'values' | 'team' | 'faq' | 'cta' | 'gallery' | 'contact-info' | 'experiences-grid' | 'articles-grid' | 'products-grid' | 'trust-bar' | 'location' | 'testimonials' | 'newsletter' | 'categories' | 'video' | 'stats' | 'logo-bar'
 
+export type TextImageLayout = 'overlap' | 'split' | 'contained' | 'stacked' | 'hero-overlay' | 'offset'
+
 export interface SectionItem {
   title: string
   description: string
@@ -134,6 +136,7 @@ export interface PageSection {
   body?: string
   image?: ProductImage
   imagePosition?: 'left' | 'right'  // CMS-05: text-image venstre/høyre
+  layoutVariant?: TextImageLayout    // CMS: text-image layout variant
   items?: SectionItem[]
   ctaText?: string
   ctaLink?: string

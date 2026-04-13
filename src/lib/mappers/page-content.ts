@@ -18,6 +18,7 @@ export function mapPageContent(doc: FirestoreDoc): PageContent {
       body: (s.body as string) || undefined,
       image: (s.image as { url?: string } | null)?.url ? s.image : undefined,
       imagePosition: (s.imagePosition as 'left' | 'right') || undefined,
+      layoutVariant: (s.layoutVariant as string) || undefined,
       items: s.items || undefined,
       ctaText: (s.ctaText as string) || undefined,
       ctaLink: (s.ctaLink as string) || undefined,

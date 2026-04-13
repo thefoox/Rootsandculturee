@@ -103,6 +103,7 @@ export const pageSectionSchema = z.object({
   body: z.string().optional(),
   image: sectionImageSchema.optional(),
   imagePosition: z.enum(['left', 'right']).optional(),
+  layoutVariant: z.enum(['overlap', 'split', 'contained', 'stacked', 'hero-overlay', 'offset']).optional(),
   ctaText: z.string().optional(),
   ctaLink: z.string().optional(),
   ctaSecondaryText: z.string().optional(),

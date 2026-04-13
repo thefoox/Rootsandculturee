@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/Button'
 import { CmsImageUpload } from '@/components/admin/CmsImageUpload'
 import { TiptapEditor } from '@/components/admin/TiptapEditor'
 import { toast } from 'sonner'
-import type { PageSection, PageContent, SectionItem, SectionType } from '@/types'
+import type { PageSection, PageContent, SectionItem, SectionType, TextImageLayout } from '@/types'
 
 const SECTION_TYPE_LABELS: Record<SectionType, string> = {
   hero: 'Hero-seksjon',
@@ -87,9 +87,10 @@ function createDefaultSection(type: SectionType, order: number): PageSection {
     base.image = undefined
   }
 
-  // Image position for text-image
+  // Image position and layout variant for text-image
   if (type === 'text-image') {
     base.imagePosition = 'right'
+    base.layoutVariant = 'overlap'
   }
 
   // Items array for types that use repeatable items
@@ -98,6 +99,50 @@ function createDefaultSection(type: SectionType, order: number): PageSection {
   }
 
   return base
+}
+
+function LayoutThumb({ variant }: { variant: TextImageLayout }) {
+  const img = 'fill-forest/40'
+  const txt = 'fill-card stroke-forest/15'
+  const thumbs: Record<TextImageLayout, React.ReactNode> = {
+    overlap: (
+      <svg viewBox="0 0 80 48" className="mx-auto h-10 w-16">
+        <rect x="2" y="4" width="38" height="40" rx="3" className={img} />
+        <rect x="32" y="10" width="46" height="28" rx="4" className={txt} strokeWidth="1" />
+      </svg>
+    ),
+    split: (
+      <svg viewBox="0 0 80 48" className="mx-auto h-10 w-16">
+        <rect x="2" y="4" width="36" height="40" rx="0" className={img} />
+        <rect x="42" y="4" width="36" height="40" rx="0" className={txt} strokeWidth="1" />
+      </svg>
+    ),
+    contained: (
+      <svg viewBox="0 0 80 48" className="mx-auto h-10 w-16">
+        <rect x="2" y="4" width="76" height="40" rx="6" className={txt} strokeWidth="1" />
+        <rect x="6" y="8" width="32" height="32" rx="3" className={img} />
+      </svg>
+    ),
+    stacked: (
+      <svg viewBox="0 0 80 48" className="mx-auto h-10 w-16">
+        <rect x="6" y="2" width="68" height="26" rx="3" className={img} />
+        <rect x="14" y="22" width="52" height="24" rx="4" className={txt} strokeWidth="1" />
+      </svg>
+    ),
+    'hero-overlay': (
+      <svg viewBox="0 0 80 48" className="mx-auto h-10 w-16">
+        <rect x="2" y="2" width="76" height="44" rx="3" className={img} />
+        <rect x="36" y="12" width="40" height="26" rx="4" fill="white" fillOpacity="0.9" stroke="#1B4332" strokeOpacity="0.15" strokeWidth="1" />
+      </svg>
+    ),
+    offset: (
+      <svg viewBox="0 0 80 48" className="mx-auto h-10 w-16">
+        <rect x="2" y="10" width="36" height="36" rx="3" className={img} />
+        <rect x="42" y="2" width="36" height="36" rx="4" className={txt} strokeWidth="1" />
+      </svg>
+    ),
+  }
+  return <>{thumbs[variant]}</>
 }
 
 function SortableSection({
@@ -241,26 +286,62 @@ function SortableSection({
           )}
 
           {hasImagePosition && (
-            <div>
-              <label className="mb-2 block text-label font-medium text-forest">
-                Bildeposisjon
-              </label>
-              <div className="flex gap-3">
-                {(['left', 'right'] as const).map((pos) => (
-                  <label key={pos} className="flex items-center gap-2 text-body text-forest">
-                    <input
-                      type="radio"
-                      name={`imagePosition-${section.id}`}
-                      value={pos}
-                      checked={(section.imagePosition || 'left') === pos}
-                      onChange={() => onUpdate({ imagePosition: pos })}
-                      className="h-4 w-4 accent-forest"
-                    />
-                    {pos === 'left' ? 'Bilde til venstre' : 'Bilde til høyre'}
-                  </label>
-                ))}
+            <>
+              <div>
+                <label className="mb-2 block text-label font-medium text-forest">
+                  Layout-variant
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {([
+                    { id: 'overlap' as TextImageLayout, name: 'Overlapp' },
+                    { id: 'split' as TextImageLayout, name: 'Delt' },
+                    { id: 'contained' as TextImageLayout, name: 'Innrammet' },
+                    { id: 'stacked' as TextImageLayout, name: 'Stablet' },
+                    { id: 'hero-overlay' as TextImageLayout, name: 'Hero' },
+                    { id: 'offset' as TextImageLayout, name: 'Forskjøvet' },
+                  ]).map((variant) => {
+                    const active = (section.layoutVariant || 'overlap') === variant.id
+                    return (
+                      <button
+                        key={variant.id}
+                        type="button"
+                        onClick={() => onUpdate({ layoutVariant: variant.id })}
+                        className={`rounded-lg border-2 p-2 text-center transition-colors ${
+                          active
+                            ? 'border-forest bg-forest/5'
+                            : 'border-forest/10 hover:border-forest/30'
+                        }`}
+                      >
+                        <LayoutThumb variant={variant.id} />
+                        <span className={`mt-1 block text-[11px] ${active ? 'font-semibold text-forest' : 'text-body/60'}`}>
+                          {variant.name}
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+              <div>
+                <label className="mb-2 block text-label font-medium text-forest">
+                  Bildeposisjon
+                </label>
+                <div className="flex gap-3">
+                  {(['left', 'right'] as const).map((pos) => (
+                    <label key={pos} className="flex items-center gap-2 text-body text-forest">
+                      <input
+                        type="radio"
+                        name={`imagePosition-${section.id}`}
+                        value={pos}
+                        checked={(section.imagePosition || 'left') === pos}
+                        onChange={() => onUpdate({ imagePosition: pos })}
+                        className="h-4 w-4 accent-forest"
+                      />
+                      {pos === 'left' ? 'Bilde til venstre' : 'Bilde til høyre'}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
 
           {hasItems && (
