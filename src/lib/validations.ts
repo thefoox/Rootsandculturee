@@ -99,11 +99,14 @@ export const pageSectionSchema = z.object({
   imagePosition: z.enum(['left', 'right']).optional(),
   ctaText: z.string().optional(),
   ctaLink: z.string().optional(),
+  ctaSecondaryText: z.string().optional(),
+  ctaSecondaryLink: z.string().optional(),
   items: z.array(z.object({
     title: z.string().default(''),
     description: z.string().default(''),
     icon: z.string().optional(),
     image: imageSchema.optional(),
+    href: z.string().optional(),
   })).optional(),
 })
 
