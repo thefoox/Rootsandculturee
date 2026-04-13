@@ -87,17 +87,23 @@ export async function createProduct(formData: FormData): Promise<ActionResult<{ 
   }))
 
   const now = new Date()
-  const docRef = await adminDb.collection('products').add({
-    ...data,
-    variants: mappedVariants,
-    inStock: data.stockCount > 0,
-    publishedAt: publish ? now : null,
-    createdAt: now,
-    updatedAt: now,
-  })
 
-  revalidateTag('products')
-  return { success: true, data: { id: docRef.id } }
+  try {
+    const docRef = await adminDb.collection('products').add({
+      ...data,
+      variants: mappedVariants,
+      inStock: data.stockCount > 0,
+      publishedAt: publish ? now : null,
+      createdAt: now,
+      updatedAt: now,
+    })
+
+    revalidateTag('products')
+    return { success: true, data: { id: docRef.id } }
+  } catch (err) {
+    console.error('[createProduct] Firestore write failed:', err)
+    return { success: false, errors: { _form: 'Kunne ikke opprette produktet. Prøv igjen.' } }
+  }
 }
 
 export async function updateProduct(id: string, formData: FormData): Promise<ActionResult> {

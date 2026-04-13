@@ -91,41 +91,47 @@ export async function createExperience(formData: FormData): Promise<ActionResult
 
   const { publish, dates, ...data } = parsed.data
   const now = new Date()
-  const docRef = await adminDb.collection('experiences').add({
-    ...data,
-    whatIsIncluded: data.whatIsIncluded
-      .split('\n')
-      .map((s) => s.trim())
-      .filter(Boolean),
-    publishedAt: publish ? now : null,
-    createdAt: now,
-    updatedAt: now,
-  })
 
-  // Create date subcollection docs
-  if (dates && dates.length > 0) {
-    const batch = adminDb.batch()
-    for (const dateSlot of dates) {
-      const ebPrice = dateSlot.earlyBirdPrice ? Math.round(Number(dateSlot.earlyBirdPrice) * 100) : null
-      const ebDeadline = dateSlot.earlyBirdDeadline ? new Date(dateSlot.earlyBirdDeadline) : null
-      const dateDocRef = docRef.collection(`dates`).doc()
-      batch.set(dateDocRef, {
-        date: new Date(dateSlot.date),
-        maxSeats: dateSlot.maxSeats,
-        bookedSeats: 0,
-        availableSeats: dateSlot.maxSeats,
-        isActive: true,
-        priceOverride: null,
-        earlyBirdPrice: ebPrice,
-        earlyBirdDeadline: ebDeadline,
-      })
+  try {
+    const docRef = await adminDb.collection('experiences').add({
+      ...data,
+      whatIsIncluded: data.whatIsIncluded
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean),
+      publishedAt: publish ? now : null,
+      createdAt: now,
+      updatedAt: now,
+    })
+
+    // Create date subcollection docs
+    if (dates && dates.length > 0) {
+      const batch = adminDb.batch()
+      for (const dateSlot of dates) {
+        const ebPrice = dateSlot.earlyBirdPrice ? Math.round(Number(dateSlot.earlyBirdPrice) * 100) : null
+        const ebDeadline = dateSlot.earlyBirdDeadline ? new Date(dateSlot.earlyBirdDeadline) : null
+        const dateDocRef = docRef.collection(`dates`).doc()
+        batch.set(dateDocRef, {
+          date: new Date(dateSlot.date),
+          maxSeats: dateSlot.maxSeats,
+          bookedSeats: 0,
+          availableSeats: dateSlot.maxSeats,
+          isActive: true,
+          priceOverride: null,
+          earlyBirdPrice: ebPrice,
+          earlyBirdDeadline: ebDeadline,
+        })
+      }
+      await batch.commit()
     }
-    await batch.commit()
-  }
 
-  revalidateTag('experiences')
-  revalidateTag('experience-dates')
-  return { success: true, data: { id: docRef.id } }
+    revalidateTag('experiences')
+    revalidateTag('experience-dates')
+    return { success: true, data: { id: docRef.id } }
+  } catch (err) {
+    console.error('[createExperience] Firestore write failed:', err)
+    return { success: false, errors: { _form: 'Kunne ikke opprette opplevelsen. Prøv igjen.' } }
+  }
 }
 
 export async function updateExperience(id: string, formData: FormData): Promise<ActionResult> {
