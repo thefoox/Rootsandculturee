@@ -172,18 +172,23 @@ export async function updateProduct(id: string, formData: FormData): Promise<Act
   const existing = existingDoc.data()
   const now = new Date()
 
-  await adminDb.collection('products').doc(id).update({
-    ...data,
-    variants: mappedVariants,
-    inStock: data.stockCount > 0,
-    publishedAt: publish
-      ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
-      : null,
-    updatedAt: now,
-  })
+  try {
+    await adminDb.collection('products').doc(id).update({
+      ...data,
+      variants: mappedVariants,
+      inStock: data.stockCount > 0,
+      publishedAt: publish
+        ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
+        : null,
+      updatedAt: now,
+    })
 
-  revalidateTag('products')
-  return { success: true }
+    revalidateTag('products')
+    return { success: true }
+  } catch (err) {
+    console.error('[updateProduct] Firestore write failed:', err)
+    return { success: false, errors: { _form: 'Kunne ikke oppdatere produktet. Prøv igjen.' } }
+  }
 }
 
 export async function deleteProduct(id: string): Promise<ActionResult> {

@@ -196,17 +196,22 @@ export async function updateExperience(id: string, formData: FormData): Promise<
   const existing = existingDoc.data()
   const now = new Date()
 
-  await adminDb.collection('experiences').doc(id).update({
-    ...data,
-    whatIsIncluded: data.whatIsIncluded
-      .split('\n')
-      .map((s) => s.trim())
-      .filter(Boolean),
-    publishedAt: publish
-      ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
-      : null,
-    updatedAt: now,
-  })
+  try {
+    await adminDb.collection('experiences').doc(id).update({
+      ...data,
+      whatIsIncluded: data.whatIsIncluded
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean),
+      publishedAt: publish
+        ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
+        : null,
+      updatedAt: now,
+    })
+  } catch (err) {
+    console.error('[updateExperience] Firestore write failed:', err)
+    return { success: false, errors: { _form: 'Kunne ikke oppdatere opplevelsen. Prøv igjen.' } }
+  }
 
   // Update dates subcollection: merge to preserve existing booking counts
   if (dates) {

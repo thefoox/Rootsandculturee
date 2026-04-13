@@ -149,18 +149,23 @@ export async function updateArticle(id: string, formData: FormData): Promise<Act
   const excerpt = data.excerpt || stripHtml(data.body).slice(0, 200)
   const now = new Date()
 
-  await adminDb.collection('articles').doc(id).update({
-    ...data,
-    excerpt,
-    status: publish ? 'published' : 'draft',
-    publishedAt: publish
-      ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
-      : (existing.publishedAt instanceof Date ? existing.publishedAt : null),
-    updatedAt: now,
-  })
+  try {
+    await adminDb.collection('articles').doc(id).update({
+      ...data,
+      excerpt,
+      status: publish ? 'published' : 'draft',
+      publishedAt: publish
+        ? (existing.publishedAt instanceof Date ? existing.publishedAt : now)
+        : (existing.publishedAt instanceof Date ? existing.publishedAt : null),
+      updatedAt: now,
+    })
 
-  revalidateTag('articles')
-  return { success: true }
+    revalidateTag('articles')
+    return { success: true }
+  } catch (err) {
+    console.error('[updateArticle] Firestore write failed:', err)
+    return { success: false, errors: { _form: 'Kunne ikke oppdatere artikkelen. Prøv igjen.' } }
+  }
 }
 
 export async function deleteArticle(id: string): Promise<ActionResult> {
