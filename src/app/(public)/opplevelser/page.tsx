@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Compass } from 'lucide-react'
 import { getExperiences, getExperienceDates } from '@/lib/data/experiences'
 import { getArticles } from '@/lib/data/articles'
-import { ExperienceList } from '@/components/experiences/ExperienceList'
+import { ExperienceGrid } from '@/components/experiences/ExperienceGrid'
 import { BlogCard } from '@/components/blog/BlogCard'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -164,7 +164,7 @@ export default async function OpplevelserPage() {
           </p>
           <div className="mt-10">
             {experiencesWithDates.length > 0 ? (
-              <ExperienceList experiences={experiencesWithDates} />
+              <ExperienceGrid experiences={experiencesWithDates} />
             ) : (
               <EmptyState icon={Compass} heading="Ingen opplevelser" body="Kom tilbake snart!" />
             )}
