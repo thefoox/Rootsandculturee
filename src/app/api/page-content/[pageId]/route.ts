@@ -72,8 +72,8 @@ export async function PUT(
       true // merge: DocRef.set() second arg is a boolean (see firestore-rest.ts)
     )
 
-    // Invalidate data cache + page CDN cache
-    revalidateTag('page-content', 'max')
+    // Invalidate data cache (hard expire) + page CDN cache
+    revalidateTag('page-content', { expire: 0 })
     const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
     if (publicPath !== '/') revalidatePath('/')
@@ -102,7 +102,7 @@ export async function DELETE(
 
     await adminDb.collection('pageContent').doc(pageId).delete()
 
-    revalidateTag('page-content', 'max')
+    revalidateTag('page-content', { expire: 0 })
     const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
 
