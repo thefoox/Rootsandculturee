@@ -2,7 +2,6 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Experience, ExperienceDate } from '@/types'
-import { mockExperiences, mockExperienceDates } from '@/lib/data/mock-data'
 import { mapExperience, mapExperienceDate } from '@/lib/mappers/experiences'
 
 const _getExperiences = unstable_cache(
@@ -22,8 +21,8 @@ export async function getExperiences(): Promise<Experience[]> {
   try {
     return await _getExperiences()
   } catch (e) {
-    console.error('[getExperiences] Firestore query failed, returning mock data:', e)
-    return mockExperiences
+    console.error('[getExperiences] Firestore query failed:', e)
+    return []
   }
 }
 
@@ -47,7 +46,7 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
     return await _getExperienceBySlug(slug)
   } catch (e) {
     console.error('[getExperienceBySlug] Firestore query failed:', e)
-    return mockExperiences.find((e) => e.slug === slug) ?? null
+    return null
   }
 }
 
@@ -71,6 +70,6 @@ export async function getExperienceDates(experienceId: string): Promise<Experien
     return await _getExperienceDates(experienceId)
   } catch (e) {
     console.error('[getExperienceDates] Firestore query failed:', e)
-    return mockExperienceDates.get(experienceId) ?? []
+    return []
   }
 }

@@ -112,15 +112,7 @@ export interface Article {
   publishedAt: Date | null
 }
 
-// Phase 2: Site content (legacy — kept for backward compat)
-
-export interface SiteContent {
-  id: string
-  heroTitle: string
-  heroIngress: string
-  aboutText: string
-  updatedAt: Date
-}
+// SiteContent removed in Phase 19 -- migrated to PageContent section-based system
 
 // CMS Page Content
 

@@ -78,11 +78,7 @@ export const articleSchema = z.object({
   publish: z.boolean().optional(),
 })
 
-export const siteContentSchema = z.object({
-  heroTitle: z.string().min(1, 'Dette feltet er påkrevd.'),
-  heroIngress: z.string().min(1, 'Dette feltet er påkrevd.'),
-  aboutText: z.string().min(1, 'Dette feltet er påkrevd.'),
-})
+// siteContentSchema removed in Phase 19 -- migrated to PageContent section-based system
 
 // -- Page Content schemas (CMS API validation) --
 

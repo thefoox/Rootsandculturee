@@ -56,6 +56,14 @@
         { "fieldPath": "dateId", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "pageContent",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "showInNavigation", "order": "ASCENDING" },
+        { "fieldPath": "navigationOrder", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

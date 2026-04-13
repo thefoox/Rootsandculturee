@@ -2,7 +2,6 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Article } from '@/types'
-import { mockArticles } from '@/lib/data/mock-data'
 import { mapArticle } from '@/lib/mappers/articles'
 
 const _getArticles = unstable_cache(
@@ -24,7 +23,7 @@ export async function getArticles(): Promise<Article[]> {
     return await _getArticles()
   } catch (e) {
     console.warn('getArticles failed:', e)
-    return mockArticles
+    return []
   }
 }
 
@@ -48,6 +47,6 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
     return await _getArticleBySlug(slug)
   } catch (e) {
     console.warn('getArticleBySlug failed:', e)
-    return mockArticles.find((a) => a.slug === slug) ?? null
+    return null
   }
 }

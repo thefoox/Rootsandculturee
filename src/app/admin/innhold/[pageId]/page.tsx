@@ -59,26 +59,44 @@ function createDefaultSection(type: SectionType, order: number): PageSection {
     heading: '',
     order,
   }
-  if (['hero', 'cta', 'text-image'].includes(type)) {
-    base.ctaText = ''
-    base.ctaLink = ''
-  }
-  if (['text', 'text-image'].includes(type)) {
-    base.body = ''
-  }
-  if (['text', 'text-image', 'video'].includes(type)) {
-    base.body = ''
-  }
+
+  // Subheading for types that show it
   if (['hero', 'text', 'cta', 'experiences-grid', 'articles-grid', 'products-grid', 'testimonials', 'newsletter', 'stats'].includes(type)) {
     base.subheading = ''
   }
-  if (['faq', 'values', 'team', 'gallery', 'contact-info', 'trust-bar', 'testimonials', 'categories', 'stats', 'logo-bar'].includes(type)) {
-    base.items = []
+
+  // Body text for types that use rich text or video URL
+  if (['hero', 'text', 'text-image', 'cta', 'video'].includes(type)) {
+    base.body = ''
   }
-  if (['newsletter'].includes(type)) {
+
+  // CTA fields
+  if (['hero', 'cta', 'text-image', 'newsletter'].includes(type)) {
     base.ctaText = ''
     base.ctaLink = ''
   }
+
+  // Secondary CTA for hero
+  if (type === 'hero') {
+    base.ctaSecondaryText = ''
+    base.ctaSecondaryLink = ''
+  }
+
+  // Image for types that show a single image
+  if (['hero', 'text-image'].includes(type)) {
+    base.image = undefined
+  }
+
+  // Image position for text-image
+  if (type === 'text-image') {
+    base.imagePosition = 'right'
+  }
+
+  // Items array for types that use repeatable items
+  if (['faq', 'values', 'team', 'gallery', 'contact-info', 'trust-bar', 'testimonials', 'categories', 'stats', 'logo-bar'].includes(type)) {
+    base.items = []
+  }
+
   return base
 }
 

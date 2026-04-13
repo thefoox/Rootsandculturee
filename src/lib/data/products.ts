@@ -2,7 +2,6 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { adminDb } from '@/lib/firebase/admin'
 import type { Product, ProductCategory } from '@/types'
-import { mockProducts } from '@/lib/data/mock-data'
 import { mapProduct } from '@/lib/mappers/products'
 
 const _getProducts = unstable_cache(
@@ -22,8 +21,8 @@ export async function getProducts(): Promise<Product[]> {
   try {
     return await _getProducts()
   } catch (e) {
-    console.error('[getProducts] Firestore query failed, returning mock data:', e)
-    return mockProducts
+    console.error('[getProducts] Firestore query failed:', e)
+    return []
   }
 }
 
@@ -45,8 +44,8 @@ export async function getProductsByCategory(category: ProductCategory): Promise<
   try {
     return await _getProductsByCategory(category)
   } catch (e) {
-    console.error('[getProductsByCategory] Firestore query failed, returning mock data:', e)
-    return mockProducts.filter((p) => p.category === category)
+    console.error('[getProductsByCategory] Firestore query failed:', e)
+    return []
   }
 }
 
