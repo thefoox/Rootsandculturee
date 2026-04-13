@@ -89,26 +89,33 @@ const sectionTypeValues = [
   'video', 'stats', 'logo-bar',
 ] as const
 
+// Lenient image schema for sections — alt may be empty on existing content
+const sectionImageSchema = z.object({
+  url: z.string().min(1),
+  alt: z.string().default(''),
+}).passthrough()
+
 export const pageSectionSchema = z.object({
   id: z.string().min(1, 'Seksjons-ID er påkrevd.'),
   type: z.enum(sectionTypeValues, { message: 'Ugyldig seksjonstype.' }),
   heading: z.string().optional(),
   subheading: z.string().optional(),
   body: z.string().optional(),
-  image: imageSchema.optional(),
+  image: sectionImageSchema.optional(),
   imagePosition: z.enum(['left', 'right']).optional(),
   ctaText: z.string().optional(),
   ctaLink: z.string().optional(),
   ctaSecondaryText: z.string().optional(),
   ctaSecondaryLink: z.string().optional(),
+  order: z.number().optional(),
   items: z.array(z.object({
     title: z.string().default(''),
     description: z.string().default(''),
     icon: z.string().optional(),
-    image: imageSchema.optional(),
+    image: sectionImageSchema.optional(),
     href: z.string().optional(),
-  })).optional(),
-})
+  }).passthrough()).optional(),
+}).passthrough()
 
 export const pageContentCreateSchema = z.object({
   title: z.string().min(1, 'Tittel er påkrevd.').max(200),
