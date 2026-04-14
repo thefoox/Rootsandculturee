@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { subscribeNewsletter } from '@/lib/email/contacts'
+import { checkActionRateLimit } from '@/lib/rate-limit'
 
 export interface NewsletterState {
   success: boolean
@@ -17,6 +18,11 @@ export async function subscribeAction(
   _prevState: NewsletterState,
   formData: FormData
 ): Promise<NewsletterState> {
+  const limited = await checkActionRateLimit('newsletter', 5, 3_600_000) // 5/hr
+  if (limited) {
+    return { success: false, error: 'For mange forsøk. Prøv igjen om en time.' }
+  }
+
   const parsed = NewsletterSchema.safeParse({
     email: formData.get('email'),
   })
