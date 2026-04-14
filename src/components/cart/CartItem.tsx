@@ -5,6 +5,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useCart, getItemKey } from './CartProvider'
 import { formatPrice, formatDate } from '@/lib/format'
+import { MAX_PRODUCT_QUANTITY } from '@/actions/cart'
 import type { CartItem as CartItemType } from '@/types'
 
 interface CartItemProps {
@@ -100,8 +101,10 @@ export function CartItem({ item }: CartItemProps) {
               <button
                 type="button"
                 onClick={() => updateQuantity(getItemKey(item), item.quantity + 1)}
-                className="flex h-8 w-8 items-center justify-center rounded border border-forest/20 text-forest"
-                aria-label="Ok antall"
+                disabled={item.quantity >= MAX_PRODUCT_QUANTITY}
+                aria-disabled={item.quantity >= MAX_PRODUCT_QUANTITY}
+                className="flex h-8 w-8 items-center justify-center rounded border border-forest/20 text-forest disabled:cursor-not-allowed disabled:opacity-40"
+                aria-label="Øk antall"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
               </button>

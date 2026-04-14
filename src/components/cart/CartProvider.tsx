@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react'
 import { loadCart, saveCart } from '@/lib/cart'
+import { MAX_PRODUCT_QUANTITY } from '@/actions/cart'
 import type { CartItem } from '@/types'
 
 interface CartContextValue {
@@ -74,6 +75,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updateQuantity = useCallback((key: string, quantity: number) => {
     if (quantity < 1) return
+    if (quantity > MAX_PRODUCT_QUANTITY) return
     setItems((prev) =>
       prev.map((i) => {
         if (getItemKey(i) !== key) return i
