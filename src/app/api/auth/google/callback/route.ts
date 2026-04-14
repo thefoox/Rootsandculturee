@@ -3,8 +3,24 @@ import { createSession } from '@/lib/session'
 
 const GOOGLE_CLIENT_ID = '914297093615-06o57idijbrb86vn16v757ks8u0j2gh3.apps.googleusercontent.com'
 
+/**
+ * Allowed hosts for baseUrl/callbackUrl construction.
+ * Defense-in-depth: Google also validates redirect_uri, but we validate Host on our side.
+ * VERCEL_URL is set automatically on Vercel preview/production deployments.
+ */
+const ALLOWED_HOSTS = [
+  'rootsnew.vercel.app',
+  'localhost:3000',
+  process.env.VERCEL_URL,           // e.g. "my-app-abc123.vercel.app" (preview deploys)
+  process.env.NEXT_PUBLIC_BASE_DOMAIN, // custom domain if set
+].filter(Boolean) as string[]
+
 export async function GET(request: NextRequest) {
-  const host = request.headers.get('host') || 'rootsnew.vercel.app'
+  // Validate Host header against allowlist before constructing any URLs
+  const host = request.headers.get('host') || ''
+  if (!ALLOWED_HOSTS.includes(host)) {
+    return NextResponse.redirect('https://rootsnew.vercel.app/?auth_error=invalid_host')
+  }
   const protocol = host.includes('localhost') ? 'http' : 'https'
   const baseUrl = `${protocol}://${host}`
   const callbackUrl = `${baseUrl}/api/auth/google/callback`
