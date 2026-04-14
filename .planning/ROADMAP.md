@@ -149,10 +149,10 @@ Plans:
 **Goal**: Fiks 4 bekreftede problemer: stale cart-validering mot Firestore, max-antall 99, konto error boundary, og aria-label-fiks
 **Requirements**: HK-01 (Stale cart validation), HK-02 (Max quantity cap), HK-03 (Konto error boundary), HK-04 (Aria-label fix)
 **Depends on**: Phase 22
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
-- [ ] 23-01-PLAN.md — Cart robustness: validateCartItems server action, handlekurv page mount validation with toast, max quantity cap at 99, aria-label fix
+- [x] 23-01-PLAN.md — Cart robustness: validateCartItems server action, handlekurv page mount validation with toast, max quantity cap at 99, aria-label fix
 - [ ] 23-02-PLAN.md — Konto error boundary: Norwegian error.tsx at /konto/ with retry and back link
 
 ### Phase 24: Auth & Produktsider Robusthet
