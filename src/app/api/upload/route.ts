@@ -107,6 +107,17 @@ export async function POST(request: Request) {
     const token = await getStorageAccessToken()
     const rawBuffer = Buffer.from(await file.arrayBuffer())
 
+    // Reject animated WebP — can be very large and cause DoS during processing
+    if (ext === '.webp') {
+      const meta = await sharp(rawBuffer).metadata()
+      if ((meta.pages ?? 1) > 1) {
+        return NextResponse.json(
+          { error: 'Animerte WebP-filer er ikke tillatt.' },
+          { status: 400 }
+        )
+      }
+    }
+
     // Optimize raster images with Sharp (skip SVG and GIF)
     const isRaster = ['.jpg', '.jpeg', '.png', '.webp'].includes(ext)
     let uploadBuffer: Buffer
