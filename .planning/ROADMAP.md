@@ -113,9 +113,9 @@ Plans:
 **Goal**: Gjor CMS-editoren skuddsikker med profesjonell UX — sikkerhet mot datatap (isDirty + beforeunload + navigasjonsvarsling), forbedret seksjonshaandtering (dupliser, gruppert typevelger, kollapser/utvid alle), autosave, elementsortering, og versjonshistorikk med mulighet for gjenoppretting
 **Requirements**: CMS-FP-01 through CMS-FP-17
 **Depends on**: Phase 19
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 
 Plans:
-- [ ] 20-01-PLAN.md — Safety and validation: isDirty tracking, beforeunload guard, navigation intercept dialog, DeleteConfirmDialog for sections, multi-open sections with collapse/expand, required field asterisks, save validation warnings, PublishBar integration
-- [ ] 20-02-PLAN.md — UX and productivity: duplicate section button, grouped SectionTypePicker modal with icons and descriptions, autosave with 30s debounce, item reorder up/down buttons, character counts on heading/subheading
-- [ ] 20-03-PLAN.md — Version history: Firestore versions subcollection API (create/list/revert/prune), VersionHistoryPanel component, automatic version creation on save, Firestore security rule for subcollection
+- [x] 20-01-PLAN.md — Safety and validation: isDirty tracking, beforeunload guard, navigation intercept dialog, DeleteConfirmDialog for sections, multi-open sections with collapse/expand, required field asterisks, save validation warnings, PublishBar integration
+- [x] 20-02-PLAN.md — UX and productivity: duplicate section button, grouped SectionTypePicker modal with icons and descriptions, autosave with 30s debounce, item reorder up/down buttons, character counts on heading/subheading
+- [x] 20-03-PLAN.md — Version history: Firestore versions subcollection API (create/list/revert/prune), VersionHistoryPanel component, automatic version creation on save, Firestore security rule for subcollection

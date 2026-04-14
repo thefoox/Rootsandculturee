@@ -44,7 +44,7 @@ export async function POST(
     )
 
     // Invalidate caches
-    revalidateTag('page-content')
+    revalidateTag('page-content', { expire: 0 })
     const slug = versionData.slug as string
     const publicPath = (slug === 'forside' || slug === '/') ? '/' : `/${slug}`
     revalidatePath(publicPath)
