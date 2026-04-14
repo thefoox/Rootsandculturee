@@ -9,7 +9,7 @@ interface PublishBarProps {
   isPublished: boolean
   isSaving: boolean
   isPublishing: boolean
-  contentType: 'product' | 'experience' | 'article'
+  contentType: 'product' | 'experience' | 'article' | 'page'
 }
 
 export function PublishBar({
@@ -21,10 +21,14 @@ export function PublishBar({
   isPublishing,
   contentType,
 }: PublishBarProps) {
-  const publishLabel =
-    contentType === 'article' ? 'Publiser artikkel' : 'Publiser'
-  const unpublishLabel =
-    contentType === 'article' ? 'Avpubliser artikkel' : 'Avpubliser'
+  const labels: Record<PublishBarProps['contentType'], { publish: string; unpublish: string }> = {
+    product: { publish: 'Publiser', unpublish: 'Avpubliser' },
+    experience: { publish: 'Publiser', unpublish: 'Avpubliser' },
+    article: { publish: 'Publiser artikkel', unpublish: 'Avpubliser artikkel' },
+    page: { publish: 'Publiser side', unpublish: 'Avpubliser side' },
+  }
+  const publishLabel = labels[contentType].publish
+  const unpublishLabel = labels[contentType].unpublish
 
   return (
     <div className="sticky bottom-0 flex items-center justify-between border-t border-forest/12 bg-card px-8 py-4">
