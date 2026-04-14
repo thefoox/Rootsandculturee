@@ -8,14 +8,10 @@
     :root {
       --green-900: #1a2e1a;
       --green-800: #2d4a2d;
-      --green-700: #3d6b3d;
-      --green-600: #4a7c4a;
       --rust: #a0522d;
-      --rust-light: #c4724a;
-      --burnt-orange: #cc6633;
-      --warm-brown: #8b6914;
-      --cream: #faf6f0;
-      --cream-dim: #f0ebe3;
+      --text: #2c2c2c;
+      --text-light: #666;
+      --text-muted: #999;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,24 +22,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: var(--green-900);
+      background: #fff;
       font-family: 'Georgia', 'Times New Roman', serif;
-      color: var(--cream);
+      color: var(--text);
       overflow: hidden;
       position: relative;
-    }
-
-    /* Subtle background texture */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 20% 50%, rgba(160, 82, 45, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 30%, rgba(45, 74, 45, 0.3) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(204, 102, 51, 0.06) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
     }
 
     .container {
@@ -54,25 +37,19 @@
       padding: 2rem;
     }
 
-    /* Leaf decoration */
-    .leaf-icon {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 2rem;
-      opacity: 0.85;
-    }
-
-    .leaf-icon svg {
-      width: 100%;
-      height: 100%;
+    .logo {
+      width: 220px;
+      height: auto;
+      margin: 0 auto 2.5rem;
+      display: block;
     }
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 400;
       letter-spacing: 0.02em;
       margin-bottom: 0.75rem;
-      color: var(--cream);
+      color: var(--green-900);
     }
 
     .divider {
@@ -84,16 +61,16 @@
     }
 
     p {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       line-height: 1.7;
-      color: var(--cream-dim);
+      color: var(--text-light);
       margin-bottom: 1rem;
       font-weight: 300;
     }
 
     p.detail {
-      font-size: 0.95rem;
-      color: rgba(250, 246, 240, 0.55);
+      font-size: 0.9rem;
+      color: var(--text-muted);
       margin-top: 1.5rem;
     }
 
@@ -133,43 +110,21 @@
     }
 
     .brand {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(250, 246, 240, 0.3);
+      color: var(--text-muted);
       font-family: system-ui, -apple-system, sans-serif;
-    }
-
-    /* Floating leaves animation */
-    .floating-leaf {
-      position: fixed;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 0;
-      animation: fall linear infinite;
-    }
-
-    @keyframes fall {
-      0% {
-        opacity: 0;
-        transform: translateY(-20px) rotate(0deg) translateX(0);
-      }
-      10% { opacity: 0.15; }
-      90% { opacity: 0.15; }
-      100% {
-        opacity: 0;
-        transform: translateY(100vh) rotate(360deg) translateX(80px);
-      }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .dot { animation: none; opacity: 0.6; }
-      .floating-leaf { animation: none; display: none; }
     }
 
     @media (max-width: 480px) {
-      h1 { font-size: 1.6rem; }
+      h1 { font-size: 1.5rem; }
       p { font-size: 1rem; }
+      .logo { width: 160px; }
       .container { padding: 1.5rem; }
     }
   </style>
@@ -177,22 +132,14 @@
 <body>
 
   <div class="container">
-    <div class="leaf-icon">
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32 8C32 8 16 20 16 36C16 44.8 23.2 52 32 52C40.8 52 48 44.8 48 36C48 20 32 8 32 8Z"
-              fill="none" stroke="rgba(160,82,45,0.6)" stroke-width="1.5"/>
-        <path d="M32 18V46" stroke="rgba(160,82,45,0.4)" stroke-width="1"/>
-        <path d="M32 28C27 24 22 28 22 28" stroke="rgba(160,82,45,0.3)" stroke-width="1"/>
-        <path d="M32 34C37 30 42 34 42 34" stroke="rgba(160,82,45,0.3)" stroke-width="1"/>
-      </svg>
-    </div>
+    <img src="file:///home/william/Documents/Rootsnew/public/logo_black.png" alt="Roots & Culture" class="logo">
 
     <h1>Nettsiden oppdateres</h1>
 
     <div class="divider"></div>
 
     <p>
-      Vi jobber med a forbedre opplevelsen for deg.
+      Vi jobber med å forbedre opplevelsen for deg.
       Nettsiden er snart tilbake.
     </p>
 
@@ -203,7 +150,7 @@
     </div>
 
     <p class="detail">
-      Takk for talmodigheten
+      Takk for tålmodigheten
     </p>
   </div>
 
@@ -211,33 +158,5 @@
     <span class="brand">Roots & Culture</span>
   </div>
 
-  <script>
-    // Floating leaf particles
-    (function() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      const leafSVG = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 2C8 2 4 5 4 9C4 11.2 5.8 13 8 13C10.2 13 12 11.2 12 9C12 5 8 2 8 2Z"
-              fill="rgba(160,82,45,0.4)"/>
-      </svg>`;
-
-      function createLeaf() {
-        const leaf = document.createElement('div');
-        leaf.className = 'floating-leaf';
-        leaf.innerHTML = leafSVG;
-        leaf.style.left = Math.random() * 100 + 'vw';
-        leaf.style.animationDuration = (12 + Math.random() * 10) + 's';
-        leaf.style.animationDelay = Math.random() * 8 + 's';
-        leaf.style.transform = `scale(${0.5 + Math.random() * 0.8})`;
-        document.body.appendChild(leaf);
-
-        leaf.addEventListener('animationiteration', () => {
-          leaf.style.left = Math.random() * 100 + 'vw';
-        });
-      }
-
-      for (let i = 0; i < 6; i++) createLeaf();
-    })();
-  </script>
 </body>
 </html>

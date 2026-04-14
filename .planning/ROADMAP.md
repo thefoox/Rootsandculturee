@@ -137,9 +137,9 @@ Plans:
 **Goal**: Fiks kritiske e-commerce problemer (checkout-frys, webhook-feil, stock race condition, manglende timeout) og legg til tilbudspris-funksjonalitet for produkter og opplevelser
 **Requirements**: EC-01, EC-02, EC-03, EC-04, EC-05, EC-06, EC-07
 **Depends on**: Phase 21
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 
 Plans:
-- [ ] 22-01-PLAN.md — Checkout robustness: ConfirmationModal escape/timeout, confirmPayment 30s timeout, 3DS redirect error fix
-- [ ] 22-02-PLAN.md — Webhook/stock safety: idempotency for processing status, stock guard in transaction, gift card zero-amount idempotency
-- [ ] 22-03-PLAN.md — Tilbudspris: salePrice on types/schemas/mappers/actions/admin forms/cards/checkout verification
+- [x] 22-01-PLAN.md — Checkout robustness: ConfirmationModal escape/timeout, confirmPayment 30s timeout, 3DS redirect error fix
+- [x] 22-02-PLAN.md — Webhook/stock safety: idempotency for processing status, stock guard in transaction, gift card zero-amount idempotency
+- [x] 22-03-PLAN.md — Tilbudspris: salePrice on types/schemas/mappers/actions/admin forms/cards/checkout verification
