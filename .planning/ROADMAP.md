@@ -125,9 +125,9 @@ Plans:
 **Goal**: Fiks alle kritiske og viktige admin-robusthetsproblemer funnet i revisjon — beforeunload pa alle skjemaer, try/catch pa alle slette-handlinger, valideringsfeil-fikser, loading-skjeletter, og feilhandtering for edge cases
 **Requirements**: AR-01 through AR-08
 **Depends on**: Phase 20
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 
 Plans:
-- [ ] 21-01-PLAN.md — Beforeunload guard on all 6 create/edit pages + try/catch on all 3 delete actions + article edit error toast
-- [ ] 21-02-PLAN.md — Validation fixes: ImageUpload alt-text bug, DateSlotsEditor date constraints, TipTap character count + paste sanitization, gift card deactivation confirmation
-- [ ] 21-03-PLAN.md — Loading skeletons on 3 admin list pages + order detail timeout/error state
+- [x] 21-01-PLAN.md — Beforeunload guard on all 6 create/edit pages + try/catch on all 3 delete actions + article edit error toast
+- [x] 21-02-PLAN.md — Validation fixes: ImageUpload alt-text bug, DateSlotsEditor date constraints, TipTap character count + paste sanitization, gift card deactivation confirmation
+- [x] 21-03-PLAN.md — Loading skeletons on 3 admin list pages + order detail timeout/error state
