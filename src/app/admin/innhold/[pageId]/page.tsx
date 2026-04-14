@@ -26,6 +26,7 @@ import { TiptapEditor } from '@/components/admin/TiptapEditor'
 import { DeleteConfirmDialog } from '@/components/admin/DeleteConfirmDialog'
 import { PublishBar } from '@/components/admin/PublishBar'
 import { SectionTypePicker } from '@/components/admin/SectionTypePicker'
+import { VersionHistoryPanel } from '@/components/admin/VersionHistoryPanel'
 import { Copy } from 'lucide-react'
 import { toast } from 'sonner'
 import type { PageSection, PageContent, SectionItem, SectionType, TextImageLayout } from '@/types'
@@ -513,6 +514,7 @@ export default function EditPageContentPage() {
 
   const savedStateRef = useRef<string>('')
   const [isDirty, setIsDirty] = useState(false)
+  const [versionRefresh, setVersionRefresh] = useState(0)
   const autosaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const sensors = useSensors(
@@ -587,6 +589,15 @@ export default function EditPageContentPage() {
           savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished, showInNav, navOrder, sections })
           setIsDirty(false)
           setLastSaved(new Date())
+          fetch(`/api/page-content/${pageId}/versions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: pageTitle, slug: pageSlug, isPublished,
+              showInNavigation: showInNav, navigationOrder: navOrder, sections,
+            }),
+          }).catch(() => {}) // Silent fail — version creation should not block workflow
+          setVersionRefresh(prev => prev + 1)
         }
       } catch {
         // Silent fail for autosave — user can still manually save
@@ -734,6 +745,15 @@ export default function EditPageContentPage() {
         savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished, showInNav, navOrder, sections })
         setIsDirty(false)
         setLastSaved(new Date())
+        fetch(`/api/page-content/${pageId}/versions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: pageTitle, slug: pageSlug, isPublished,
+            showInNavigation: showInNav, navigationOrder: navOrder, sections,
+          }),
+        }).catch(() => {}) // Silent fail — version creation should not block workflow
+        setVersionRefresh(prev => prev + 1)
       } else {
         toast.error('Kunne ikke lagre.')
       }
@@ -763,6 +783,15 @@ export default function EditPageContentPage() {
         savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished: publishedState, showInNav, navOrder, sections })
         setIsDirty(false)
         setLastSaved(new Date())
+        fetch(`/api/page-content/${pageId}/versions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: pageTitle, slug: pageSlug, isPublished: publishedState,
+            showInNavigation: showInNav, navigationOrder: navOrder, sections,
+          }),
+        }).catch(() => {}) // Silent fail — version creation should not block workflow
+        setVersionRefresh(prev => prev + 1)
       } else {
         toast.error('Kunne ikke publisere.')
       }
@@ -788,6 +817,15 @@ export default function EditPageContentPage() {
         toast.success('Siden er avpublisert.')
         savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished: false, showInNav, navOrder, sections })
         setIsDirty(false)
+        fetch(`/api/page-content/${pageId}/versions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: pageTitle, slug: pageSlug, isPublished: false,
+            showInNavigation: showInNav, navigationOrder: navOrder, sections,
+          }),
+        }).catch(() => {}) // Silent fail — version creation should not block workflow
+        setVersionRefresh(prev => prev + 1)
       } else {
         toast.error('Kunne ikke avpublisere.')
       }
@@ -906,6 +944,32 @@ export default function EditPageContentPage() {
           </div>
         </SortableContext>
       </DndContext>
+
+      {/* Version history panel */}
+      <div className="mt-6">
+        <VersionHistoryPanel
+          pageId={pageId}
+          onRevert={(data) => {
+            setPageTitle(data.title)
+            setPageSlug(data.slug)
+            setIsPublished(data.isPublished)
+            setShowInNav(data.showInNavigation)
+            setNavOrder(data.navigationOrder)
+            setSections((data.sections as PageSection[]).sort((a, b) => a.order - b.order))
+            // Update saved state to match reverted content
+            savedStateRef.current = JSON.stringify({
+              pageTitle: data.title,
+              pageSlug: data.slug,
+              isPublished: data.isPublished,
+              showInNav: data.showInNavigation,
+              navOrder: data.navigationOrder,
+              sections: (data.sections as PageSection[]).sort((a, b) => a.order - b.order),
+            })
+            setIsDirty(false)
+          }}
+          refreshTrigger={versionRefresh}
+        />
+      </div>
 
       {/* Section delete confirmation dialog */}
       <DeleteConfirmDialog
