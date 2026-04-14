@@ -10,7 +10,7 @@ const isDev = process.env.NODE_ENV === 'development'
 // 'frame-ancestors none' reinforces X-Frame-Options: DENY.
 const cspHeader = `
   default-src 'self';
-  script-src 'self' https://js.stripe.com${isDev ? " 'unsafe-eval'" : ''};
+  script-src 'self' 'unsafe-inline' https://js.stripe.com${isDev ? " 'unsafe-eval'" : ''};
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   img-src 'self' blob: data: https://firebasestorage.googleapis.com https://storage.googleapis.com;
   font-src 'self' https://fonts.gstatic.com;
