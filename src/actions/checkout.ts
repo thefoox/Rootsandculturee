@@ -345,6 +345,27 @@ export async function updatePaymentIntentMetadata(
 
   // If gift card covers the full amount, cancel PI and fulfill directly
   if (total <= 0 && giftCardCode && giftCardDeduction > 0) {
+    // Idempotency guard: prevent double-processing of gift card zero-amount path
+    const fulfillmentRef = adminDb.collection('giftCardFulfillments').doc(paymentIntentId)
+    const existingFulfillment = await fulfillmentRef.get()
+    if (existingFulfillment.exists) {
+      // Already processed — return success without re-processing
+      return {
+        coveredByGiftCard: true,
+        giftCardCode,
+        totalDeducted: giftCardDeduction,
+      }
+    }
+
+    // Mark as processing BEFORE any side effects
+    await fulfillmentRef.set({
+      status: 'processing',
+      paymentIntentId,
+      giftCardCode,
+      totalDeducted: giftCardDeduction,
+      startedAt: new Date(),
+    })
+
     try {
       await stripe.paymentIntents.cancel(paymentIntentId)
     } catch (cancelErr) {
@@ -458,6 +479,12 @@ export async function updatePaymentIntentMetadata(
         })
       })
     }
+
+    // Mark fulfillment as completed
+    await fulfillmentRef.update({
+      status: 'completed',
+      completedAt: new Date(),
+    })
 
     return {
       coveredByGiftCard: true,
