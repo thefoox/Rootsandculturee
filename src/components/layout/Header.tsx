@@ -111,11 +111,11 @@ export function Header() {
     <>
       <header
         className={cn(
-          'fixed z-50 flex h-20 items-center justify-center motion-safe:transition-all motion-safe:duration-300',
+          'fixed z-50 flex h-20 items-center justify-center motion-safe:transition-[top,left,right,max-width,border-radius,box-shadow,background-color,backdrop-filter] motion-safe:duration-500 motion-safe:ease-[cubic-bezier(0.4,0,0.2,1)]',
           isScrolled
             ? 'top-3 left-4 right-4 mx-auto max-w-[1200px] rounded-full shadow-lg bg-cream/95 backdrop-blur-md sm:left-6 sm:right-6'
             : isTransparent
-              ? 'top-0 left-0 right-0 bg-transparent'
+              ? 'top-0 left-0 right-0 bg-transparent backdrop-blur-none'
               : 'top-0 left-0 right-0 bg-cream/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.05)]'
         )}
       >
