@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from 'react'
 import { loadCart, saveCart } from '@/lib/cart'
-import { MAX_PRODUCT_QUANTITY } from '@/actions/cart'
+import { MAX_PRODUCT_QUANTITY } from '@/lib/cart-constants'
 import type { CartItem } from '@/types'
 
 interface CartContextValue {

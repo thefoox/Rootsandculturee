@@ -3,8 +3,6 @@
 import { adminDb } from '@/lib/firebase/admin'
 import type { CartItem } from '@/types'
 
-export const MAX_PRODUCT_QUANTITY = 99
-
 export interface CartValidationResult {
   valid: CartItem[]
   removed: Array<{

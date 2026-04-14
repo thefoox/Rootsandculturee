@@ -5,7 +5,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useCart, getItemKey } from './CartProvider'
 import { formatPrice, formatDate } from '@/lib/format'
-import { MAX_PRODUCT_QUANTITY } from '@/actions/cart'
+import { MAX_PRODUCT_QUANTITY } from '@/lib/cart-constants'
 import type { CartItem as CartItemType } from '@/types'
 
 interface CartItemProps {
