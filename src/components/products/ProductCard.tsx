@@ -20,7 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/produkter/${product.slug}`}
-      aria-label={`${product.name}, ${formatPrice(product.price)}`}
+      aria-label={`${product.name}, ${formatPrice(product.salePrice && product.salePrice < product.price ? product.salePrice : product.price)}`}
       className="group block overflow-hidden rounded-xl border border-forest/8 bg-cream shadow-sm motion-safe:transition-all motion-safe:duration-200 hover:shadow-md hover:-translate-y-1"
     >
       {/* Ember accent strip */}
@@ -49,9 +49,17 @@ export function ProductCard({ product }: ProductCardProps) {
         <h3 className="mt-2 line-clamp-2 font-heading text-h4 font-bold leading-[1.25] text-forest">
           {product.name}
         </h3>
-        <span className="mt-2 block font-body text-h4 font-bold text-forest">
-          {formatPrice(product.price)}
-        </span>
+        {product.salePrice && product.salePrice < product.price ? (
+          <p className="mt-2 font-body text-body font-bold text-forest">
+            {formatPrice(product.salePrice)}{' '}
+            <span className="font-normal text-body/50 line-through">{formatPrice(product.price)}</span>{' '}
+            <span className="text-rust text-[12px] font-medium">tilbud</span>
+          </p>
+        ) : (
+          <span className="mt-2 block font-body text-h4 font-bold text-forest">
+            {formatPrice(product.price)}
+          </span>
+        )}
       </div>
     </Link>
   )

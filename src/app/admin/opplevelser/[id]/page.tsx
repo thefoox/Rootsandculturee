@@ -38,6 +38,7 @@ export default function EditExperiencePage() {
   const [images, setImages] = useState<ProductImage[]>([])
   const [dates, setDates] = useState<{ date: string; maxSeats: number; earlyBirdPrice: string; earlyBirdDeadline: string }[]>([])
   const [basePrice, setBasePrice] = useState('')
+  const [salePrice, setSalePrice] = useState('')
   const [whatIsIncluded, setWhatIsIncluded] = useState('')
   const [cancellationPolicy, setCancellationPolicy] = useState('')
   const [whatToBring, setWhatToBring] = useState('')
@@ -62,6 +63,7 @@ export default function EditExperiencePage() {
         setDurationText(experience.durationText)
         setImages(experience.images)
         setBasePrice(String(experience.basePrice / 100))
+        setSalePrice(experience.salePrice ? String(experience.salePrice / 100) : '')
         setWhatIsIncluded(experience.whatIsIncluded.join('\n'))
         setCancellationPolicy(experience.cancellationPolicy)
         setWhatToBring(experience.whatToBring)
@@ -94,6 +96,9 @@ export default function EditExperiencePage() {
     formData.set('images', JSON.stringify(images))
     formData.set('dates', JSON.stringify(dates))
     formData.set('basePrice', basePrice)
+    if (salePrice && Number(salePrice) > 0) {
+      formData.set('salePrice', salePrice)
+    }
     formData.set('whatIsIncluded', whatIsIncluded)
     formData.set('cancellationPolicy', cancellationPolicy)
     formData.set('whatToBring', whatToBring)
@@ -289,14 +294,25 @@ export default function EditExperiencePage() {
           <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Pris
           </h2>
-          <Input
-            label="Pris (NOK)"
-            type="number"
-            min={0}
-            value={basePrice}
-            onChange={(e) => setBasePrice(e.target.value)}
-            error={errors.basePrice}
-          />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Input
+              label="Pris (NOK)"
+              type="number"
+              min={0}
+              value={basePrice}
+              onChange={(e) => setBasePrice(e.target.value)}
+              error={errors.basePrice}
+            />
+            <Input
+              label="Tilbudspris (NOK)"
+              type="number"
+              min={0}
+              value={salePrice}
+              onChange={(e) => setSalePrice(e.target.value)}
+              error={errors.salePrice}
+              placeholder="Valgfritt"
+            />
+          </div>
         </section>
       </div>
 

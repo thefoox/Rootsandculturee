@@ -27,6 +27,7 @@ export default function EditProductPage() {
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
+  const [salePrice, setSalePrice] = useState('')
   const [shippingCost, setShippingCost] = useState('0')
   const [stockCount, setStockCount] = useState('0')
   const [category, setCategory] = useState<ProductCategory>('drikke')
@@ -53,6 +54,7 @@ export default function EditProductPage() {
       setSlug(product.slug)
       setDescription(product.description)
       setPrice(String(product.price / 100))
+      setSalePrice(product.salePrice ? String(product.salePrice / 100) : '')
       setShippingCost(String((product.shippingCost || 0) / 100))
       setStockCount(String(product.stockCount))
       setCategory(product.category)
@@ -78,6 +80,9 @@ export default function EditProductPage() {
     formData.set('slug', slug)
     formData.set('description', description)
     formData.set('price', price)
+    if (salePrice && Number(salePrice) > 0) {
+      formData.set('salePrice', salePrice)
+    }
     formData.set('stockCount', stockCount)
     formData.set('shippingCost', shippingCost)
     formData.set('category', category)
@@ -199,7 +204,7 @@ export default function EditProductPage() {
           <h2 className="mb-4 font-heading text-h4 font-bold text-forest">
             Pris og lager
           </h2>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <Input
               label="Pris (NOK)"
               type="number"
@@ -207,6 +212,15 @@ export default function EditProductPage() {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               error={errors.price}
+            />
+            <Input
+              label="Tilbudspris (NOK)"
+              type="number"
+              min={0}
+              value={salePrice}
+              onChange={(e) => setSalePrice(e.target.value)}
+              error={errors.salePrice}
+              placeholder="Valgfritt"
             />
             <Input
               label="Frakt (NOK)"

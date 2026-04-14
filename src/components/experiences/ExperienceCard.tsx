@@ -15,6 +15,7 @@ export function ExperienceCard({ experience, nextDate }: ExperienceCardProps) {
   const mainImage = experience.images[0]
   const now = new Date()
   const hasEarlybird = nextDate?.earlyBirdPrice != null && nextDate?.earlyBirdDeadline != null && new Date(nextDate.earlyBirdDeadline) > now
+  const hasSalePrice = experience.salePrice != null && experience.salePrice < experience.basePrice
 
   return (
     <Link
@@ -52,6 +53,12 @@ export function ExperienceCard({ experience, nextDate }: ExperienceCardProps) {
             {formatPrice(nextDate!.earlyBirdPrice!)}{' '}
             <span className="font-normal text-body/50 line-through">{formatPrice(experience.basePrice)}</span>{' '}
             <span className="text-rust text-[12px] font-medium">earlybird</span>
+          </p>
+        ) : hasSalePrice ? (
+          <p className="mt-2 font-body text-body font-bold text-forest">
+            {formatPrice(experience.salePrice!)}{' '}
+            <span className="font-normal text-body/50 line-through">{formatPrice(experience.basePrice)}</span>{' '}
+            <span className="text-rust text-[12px] font-medium">tilbud</span>
           </p>
         ) : (
           <PriceBadge priceInOre={experience.basePrice} className="mt-2 block" />
