@@ -110,7 +110,7 @@ Plans:
 
 ### Phase 20: CMS Futureproofing
 
-**Goal**: Gjor CMS-editoren skuddsikker med profesjonell UX — sikkerhet mot datatap (isDirty + beforeunload + navigasjonsvarsling), forbedret seksjonshaandtering (dupliser, gruppert typevelger, kollapser/utvid alle), autosave, elementsortering, og versjonshistorikk med mulighet for gjenoppretting
+**Goal**: Gjor CMS-editoren skuddsikker med profesjonell UX — sikkerhet mot datatap (isDirty + beforeunload + navigasjonsvarsling), forbedret seksjonshaandtering (dupliser, gruppert typeveljer, kollapser/utvid alle), autosave, elementsortering, og versjonshistorikk med mulighet for gjenoppretting
 **Requirements**: CMS-FP-01 through CMS-FP-17
 **Depends on**: Phase 19
 **Plans:** 3/3 plans complete
@@ -131,3 +131,15 @@ Plans:
 - [x] 21-01-PLAN.md — Beforeunload guard on all 6 create/edit pages + try/catch on all 3 delete actions + article edit error toast
 - [x] 21-02-PLAN.md — Validation fixes: ImageUpload alt-text bug, DateSlotsEditor date constraints, TipTap character count + paste sanitization, gift card deactivation confirmation
 - [x] 21-03-PLAN.md — Loading skeletons on 3 admin list pages + order detail timeout/error state
+
+### Phase 22: E-commerce Robusthet + Tilbudspris
+
+**Goal**: Fiks kritiske e-commerce problemer (checkout-frys, webhook-feil, stock race condition, manglende timeout) og legg til tilbudspris-funksjonalitet for produkter og opplevelser
+**Requirements**: EC-01, EC-02, EC-03, EC-04, EC-05, EC-06, EC-07
+**Depends on**: Phase 21
+**Plans:** 3 plans
+
+Plans:
+- [ ] 22-01-PLAN.md — Checkout robustness: ConfirmationModal escape/timeout, confirmPayment 30s timeout, 3DS redirect error fix
+- [ ] 22-02-PLAN.md — Webhook/stock safety: idempotency for processing status, stock guard in transaction, gift card zero-amount idempotency
+- [ ] 22-03-PLAN.md — Tilbudspris: salePrice on types/schemas/mappers/actions/admin forms/cards/checkout verification
