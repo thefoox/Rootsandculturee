@@ -155,9 +155,9 @@ Plans:
 - [x] 23-01-PLAN.md — Cart robustness: validateCartItems server action, handlekurv page mount validation with toast, max quantity cap at 99, aria-label fix
 - [ ] 23-02-PLAN.md — Konto error boundary: Norwegian error.tsx at /konto/ with retry and back link
 
-### Phase 24: Auth & Produktsider Robusthet
+### Phase 24: Sikkerhet & Infrastruktur
 
-**Goal**: Forbedre auth-flyt (feilhåndtering, Google OAuth edge cases) og produktsider (out-of-stock UI, fulle datoer, tilgjengelighet)
+**Goal**: Implementer proxy.ts (Next.js 16 — erstatter middleware) med rate limiting, legg til CSP headers via next.config.ts, fiks Google OAuth host-validering, rate limit kontakt/nyhetsbrev server actions, og fiks /api/upload animert WebP-blokkering
 **Requirements**: TBD
 **Depends on**: Phase 23
 
