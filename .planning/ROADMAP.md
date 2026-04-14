@@ -119,3 +119,15 @@ Plans:
 - [x] 20-01-PLAN.md — Safety and validation: isDirty tracking, beforeunload guard, navigation intercept dialog, DeleteConfirmDialog for sections, multi-open sections with collapse/expand, required field asterisks, save validation warnings, PublishBar integration
 - [x] 20-02-PLAN.md — UX and productivity: duplicate section button, grouped SectionTypePicker modal with icons and descriptions, autosave with 30s debounce, item reorder up/down buttons, character counts on heading/subheading
 - [x] 20-03-PLAN.md — Version history: Firestore versions subcollection API (create/list/revert/prune), VersionHistoryPanel component, automatic version creation on save, Firestore security rule for subcollection
+
+### Phase 21: Admin Robusthet
+
+**Goal**: Fiks alle kritiske og viktige admin-robusthetsproblemer funnet i revisjon — beforeunload pa alle skjemaer, try/catch pa alle slette-handlinger, valideringsfeil-fikser, loading-skjeletter, og feilhandtering for edge cases
+**Requirements**: AR-01 through AR-08
+**Depends on**: Phase 20
+**Plans:** 3 plans
+
+Plans:
+- [ ] 21-01-PLAN.md — Beforeunload guard on all 6 create/edit pages + try/catch on all 3 delete actions + article edit error toast
+- [ ] 21-02-PLAN.md — Validation fixes: ImageUpload alt-text bug, DateSlotsEditor date constraints, TipTap character count + paste sanitization, gift card deactivation confirmation
+- [ ] 21-03-PLAN.md — Loading skeletons on 3 admin list pages + order detail timeout/error state
