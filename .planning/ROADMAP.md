@@ -143,3 +143,27 @@ Plans:
 - [x] 22-01-PLAN.md — Checkout robustness: ConfirmationModal escape/timeout, confirmPayment 30s timeout, 3DS redirect error fix
 - [x] 22-02-PLAN.md — Webhook/stock safety: idempotency for processing status, stock guard in transaction, gift card zero-amount idempotency
 - [x] 22-03-PLAN.md — Tilbudspris: salePrice on types/schemas/mappers/actions/admin forms/cards/checkout verification
+
+### Phase 23: Handlekurv & Konto Robusthet
+
+**Goal**: Foolproof handlekurv (stale item-validering, max-antall, tom kurv UX) og konto-sider (feilhåndtering, loading states, empty states)
+**Requirements**: TBD
+**Depends on**: Phase 22
+
+### Phase 24: Auth & Produktsider Robusthet
+
+**Goal**: Forbedre auth-flyt (feilhåndtering, Google OAuth edge cases) og produktsider (out-of-stock UI, fulle datoer, tilgjengelighet)
+**Requirements**: TBD
+**Depends on**: Phase 23
+
+### Phase 25: SEO & Ytelse
+
+**Goal**: Sitemap.xml, robots.txt, strukturert data (JSON-LD), bildeoptimalisering-audit, bundle-analyse
+**Requirements**: TBD
+**Depends on**: Phase 24
+
+### Phase 26: E-post & Søk
+
+**Goal**: Resend retry-logikk, e-post-logg i admin, søkefunksjon for produkter og opplevelser
+**Requirements**: TBD
+**Depends on**: Phase 25
