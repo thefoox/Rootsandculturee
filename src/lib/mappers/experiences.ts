@@ -11,6 +11,7 @@ export function mapExperience(doc: FirestoreDoc): Experience {
     category: data.category as Experience['category'],
     images: (data.images as Experience['images']) || [],
     basePrice: data.basePrice as number,
+    salePrice: (data.salePrice as number) ?? null,
     location: data.location as string,
     locationLat: (data.locationLat as number) ?? null,
     locationLng: (data.locationLng as number) ?? null,

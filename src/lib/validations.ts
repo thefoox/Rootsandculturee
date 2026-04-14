@@ -14,6 +14,7 @@ export const productSchema = z.object({
     .regex(/^[a-z0-9-]+$/, 'Kun bokstaver, tall og bindestreker.'),
   description: z.string().min(1, 'Dette feltet er påkrevd.'),
   price: z.number().int().positive('Pris må være et positivt tall.'),
+  salePrice: z.number().int().positive('Tilbudspris ma vaere et positivt tall.').nullable().optional(),
   category: z.enum(['drikke', 'kaffe-te', 'naturprodukter']),
   images: z.array(imageSchema).min(1, 'Minst ett bilde er påkrevd.'),
   stockCount: z.number().int().min(0),
@@ -31,7 +32,10 @@ export const productSchema = z.object({
     )
     .optional()
     .default([]),
-})
+}).refine(
+  (data) => !data.salePrice || data.salePrice < data.price,
+  { message: 'Tilbudspris ma vaere lavere enn ordinaer pris.', path: ['salePrice'] }
+)
 
 export const experienceSchema = z.object({
   name: z.string().min(1, 'Dette feltet er påkrevd.').max(200),
@@ -43,6 +47,7 @@ export const experienceSchema = z.object({
   category: z.enum(['retreat', 'kurs', 'matopplevelse']),
   images: z.array(imageSchema).min(1, 'Minst ett bilde er påkrevd.'),
   basePrice: z.number().int().positive(),
+  salePrice: z.number().int().positive('Tilbudspris ma vaere et positivt tall.').nullable().optional(),
   location: z.string().min(1, 'Dette feltet er påkrevd.'),
   durationText: z.string().min(1, 'Dette feltet er påkrevd.'),
   whatIsIncluded: z.string(),
@@ -62,7 +67,10 @@ export const experienceSchema = z.object({
     )
     .optional(),
   publish: z.boolean().optional(),
-})
+}).refine(
+  (data) => !data.salePrice || data.salePrice < data.basePrice,
+  { message: 'Tilbudspris ma vaere lavere enn ordinaer pris.', path: ['salePrice'] }
+)
 
 export const articleSchema = z.object({
   title: z.string().min(1, 'Dette feltet er påkrevd.').max(200),

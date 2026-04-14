@@ -44,6 +44,7 @@ export async function createExperience(formData: FormData): Promise<ActionResult
   const rawImages = formData.get('images') as string
   const rawDates = formData.get('dates') as string
   const priceNOK = Number(formData.get('basePrice'))
+  const salePriceNOK = formData.get('salePrice') ? Number(formData.get('salePrice')) : null
   const whatIsIncludedRaw = (formData.get('whatIsIncluded') as string) || ''
 
   let parsedImages: unknown[]
@@ -67,6 +68,7 @@ export async function createExperience(formData: FormData): Promise<ActionResult
     category: formData.get('category'),
     images: parsedImages,
     basePrice: Math.round(priceNOK * 100),
+    salePrice: salePriceNOK ? Math.round(salePriceNOK * 100) : null,
     location: formData.get('location'),
     durationText: formData.get('durationText'),
     whatIsIncluded: whatIsIncludedRaw,
@@ -149,6 +151,7 @@ export async function updateExperience(id: string, formData: FormData): Promise<
   const rawImages = formData.get('images') as string
   const rawDates = formData.get('dates') as string
   const priceNOK = Number(formData.get('basePrice'))
+  const salePriceNOK = formData.get('salePrice') ? Number(formData.get('salePrice')) : null
   const whatIsIncludedRaw = (formData.get('whatIsIncluded') as string) || ''
 
   let parsedImages: unknown[]
@@ -172,6 +175,7 @@ export async function updateExperience(id: string, formData: FormData): Promise<
     category: formData.get('category'),
     images: parsedImages,
     basePrice: Math.round(priceNOK * 100),
+    salePrice: salePriceNOK ? Math.round(salePriceNOK * 100) : null,
     location: formData.get('location'),
     durationText: formData.get('durationText'),
     whatIsIncluded: whatIsIncludedRaw,

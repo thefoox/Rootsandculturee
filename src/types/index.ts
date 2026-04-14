@@ -47,6 +47,7 @@ export interface Product {
   name: string
   description: string
   price: number // NOK in ore (integer) — base/default price
+  salePrice: number | null   // NOK in ore — null means no sale
   category: ProductCategory
   images: ProductImage[]
   inStock: boolean
@@ -69,6 +70,7 @@ export interface Experience {
   category: ExperienceCategory
   images: ProductImage[] // Reuses same image+alt structure
   basePrice: number // NOK in ore
+  salePrice: number | null   // NOK in ore — null means no sale
   location: string
   locationLat?: number
   locationLng?: number

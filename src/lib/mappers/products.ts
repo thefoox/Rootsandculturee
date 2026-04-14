@@ -9,6 +9,7 @@ export function mapProduct(doc: FirestoreDoc): Product {
     name: data.name as string,
     description: data.description as string,
     price: data.price as number,
+    salePrice: (data.salePrice as number) ?? null,
     category: data.category as Product['category'],
     images: (data.images as Product['images']) || [],
     inStock: data.inStock as boolean,

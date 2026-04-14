@@ -32,6 +32,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult<{ 
 
   const rawImages = formData.get('images') as string
   const priceNOK = Number(formData.get('price'))
+  const salePriceNOK = formData.get('salePrice') ? Number(formData.get('salePrice')) : null
   const rawVariants = formData.get('variants') as string
 
   let parsedImages: unknown[]
@@ -53,6 +54,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult<{ 
     slug: formData.get('slug'),
     description: formData.get('description'),
     price: Math.round(priceNOK * 100),
+    salePrice: salePriceNOK ? Math.round(salePriceNOK * 100) : null,
     category: formData.get('category'),
     images: parsedImages,
     stockCount: Number(formData.get('stockCount')),
@@ -117,6 +119,7 @@ export async function updateProduct(id: string, formData: FormData): Promise<Act
 
   const rawImages = formData.get('images') as string
   const priceNOK = Number(formData.get('price'))
+  const salePriceNOK = formData.get('salePrice') ? Number(formData.get('salePrice')) : null
   const rawVariants = formData.get('variants') as string
 
   let parsedImages: unknown[]
@@ -138,6 +141,7 @@ export async function updateProduct(id: string, formData: FormData): Promise<Act
     slug: formData.get('slug'),
     description: formData.get('description'),
     price: Math.round(priceNOK * 100),
+    salePrice: salePriceNOK ? Math.round(salePriceNOK * 100) : null,
     category: formData.get('category'),
     images: parsedImages,
     stockCount: Number(formData.get('stockCount')),

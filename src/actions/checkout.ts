@@ -81,6 +81,11 @@ export async function createPaymentIntent(
         return { error: `Produktet "${item.name}" er ikke tilgjengelig.` }
       }
       let verifiedPrice = product.price as number
+      // Prefer salePrice when present and lower than regular price (only for base product, not variants)
+      const productSalePrice = product.salePrice as number | null
+      if (!item.variantId && productSalePrice && productSalePrice > 0 && productSalePrice < verifiedPrice) {
+        verifiedPrice = productSalePrice
+      }
       let verifiedStock = product.stockCount as number
       const variants = product.variants as Array<{ id: string; price: number; stockCount: number }> | null
       if (item.variantId && Array.isArray(variants) && variants.length > 0) {
@@ -120,7 +125,13 @@ export async function createPaymentIntent(
         return { error: `Ingen ledige plasser for "${item.name}" på valgt dato.` }
       }
       const now = new Date()
-      let verifiedPrice = (dateData.priceOverride as number | null) ?? (expDoc.data().basePrice as number) ?? item.price
+      // Priority: earlybird (applied below) > priceOverride > salePrice > basePrice
+      const expData = expDoc.data()
+      const expSalePrice = (expData.salePrice as number | null)
+      let verifiedPrice = (dateData.priceOverride as number | null)
+        ?? expSalePrice
+        ?? (expData.basePrice as number)
+        ?? item.price
       const earlyBirdDeadline = dateData.earlyBirdDeadline instanceof Date ? dateData.earlyBirdDeadline : null
       if (dateData.earlyBirdPrice && earlyBirdDeadline && earlyBirdDeadline > now) {
         verifiedPrice = dateData.earlyBirdPrice as number
@@ -280,6 +291,11 @@ export async function updatePaymentIntentMetadata(
         return { error: `Produktet "${item.name}" er ikke tilgjengelig.` }
       }
       let verifiedPrice = product.price as number
+      // Prefer salePrice when present and lower than regular price (only for base product, not variants)
+      const productSalePrice = product.salePrice as number | null
+      if (!item.variantId && productSalePrice && productSalePrice > 0 && productSalePrice < verifiedPrice) {
+        verifiedPrice = productSalePrice
+      }
       let verifiedStock = product.stockCount as number
       const variants = product.variants as Array<{ id: string; price: number; stockCount: number }> | null
       if (item.variantId && Array.isArray(variants) && variants.length > 0) {
@@ -319,7 +335,13 @@ export async function updatePaymentIntentMetadata(
         return { error: `Ingen ledige plasser for "${item.name}" på valgt dato.` }
       }
       const now = new Date()
-      let verifiedPrice = (dateData.priceOverride as number | null) ?? (expDoc.data().basePrice as number) ?? item.price
+      // Priority: earlybird (applied below) > priceOverride > salePrice > basePrice
+      const expData = expDoc.data()
+      const expSalePrice = (expData.salePrice as number | null)
+      let verifiedPrice = (dateData.priceOverride as number | null)
+        ?? expSalePrice
+        ?? (expData.basePrice as number)
+        ?? item.price
       const earlyBirdDeadline = dateData.earlyBirdDeadline instanceof Date ? dateData.earlyBirdDeadline : null
       if (dateData.earlyBirdPrice && earlyBirdDeadline && earlyBirdDeadline > now) {
         verifiedPrice = dateData.earlyBirdPrice as number
