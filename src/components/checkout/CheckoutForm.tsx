@@ -14,6 +14,8 @@ import { FormError } from '@/components/ui/FormError'
 import { updatePaymentIntentMetadata } from '@/actions/checkout'
 import type { CartItem } from '@/types'
 
+const PAYMENT_TIMEOUT_MS = 30_000
+
 const shippingSchema = z.object({
   email: z.string().email('Ugyldig e-postadresse.'),
   fullName: z.string().min(1, 'Fullt navn er påkrevd.'),
@@ -142,16 +144,33 @@ export function CheckoutForm({
         return
       }
 
-      // Confirm payment with Stripe Elements (uses the same PI that was initialized)
-      const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/checkout`,
-        },
-        redirect: 'if_required',
-      })
+      // Confirm payment with Stripe Elements, wrapped in a 30s timeout.
+      // stripe.confirmPayment does not accept AbortController, so Promise.race
+      // is the correct pattern for imposing a client-side timeout.
+      const confirmResult = await Promise.race([
+        stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: `${window.location.origin}/checkout`,
+          },
+          redirect: 'if_required',
+        }),
+        new Promise<{ error: { message: string } }>((resolve) =>
+          setTimeout(
+            () => resolve({ error: { message: 'PAYMENT_TIMEOUT' } }),
+            PAYMENT_TIMEOUT_MS
+          )
+        ),
+      ])
 
-      if (stripeError) {
+      if ('error' in confirmResult && confirmResult.error) {
+        if (confirmResult.error.message === 'PAYMENT_TIMEOUT') {
+          setPaymentError('Betalingen tok for lang tid. Sjekk at betalingen gikk gjennom, eller prov igjen.')
+          setLoading(false)
+          return
+        }
+
+        const stripeError = confirmResult.error
         const errorMessages: Record<string, string> = {
           card_declined: 'Kortet ble avvist. Prøv et annet kort.',
           insufficient_funds: 'Ikke nok dekning på kortet.',
@@ -161,13 +180,15 @@ export function CheckoutForm({
           incorrect_number: 'Ugyldig kortnummer.',
         }
         setPaymentError(
-          errorMessages[stripeError.code || ''] ||
+          errorMessages[(stripeError as { code?: string }).code || ''] ||
             stripeError.message ||
             'Noe gikk galt med betalingen. Prøv igjen.'
         )
         setLoading(false)
         return
       }
+
+      const paymentIntent = 'paymentIntent' in confirmResult ? confirmResult.paymentIntent : null
 
       if (paymentIntent && paymentIntent.status === 'succeeded') {
         onPaymentSuccess(paymentIntent.id, email)

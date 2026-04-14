@@ -118,10 +118,12 @@ export default function CheckoutPage() {
     } else {
       // Payment failed or was cancelled — surface an error and strip the params
       // so the form can be re-attempted cleanly.
+      // Use window.history.replaceState instead of router.replace to avoid
+      // triggering a full Next.js re-render that would reset the initError state.
       setInitError('Betalingen mislyktes. Prøv igjen eller bruk en annen betalingsmetode.')
-      router.replace('/checkout')
+      window.history.replaceState({}, '', '/checkout')
     }
-  }, [searchParams, router])
+  }, [searchParams])
 
   const hasProducts = items.some((i) => i.type === 'product')
   const shippingCost = hasProducts ? FLAT_RATE_SHIPPING : 0
