@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { Button } from '@/components/ui/Button'
+import { DeleteConfirmDialog } from '@/components/admin/DeleteConfirmDialog'
 import { formatPrice, formatDate } from '@/lib/format'
 import { getGiftCardsAdmin, deactivateGiftCardAction } from '@/actions/gift-cards'
 import { cn } from '@/lib/utils'
@@ -24,6 +25,8 @@ const statusClasses: Record<string, string> = {
 export default function AdminGavekortPage() {
   const [giftCards, setGiftCards] = useState<GiftCard[]>([])
   const [loading, setLoading] = useState(true)
+  const [deactivateTarget, setDeactivateTarget] = useState<GiftCard | null>(null)
+  const [isDeactivating, setIsDeactivating] = useState(false)
 
   useEffect(() => {
     getGiftCardsAdmin().then((cards) => {
@@ -35,18 +38,22 @@ export default function AdminGavekortPage() {
     })
   }, [])
 
-  async function handleDeactivate(code: string) {
-    const result = await deactivateGiftCardAction(code)
+  async function handleDeactivate() {
+    if (!deactivateTarget) return
+    setIsDeactivating(true)
+    const result = await deactivateGiftCardAction(deactivateTarget.code)
     if (result.success) {
       setGiftCards((prev) =>
         prev.map((gc) =>
-          gc.code === code ? { ...gc, status: 'expired' as const } : gc
+          gc.code === deactivateTarget.code ? { ...gc, status: 'expired' as const } : gc
         )
       )
       toast.success('Gavekort deaktivert.')
     } else {
       toast.error(result.error || 'Kunne ikke deaktivere gavekortet.')
     }
+    setIsDeactivating(false)
+    setDeactivateTarget(null)
   }
 
   return (
@@ -121,7 +128,7 @@ export default function AdminGavekortPage() {
                     {gc.status === 'active' && (
                       <Button
                         variant="secondary"
-                        onClick={() => handleDeactivate(gc.code)}
+                        onClick={() => setDeactivateTarget(gc)}
                       >
                         Deaktiver
                       </Button>
@@ -133,6 +140,18 @@ export default function AdminGavekortPage() {
           </table>
         </div>
       )}
+
+      <DeleteConfirmDialog
+        isOpen={deactivateTarget !== null}
+        onClose={() => setDeactivateTarget(null)}
+        onConfirm={handleDeactivate}
+        itemName={deactivateTarget?.code || ''}
+        isDeleting={isDeactivating}
+        heading="Deaktiver gavekort?"
+        body={deactivateTarget ? `Vil du deaktivere gavekort ${deactivateTarget.code}? Gavekortet kan ikke brukes etter deaktivering.` : ''}
+        confirmLabel="Ja, deaktiver"
+        cancelLabel="Nei, behold"
+      />
     </div>
   )
 }

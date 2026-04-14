@@ -5,6 +5,7 @@ import StarterKit from '@tiptap/starter-kit'
 import LinkExtension from '@tiptap/extension-link'
 import ImageExtension from '@tiptap/extension-image'
 import Underline from '@tiptap/extension-underline'
+import CharacterCount from '@tiptap/extension-character-count'
 import {
   Bold,
   Italic,
@@ -22,6 +23,7 @@ import { cn } from '@/lib/utils'
 interface TiptapEditorProps {
   content: string
   onChange: (html: string) => void
+  maxLength?: number
 }
 
 interface ToolbarButtonProps {
@@ -53,7 +55,7 @@ function ToolbarButton({
   )
 }
 
-export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
+export function TiptapEditor({ content, onChange, maxLength = 50000 }: TiptapEditorProps) {
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -65,6 +67,9 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
       }),
       ImageExtension,
       Underline,
+      CharacterCount.configure({
+        limit: maxLength,
+      }),
     ],
     content,
     onUpdate: ({ editor }) => {
@@ -76,6 +81,13 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
         role: 'textbox',
         'aria-multiline': 'true',
         'aria-label': 'Artikkelinnhold',
+      },
+      transformPastedHTML(html: string) {
+        // Strip style attributes and event handlers, keep structure
+        return html
+          .replace(/\s*style="[^"]*"/gi, '')
+          .replace(/\s*on\w+="[^"]*"/gi, '')
+          .replace(/<script[\s\S]*?<\/script>/gi, '')
       },
     },
   })
@@ -185,6 +197,22 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
       <div className="bg-cream">
         <EditorContent editor={editor} />
       </div>
+
+      {/* Character count */}
+      {editor && (
+        <div className="flex items-center justify-end border-t border-forest/12 bg-card px-3 py-1.5">
+          <span
+            className={cn(
+              'text-label',
+              editor.storage.characterCount.characters() > maxLength * 0.9
+                ? 'text-destructive'
+                : 'text-body/60'
+            )}
+          >
+            {editor.storage.characterCount.characters().toLocaleString('nb-NO')} / {maxLength.toLocaleString('nb-NO')} tegn
+          </span>
+        </div>
+      )}
     </div>
   )
 }
