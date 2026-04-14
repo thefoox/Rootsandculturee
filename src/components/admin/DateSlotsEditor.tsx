@@ -18,6 +18,7 @@ interface DateSlotsEditorProps {
 
 export function DateSlotsEditor({ dates, onChange }: DateSlotsEditorProps) {
   const [expandedSlots, setExpandedSlots] = useState<Set<number>>(new Set())
+  const today = new Date().toISOString().split('T')[0]
 
   const toggleExpanded = (index: number) => {
     setExpandedSlots((prev) => {
@@ -73,6 +74,7 @@ export function DateSlotsEditor({ dates, onChange }: DateSlotsEditorProps) {
               <Input
                 label="Dato"
                 type="date"
+                min={today}
                 value={slot.date}
                 onChange={(e) => handleChange(index, 'date', e.target.value)}
                 id={`date-slot-date-${index}`}
@@ -125,8 +127,8 @@ export function DateSlotsEditor({ dates, onChange }: DateSlotsEditorProps) {
               >
                 <Input
                   label="Earlybird-pris (NOK)"
-                  type="text"
-                  inputMode="numeric"
+                  type="number"
+                  min={0}
                   placeholder="F.eks. 990"
                   value={slot.earlyBirdPrice}
                   onChange={(e) =>
@@ -137,6 +139,8 @@ export function DateSlotsEditor({ dates, onChange }: DateSlotsEditorProps) {
                 <Input
                   label="Earlybird gyldig til"
                   type="date"
+                  min={today}
+                  max={slot.date || undefined}
                   value={slot.earlyBirdDeadline}
                   onChange={(e) =>
                     handleChange(index, 'earlyBirdDeadline', e.target.value)

@@ -166,8 +166,8 @@ export function ImageUpload({
                 onChange={(e) => handleAltChange(index, e.target.value)}
                 aria-required="true"
                 error={
-                  img.alt === ''
-                    ? undefined
+                  !img.alt
+                    ? 'Alt-tekst er pakrevd.'
                     : undefined
                 }
                 id={`alt-tekst-${index}`}
