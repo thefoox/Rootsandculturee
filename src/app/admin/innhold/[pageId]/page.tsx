@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import {
   DndContext,
@@ -21,9 +21,10 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb'
 import { Input } from '@/components/ui/Input'
-import { Button } from '@/components/ui/Button'
 import { CmsImageUpload } from '@/components/admin/CmsImageUpload'
 import { TiptapEditor } from '@/components/admin/TiptapEditor'
+import { DeleteConfirmDialog } from '@/components/admin/DeleteConfirmDialog'
+import { PublishBar } from '@/components/admin/PublishBar'
 import { toast } from 'sonner'
 import type { PageSection, PageContent, SectionItem, SectionType, TextImageLayout } from '@/types'
 
@@ -455,7 +456,6 @@ export default function EditPageContentPage() {
   const router = useRouter()
   const pageId = params.pageId as string
 
-  const [pageData, setPageData] = useState<PageContent | null>(null)
   const [sections, setSections] = useState<PageSection[]>([])
   const [pageTitle, setPageTitle] = useState('')
   const [pageSlug, setPageSlug] = useState('')
@@ -464,9 +464,14 @@ export default function EditPageContentPage() {
   const [navOrder, setNavOrder] = useState(0)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [openSection, setOpenSection] = useState<string | null>(null)
+  const [publishing, setPublishing] = useState(false)
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set())
   const [showAddDropdown, setShowAddDropdown] = useState(false)
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [sectionToDelete, setSectionToDelete] = useState<string | null>(null)
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false)
+
+  const savedStateRef = useRef<string>('')
+  const [isDirty, setIsDirty] = useState(false)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -478,13 +483,22 @@ export default function EditPageContentPage() {
       .then((r) => r.json())
       .then((data: PageContent | null) => {
         if (data) {
-          setPageData(data)
           setPageTitle(data.title || pageId)
           setPageSlug(data.slug || pageId)
           setIsPublished(data.isPublished ?? true)
           setShowInNav(data.showInNavigation ?? false)
           setNavOrder(data.navigationOrder ?? 0)
           setSections((data.sections || []).sort((a, b) => a.order - b.order))
+          setTimeout(() => {
+            savedStateRef.current = JSON.stringify({
+              pageTitle: data.title || pageId,
+              pageSlug: data.slug || pageId,
+              isPublished: data.isPublished ?? true,
+              showInNav: data.showInNavigation ?? false,
+              navOrder: data.navigationOrder ?? 0,
+              sections: (data.sections || []).sort((a, b) => a.order - b.order),
+            })
+          }, 0)
         }
         setLoading(false)
       })
@@ -493,6 +507,44 @@ export default function EditPageContentPage() {
         toast.error('Kunne ikke laste sideinnhold.')
       })
   }, [pageId])
+
+  // Track dirty state
+  useEffect(() => {
+    if (!savedStateRef.current) return
+    const current = JSON.stringify({ pageTitle, pageSlug, isPublished, showInNav, navOrder, sections })
+    setIsDirty(current !== savedStateRef.current)
+  }, [pageTitle, pageSlug, isPublished, showInNav, navOrder, sections])
+
+  // beforeunload guard
+  useEffect(() => {
+    if (!isDirty) return
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [isDirty])
+
+  function toggleSection(id: string) {
+    setOpenSections(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const collapseAll = () => setOpenSections(new Set())
+  const expandAll = () => setOpenSections(new Set(sections.map(s => s.id)))
+
+  function handleBack() {
+    if (isDirty) {
+      setShowUnsavedDialog(true)
+    } else {
+      router.push('/admin/innhold')
+    }
+  }
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
@@ -544,39 +596,39 @@ export default function EditPageContentPage() {
   function addSection(type: SectionType) {
     const newSection = createDefaultSection(type, sections.length)
     setSections((prev) => [...prev, newSection])
-    setOpenSection(newSection.id)
+    setOpenSections(prev => new Set(prev).add(newSection.id))
     setShowAddDropdown(false)
   }
 
-  function deleteSection(sectionId: string) {
-    if (deleteConfirm !== sectionId) {
-      setDeleteConfirm(sectionId)
-      return
-    }
-    setSections((prev) =>
-      prev.filter((s) => s.id !== sectionId).map((s, i) => ({ ...s, order: i }))
-    )
-    setDeleteConfirm(null)
-    if (openSection === sectionId) setOpenSection(null)
+  function validateBeforeSave(): string[] {
+    const warnings: string[] = []
+    if (!pageTitle.trim()) warnings.push('Sidetittel er pakrevd.')
+    if (!pageSlug.trim()) warnings.push('Slug er pakrevd.')
+    sections.forEach((s, i) => {
+      if (!s.heading?.trim() && !['experiences-grid', 'articles-grid', 'products-grid', 'trust-bar', 'categories', 'logo-bar'].includes(s.type)) {
+        warnings.push(`Seksjon ${i + 1} (${SECTION_TYPE_LABELS[s.type]}) mangler overskrift.`)
+      }
+    })
+    return warnings
   }
 
-  async function handleSave() {
+  async function handleSaveDraft() {
+    const warnings = validateBeforeSave()
+    if (warnings.length > 0) warnings.forEach(w => toast.warning(w))
     setSaving(true)
     try {
       const res = await fetch(`/api/page-content/${pageId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: pageTitle,
-          slug: pageSlug,
-          isPublished,
-          showInNavigation: showInNav,
-          navigationOrder: navOrder,
-          sections,
+          title: pageTitle, slug: pageSlug, isPublished,
+          showInNavigation: showInNav, navigationOrder: navOrder, sections,
         }),
       })
       if (res.ok) {
         toast.success('Innhold lagret!')
+        savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished, showInNav, navOrder, sections })
+        setIsDirty(false)
       } else {
         toast.error('Kunne ikke lagre.')
       }
@@ -584,6 +636,59 @@ export default function EditPageContentPage() {
       toast.error('Noe gikk galt.')
     }
     setSaving(false)
+  }
+
+  async function handlePublish() {
+    const warnings = validateBeforeSave()
+    if (warnings.length > 0) warnings.forEach(w => toast.warning(w))
+    setPublishing(true)
+    const publishedState = true
+    try {
+      const res = await fetch(`/api/page-content/${pageId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: pageTitle, slug: pageSlug, isPublished: publishedState,
+          showInNavigation: showInNav, navigationOrder: navOrder, sections,
+        }),
+      })
+      if (res.ok) {
+        setIsPublished(publishedState)
+        toast.success('Siden er publisert!')
+        savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished: publishedState, showInNav, navOrder, sections })
+        setIsDirty(false)
+      } else {
+        toast.error('Kunne ikke publisere.')
+      }
+    } catch {
+      toast.error('Noe gikk galt.')
+    }
+    setPublishing(false)
+  }
+
+  async function handleUnpublish() {
+    setPublishing(true)
+    try {
+      const res = await fetch(`/api/page-content/${pageId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: pageTitle, slug: pageSlug, isPublished: false,
+          showInNavigation: showInNav, navigationOrder: navOrder, sections,
+        }),
+      })
+      if (res.ok) {
+        setIsPublished(false)
+        toast.success('Siden er avpublisert.')
+        savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished: false, showInNav, navOrder, sections })
+        setIsDirty(false)
+      } else {
+        toast.error('Kunne ikke avpublisere.')
+      }
+    } catch {
+      toast.error('Noe gikk galt.')
+    }
+    setPublishing(false)
   }
 
   if (loading) {
@@ -605,26 +710,17 @@ export default function EditPageContentPage() {
         <h2 className="font-heading text-h3 font-bold text-forest">Sideinnstillinger</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Input
-            label="Tittel"
+            label="Tittel *"
             value={pageTitle}
             onChange={(e) => setPageTitle(e.target.value)}
           />
           <Input
-            label="Slug (URL-path)"
+            label="Slug (URL-path) *"
             value={pageSlug}
             onChange={(e) => setPageSlug(e.target.value)}
           />
         </div>
         <div className="flex flex-wrap items-center gap-6">
-          <label className="flex items-center gap-2 text-body text-forest">
-            <input
-              type="checkbox"
-              checked={isPublished}
-              onChange={(e) => setIsPublished(e.target.checked)}
-              className="h-4 w-4 rounded border-forest/30 accent-forest"
-            />
-            Publisert
-          </label>
           <label className="flex items-center gap-2 text-body text-forest">
             <input
               type="checkbox"
@@ -646,40 +742,60 @@ export default function EditPageContentPage() {
         </div>
       </div>
 
-      {/* Section heading + add button */}
+      {/* Section heading + collapse/expand + add button */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="font-heading text-h3 font-bold text-forest">
           Seksjoner ({sections.length})
         </h2>
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => setShowAddDropdown(!showAddDropdown)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-forest px-3 py-2 text-sm font-medium text-cream hover:bg-forest/90"
-          >
-            <span aria-hidden="true">+</span>
-            Legg til seksjon
-          </button>
-          {showAddDropdown && (
+        <div className="flex items-center gap-2">
+          {sections.length > 0 && (
             <>
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setShowAddDropdown(false)}
-              />
-              <div className="absolute right-0 z-50 mt-1 w-56 rounded-xl border border-forest/10 bg-cream py-1 shadow-lg">
-                {ALL_SECTION_TYPES.map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => addSection(type)}
-                    className="block w-full px-4 py-2 text-left text-sm text-forest hover:bg-card"
-                  >
-                    {SECTION_TYPE_LABELS[type]}
-                  </button>
-                ))}
-              </div>
+              <button
+                type="button"
+                onClick={expandAll}
+                className="rounded-lg border border-forest/15 px-3 py-1.5 text-xs font-medium text-forest hover:bg-card"
+              >
+                Vis alle
+              </button>
+              <button
+                type="button"
+                onClick={collapseAll}
+                className="rounded-lg border border-forest/15 px-3 py-1.5 text-xs font-medium text-forest hover:bg-card"
+              >
+                Skjul alle
+              </button>
             </>
           )}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowAddDropdown(!showAddDropdown)}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-forest px-3 py-2 text-sm font-medium text-cream hover:bg-forest/90"
+            >
+              <span aria-hidden="true">+</span>
+              Legg til seksjon
+            </button>
+            {showAddDropdown && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowAddDropdown(false)}
+                />
+                <div className="absolute right-0 z-50 mt-1 w-56 rounded-xl border border-forest/10 bg-cream py-1 shadow-lg">
+                  {ALL_SECTION_TYPES.map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => addSection(type)}
+                      className="block w-full px-4 py-2 text-left text-sm text-forest hover:bg-card"
+                    >
+                      {SECTION_TYPE_LABELS[type]}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -691,39 +807,66 @@ export default function EditPageContentPage() {
               <SortableSection
                 key={section.id}
                 section={section}
-                isOpen={openSection === section.id}
-                onToggle={() => setOpenSection(openSection === section.id ? null : section.id)}
+                isOpen={openSections.has(section.id)}
+                onToggle={() => toggleSection(section.id)}
                 onUpdate={(updates) => updateSection(section.id, updates)}
                 onUpdateItem={(i, updates) => updateSectionItem(section.id, i, updates)}
                 onAddItem={() => addSectionItem(section.id)}
                 onRemoveItem={(i) => removeSectionItem(section.id, i)}
-                onDelete={() => deleteSection(section.id)}
+                onDelete={() => setSectionToDelete(section.id)}
               />
             ))}
           </div>
         </SortableContext>
       </DndContext>
 
-      {deleteConfirm && (
-        <div className="mt-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-          Klikk slett-knappen igjen for å bekrefte sletting av seksjonen.
-          <button
-            type="button"
-            onClick={() => setDeleteConfirm(null)}
-            className="ml-2 underline"
-          >
-            Avbryt
-          </button>
-        </div>
-      )}
+      {/* Section delete confirmation dialog */}
+      <DeleteConfirmDialog
+        isOpen={sectionToDelete !== null}
+        onClose={() => setSectionToDelete(null)}
+        onConfirm={() => {
+          if (sectionToDelete) {
+            setSections(prev => prev.filter(s => s.id !== sectionToDelete).map((s, i) => ({ ...s, order: i })))
+            setOpenSections(prev => {
+              const next = new Set(prev)
+              next.delete(sectionToDelete)
+              return next
+            })
+            setSectionToDelete(null)
+          }
+        }}
+        itemName={sections.find(s => s.id === sectionToDelete)?.heading || 'seksjonen'}
+        heading="Slett seksjon?"
+        body="Innholdet i seksjonen vil ga tapt. Vil du fortsette?"
+        confirmLabel="Slett seksjon"
+        isDeleting={false}
+      />
 
-      <div className="mt-8 flex gap-3">
-        <Button variant="primary" onClick={handleSave} loading={saving}>
-          Lagre endringer
-        </Button>
-        <Button variant="secondary" onClick={() => router.push('/admin/innhold')}>
+      {/* Unsaved changes navigation intercept dialog */}
+      <DeleteConfirmDialog
+        isOpen={showUnsavedDialog}
+        onClose={() => setShowUnsavedDialog(false)}
+        onConfirm={() => {
+          setShowUnsavedDialog(false)
+          router.push('/admin/innhold')
+        }}
+        itemName="endringene"
+        heading="Forkast endringer?"
+        body="Du har ulagrede endringer. Vil du forlate siden uten a lagre?"
+        confirmLabel="Ja, forkast"
+        cancelLabel="Nei, bli her"
+        isDeleting={false}
+      />
+
+      {/* Bottom navigation row */}
+      <div className="mt-4 flex items-center gap-3">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-forest/20 px-4 py-2 text-sm font-medium text-forest hover:bg-card"
+        >
           Tilbake
-        </Button>
+        </button>
         {pageSlug && (
           <a
             href={`/${pageSlug === '/' ? '' : pageSlug}`}
@@ -732,10 +875,21 @@ export default function EditPageContentPage() {
             className="inline-flex items-center gap-1.5 rounded-lg border border-forest/20 px-4 py-2 text-sm font-medium text-forest hover:bg-card"
           >
             Vis side
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">&#8599;</span>
           </a>
         )}
       </div>
+
+      <PublishBar
+        onSaveDraft={handleSaveDraft}
+        onPublish={handlePublish}
+        onUnpublish={handleUnpublish}
+        isPublished={isPublished}
+        isSaving={saving}
+        isPublishing={publishing}
+        contentType="page"
+      />
+
     </div>
   )
 }
