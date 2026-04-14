@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roots & Culture — Profilkonto UI Playground</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --forest: #1B4332;
+    --cream: #FEFCF3;
+    --card: #F5F0E8;
+    --body-color: #374740;
+    --rust: #A0440B;
+    --badge-easy: #166534;
+    --badge-easy-bg: #DCFCE7;
+    --badge-warning: #92400E;
+    --badge-warning-bg: #FEF3C7;
+    --ui-bg: #111116;
+    --ui-surface: #1a1a22;
+    --ui-border: #2a2a35;
+    --ui-text: #e0e0e8;
+    --ui-muted: #8888a0;
+    --ui-accent: #7c9a85;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--ui-bg);
+    color: var(--ui-text);
+    min-height: 100vh;
+  }
+
+  .playground-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+  }
+
+  /* Controls panel */
+  .controls {
+    background: var(--ui-surface);
+    border-right: 1px solid var(--ui-border);
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+
+  .controls h1 {
+    font-family: 'Merriweather', serif;
+    font-size: 16px;
+    color: var(--ui-accent);
+    margin-bottom: 4px;
+  }
+
+  .controls .subtitle {
+    font-size: 12px;
+    color: var(--ui-muted);
+    margin-bottom: 20px;
+  }
+
+  .control-group {
+    margin-bottom: 20px;
+  }
+
+  .control-group h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ui-muted);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--ui-border);
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .control-row label {
+    font-size: 13px;
+    color: var(--ui-text);
+  }
+
+  /* Layout option cards */
+  .layout-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .layout-option {
+    background: var(--ui-bg);
+    border: 2px solid var(--ui-border);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .layout-option:hover {
+    border-color: var(--ui-accent);
+  }
+
+  .layout-option.active {
+    border-color: var(--ui-accent);
+    background: rgba(124, 154, 133, 0.1);
+  }
+
+  .layout-option .icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .layout-option .label {
+    font-size: 11px;
+    color: var(--ui-muted);
+  }
+
+  .layout-option.active .label {
+    color: var(--ui-accent);
+  }
+
+  /* Toggle */
+  .toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    background: var(--ui-border);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .toggle.on {
+    background: var(--ui-accent);
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+
+  .toggle.on::after {
+    transform: translateX(18px);
+  }
+
+  /* Select */
+  select {
+    background: var(--ui-bg);
+    color: var(--ui-text);
+    border: 1px solid var(--ui-border);
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+  }
+
+  /* Slider */
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 120px;
+    height: 4px;
+    background: var(--ui-border);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--ui-accent);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  /* Presets */
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .preset-btn {
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    color: var(--ui-text);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .preset-btn:hover {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+  }
+
+  .preset-btn.active {
+    background: var(--ui-accent);
+    color: white;
+    border-color: var(--ui-accent);
+  }
+
+  /* Preview area */
+  .preview-area {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  .preview-container {
+    background: var(--cream);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 600px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  /* Prompt output */
+  .prompt-output {
+    background: var(--ui-surface);
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .prompt-output h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ui-muted);
+    margin-bottom: 10px;
+  }
+
+  .prompt-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ui-text);
+    white-space: pre-wrap;
+  }
+
+  .copy-btn {
+    margin-top: 12px;
+    background: var(--ui-accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: opacity 0.15s;
+  }
+
+  .copy-btn:hover { opacity: 0.85; }
+
+  /* ====== PREVIEW STYLES ====== */
+
+  /* Sidebar nav */
+  .preview-sidebar-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 600px;
+  }
+
+  .preview-sidebar {
+    background: #f7f2ea;
+    border-right: 1px solid rgba(27,67,50,0.08);
+    padding: 28px 16px;
+  }
+
+  .preview-sidebar .user-info {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(27,67,50,0.08);
+  }
+
+  .preview-sidebar .avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Merriweather', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 auto 10px;
+  }
+
+  .preview-sidebar .user-name {
+    font-family: 'Merriweather', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--forest);
+  }
+
+  .preview-sidebar .user-email {
+    font-size: 12px;
+    color: var(--body-color);
+    opacity: 0.6;
+    margin-top: 2px;
+  }
+
+  .preview-sidebar .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--body-color);
+    cursor: default;
+    margin-bottom: 2px;
+    transition: background 0.15s;
+  }
+
+  .preview-sidebar .nav-item.active {
+    background: rgba(27,67,50,0.08);
+    color: var(--forest);
+    font-weight: 500;
+  }
+
+  .preview-sidebar .nav-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.5;
+  }
+
+  .preview-sidebar .nav-item.active .nav-icon {
+    opacity: 0.8;
+  }
+
+  /* Tabs nav */
+  .preview-tabs-nav {
+    display: flex;
+    border-bottom: 1px solid rgba(27,67,50,0.12);
+    padding: 0 28px;
+    gap: 0;
+  }
+
+  .preview-tabs-nav .tab {
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--body-color);
+    border-bottom: 2px solid transparent;
+    cursor: default;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .preview-tabs-nav .tab.active {
+    color: var(--forest);
+    border-bottom-color: var(--forest);
+    font-weight: 500;
+  }
+
+  /* Pills nav */
+  .preview-pills-nav {
+    display: flex;
+    gap: 8px;
+    padding: 0 28px;
+    margin-bottom: 4px;
+  }
+
+  .preview-pills-nav .pill {
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 999px;
+    color: var(--body-color);
+    background: transparent;
+    border: 1px solid rgba(27,67,50,0.12);
+    cursor: default;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .preview-pills-nav .pill.active {
+    background: var(--forest);
+    color: var(--cream);
+    border-color: var(--forest);
+    font-weight: 500;
+  }
+
+  /* Main content area */
+  .preview-main {
+    padding: 28px;
+  }
+
+  .preview-header {
+    margin-bottom: 24px;
+  }
+
+  .preview-header h1 {
+    font-family: 'Merriweather', serif;
+    color: var(--forest);
+    font-weight: 700;
+  }
+
+  .preview-greeting {
+    font-family: 'Inter', sans-serif;
+    color: var(--forest);
+    margin-top: 4px;
+  }
+
+  /* Welcome banner */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--forest) 0%, #2d6a4f 100%);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .welcome-banner .avatar-large {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(254,252,243,0.2);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Merriweather', serif;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .welcome-banner h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .welcome-banner .sub {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid rgba(27,67,50,0.08);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .stat-card .number {
+    font-family: 'Merriweather', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--forest);
+  }
+
+  .stat-card .label {
+    font-size: 12px;
+    color: var(--body-color);
+    margin-top: 2px;
+  }
+
+  /* Section */
+  .preview-section {
+    margin-bottom: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .section-header h3 {
+    font-family: 'Merriweather', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--forest);
+  }
+
+  .section-header .link {
+    font-size: 12px;
+    color: var(--forest);
+    text-decoration: underline;
+    cursor: default;
+  }
+
+  /* Cards */
+  .item-card {
+    border: 1px solid rgba(27,67,50,0.12);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: background 0.15s;
+  }
+
+  .item-card:hover {
+    background: rgba(254,252,243,0.5);
+  }
+
+  .card-left .card-title {
+    font-size: 14px;
+    color: var(--forest);
+    font-weight: 500;
+  }
+
+  .card-left .card-sub {
+    font-size: 12px;
+    color: var(--body-color);
+    opacity: 0.6;
+    margin-top: 2px;
+  }
+
+  .card-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-price {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--forest);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .badge-success {
+    background: var(--badge-easy-bg);
+    color: var(--badge-easy);
+  }
+
+  .badge-warning {
+    background: var(--badge-warning-bg);
+    color: var(--badge-warning);
+  }
+
+  /* Quick actions */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .quick-action {
+    background: white;
+    border: 1px solid rgba(27,67,50,0.08);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: default;
+    transition: border-color 0.15s;
+  }
+
+  .quick-action:hover {
+    border-color: rgba(27,67,50,0.2);
+  }
+
+  .quick-action .qa-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(27,67,50,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--forest);
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .quick-action .qa-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--forest);
+  }
+
+  .quick-action .qa-sub {
+    font-size: 11px;
+    color: var(--body-color);
+    opacity: 0.6;
+    margin-top: 1px;
+  }
+
+  /* Profile form preview */
+  .profile-section {
+    max-width: 480px;
+  }
+
+  .profile-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .profile-avatar-row .avatar-edit {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Merriweather', serif;
+    font-size: 24px;
+    font-weight: 700;
+    position: relative;
+  }
+
+  .profile-avatar-row .avatar-edit::after {
+    content: '✎';
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 22px;
+    height: 22px;
+    background: var(--cream);
+    border: 2px solid var(--forest);
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--forest);
+  }
+
+  .profile-avatar-row .avatar-info .name {
+    font-family: 'Merriweather', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--forest);
+  }
+
+  .profile-avatar-row .avatar-info .email {
+    font-size: 13px;
+    color: var(--body-color);
+    opacity: 0.6;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--forest);
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid rgba(27,67,50,0.15);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: var(--forest);
+    background: white;
+  }
+
+  .form-input:disabled {
+    background: #f5f5f0;
+    opacity: 0.6;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .form-hint {
+    font-size: 11px;
+    color: var(--body-color);
+    opacity: 0.5;
+    margin-top: 4px;
+  }
+
+  .form-divider {
+    border: none;
+    border-top: 1px solid rgba(27,67,50,0.08);
+    margin: 28px 0;
+  }
+
+  .form-section-title {
+    font-family: 'Merriweather', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 16px;
+  }
+
+  .btn-primary {
+    background: var(--forest);
+    color: var(--cream);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: default;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--forest);
+    border: 1px solid var(--forest);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: default;
+  }
+
+  /* Collapsible */
+  .collapsible {
+    margin-top: 8px;
+  }
+
+  .collapsible-header {
+    font-size: 12px;
+    color: var(--ui-muted);
+    cursor: pointer;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .collapsible-header:hover { color: var(--ui-accent); }
+
+  .collapsible-body {
+    display: none;
+    padding-top: 6px;
+  }
+
+  .collapsible-body.open { display: block; }
+
+  /* Profile card layout */
+  .profile-cards-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .profile-card {
+    background: white;
+    border: 1px solid rgba(27,67,50,0.08);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .profile-card h4 {
+    font-family: 'Merriweather', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .profile-card .card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(27,67,50,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .profile-card-full {
+    grid-column: 1 / -1;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .playground-layout {
+      grid-template-columns: 1fr;
+    }
+    .controls {
+      max-height: none;
+      position: static;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="playground-layout">
+  <!-- Controls Panel -->
+  <div class="controls">
+    <h1>Profilkonto UI</h1>
+    <p class="subtitle">Roots & Culture — utforsk layout og UX</p>
+
+    <!-- Presets -->
+    <div class="control-group">
+      <h3>Forhåndsvalg</h3>
+      <div class="presets">
+        <button class="preset-btn active" onclick="applyPreset('current')">Nåværende</button>
+        <button class="preset-btn" onclick="applyPreset('modern')">Moderne</button>
+        <button class="preset-btn" onclick="applyPreset('dashboard')">Dashboard</button>
+        <button class="preset-btn" onclick="applyPreset('premium')">Premium</button>
+        <button class="preset-btn" onclick="applyPreset('minimal')">Minimal</button>
+      </div>
+    </div>
+
+    <!-- Navigation Style -->
+    <div class="control-group">
+      <h3>Navigasjon</h3>
+      <div class="layout-options">
+        <div class="layout-option active" data-nav="tabs" onclick="setNav('tabs')">
+          <span class="icon">━━</span>
+          <span class="label">Faner</span>
+        </div>
+        <div class="layout-option" data-nav="sidebar" onclick="setNav('sidebar')">
+          <span class="icon">┃ ▐</span>
+          <span class="label">Sidepanel</span>
+        </div>
+        <div class="layout-option" data-nav="pills" onclick="setNav('pills')">
+          <span class="icon">◉◉</span>
+          <span class="label">Piller</span>
+        </div>
+        <div class="layout-option" data-nav="none" onclick="setNav('none')">
+          <span class="icon">─ ─</span>
+          <span class="label">Ingen</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Page -->
+    <div class="control-group">
+      <h3>Aktiv side</h3>
+      <div class="control-row">
+        <label>Vis</label>
+        <select onchange="state.activePage = this.value; updateAll()">
+          <option value="oversikt">Oversikt (dashboard)</option>
+          <option value="profil">Profilinnstillinger</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Dashboard Options -->
+    <div class="control-group" id="dashboard-controls">
+      <h3>Oversikt</h3>
+      <div class="control-row">
+        <label>Velkomstbanner</label>
+        <div class="toggle on" data-key="welcomeBanner" onclick="toggleState(this, 'welcomeBanner')"></div>
+      </div>
+      <div class="control-row">
+        <label>Statistikk-kort</label>
+        <div class="toggle" data-key="statsRow" onclick="toggleState(this, 'statsRow')"></div>
+      </div>
+      <div class="control-row">
+        <label>Hurtighandlinger</label>
+        <div class="toggle" data-key="quickActions" onclick="toggleState(this, 'quickActions')"></div>
+      </div>
+      <div class="control-row">
+        <label>Vis ordrer</label>
+        <div class="toggle on" data-key="showOrders" onclick="toggleState(this, 'showOrders')"></div>
+      </div>
+      <div class="control-row">
+        <label>Vis bookinger</label>
+        <div class="toggle on" data-key="showBookings" onclick="toggleState(this, 'showBookings')"></div>
+      </div>
+      <div class="control-row">
+        <label>Kort-stil</label>
+        <select onchange="state.cardStyle = this.value; updateAll()">
+          <option value="bordered">Ramme</option>
+          <option value="elevated">Skygge</option>
+          <option value="flat">Flat</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Profile Options -->
+    <div class="control-group" id="profile-controls" style="display:none;">
+      <h3>Profilside</h3>
+      <div class="control-row">
+        <label>Avatar med redigering</label>
+        <div class="toggle on" data-key="profileAvatar" onclick="toggleState(this, 'profileAvatar')"></div>
+      </div>
+      <div class="control-row">
+        <label>Oppdelt i kort</label>
+        <div class="toggle" data-key="profileCards" onclick="toggleState(this, 'profileCards')"></div>
+      </div>
+      <div class="control-row">
+        <label>Telefonnummer-felt</label>
+        <div class="toggle" data-key="phoneField" onclick="toggleState(this, 'phoneField')"></div>
+      </div>
+      <div class="control-row">
+        <label>Adresse todelt (gate + postnr)</label>
+        <div class="toggle" data-key="splitAddress" onclick="toggleState(this, 'splitAddress')"></div>
+      </div>
+      <div class="control-row">
+        <label>Passordendring</label>
+        <div class="toggle on" data-key="passwordSection" onclick="toggleState(this, 'passwordSection')"></div>
+      </div>
+      <div class="control-row">
+        <label>Slett konto-knapp</label>
+        <div class="toggle" data-key="deleteAccount" onclick="toggleState(this, 'deleteAccount')"></div>
+      </div>
+    </div>
+
+    <!-- Spacing & Layout -->
+    <div class="control-group">
+      <h3>Layout</h3>
+      <div class="control-row">
+        <label>Maks bredde</label>
+        <select onchange="state.maxWidth = this.value; updateAll()">
+          <option value="4xl">4xl (56rem)</option>
+          <option value="5xl">5xl (64rem)</option>
+          <option value="6xl">6xl (72rem)</option>
+        </select>
+      </div>
+      <div class="control-row">
+        <label>Kortradius</label>
+        <input type="range" min="0" max="16" value="10" onchange="state.cardRadius = +this.value; updateAll()" oninput="state.cardRadius = +this.value; updateAll()">
+        <span id="radius-val" style="font-size:11px;color:var(--ui-muted);width:30px;text-align:right;">10px</span>
+      </div>
+      <div class="control-row">
+        <label>Innvendig padding</label>
+        <input type="range" min="12" max="32" value="16" onchange="state.cardPadding = +this.value; updateAll()" oninput="state.cardPadding = +this.value; updateAll()">
+        <span id="padding-val" style="font-size:11px;color:var(--ui-muted);width:30px;text-align:right;">16px</span>
+      </div>
+    </div>
+
+    <!-- Typography -->
+    <div class="control-group">
+      <h3>Typografi</h3>
+      <div class="control-row">
+        <label>Overskrift</label>
+        <select onchange="state.headingSize = this.value; updateAll()">
+          <option value="compact">Kompakt</option>
+          <option value="normal" selected>Normal</option>
+          <option value="large">Stor</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview + Prompt -->
+  <div class="preview-area">
+    <div class="preview-container" id="preview"></div>
+
+    <div class="prompt-output">
+      <h3>Generert prompt</h3>
+      <div class="prompt-text" id="prompt-text"></div>
+      <button class="copy-btn" onclick="copyPrompt()">Kopier prompt</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEFAULTS = {
+  navStyle: 'tabs',
+  activePage: 'oversikt',
+  welcomeBanner: true,
+  statsRow: false,
+  quickActions: false,
+  showOrders: true,
+  showBookings: true,
+  cardStyle: 'bordered',
+  profileAvatar: true,
+  profileCards: false,
+  phoneField: false,
+  splitAddress: false,
+  passwordSection: true,
+  deleteAccount: false,
+  maxWidth: '4xl',
+  cardRadius: 10,
+  cardPadding: 16,
+  headingSize: 'normal',
+};
+
+const state = { ...DEFAULTS };
+
+const PRESETS = {
+  current: {
+    navStyle: 'tabs', welcomeBanner: false, statsRow: false, quickActions: false,
+    showOrders: true, showBookings: true, cardStyle: 'bordered', profileAvatar: false,
+    profileCards: false, phoneField: false, splitAddress: false, passwordSection: true,
+    deleteAccount: false, maxWidth: '4xl', cardRadius: 8, cardPadding: 16, headingSize: 'normal'
+  },
+  modern: {
+    navStyle: 'pills', welcomeBanner: true, statsRow: true, quickActions: true,
+    showOrders: true, showBookings: true, cardStyle: 'elevated', profileAvatar: true,
+    profileCards: true, phoneField: true, splitAddress: true, passwordSection: true,
+    deleteAccount: true, maxWidth: '5xl', cardRadius: 12, cardPadding: 16, headingSize: 'normal'
+  },
+  dashboard: {
+    navStyle: 'sidebar', welcomeBanner: true, statsRow: true, quickActions: true,
+    showOrders: true, showBookings: true, cardStyle: 'elevated', profileAvatar: true,
+    profileCards: false, phoneField: false, splitAddress: false, passwordSection: true,
+    deleteAccount: false, maxWidth: '6xl', cardRadius: 10, cardPadding: 16, headingSize: 'large'
+  },
+  premium: {
+    navStyle: 'sidebar', welcomeBanner: true, statsRow: true, quickActions: false,
+    showOrders: true, showBookings: true, cardStyle: 'elevated', profileAvatar: true,
+    profileCards: true, phoneField: true, splitAddress: true, passwordSection: true,
+    deleteAccount: true, maxWidth: '5xl', cardRadius: 14, cardPadding: 20, headingSize: 'large'
+  },
+  minimal: {
+    navStyle: 'none', welcomeBanner: false, statsRow: false, quickActions: false,
+    showOrders: true, showBookings: true, cardStyle: 'flat', profileAvatar: true,
+    profileCards: false, phoneField: false, splitAddress: false, passwordSection: true,
+    deleteAccount: false, maxWidth: '4xl', cardRadius: 8, cardPadding: 14, headingSize: 'compact'
+  }
+};
+
+function applyPreset(name) {
+  Object.assign(state, PRESETS[name]);
+  syncControls();
+  updateAll();
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === name.toLowerCase()));
+}
+
+function setNav(style) {
+  state.navStyle = style;
+  document.querySelectorAll('.layout-option').forEach(el => el.classList.toggle('active', el.dataset.nav === style));
+  updateAll();
+}
+
+function toggleState(el, key) {
+  state[key] = !state[key];
+  el.classList.toggle('on', state[key]);
+  updateAll();
+}
+
+function syncControls() {
+  // Sync toggles
+  document.querySelectorAll('.toggle').forEach(el => {
+    const key = el.dataset.key;
+    if (key) el.classList.toggle('on', state[key]);
+  });
+  // Sync nav options
+  document.querySelectorAll('.layout-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.nav === state.navStyle);
+  });
+  // Sync selects
+  document.querySelectorAll('select').forEach(sel => {
+    if (sel.onchange) {
+      const fn = sel.onchange.toString();
+      if (fn.includes('cardStyle')) sel.value = state.cardStyle;
+      if (fn.includes('maxWidth')) sel.value = state.maxWidth;
+      if (fn.includes('headingSize')) sel.value = state.headingSize;
+      if (fn.includes('activePage')) sel.value = state.activePage;
+    }
+  });
+  // Sync sliders
+  const sliders = document.querySelectorAll('input[type="range"]');
+  sliders[0].value = state.cardRadius;
+  sliders[1].value = state.cardPadding;
+}
+
+function getCardStyleCSS() {
+  switch (state.cardStyle) {
+    case 'elevated': return `border: none; box-shadow: 0 1px 8px rgba(27,67,50,0.08);`;
+    case 'flat': return `border: none; background: rgba(27,67,50,0.03);`;
+    default: return `border: 1px solid rgba(27,67,50,0.12);`;
+  }
+}
+
+function getHeadingSizes() {
+  switch (state.headingSize) {
+    case 'compact': return { h1: '22px', h2: '15px', greeting: '14px' };
+    case 'large': return { h1: '30px', h2: '18px', greeting: '16px' };
+    default: return { h1: '26px', h2: '16px', greeting: '15px' };
+  }
+}
+
+function svgIcon(name) {
+  const icons = {
+    home: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
+    bag: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" x2="21" y1="6" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>',
+    calendar: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>',
+    user: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+    logout: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2 2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>',
+    explore: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>',
+    edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>',
+  };
+  return icons[name] || '';
+}
+
+function renderPreview() {
+  const sizes = getHeadingSizes();
+  const cardCSS = getCardStyleCSS();
+  const r = state.cardRadius;
+  const p = state.cardPadding;
+
+  document.getElementById('radius-val').textContent = r + 'px';
+  document.getElementById('padding-val').textContent = p + 'px';
+
+  // Show/hide page-specific controls
+  document.getElementById('dashboard-controls').style.display = state.activePage === 'oversikt' ? 'block' : 'none';
+  document.getElementById('profile-controls').style.display = state.activePage === 'profil' ? 'block' : 'none';
+
+  let html = '';
+
+  // Sidebar layout wrapping
+  if (state.navStyle === 'sidebar') {
+    html += `<div class="preview-sidebar-layout">`;
+    html += `<div class="preview-sidebar">`;
+    html += `<div class="user-info">`;
+    html += `<div class="avatar">KL</div>`;
+    html += `<div class="user-name">Kari Larsen</div>`;
+    html += `<div class="user-email">kari@example.com</div>`;
+    html += `</div>`;
+    const navItems = [
+      { label: 'Oversikt', icon: 'home', id: 'oversikt' },
+      { label: 'Ordrer', icon: 'bag', id: 'ordrer' },
+      { label: 'Bookinger', icon: 'calendar', id: 'bookinger' },
+      { label: 'Profil', icon: 'user', id: 'profil' },
+    ];
+    navItems.forEach(item => {
+      const active = state.activePage === item.id || (state.activePage === 'oversikt' && item.id === 'oversikt');
+      html += `<div class="nav-item ${active ? 'active' : ''}">
+        <span class="nav-icon">${svgIcon(item.icon)}</span>
+        ${item.label}
+      </div>`;
+    });
+    html += `<div style="margin-top:auto;padding-top:20px;border-top:1px solid rgba(27,67,50,0.08);margin-top:24px;">`;
+    html += `<div class="nav-item"><span class="nav-icon">${svgIcon('logout')}</span>Logg ut</div>`;
+    html += `</div>`;
+    html += `</div>`;
+    html += `<div class="preview-main">`;
+  } else {
+    html += `<div class="preview-main">`;
+    // Header
+    html += `<div class="preview-header">`;
+    html += `<h1 style="font-size:${sizes.h1}">Min konto</h1>`;
+    if (!state.welcomeBanner && state.activePage === 'oversikt') {
+      html += `<p class="preview-greeting" style="font-size:${sizes.greeting}">Hei, Kari!</p>`;
+    }
+    html += `</div>`;
+
+    // Nav
+    if (state.navStyle === 'tabs') {
+      html += `<div class="preview-tabs-nav">`;
+      ['Oversikt', 'Ordrer', 'Bookinger', 'Profil'].forEach((t, i) => {
+        const id = ['oversikt','ordrer','bookinger','profil'][i];
+        html += `<div class="tab ${state.activePage === id ? 'active' : ''}">${t}</div>`;
+      });
+      html += `</div>`;
+      html += `<div style="height:24px"></div>`;
+    } else if (state.navStyle === 'pills') {
+      html += `<div class="preview-pills-nav">`;
+      ['Oversikt', 'Ordrer', 'Bookinger', 'Profil'].forEach((t, i) => {
+        const id = ['oversikt','ordrer','bookinger','profil'][i];
+        html += `<div class="pill ${state.activePage === id ? 'active' : ''}">${t}</div>`;
+      });
+      html += `</div>`;
+      html += `<div style="height:20px"></div>`;
+    } else if (state.navStyle === 'none') {
+      html += `<div style="height:8px"></div>`;
+    }
+  }
+
+  // Page content
+  if (state.activePage === 'oversikt') {
+    html += renderDashboard(sizes, cardCSS, r, p);
+  } else {
+    html += renderProfile(sizes, cardCSS, r, p);
+  }
+
+  // Close wrappers
+  html += `</div>`;
+  if (state.navStyle === 'sidebar') {
+    html += `</div>`;
+  }
+
+  document.getElementById('preview').innerHTML = html;
+}
+
+function renderDashboard(sizes, cardCSS, r, p) {
+  let html = '';
+
+  // Welcome banner
+  if (state.welcomeBanner) {
+    html += `<div class="welcome-banner" style="border-radius:${r}px;">
+      <div class="avatar-large">KL</div>
+      <div>
+        <h2>Hei, Kari!</h2>
+        <div class="sub">Velkommen tilbake til Roots & Culture</div>
+      </div>
+    </div>`;
+  }
+
+  // Stats
+  if (state.statsRow) {
+    html += `<div class="stats-row">
+      <div class="stat-card" style="border-radius:${r}px;${cardCSS}">
+        <div class="number">5</div>
+        <div class="label">Ordrer</div>
+      </div>
+      <div class="stat-card" style="border-radius:${r}px;${cardCSS}">
+        <div class="number">2</div>
+        <div class="label">Bookinger</div>
+      </div>
+      <div class="stat-card" style="border-radius:${r}px;${cardCSS}">
+        <div class="number">1</div>
+        <div class="label">Kommende</div>
+      </div>
+    </div>`;
+  }
+
+  // Quick actions
+  if (state.quickActions) {
+    html += `<div class="quick-actions">
+      <div class="quick-action" style="border-radius:${r}px;${cardCSS}">
+        <div class="qa-icon">${svgIcon('explore')}</div>
+        <div>
+          <div class="qa-label">Utforsk opplevelser</div>
+          <div class="qa-sub">Finn din neste naturopplevelse</div>
+        </div>
+      </div>
+      <div class="quick-action" style="border-radius:${r}px;${cardCSS}">
+        <div class="qa-icon">${svgIcon('edit')}</div>
+        <div>
+          <div class="qa-label">Oppdater profil</div>
+          <div class="qa-sub">Navn, adresse og passord</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Orders section
+  if (state.showOrders) {
+    html += `<div class="preview-section">`;
+    html += `<div class="section-header">
+      <h3 style="font-size:${sizes.h2}">Siste ordrer</h3>
+      <span class="link">Se alle ordrer</span>
+    </div>`;
+    const orders = [
+      { date: '12. april 2026', items: '3 varer', price: 'kr 489,00', status: 'Bekreftet', type: 'success' },
+      { date: '28. mars 2026', items: '1 vare', price: 'kr 199,00', status: 'Sendt', type: 'warning' },
+      { date: '15. mars 2026', items: '2 varer', price: 'kr 349,00', status: 'Levert', type: 'success' },
+    ];
+    orders.forEach(o => {
+      html += `<div class="item-card" style="border-radius:${r}px;padding:${p}px;${cardCSS}">
+        <div class="card-left">
+          <div class="card-title">${o.date}</div>
+          <div class="card-sub">${o.items}</div>
+        </div>
+        <div class="card-right">
+          <span class="card-price">${o.price}</span>
+          <span class="badge badge-${o.type}">${o.status}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Bookings section
+  if (state.showBookings) {
+    html += `<div class="preview-section">`;
+    html += `<div class="section-header">
+      <h3 style="font-size:${sizes.h2}">Kommende bookinger</h3>
+      <span class="link">Se alle bookinger</span>
+    </div>`;
+    const bookings = [
+      { name: 'Naturretreat Hardangervidda', date: '20. mai 2026', seats: '2 plasser', code: 'RC-4821', status: 'Bekreftet', type: 'success' },
+      { name: 'Kaffebrenneri-kurs', date: '8. juni 2026', seats: '1 plass', code: 'RC-5103', status: 'Venter', type: 'warning' },
+    ];
+    bookings.forEach(b => {
+      html += `<div class="item-card" style="border-radius:${r}px;padding:${p}px;${cardCSS}">
+        <div class="card-left">
+          <div class="card-title">${b.name}</div>
+          <div class="card-sub">${b.date} · ${b.seats} · Kode: ${b.code}</div>
+        </div>
+        <div class="card-right">
+          <span class="badge badge-${b.type}">${b.status}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+function renderProfile(sizes, cardCSS, r, p) {
+  let html = '';
+
+  if (state.navStyle === 'sidebar') {
+    html += `<h2 style="font-family:'Merriweather',serif;font-size:${sizes.h2};font-weight:700;color:var(--forest);margin-bottom:20px;">Profilinnstillinger</h2>`;
+  }
+
+  if (state.profileCards) {
+    // Card-based layout
+    html += `<div class="profile-cards-layout">`;
+
+    // Personal info card
+    html += `<div class="profile-card" style="border-radius:${r}px;${cardCSS}">`;
+    html += `<h4><span class="card-icon">${svgIcon('user')}</span> Personlig informasjon</h4>`;
+    if (state.profileAvatar) {
+      html += `<div class="profile-avatar-row" style="margin-bottom:16px;">
+        <div class="avatar-edit" style="width:56px;height:56px;font-size:18px;">KL</div>
+        <div class="avatar-info">
+          <div class="name" style="font-size:16px;">Kari Larsen</div>
+          <div class="email">kari@example.com</div>
+        </div>
+      </div>`;
+    }
+    html += `<div class="form-group"><label>Fullt navn</label><input class="form-input" value="Kari Larsen"></div>`;
+    html += `<div class="form-group"><label>E-post</label><input class="form-input" value="kari@example.com" disabled></div>`;
+    if (state.phoneField) {
+      html += `<div class="form-group"><label>Telefon</label><input class="form-input" value="+47 912 34 567" placeholder="+47"></div>`;
+    }
+    html += `<button class="btn-primary" style="border-radius:${r - 2}px;">Lagre</button>`;
+    html += `</div>`;
+
+    // Address card
+    html += `<div class="profile-card" style="border-radius:${r}px;${cardCSS}">`;
+    html += `<h4><span class="card-icon">📍</span> Leveringsadresse</h4>`;
+    if (state.splitAddress) {
+      html += `<div class="form-group"><label>Gateadresse</label><input class="form-input" value="Storgata 15"></div>`;
+      html += `<div class="form-row">
+        <div class="form-group"><label>Postnummer</label><input class="form-input" value="0182"></div>
+        <div class="form-group"><label>Sted</label><input class="form-input" value="Oslo"></div>
+      </div>`;
+    } else {
+      html += `<div class="form-group"><label>Adresse</label><input class="form-input" value="Storgata 15, 0182 Oslo"></div>`;
+    }
+    html += `<button class="btn-primary" style="border-radius:${r - 2}px;">Lagre adresse</button>`;
+    html += `</div>`;
+
+    // Password card
+    if (state.passwordSection) {
+      html += `<div class="profile-card" style="border-radius:${r}px;${cardCSS}">`;
+      html += `<h4><span class="card-icon">🔒</span> Passord</h4>`;
+      html += `<div class="form-group"><label>Nåværende passord</label><input class="form-input" type="password" value="••••••••"></div>`;
+      html += `<div class="form-group"><label>Nytt passord</label><input class="form-input" type="password" placeholder="Minst 8 tegn"></div>`;
+      html += `<button class="btn-primary" style="border-radius:${r - 2}px;">Endre passord</button>`;
+      html += `</div>`;
+    }
+
+    // Delete account card
+    if (state.deleteAccount) {
+      html += `<div class="profile-card" style="border-radius:${r}px;border-color:rgba(160,68,11,0.15);">`;
+      html += `<h4 style="color:var(--rust);"><span class="card-icon" style="background:rgba(160,68,11,0.06);">⚠</span> Faresone</h4>`;
+      html += `<p style="font-size:13px;color:var(--body-color);margin-bottom:12px;">Sletting av kontoen kan ikke angres. Alle ordrer og bookinger vil bli fjernet.</p>`;
+      html += `<button class="btn-secondary" style="border-radius:${r - 2}px;color:var(--rust);border-color:var(--rust);">Slett min konto</button>`;
+      html += `</div>`;
+    }
+
+    html += `</div>`;
+  } else {
+    // Linear form layout
+    html += `<div class="profile-section">`;
+
+    if (state.profileAvatar) {
+      html += `<div class="profile-avatar-row">
+        <div class="avatar-edit">KL</div>
+        <div class="avatar-info">
+          <div class="name">Kari Larsen</div>
+          <div class="email">kari@example.com</div>
+        </div>
+      </div>`;
+    }
+
+    html += `<div class="form-group"><label>E-post</label><input class="form-input" value="kari@example.com" disabled><div class="form-hint">Kontakt oss for å endre e-postadresse</div></div>`;
+    html += `<div class="form-group"><label>Fullt navn</label><input class="form-input" value="Kari Larsen"></div>`;
+    if (state.phoneField) {
+      html += `<div class="form-group"><label>Telefon</label><input class="form-input" value="+47 912 34 567" placeholder="+47"></div>`;
+    }
+    if (state.splitAddress) {
+      html += `<div class="form-group"><label>Gateadresse</label><input class="form-input" value="Storgata 15"></div>`;
+      html += `<div class="form-row">
+        <div class="form-group"><label>Postnummer</label><input class="form-input" value="0182"></div>
+        <div class="form-group"><label>Sted</label><input class="form-input" value="Oslo"></div>
+      </div>`;
+    } else {
+      html += `<div class="form-group"><label>Leveringsadresse</label><input class="form-input" value="Storgata 15, 0182 Oslo"></div>`;
+    }
+    html += `<button class="btn-primary" style="border-radius:${r - 2}px;">Lagre endringer</button>`;
+
+    if (state.passwordSection) {
+      html += `<hr class="form-divider">`;
+      html += `<div class="form-section-title">Endre passord</div>`;
+      html += `<div class="form-group"><label>Nåværende passord</label><input class="form-input" type="password" value="••••••••"></div>`;
+      html += `<div class="form-group"><label>Nytt passord</label><input class="form-input" type="password" placeholder="Minst 8 tegn"></div>`;
+      html += `<button class="btn-primary" style="border-radius:${r - 2}px;">Endre passord</button>`;
+    }
+
+    if (state.deleteAccount) {
+      html += `<hr class="form-divider">`;
+      html += `<div class="form-section-title" style="color:var(--rust);">Faresone</div>`;
+      html += `<p style="font-size:13px;color:var(--body-color);margin-bottom:12px;">Sletting av kontoen kan ikke angres. Alle ordrer og bookinger vil bli fjernet.</p>`;
+      html += `<button class="btn-secondary" style="border-radius:${r - 2}px;color:var(--rust);border-color:var(--rust);">Slett min konto</button>`;
+    }
+
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+function updatePrompt() {
+  const parts = [];
+  const diffs = [];
+
+  // Navigation
+  if (state.navStyle !== DEFAULTS.navStyle) {
+    const navLabels = { tabs: 'horisontal fanenavigasjon', sidebar: 'venstre sidepanel-navigasjon med brukeravatar og meny', pills: 'pilleformet navigasjon med avrundede knapper', none: 'ingen synlig navigasjon (seksjonene vises direkte)' };
+    diffs.push(`Endre navigasjonen fra faner til ${navLabels[state.navStyle]}`);
+  }
+
+  // Welcome banner
+  if (state.welcomeBanner !== DEFAULTS.welcomeBanner) {
+    if (state.welcomeBanner) {
+      diffs.push('Legg til et velkomstbanner med morkgronn gradient-bakgrunn, brukerens avatar-initialer og hilsen ("Hei, [navn]! Velkommen tilbake til Roots & Culture")');
+    } else {
+      diffs.push('Fjern velkomstbanneret, vis bare en enkel teksthilsen');
+    }
+  }
+
+  // Stats
+  if (state.statsRow) {
+    diffs.push('Legg til en statistikkrad med tre kort som viser antall ordrer, bookinger og kommende hendelser');
+  }
+
+  // Quick actions
+  if (state.quickActions) {
+    diffs.push('Legg til en hurtighandling-seksjon med to kort: "Utforsk opplevelser" og "Oppdater profil", med ikoner og undertekst');
+  }
+
+  // Card style
+  if (state.cardStyle !== DEFAULTS.cardStyle) {
+    const styleLabels = { elevated: 'subtil skygge (box-shadow) uten synlig ramme', flat: 'flat stil med svak bakgrunnsfarge uten ramme', bordered: 'tynn ramme med forest/12 opacity' };
+    diffs.push(`Bruk ${styleLabels[state.cardStyle]} pa alle kort`);
+  }
+
+  // Profile avatar
+  if (state.profileAvatar !== DEFAULTS.profileAvatar) {
+    if (state.profileAvatar) {
+      diffs.push('Legg til en avatar-seksjon pa profilsiden med brukerens initialer i en morkgronn sirkel, redigeringsikon, og navn/e-post ved siden av');
+    }
+  }
+
+  // Profile cards
+  if (state.profileCards) {
+    diffs.push('Organiser profilsiden i separate kort (2-kolonners grid): personlig informasjon, leveringsadresse, passord, og eventuelt faresone — istedenfor et langt lineært skjema');
+  }
+
+  // Phone field
+  if (state.phoneField) {
+    diffs.push('Legg til et telefonnummer-felt pa profilsiden (valgfritt felt med +47 placeholder)');
+  }
+
+  // Split address
+  if (state.splitAddress) {
+    diffs.push('Del opp adressefeltet i tre separate felt: gateadresse, postnummer og sted — for bedre validering og UX');
+  }
+
+  // Delete account
+  if (state.deleteAccount) {
+    diffs.push('Legg til en "Faresone"-seksjon nederst pa profilsiden med slett-konto-knapp og advarselstekst i rust-farge');
+  }
+
+  // Layout changes
+  if (state.cardRadius !== DEFAULTS.cardRadius) {
+    diffs.push(`Sett border-radius til ${state.cardRadius}px pa alle kort og containere`);
+  }
+  if (state.cardPadding !== DEFAULTS.cardPadding) {
+    diffs.push(`Sett intern padding til ${state.cardPadding}px pa alle kort`);
+  }
+  if (state.maxWidth !== DEFAULTS.maxWidth) {
+    diffs.push(`Opp maks-bredde fra max-w-4xl til max-w-${state.maxWidth}`);
+  }
+
+  // Typography
+  if (state.headingSize !== DEFAULTS.headingSize) {
+    const sizeLabels = { compact: 'mer kompakte overskrifter', large: 'storre, mer prominente overskrifter' };
+    diffs.push(`Bruk ${sizeLabels[state.headingSize]}`);
+  }
+
+  let prompt;
+  if (diffs.length === 0) {
+    prompt = 'Navarende design — ingen endringer valgt. Juster kontrollene til venstre for a utforske forskjellige UI-valg for profilkonto-sidene.';
+  } else {
+    prompt = `Oppdater profilkonto-sidene (/konto) i Roots & Culture med folgende endringer:\n\n`;
+    diffs.forEach((d, i) => {
+      prompt += `${i + 1}. ${d}\n`;
+    });
+    prompt += `\nBehold den eksisterende fargepaletten (forest green #1B4332, cream #FEFCF3, card #F5F0E8) og typografien (Merriweather for overskrifter, Inter for brodtekst). Alle tekster pa norsk. WCAG 2.1 AA tilgjengelighet — 44px minste trykkmal, tastaturtilgjengelig, semantisk HTML.`;
+  }
+
+  document.getElementById('prompt-text').textContent = prompt;
+}
+
+function updateAll() {
+  renderPreview();
+  updatePrompt();
+  // Clear active preset if state doesn't match any
+  document.querySelectorAll('.preset-btn').forEach(b => {
+    const name = b.textContent.toLowerCase();
+    if (name === 'navarende') return;
+    const preset = PRESETS[name];
+    if (!preset) return;
+    const matches = Object.keys(preset).every(k => state[k] === preset[k]);
+    b.classList.toggle('active', matches);
+  });
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Kopiert!';
+    setTimeout(() => btn.textContent = 'Kopier prompt', 1500);
+  });
+}
+
+// Init
+updateAll();
+applyPreset('current');
+</script>
+</body>
+</html>
