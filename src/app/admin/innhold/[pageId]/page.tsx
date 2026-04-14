@@ -25,6 +25,8 @@ import { CmsImageUpload } from '@/components/admin/CmsImageUpload'
 import { TiptapEditor } from '@/components/admin/TiptapEditor'
 import { DeleteConfirmDialog } from '@/components/admin/DeleteConfirmDialog'
 import { PublishBar } from '@/components/admin/PublishBar'
+import { SectionTypePicker } from '@/components/admin/SectionTypePicker'
+import { Copy } from 'lucide-react'
 import { toast } from 'sonner'
 import type { PageSection, PageContent, SectionItem, SectionType, TextImageLayout } from '@/types'
 
@@ -50,8 +52,6 @@ const SECTION_TYPE_LABELS: Record<SectionType, string> = {
   stats: 'Tall i fokus',
   'logo-bar': 'Partnere / Omtalt i',
 }
-
-const ALL_SECTION_TYPES = Object.keys(SECTION_TYPE_LABELS) as SectionType[]
 
 function createDefaultSection(type: SectionType, order: number): PageSection {
   const base: PageSection = {
@@ -155,6 +155,9 @@ function SortableSection({
   onAddItem,
   onRemoveItem,
   onDelete,
+  onDuplicate,
+  onMoveItemUp,
+  onMoveItemDown,
 }: {
   section: PageSection
   isOpen: boolean
@@ -164,6 +167,9 @@ function SortableSection({
   onAddItem: () => void
   onRemoveItem: (index: number) => void
   onDelete: () => void
+  onDuplicate: () => void
+  onMoveItemUp: (index: number) => void
+  onMoveItemDown: (index: number) => void
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: section.id,
@@ -214,6 +220,14 @@ function SortableSection({
         </button>
         <button
           type="button"
+          onClick={onDuplicate}
+          className="p-2 text-body/40 hover:text-forest"
+          aria-label="Dupliser seksjon"
+        >
+          <Copy className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
           onClick={onDelete}
           className="p-2 text-body/40 hover:text-red-600"
           aria-label="Slett seksjon"
@@ -235,6 +249,9 @@ function SortableSection({
             value={section.heading || ''}
             onChange={(e) => onUpdate({ heading: e.target.value })}
           />
+          <p className="mt-0.5 text-right text-xs text-body/40">
+            {(section.heading || '').length} tegn
+          </p>
 
           {hasSubheading && (
             <div>
@@ -244,6 +261,9 @@ function SortableSection({
                 value={section.subheading || ''}
                 onChange={(e) => onUpdate({ subheading: e.target.value })}
               />
+              <p className="mt-0.5 text-right text-xs text-body/40">
+                {(section.subheading || '').length} tegn
+              </p>
             </div>
           )}
 
@@ -355,14 +375,34 @@ function SortableSection({
                   <div key={i} className="rounded-lg border border-forest/8 bg-card/50 p-4 space-y-3">
                     <div className="flex items-start justify-between">
                       <span className="text-label text-body/50">Element {i + 1}</span>
-                      <button
-                        type="button"
-                        onClick={() => onRemoveItem(i)}
-                        className="p-1 text-body/40 hover:text-red-600"
-                        aria-label="Fjern element"
-                      >
-                        Slett
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => onMoveItemUp(i)}
+                          disabled={i === 0}
+                          className="p-1 text-body/40 hover:text-forest disabled:opacity-30"
+                          aria-label="Flytt opp"
+                        >
+                          &#9650;
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onMoveItemDown(i)}
+                          disabled={i === (section.items?.length ?? 0) - 1}
+                          className="p-1 text-body/40 hover:text-forest disabled:opacity-30"
+                          aria-label="Flytt ned"
+                        >
+                          &#9660;
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onRemoveItem(i)}
+                          className="p-1 text-body/40 hover:text-red-600"
+                          aria-label="Fjern element"
+                        >
+                          Slett
+                        </button>
+                      </div>
                     </div>
                     {section.type !== 'gallery' && section.type !== 'logo-bar' && (
                       <Input
@@ -466,12 +506,14 @@ export default function EditPageContentPage() {
   const [saving, setSaving] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const [openSections, setOpenSections] = useState<Set<string>>(new Set())
-  const [showAddDropdown, setShowAddDropdown] = useState(false)
+  const [showTypePicker, setShowTypePicker] = useState(false)
   const [sectionToDelete, setSectionToDelete] = useState<string | null>(null)
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false)
+  const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
   const savedStateRef = useRef<string>('')
   const [isDirty, setIsDirty] = useState(false)
+  const autosaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -525,6 +567,35 @@ export default function EditPageContentPage() {
     window.addEventListener('beforeunload', handler)
     return () => window.removeEventListener('beforeunload', handler)
   }, [isDirty])
+
+  // Autosave: triggers 30s after last change when form is dirty
+  useEffect(() => {
+    if (!isDirty || saving) return
+    if (autosaveTimerRef.current) clearTimeout(autosaveTimerRef.current)
+    autosaveTimerRef.current = setTimeout(async () => {
+      if (!isDirty) return
+      try {
+        const res = await fetch(`/api/page-content/${pageId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: pageTitle, slug: pageSlug, isPublished,
+            showInNavigation: showInNav, navigationOrder: navOrder, sections,
+          }),
+        })
+        if (res.ok) {
+          savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished, showInNav, navOrder, sections })
+          setIsDirty(false)
+          setLastSaved(new Date())
+        }
+      } catch {
+        // Silent fail for autosave — user can still manually save
+      }
+    }, 30000)
+    return () => {
+      if (autosaveTimerRef.current) clearTimeout(autosaveTimerRef.current)
+    }
+  }, [isDirty, saving, pageTitle, pageSlug, isPublished, showInNav, navOrder, sections, pageId])
 
   function toggleSection(id: string) {
     setOpenSections(prev => {
@@ -597,7 +668,40 @@ export default function EditPageContentPage() {
     const newSection = createDefaultSection(type, sections.length)
     setSections((prev) => [...prev, newSection])
     setOpenSections(prev => new Set(prev).add(newSection.id))
-    setShowAddDropdown(false)
+  }
+
+  function duplicateSection(sectionId: string) {
+    setSections(prev => {
+      const idx = prev.findIndex(s => s.id === sectionId)
+      if (idx === -1) return prev
+      const copy: PageSection = {
+        ...JSON.parse(JSON.stringify(prev[idx])),
+        id: `section-${crypto.randomUUID()}`,
+      }
+      const result = [...prev.slice(0, idx + 1), copy, ...prev.slice(idx + 1)]
+      return result.map((s, i) => ({ ...s, order: i }))
+    })
+    toast.success('Seksjon duplisert')
+  }
+
+  function moveItemUp(sectionId: string, index: number) {
+    if (index === 0) return
+    setSections(prev => prev.map(s => {
+      if (s.id !== sectionId || !s.items) return s
+      const newItems = [...s.items]
+      ;[newItems[index - 1], newItems[index]] = [newItems[index], newItems[index - 1]]
+      return { ...s, items: newItems }
+    }))
+  }
+
+  function moveItemDown(sectionId: string, index: number) {
+    setSections(prev => prev.map(s => {
+      if (s.id !== sectionId || !s.items) return s
+      if (index >= s.items.length - 1) return s
+      const newItems = [...s.items]
+      ;[newItems[index], newItems[index + 1]] = [newItems[index + 1], newItems[index]]
+      return { ...s, items: newItems }
+    }))
   }
 
   function validateBeforeSave(): string[] {
@@ -629,6 +733,7 @@ export default function EditPageContentPage() {
         toast.success('Innhold lagret!')
         savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished, showInNav, navOrder, sections })
         setIsDirty(false)
+        setLastSaved(new Date())
       } else {
         toast.error('Kunne ikke lagre.')
       }
@@ -657,6 +762,7 @@ export default function EditPageContentPage() {
         toast.success('Siden er publisert!')
         savedStateRef.current = JSON.stringify({ pageTitle, pageSlug, isPublished: publishedState, showInNav, navOrder, sections })
         setIsDirty(false)
+        setLastSaved(new Date())
       } else {
         toast.error('Kunne ikke publisere.')
       }
@@ -766,36 +872,14 @@ export default function EditPageContentPage() {
               </button>
             </>
           )}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowAddDropdown(!showAddDropdown)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-forest px-3 py-2 text-sm font-medium text-cream hover:bg-forest/90"
-            >
-              <span aria-hidden="true">+</span>
-              Legg til seksjon
-            </button>
-            {showAddDropdown && (
-              <>
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setShowAddDropdown(false)}
-                />
-                <div className="absolute right-0 z-50 mt-1 w-56 rounded-xl border border-forest/10 bg-cream py-1 shadow-lg">
-                  {ALL_SECTION_TYPES.map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => addSection(type)}
-                      className="block w-full px-4 py-2 text-left text-sm text-forest hover:bg-card"
-                    >
-                      {SECTION_TYPE_LABELS[type]}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
+          <button
+            type="button"
+            onClick={() => setShowTypePicker(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-forest px-3 py-2 text-sm font-medium text-cream hover:bg-forest/90"
+          >
+            <span aria-hidden="true">+</span>
+            Legg til seksjon
+          </button>
         </div>
       </div>
 
@@ -814,6 +898,9 @@ export default function EditPageContentPage() {
                 onAddItem={() => addSectionItem(section.id)}
                 onRemoveItem={(i) => removeSectionItem(section.id, i)}
                 onDelete={() => setSectionToDelete(section.id)}
+                onDuplicate={() => duplicateSection(section.id)}
+                onMoveItemUp={(i) => moveItemUp(section.id, i)}
+                onMoveItemDown={(i) => moveItemDown(section.id, i)}
               />
             ))}
           </div>
@@ -880,6 +967,12 @@ export default function EditPageContentPage() {
         )}
       </div>
 
+      {lastSaved && (
+        <p className="px-4 py-1 text-right text-xs text-body/50">
+          Sist lagret: {lastSaved.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' })}
+        </p>
+      )}
+
       <PublishBar
         onSaveDraft={handleSaveDraft}
         onPublish={handlePublish}
@@ -888,6 +981,12 @@ export default function EditPageContentPage() {
         isSaving={saving}
         isPublishing={publishing}
         contentType="page"
+      />
+
+      <SectionTypePicker
+        isOpen={showTypePicker}
+        onClose={() => setShowTypePicker(false)}
+        onSelect={(type) => addSection(type)}
       />
 
     </div>
