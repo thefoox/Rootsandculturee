@@ -497,19 +497,19 @@ await versionRef.set({
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Version history scope**
+1. **Version history scope** — RESOLVED: Included as Plan 03 with Firestore subcollection versioning, 20-version cap, and revert API.
    - What we know: User mentioned version history as a "nice-to-have"
    - What's unclear: Does user want this in Phase 20, or deferred to a later phase?
    - Recommendation: Include as optional Plan 3; keep Plan 1+2 independent so Phase 20 is valuable without it
 
-2. **Autosave behavior**
+2. **Autosave behavior** — RESOLVED: Included in Plan 02, Task 2 with 30-second debounce, isDirty guard, and "Sist lagret" indicator.
    - What we know: Listed as "moderate gap" in the audit; adds Firestore write cost
    - What's unclear: Is autosave wanted, and if so — what interval and trigger?
    - Recommendation: Default to debounced 60s autosave only if `isDirty`; make it opt-out via a "Automatisk lagring" toggle in page settings
 
-3. **Section item reordering**
+3. **Section item reordering** — RESOLVED: Included in Plan 02, Task 2 using move-up/move-down buttons (not nested DnD — avoids @dnd-kit nested context complexity).
    - What we know: Items within sections cannot be reordered; listed as moderate gap
    - What's unclear: How important is this vs. other gaps?
    - Recommendation: Can be added using @dnd-kit SortableContext inside `SortableSection` — same pattern as outer section list; medium complexity
