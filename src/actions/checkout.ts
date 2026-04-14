@@ -169,6 +169,7 @@ export async function createPaymentIntent(
     const paymentIntent = await stripe.paymentIntents.create({
       amount: total,
       currency: 'nok',
+      payment_method_types: ['card'],
       metadata: {
         type: hasProducts && hasExperiences ? 'mixed' : hasProducts ? 'order' : hasGiftCards ? 'giftcard' : 'booking',
         orderItems: JSON.stringify(
