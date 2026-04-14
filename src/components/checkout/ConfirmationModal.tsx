@@ -37,6 +37,7 @@ export function ConfirmationModal({
   const modalRef = useRef<HTMLDivElement>(null)
   const [order, setOrder] = useState<Order | null>(null)
   const [loading, setLoading] = useState(true)
+  const [timedOut, setTimedOut] = useState(false)
   const [polledBookings, setPolledBookings] = useState<BookingConfirmation[]>([])
 
   // Poll for order and bookings until webhook confirms
@@ -78,7 +79,8 @@ export function ConfirmationModal({
         attempts++
         await new Promise((r) => setTimeout(r, 2000))
       }
-      // Timeout — stop loading even with no results
+      // Polling exhausted without results — mark timed out, then stop loading
+      setTimedOut(true)
       setLoading(false)
     }
 
@@ -122,8 +124,14 @@ export function ConfirmationModal({
     }
   }, [])
 
-  function handleDismiss() {
+  // Called when user dismisses after confirmed success — clears cart and navigates home
+  function handleDismissSuccess() {
     clearCart()
+    router.push('/')
+  }
+
+  // Called when user wants to leave during loading or after timeout — does NOT clear cart
+  function handleDismissTimeout() {
     router.push('/')
   }
 
@@ -155,14 +163,41 @@ export function ConfirmationModal({
         className="fixed inset-0 z-[201] flex items-center justify-center p-4"
       >
         <div className="w-full max-w-[480px] rounded-lg bg-cream p-8 shadow-xl">
-          {loading ? (
+          {loading && (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-forest" aria-hidden="true" />
               <p className="mt-4 text-body text-forest" aria-live="polite">
                 Bekrefter betaling...
               </p>
+              <button
+                type="button"
+                onClick={handleDismissTimeout}
+                className="mt-4 text-[14px] text-body/60 underline hover:text-forest"
+              >
+                Avbryt og ga tilbake
+              </button>
             </div>
-          ) : (
+          )}
+
+          {!loading && timedOut && !hasOrder && !hasBookings && (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <div className="mb-4 rounded-lg bg-amber-50 p-4" role="alert" aria-live="assertive">
+                <p className="text-body text-forest">
+                  Betalingen er under behandling. Sjekk e-posten din for bekreftelse,
+                  eller kontakt oss hvis du ikke mottar noe innen 24 timer.
+                </p>
+              </div>
+              <Button
+                variant="primary"
+                className="w-full"
+                onClick={handleDismissTimeout}
+              >
+                Tilbake til nettbutikken
+              </Button>
+            </div>
+          )}
+
+          {!loading && (hasOrder || hasBookings) && (
             <>
               {/* Success header */}
               <div className="mb-6 rounded-lg bg-success-bg p-4 text-center">
@@ -255,7 +290,7 @@ export function ConfirmationModal({
               <Button
                 variant="primary"
                 className="w-full"
-                onClick={handleDismiss}
+                onClick={handleDismissSuccess}
               >
                 Tilbake til nettbutikken
               </Button>
