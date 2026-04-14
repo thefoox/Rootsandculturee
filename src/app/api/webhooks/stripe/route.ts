@@ -80,10 +80,14 @@ export async function POST(req: Request) {
     )
   }
 
-  // Idempotency check: only skip events that completed successfully
+  // Idempotency check: skip events that are already completed or in-flight
   const eventDoc = await adminDb.collection('stripeEvents').doc(event.id).get()
-  if (eventDoc.exists && eventDoc.data()?.status === 'completed') {
-    return NextResponse.json({ received: true }, { status: 200 })
+  if (eventDoc.exists) {
+    const eventStatus = eventDoc.data()?.status
+    if (eventStatus === 'completed' || eventStatus === 'processing') {
+      // Already handled or in-flight — return 200 to stop Stripe retrying
+      return NextResponse.json({ received: true }, { status: 200 })
+    }
   }
 
   // Mark event as processing before handling
@@ -197,7 +201,13 @@ export async function POST(req: Request) {
             if (!productDoc.exists) return
             const data = productDoc.data()
             const currentStock = (data.stockCount as number) ?? 0
-            const newStock = Math.max(0, currentStock - item.quantity)
+
+            // Guard: verify sufficient stock inside the transaction (prevents race condition)
+            if (currentStock < item.quantity) {
+              throw new Error(`STOCK_INSUFFICIENT:${item.productId}:${item.name}`)
+            }
+
+            const newStock = currentStock - item.quantity
             const updates: Record<string, unknown> = {
               stockCount: newStock,
               inStock: newStock > 0,
@@ -205,8 +215,11 @@ export async function POST(req: Request) {
             if (item.variantId && Array.isArray(data.variants)) {
               const variants = (data.variants as Array<{ id: string; stockCount?: number }>).map((v) => {
                 if (v.id === item.variantId) {
-                  const newVariantStock = Math.max(0, (v.stockCount ?? 0) - item.quantity)
-                  return { ...v, stockCount: newVariantStock }
+                  const variantStock = v.stockCount ?? 0
+                  if (variantStock < item.quantity) {
+                    throw new Error(`STOCK_INSUFFICIENT:${item.productId}:variant:${item.variantId}`)
+                  }
+                  return { ...v, stockCount: variantStock - item.quantity }
                 }
                 return v
               })
@@ -480,6 +493,10 @@ export async function POST(req: Request) {
       }
     }
   } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err)
+    if (errMsg.startsWith('STOCK_INSUFFICIENT')) {
+      console.error('STOCK INSUFFICIENT — manual refund required:', errMsg, 'paymentIntentId:', (event.data?.object as { id?: string })?.id)
+    }
     console.error('Webhook processing error:', err)
     // Return 500 so Stripe retries the event
     return NextResponse.json(
