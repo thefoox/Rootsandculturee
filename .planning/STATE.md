@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-07)
 Phase: 21 (Admin Robusthet) — EXECUTING
 Plan: 1 of 3
 Status: Ready to execute
-Last activity: 2026-04-14 -- Phase 24 planning complete
+Last activity: 2026-04-15 - Completed quick task 260415-q1c: Fiks mobil-responsivitet — innhold faller utenfor skjermen
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -118,6 +118,7 @@ None.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260411-eus | Redesign header to floating pill-shaped design | 2026-04-11 | bd20f9d | [260411-eus-redesign-header-to-floating-pill-shaped-](./quick/260411-eus-redesign-header-to-floating-pill-shaped-/) |
+| 260415-q1c | Fiks mobil-responsivitet — innhold faller utenfor skjermen | 2026-04-15 | 6ead8ee | [260415-q1c-fiks-mobil-responsivitet-innhold-faller-](./quick/260415-q1c-fiks-mobil-responsivitet-innhold-faller-/) |
 
 ### Blockers/Concerns
 
