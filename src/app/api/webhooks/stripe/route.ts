@@ -339,7 +339,7 @@ export async function POST(req: Request) {
       if (resend && createdGiftCards.length > 0) {
         try {
           for (const gc of createdGiftCards) {
-            const emailData = giftCardEmail({
+            const emailData = await giftCardEmail({
               code: gc.code,
               amount: gc.amount,
               recipientName: gc.recipientName,
@@ -350,6 +350,7 @@ export async function POST(req: Request) {
               from: FROM_EMAIL,
               to: gc.recipientEmail || customerEmail,
               subject: emailData.subject,
+              html: emailData.html,
               text: emailData.text,
             })
           }
@@ -362,7 +363,7 @@ export async function POST(req: Request) {
       if (resend && customerEmail) {
         try {
           if (orderItems.length > 0 && bookingResults.length > 0) {
-            const emailData = mixedConfirmationEmail(
+            const emailData = await mixedConfirmationEmail(
               {
                 orderId: orderId || '',
                 items: firestoreItems,
@@ -378,10 +379,11 @@ export async function POST(req: Request) {
               from: FROM_EMAIL,
               to: customerEmail,
               subject: emailData.subject,
+              html: emailData.html,
               text: emailData.text,
             })
           } else if (orderItems.length > 0) {
-            const emailData = orderConfirmationEmail({
+            const emailData = await orderConfirmationEmail({
               orderId: orderId || '',
               items: firestoreItems,
               subtotal,
@@ -394,15 +396,17 @@ export async function POST(req: Request) {
               from: FROM_EMAIL,
               to: customerEmail,
               subject: emailData.subject,
+              html: emailData.html,
               text: emailData.text,
             })
           } else if (bookingResults.length > 0) {
             for (const booking of bookingResults) {
-              const emailData = bookingConfirmationEmail({ ...booking, customerEmail })
+              const emailData = await bookingConfirmationEmail({ ...booking, customerEmail })
               await resend.emails.send({
                 from: FROM_EMAIL,
                 to: customerEmail,
                 subject: emailData.subject,
+                html: emailData.html,
                 text: emailData.text,
               })
             }
