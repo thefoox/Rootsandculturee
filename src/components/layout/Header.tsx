@@ -130,7 +130,7 @@ export function Header() {
             alt="Roots & Culture"
             width={72}
             height={72}
-            className={`h-[72px] w-[72px] ${showDarkHeader ? 'brightness-0 invert' : ''}`}
+            className={`h-14 w-14 md:h-[72px] md:w-[72px] ${showDarkHeader ? 'brightness-0 invert' : ''}`}
             priority
           />
         </Link>

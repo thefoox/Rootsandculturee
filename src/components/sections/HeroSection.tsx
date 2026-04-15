@@ -61,10 +61,9 @@ function FullscreenHero({ section }: { section: PageSection }) {
             <>
               {/* Mobile title */}
               <h1
-                className="font-heading font-medium leading-[1.2] tracking-[-0.02em] text-cream md:hidden"
+                className="pt-24 font-heading font-medium leading-[1.2] tracking-[-0.02em] text-cream md:hidden"
                 style={{
                   fontSize: 'clamp(2.5rem, 10vw, 3.5rem)',
-                  paddingTop: '6rem',
                   textShadow: '0 2px 10px rgba(0,0,0,0.3)',
                 }}
               >

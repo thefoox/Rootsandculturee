@@ -66,10 +66,15 @@
 }
 
 /* Global base styles */
+html {
+  overflow-x: hidden;
+}
+
 body {
   @apply bg-cream text-forest font-body;
   font-size: 15px;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
 /* Focus ring: visible on all interactive elements */
