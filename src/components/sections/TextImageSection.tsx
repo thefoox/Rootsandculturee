@@ -63,7 +63,7 @@ function OverlapLayout({ section }: { section: PageSection }) {
   return (
     <section className="bg-cream py-24">
       <div className="mx-auto max-w-[1200px] px-6">
-        <div className={`items-center max-md:space-y-0 md:grid md:gap-0 ${
+        <div className={`items-center md:grid md:gap-0 ${
           imageOnRight ? 'md:grid-cols-[1fr_1.2fr]' : 'md:grid-cols-[1.2fr_1fr]'
         }`}>
           <div className={`relative overflow-hidden max-md:aspect-video ${
@@ -90,7 +90,7 @@ function SplitLayout({ section }: { section: PageSection }) {
   return (
     <section className="bg-cream py-24">
       <div className="mx-auto max-w-[1200px] px-6">
-        <div className={`max-md:space-y-0 md:grid md:min-h-[500px] ${
+        <div className={`md:grid md:min-h-[500px] ${
           imageOnRight ? 'md:grid-cols-[1fr_1.15fr]' : 'md:grid-cols-[1.15fr_1fr]'
         }`}>
           <div className={`relative overflow-hidden max-md:aspect-video md:h-full ${
@@ -115,7 +115,7 @@ function ContainedLayout({ section }: { section: PageSection }) {
   return (
     <section className="bg-cream py-24">
       <div className="mx-auto max-w-[1200px] px-6">
-        <div className={`overflow-hidden rounded-3xl bg-card max-md:space-y-0 md:grid md:min-h-[480px] ${
+        <div className={`overflow-hidden rounded-3xl bg-card md:grid md:min-h-[480px] ${
           imageOnRight ? 'md:grid-cols-[1fr_1.15fr]' : 'md:grid-cols-[1.15fr_1fr]'
         }`}>
           <div className={`relative overflow-hidden max-md:aspect-video md:m-4 md:h-auto md:rounded-2xl ${
@@ -168,8 +168,8 @@ function HeroOverlayLayout({ section }: { section: PageSection }) {
               : 'bg-gradient-to-r from-[rgba(27,67,50,0.55)] via-[rgba(27,67,50,0.15)] to-transparent'
           }`} />
         </div>
-        <div className={`relative z-[2] flex min-h-[500px] items-center px-6 py-20 md:min-h-[600px] md:px-12 ${
-          imageOnRight ? 'justify-start' : 'justify-end'
+        <div className={`relative z-[2] flex min-h-[500px] items-center justify-center px-6 py-20 md:min-h-[600px] md:px-12 ${
+          imageOnRight ? 'md:justify-start' : 'md:justify-end'
         }`}>
           <div className="max-w-[480px] rounded-2xl bg-white/95 p-8 shadow-lg backdrop-blur-sm md:p-10">
             <TextContent section={section} />
@@ -186,7 +186,7 @@ function OffsetLayout({ section }: { section: PageSection }) {
   return (
     <section className="bg-cream py-24">
       <div className="mx-auto max-w-[1200px] px-6">
-        <div className={`items-start gap-8 max-md:space-y-0 md:grid ${
+        <div className={`items-start gap-8 md:grid ${
           imageOnRight ? 'md:grid-cols-[1fr_1.15fr]' : 'md:grid-cols-[1.15fr_1fr]'
         }`}>
           <div className={`relative overflow-hidden rounded-2xl max-md:aspect-video md:mt-12 md:aspect-[4/5] md:shadow-[24px_24px_48px_rgba(27,67,50,0.1)] ${

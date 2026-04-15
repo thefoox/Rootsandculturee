@@ -10,7 +10,7 @@ function getIcon(name?: string) {
 
 export function ContactInfoSection({ section }: { section: PageSection }) {
   return (
-    <section className="relative z-[2] -mt-12 px-6">
+    <section className="relative z-[2] -mt-6 px-6 md:-mt-12">
       <div className="mx-auto max-w-[1200px]">
         {section.items && section.items.length > 0 && (
           <div className="grid gap-5 md:grid-cols-3">

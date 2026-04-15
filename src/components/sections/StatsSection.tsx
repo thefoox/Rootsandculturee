@@ -17,7 +17,7 @@ export function StatsSection({ section }: { section: PageSection }) {
           </div>
         )}
         {section.items && section.items.length > 0 && (
-          <div className={`grid grid-cols-2 gap-8 ${section.items.length >= 4 ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
+          <div className={`grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 ${section.items.length >= 4 ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
             {section.items.map((item, i) => (
               <div key={i} className="text-center">
                 <div className="font-heading text-h1 font-bold text-cream">
