@@ -172,3 +172,15 @@ Plans:
 **Goal**: Resend retry-logikk, e-post-logg i admin, søkefunksjon for produkter og opplevelser
 **Requirements**: TBD
 **Depends on**: Phase 25
+
+### Phase 27: GDPR og cookiesamtykke
+
+**Goal**: Implementer GDPR-samsvar etter norske reglement — cookie consent banner med granulær kategori-samtykke, personvernerklæring, informasjonskapselpolicy, og rett til sletting/innsyn i kundekonto. Følg Datatilsynets retningslinjer og Schrems II-krav.
+**Requirements**: GDPR-CONSENT, GDPR-COOKIE-POLICY, GDPR-PRIVACY-POLICY, GDPR-ART-15, GDPR-ART-17
+**Depends on**: Phase 24
+**Plans:** 3 plans
+
+Plans:
+- [ ] 27-01-PLAN.md — Cookie consent banner (vanilla-cookieconsent) + informasjonskapsler page + footer link
+- [ ] 27-02-PLAN.md — Personvernerklaering rewrite with all GDPR Art. 13 sections
+- [ ] 27-03-PLAN.md — Account data export (Art. 15) + account deletion (Art. 17) in konto/profil
