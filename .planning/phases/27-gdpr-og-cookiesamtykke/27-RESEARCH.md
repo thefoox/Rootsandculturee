@@ -27,8 +27,9 @@ All four data processors (Firebase/Google, Stripe, Vercel, Resend) have current 
 | Cookie category gating (analytics init) | Browser / Client | — | Must check consent before loading scripts |
 | Personvernerklæring page | Frontend Server (SSR) | — | Static content page, SSR appropriate |
 | Informasjonskapselpolicy page | Frontend Server (SSR) | — | Static content page |
-| Account deletion (Art. 17) | API / Backend | Browser / Client | Server Action: admin.auth().deleteUser + Firestore cascade |
+| Account deletion (Art. 17) | API / Backend | Browser / Client | Server Action: Firestore anonymization + session clear. Firebase Auth deletion: client-side user.delete() (adminAuth is null) |
 | Data export (Art. 15) | API / Backend | Browser / Client | Server Action: collect from Firestore, return JSON |
+| Newsletter consent storage | API / Backend | — | Persist newsletterConsent to Firestore users/{uid} during registration |
 | DPA documentation | Static (policy page) | — | Listed in privacy policy text, no code |
 
 ---
@@ -106,13 +107,19 @@ cookie-consent localStorage key → REMOVE (replace with cc_cookie)
       |-- "Slett konto" button (with confirmation dialog)
              |
              v
-          Server Action: deleteUserAccount(uid)
-             |-- adminDb.collection('users').doc(uid).delete()
+          Step 1: Client-side user.delete() (Firebase Auth client SDK)
+             |-- auth/requires-recent-login? → prompt re-auth, abort
+             |-- other error? → show error toast, abort (do NOT proceed)
+             |-- success → continue to Step 2
+             |
+          Step 2: Server Action: deleteUserAccount(uid)
              |-- adminDb.collection('orders') — anonymize (null out customerId)
              |-- adminDb.collection('bookings') — anonymize (null out customerId)
-             |-- admin.auth().deleteUser(uid)
+             |-- adminDb.collection('users').doc(uid).delete()
              |-- deleteSession()
-             |-- redirect('/')
+             |-- return { success: true }
+             |
+          Step 3: Client-side redirect to /
 ```
 
 ### Recommended Project Structure
@@ -122,16 +129,25 @@ src/
 │   └── layout/
 │       └── CookieBanner.tsx          # Replace: vanilla-cookieconsent wrapper
 ├── app/
-│   └── (public)/
-│       ├── personvern/
-│       │   └── page.tsx              # Rewrite: full GDPR Art. 13 content
-│       ├── informasjonskapsler/
-│       │   └── page.tsx              # New: cookie policy with inventory table
-│       └── konto/
-│           └── profil/
-│               └── page.tsx          # Add: data export + account deletion UI
+│   ├── (public)/
+│   │   ├── personvern/
+│   │   │   └── page.tsx              # Rewrite: full GDPR Art. 13 content
+│   │   └── informasjonskapsler/
+│   │       ├── page.tsx              # New: cookie policy with inventory table
+│   │       └── ManageConsentButton.tsx # New: client component for consent prefs
+│   ├── konto/
+│   │   └── profil/
+│   │       └── page.tsx              # Add: data export + account deletion UI
+│   └── api/
+│       └── auth/
+│           └── login/
+│               └── route.ts          # Update: create Firestore user doc on registration
 ├── actions/
 │   └── account.ts                    # New: exportUserData, deleteUserAccount
+├── components/
+│   └── konto/
+│       ├── DataExportButton.tsx       # New: JSON data download
+│       └── DeleteAccountSection.tsx   # New: account deletion with confirmation
 └── lib/
     └── navigation.ts                 # Update: add /informasjonskapsler to footer
 ```
@@ -219,57 +235,63 @@ export function CookieBanner() {
 
 ### Pattern 2: Account Deletion Server Action (Art. 17)
 
-**What:** Cascade delete — anonymize orders/bookings (preserve for accounting), delete user doc, delete Firebase Auth record, delete session.
+**What:** Two-step deletion: client-side Firebase Auth deletion, then server-side Firestore anonymization + session clear.
 **When to use:** User-initiated account deletion from `/konto/profil`.
 
+**CRITICAL: adminAuth is null in this project.** Firebase Admin SDK is not fully configured on Vercel. The `adminAuth.deleteUser(uid)` call from the original research pattern CANNOT be used. Instead, use client-side `user.delete()` from Firebase Auth client SDK BEFORE calling the server action.
+
+**Deletion flow:**
+1. Client calls `auth.currentUser.delete()` (Firebase client SDK via `@/lib/firebase/client`)
+2. If `auth/requires-recent-login` error: prompt re-authentication, abort
+3. If other auth error: show error toast, abort (do NOT proceed to server action)
+4. On success: call `deleteUserAccount()` server action for Firestore anonymization
+5. Server action returns `{ success: true }`, client redirects via `window.location.href = '/'`
+
 ```typescript
-// actions/account.ts
+// actions/account.ts — server-side only (Firestore + session)
 'use server'
-import { adminDb, adminAuth } from '@/lib/firebase/admin'
+import { adminDb } from '@/lib/firebase/admin'
 import { deleteSession } from '@/lib/session'
 import { verifySession } from '@/lib/dal'
-import { redirect } from 'next/navigation'
 
-export async function deleteUserAccount(): Promise<void> {
+export async function deleteUserAccount(): Promise<{
+  success: boolean
+  error?: string
+}> {
   const session = await verifySession()
-  if (!session) redirect('/')
+  if (!session) {
+    return { success: false, error: 'Du er ikke logget inn.' }
+  }
 
   const uid = session.uid
 
-  // Anonymize orders — keep for legal accounting obligation (up to 5 years)
-  // Nulling customerId means user cannot see them, but records remain for accounting
-  const ordersSnap = await adminDb
-    .collection('orders')
-    .where('customerId', '==', uid)
-    .get()
-  const batch = adminDb.batch()
-  for (const doc of ordersSnap.docs) {
-    batch.update(doc.ref, { customerId: null, customerEmail: '[slettet]' })
+  try {
+    const [ordersSnap, bookingsSnap] = await Promise.all([
+      adminDb.collection('orders').where('customerId', '==', uid).get(),
+      adminDb.collection('bookings').where('customerId', '==', uid).get(),
+    ])
+
+    const batch = adminDb.batch()
+
+    for (const doc of ordersSnap.docs) {
+      batch.update(doc.ref, { customerId: null, customerEmail: '[slettet]', customerName: '[slettet]' })
+    }
+    for (const doc of bookingsSnap.docs) {
+      batch.update(doc.ref, { customerId: null, customerEmail: '[slettet]', customerName: '[slettet]' })
+    }
+
+    batch.delete(adminDb.collection('users').doc(uid))
+    await batch.commit()
+
+    await deleteSession()
+    return { success: true }
+  } catch {
+    return { success: false, error: 'Kunne ikke slette kontoen. Prov igjen eller kontakt oss.' }
   }
-
-  // Anonymize bookings similarly
-  const bookingsSnap = await adminDb
-    .collection('bookings')
-    .where('customerId', '==', uid)
-    .get()
-  for (const doc of bookingsSnap.docs) {
-    batch.update(doc.ref, { customerId: null, customerEmail: '[slettet]', customerName: '[slettet]' })
-  }
-
-  // Delete user profile doc
-  batch.delete(adminDb.collection('users').doc(uid))
-  await batch.commit()
-
-  // Delete Firebase Auth record
-  await adminAuth.deleteUser(uid)
-
-  // Clear session
-  await deleteSession()
-  redirect('/')
 }
 ```
 
-**Important:** Orders/bookings are NOT hard-deleted. Norwegian accounting law (Bokføringsloven) requires retention of transaction records for 5 years. Anonymization satisfies GDPR while preserving legal obligation.
+**Important:** Orders/bookings are NOT hard-deleted. Norwegian accounting law (Bokforingsloven) requires retention of transaction records for 5 years. Anonymization satisfies GDPR while preserving legal obligation.
 
 ### Pattern 3: Data Export Server Action (Art. 15)
 
@@ -306,9 +328,10 @@ On the client, trigger a JSON file download using `URL.createObjectURL(new Blob(
 - **Gating `__session` cookie on consent:** The session cookie is strictly necessary for authentication. It MUST NOT require consent — it would break login. [VERIFIED: Datatilsynet guidelines]
 - **Gating `roots-cart` localStorage on consent:** Cart state is strictly necessary for the shopping service to function. No consent required.
 - **Binary consent (current banner):** The current `cookie-consent` localStorage flag with no categories is not GDPR-compliant under 2025 ekomlov — it does not give granular control.
-- **Hard-deleting orders on Art. 17 requests:** Violates Bokføringsloven. Anonymize instead.
+- **Hard-deleting orders on Art. 17 requests:** Violates Bokforingsloven. Anonymize instead.
 - **Storing consent in Firestore only:** Anonymous/guest visitors never authenticate. Consent must persist in the browser (cookie) regardless of login status.
 - **Dark patterns:** Reject button must be equally prominent as Accept button. No pre-checked boxes for optional categories. [VERIFIED: Datatilsynet 2025 guidance]
+- **Proceeding with Firestore deletion when Firebase Auth deletion fails:** If `user.delete()` fails for non-reauthentication reasons, do NOT call the server action. This prevents orphaned Auth records that could allow re-login after "deletion."
 
 ---
 
@@ -329,7 +352,7 @@ On the client, trigger a JSON file download using `URL.createObjectURL(new Blob(
 **What goes wrong:** Developer assumes all cookies need consent, gates the session cookie — users can't log in without accepting cookies, creating a "consent wall."
 **Why it happens:** Misunderstanding of "strictly necessary" exemption.
 **How to avoid:** Ekomloven § 3-15 explicitly exempts cookies "strictly necessary to deliver the service the user has requested." An HttpOnly session cookie is unambiguously exempt.
-**Warning signs:** Login flow breaks when user clicks "Avslå alle."
+**Warning signs:** Login flow breaks when user clicks "Avsla alle."
 
 ### Pitfall 2: localStorage not covered by consent
 **What goes wrong:** Developers exclude localStorage from cookie policy, but Datatilsynet treats localStorage access the same as cookie access.
@@ -339,7 +362,7 @@ On the client, trigger a JSON file download using `URL.createObjectURL(new Blob(
 ### Pitfall 3: Hard-deleting orders on account deletion
 **What goes wrong:** Full Firestore cascade delete removes order history needed for VAT/accounting records.
 **Why it happens:** "Right to erasure" interpreted as "delete everything."
-**How to avoid:** GDPR Art. 17(3)(b) explicitly allows retention when necessary for compliance with a legal obligation. Norwegian Bokføringsloven requires 5-year retention of transaction records. Anonymize: null out personal identifiers while keeping order data.
+**How to avoid:** GDPR Art. 17(3)(b) explicitly allows retention when necessary for compliance with a legal obligation. Norwegian Bokforingsloven requires 5-year retention of transaction records. Anonymize: null out personal identifiers while keeping order data.
 
 ### Pitfall 4: SSR hydration errors with vanilla-cookieconsent
 **What goes wrong:** CookieBanner attempts to access `window`/`document` during SSR, causing hydration mismatch.
@@ -369,8 +392,8 @@ Step 2.6: SKIPPED — this is not a rename/refactor phase.
 | Dependency | Required By | Available | Version | Fallback |
 |------------|------------|-----------|---------|----------|
 | vanilla-cookieconsent | Cookie banner | Not installed | — | No fallback needed — install in Wave 0 |
-| firebase-admin (adminAuth) | deleteUser (Art. 17) | ✓ (devDeps) | ^13.7.0 | — |
-| Firebase Auth Admin SDK `deleteUser` | Account deletion | ✓ | Already used | — |
+| firebase-admin (adminAuth) | deleteUser (Art. 17) | NOT AVAILABLE (adminAuth is null) | — | Client-side user.delete() via Firebase Auth client SDK |
+| Firebase Auth client SDK | user.delete() (Art. 17) | Available | via @/lib/firebase/client | — |
 
 **Missing dependencies with no fallback:**
 - vanilla-cookieconsent: install with `npm install vanilla-cookieconsent`
@@ -392,35 +415,35 @@ This is the full cookie/storage inventory for Roots & Culture as it stands today
 
 ---
 
-## Personvernerklæring Required Content (GDPR Art. 13)
+## Personvernerklaering Required Content (GDPR Art. 13)
 
 The existing `/personvern` page is incomplete. Full GDPR Art. 13 disclosure requires:
 
-1. **Behandlingsansvarlig** (Controller identity) — Roots & Culture, org.nr., address, contact email ✓ (partial)
-2. **Kontaktdetaljer for personvernombud** — Not applicable for small businesses unless processing large scale sensitive data. State "ikke pålagt" or provide DPO contact if one exists. [ASSUMED]
-3. **Formål og rettslig grunnlag** for each processing activity:
-   - Ordrebehandling → Art. 6(1)(b) Contractual necessity
-   - Sesjonshåndtering → Art. 6(1)(b) Contractual necessity
-   - E-postmarkedsføring (newsletter) → Art. 6(1)(a) Samtykke
-   - Transaksjonslogg/regnskap → Art. 6(1)(c) Legal obligation (Bokføringsloven)
+1. **Behandlingsansvarlig** (Controller identity) — Roots & Culture, org.nr., address, contact email (partial)
+2. **Kontaktdetaljer for personvernombud** — Not applicable for small businesses unless processing large scale sensitive data. State "ikke palagt" or provide DPO contact if one exists. [ASSUMED]
+3. **Formaal og rettslig grunnlag** for each processing activity:
+   - Ordrebehandling -> Art. 6(1)(b) Contractual necessity
+   - Sesjonshandtering -> Art. 6(1)(b) Contractual necessity
+   - E-postmarkedsforing (newsletter) -> Art. 6(1)(a) Samtykke
+   - Transaksjonslogg/regnskap -> Art. 6(1)(c) Legal obligation (Bokforingsloven)
 4. **Mottakere / databehandlere** — Stripe, Firebase/Google Cloud, Vercel, Resend (with their roles)
-5. **Overføring til tredjeland** — US, via SCCs and EU-US DPF
+5. **Overforing til tredjeland** — US, via SCCs and EU-US DPF
 6. **Lagringstid** per kategori:
-   - Ordrer/bookinger: 5 år (Bokføringsloven)
+   - Ordrer/bookinger: 5 ar (Bokforingsloven)
    - Brukerkonto: Until deletion request or 3 years inactivity [ASSUMED — common practice]
    - Nyhetsbrevsamtykke: Until withdrawal
 7. **Den registrertes rettigheter** (Art. 15-22): Innsyn, retting, sletting, begrensning, portabilitet, innsigelse
 8. **Klagerett** — Datatilsynet, Postboks 458 Sentrum, 0105 Oslo, postkasse@datatilsynet.no
-9. **Automatiserte avgjørelser** — None (state explicitly)
+9. **Automatiserte avgjoerelser** — None (state explicitly)
 
 ---
 
 ## Informasjonskapselpolicy Required Content
 
-Separate from Personvernerklæring, the cookie policy at `/informasjonskapsler` must list each cookie with:
+Separate from Personvernerklaering, the cookie policy at `/informasjonskapsler` must list each cookie with:
 - Name
 - Type (HTTP cookie / localStorage)
-- Category (Nødvendig / Analyse / Markedsføring)
+- Category (Nodvendig / Analyse / Markedsforing)
 - Purpose (plain Norwegian)
 - Duration
 - Set by (first-party or third-party)
@@ -491,7 +514,7 @@ onConsent: ({ cookie }) => {
 | Binary accept/decline consent | Granular per-category consent | Norway: Jan 1 2025 (ekomlov) | Must have separate toggles for necessary / analytics / marketing |
 | Privacy Shield (US data transfers) | EU-US Data Privacy Framework + SCCs | DPF adopted Sept 2023, SCCs updated 2021 | Firebase/Stripe/Vercel/Resend all compliant — no action needed |
 | "Necessary cookies" exemption | "Strictly necessary cookies" exemption | Jan 1 2025 ekomlov | Raises bar — session and cart clearly qualify; analytics and preferences do not |
-| Reject must be findable | Reject must be equally prominent as Accept | EDPB guidance, Datatilsynet 2025 | Banner must show "Avslå alle" button at same visual level as "Godta alle" |
+| Reject must be findable | Reject must be equally prominent as Accept | EDPB guidance, Datatilsynet 2025 | Banner must show "Avsla alle" button at same visual level as "Godta alle" |
 
 ---
 
@@ -499,29 +522,26 @@ onConsent: ({ cookie }) => {
 
 | # | Claim | Section | Risk if Wrong |
 |---|-------|---------|---------------|
-| A1 | Brukerkonto data retention: 3 years of inactivity is common practice | Personvernerklæring Required Content | Could specify a different period — verify with legal counsel or Datatilsynet guidance |
+| A1 | Brukerkonto data retention: 3 years of inactivity is common practice | Personvernerklaering Required Content | Could specify a different period — verify with legal counsel or Datatilsynet guidance |
 | A2 | Firebase Firestore is deployed in US-central (not EU region) | Data Processor Agreements | If already in EU region, no concern. If US, the DPF/SCCs are sufficient but EU region is preferred |
-| A3 | DPO (personvernombud) is not required for this business | Personvernerklæring Required Content | Small e-commerce site unlikely to meet Art. 37 threshold, but should be confirmed |
+| A3 | DPO (personvernombud) is not required for this business | Personvernerklaering Required Content | Small e-commerce site unlikely to meet Art. 37 threshold, but should be confirmed |
 | A4 | No Google Analytics or similar tracking is currently deployed | Cookie Inventory | If any analytics are loaded via CMS scripts or external tools, the cookie inventory is incomplete |
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Is Firebase Firestore region configured?**
+1. **Is Firebase Firestore region configured?** (RESOLVED)
    - What we know: Firebase project region is set at creation time
-   - What's unclear: Whether it is EU (europe-west1/2) or US (us-central1)
-   - Recommendation: Check Firebase console. EU region preferred for GDPR optics, though US is legally compliant via DPF+SCCs.
+   - Resolution: Regardless of region (EU or US), all data transfers are legally compliant via EU-US Data Privacy Framework + SCCs. The privacy policy documents this transfer mechanism. EU region is preferred for optics but not legally required. No code change needed — document current state in privacy policy.
 
-2. **Accounting retention period for orders**
-   - What we know: Bokføringsloven requires 5-year retention of accounting records
-   - What's unclear: Whether Roots & Culture is incorporated (AS) or sole trader (enkeltpersonforetak) — the rules apply to both but context affects what "accounting records" means
-   - Recommendation: State 5 years in privacy policy and anonymize (not delete) on Art. 17 request
+2. **Accounting retention period for orders** (RESOLVED)
+   - What we know: Bokforingsloven requires 5-year retention of accounting records
+   - Resolution: The 5-year retention applies to both AS and enkeltpersonforetak for bilagspliktige transaksjoner. State 5 years in privacy policy and anonymize (not delete) orders/bookings on Art. 17 request. This is the conservative and legally safe approach regardless of business structure.
 
-3. **Newsletter consent handling**
-   - What we know: RegisterForm.tsx includes a `newsletterConsent` checkbox, but `registerAction` in auth.ts does not save it to Firestore
-   - What's unclear: Whether newsletter consent is being stored anywhere, and if Resend is being used for marketing emails
-   - Recommendation: Either implement newsletterConsent storage in Firestore or remove the checkbox. If consent is not stored, sending marketing emails is illegal.
+3. **Newsletter consent handling** (RESOLVED)
+   - What we know: RegisterForm.tsx includes a `newsletterConsent` checkbox, but the registration flow (signUp -> POST /api/auth/login) does not save it to Firestore. The `registerAction` in auth.ts accepts the parameter but is never called. Resend is used only for transactional order/booking confirmation emails, not marketing.
+   - Resolution: Persist `newsletterConsent` to Firestore during registration. The RegisterForm must send `newsletterConsent` + `displayName` + `address` to the login API route, which creates a user document in Firestore with the consent field. This ensures consent is recorded per GDPR Art. 6(1)(a) for any future newsletter use. Implemented in Plan 27-03 Task 3.
 
 ---
 
@@ -555,13 +575,14 @@ onConsent: ({ cookie }) => {
 
 ## Project Constraints (from CLAUDE.md)
 
-- All UI strings must be in Norwegian (Bokmål) — consent banner text, policy pages, error messages
+- All UI strings must be in Norwegian (Bokmal) — consent banner text, policy pages, error messages
 - WCAG 2.1 AA: consent banner must be keyboard navigable, have visible focus, sufficient color contrast
 - No motion without `prefers-reduced-motion` guard — apply to banner slide-in animation
 - `tailwind.config.js` forbidden — use CSS custom properties (Tailwind v4 pattern)
 - Semantic HTML: consent modal must use appropriate roles, `aria-modal`, keyboard trap while open
 - No `pages/` directory — App Router only
 - No analytics tool (no GA, no PostHog) is in the current stack — analytics consent category should be present in banner but inactive until Phase 25 introduces analytics
+- Design palette: Morkgronn + hostfarger (rustrod, brent oransje, varm brun). Ingen gul. Cookie consent banner CSS must be overridden to match.
 
 ---
 
