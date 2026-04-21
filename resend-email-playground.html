@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resend E-post Template Playground</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #242733;
+    --border: #2e3140;
+    --text: #e4e4e7;
+    --text-dim: #8b8d98;
+    --accent: #6366f1;
+    --accent-hover: #818cf8;
+    --green: #22c55e;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    grid-column: 1 / -1;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+  }
+  .header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .header h1 span { color: var(--accent); }
+  .header-actions { display: flex; gap: 6px; }
+
+  /* Controls Panel */
+  .controls {
+    grid-row: 2 / 4;
+    overflow-y: auto;
+    padding: 16px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .controls::-webkit-scrollbar { width: 4px; }
+  .controls::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .control-group {
+    margin-bottom: 20px;
+  }
+  .control-group-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .control-row {
+    margin-bottom: 10px;
+  }
+  .control-row label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .control-row select,
+  .control-row input[type="text"],
+  .control-row input[type="number"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+  }
+  .control-row select:focus,
+  .control-row input:focus {
+    border-color: var(--accent);
+  }
+
+  .control-row input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .control-row input[type="color"] {
+    width: 36px;
+    height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    padding: 2px;
+  }
+
+  .color-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .color-row input[type="color"] { flex-shrink: 0; }
+  .color-row .color-hex {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .slider-row input[type="range"] { flex: 1; }
+  .slider-value {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    min-width: 32px;
+    text-align: right;
+  }
+
+  /* Presets */
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+  .preset-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .preset-btn:hover { border-color: var(--accent); color: var(--text); }
+  .preset-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Preview */
+  .preview-area {
+    overflow-y: auto;
+    padding: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: repeating-conic-gradient(#1a1d27 0% 25%, #15171f 0% 50%) 0 0 / 20px 20px;
+  }
+  .email-frame {
+    width: 600px;
+    max-width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  /* Prompt Output */
+  .prompt-area {
+    border-top: 1px solid var(--border);
+    padding: 14px 20px;
+    background: var(--surface);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .prompt-text {
+    flex: 1;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-dim);
+    max-height: 80px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  .copy-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .copy-btn:hover { background: var(--accent-hover); }
+  .copy-btn.copied { background: var(--green); }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .toggle-row label { margin-bottom: 0; }
+  .toggle {
+    width: 36px; height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+    padding: 0;
+  }
+  .toggle::after {
+    content: '';
+    width: 16px; height: 16px;
+    background: var(--text);
+    border-radius: 50%;
+    position: absolute;
+    top: 2px; left: 2px;
+    transition: transform 0.2s;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle.on::after { transform: translateX(16px); }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* Textarea for content editing */
+  .control-row textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+    resize: vertical;
+    min-height: 50px;
+  }
+  .control-row textarea:focus { border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>Resend</span> E-post Template Playground</h1>
+  <div class="header-actions">
+    <select id="viewMode" style="background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-size:12px;">
+      <option value="desktop">Desktop (600px)</option>
+      <option value="mobile">Mobil (375px)</option>
+    </select>
+  </div>
+</div>
+
+<div class="controls">
+  <!-- Presets -->
+  <div class="control-group">
+    <div class="control-group-title">Maler</div>
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <!-- Template Type -->
+  <div class="control-group">
+    <div class="control-group-title">Template-type</div>
+    <div class="control-row">
+      <label>Type</label>
+      <select id="templateType">
+        <option value="transactional">Ordrebekreftelse</option>
+        <option value="welcome">Velkomst-epost</option>
+        <option value="booking">Bookingbekreftelse</option>
+        <option value="newsletter">Nyhetsbrev</option>
+        <option value="reset">Passord-tilbakestilling</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Brand / Colors -->
+  <div class="control-group">
+    <div class="control-group-title">Farger</div>
+    <div class="control-row">
+      <label>Bakgrunn (ytre)</label>
+      <div class="color-row">
+        <input type="color" id="bgColor" value="#f4f1ec">
+        <span class="color-hex" id="bgColorHex">#f4f1ec</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Innhold-bakgrunn</label>
+      <div class="color-row">
+        <input type="color" id="contentBg" value="#ffffff">
+        <span class="color-hex" id="contentBgHex">#ffffff</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Primærfarge (knapper, lenker)</label>
+      <div class="color-row">
+        <input type="color" id="primaryColor" value="#2d5016">
+        <span class="color-hex" id="primaryColorHex">#2d5016</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Sekundærfarge (aksent)</label>
+      <div class="color-row">
+        <input type="color" id="secondaryColor" value="#a0522d">
+        <span class="color-hex" id="secondaryColorHex">#a0522d</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Tekstfarge</label>
+      <div class="color-row">
+        <input type="color" id="textColor" value="#1a1a1a">
+        <span class="color-hex" id="textColorHex">#1a1a1a</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Sekundær tekst</label>
+      <div class="color-row">
+        <input type="color" id="mutedColor" value="#6b7280">
+        <span class="color-hex" id="mutedColorHex">#6b7280</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="control-group">
+    <div class="control-group-title">Typografi</div>
+    <div class="control-row">
+      <label>Skriftfamilie</label>
+      <select id="fontFamily">
+        <option value="Georgia, 'Times New Roman', serif">Georgia (serif)</option>
+        <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">System (sans-serif)</option>
+        <option value="'Helvetica Neue', Helvetica, Arial, sans-serif">Helvetica (sans-serif)</option>
+        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+        <option value="Verdana, Geneva, sans-serif">Verdana</option>
+      </select>
+    </div>
+    <div class="control-row">
+      <label>Overskrift-størrelse</label>
+      <div class="slider-row">
+        <input type="range" id="headingSize" min="18" max="36" value="24">
+        <span class="slider-value" id="headingSizeVal">24px</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Brødtekst-størrelse</label>
+      <div class="slider-row">
+        <input type="range" id="bodySize" min="13" max="18" value="15">
+        <span class="slider-value" id="bodySizeVal">15px</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Linjeavstand</label>
+      <div class="slider-row">
+        <input type="range" id="lineHeight" min="1.2" max="2.0" step="0.05" value="1.6">
+        <span class="slider-value" id="lineHeightVal">1.6</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spacing -->
+  <div class="control-group">
+    <div class="control-group-title">Spacing</div>
+    <div class="control-row">
+      <label>Innhold-padding</label>
+      <div class="slider-row">
+        <input type="range" id="contentPadding" min="16" max="48" value="32">
+        <span class="slider-value" id="contentPaddingVal">32px</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Seksjon-mellomrom</label>
+      <div class="slider-row">
+        <input type="range" id="sectionGap" min="8" max="40" value="24">
+        <span class="slider-value" id="sectionGapVal">24px</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Knapp border-radius</label>
+      <div class="slider-row">
+        <input type="range" id="btnRadius" min="0" max="24" value="6">
+        <span class="slider-value" id="btnRadiusVal">6px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Options -->
+  <div class="control-group">
+    <div class="control-group-title">Alternativer</div>
+    <div class="control-row toggle-row">
+      <label>Vis logo/header-bilde</label>
+      <button class="toggle on" id="showLogo" onclick="toggleBtn(this)"></button>
+    </div>
+    <div class="control-row toggle-row" style="margin-top:8px">
+      <label>Vis footer med sosiale lenker</label>
+      <button class="toggle on" id="showFooter" onclick="toggleBtn(this)"></button>
+    </div>
+    <div class="control-row toggle-row" style="margin-top:8px">
+      <label>Vis skillelinje mellom seksjoner</label>
+      <button class="toggle" id="showDividers" onclick="toggleBtn(this)"></button>
+    </div>
+    <div class="control-row toggle-row" style="margin-top:8px">
+      <label>Avrundede hjørner på innhold</label>
+      <button class="toggle on" id="roundedContent" onclick="toggleBtn(this)"></button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="control-group">
+    <div class="control-group-title">Innhold</div>
+    <div class="control-row">
+      <label>Bedriftsnavn</label>
+      <input type="text" id="brandName" value="Roots & Culture">
+    </div>
+    <div class="control-row">
+      <label>Avsender-epost</label>
+      <input type="text" id="senderEmail" value="hei@rootsculture.no">
+    </div>
+  </div>
+</div>
+
+<div class="preview-area" id="previewArea">
+  <div class="email-frame" id="emailFrame"></div>
+</div>
+
+<div class="prompt-area">
+  <div class="prompt-text" id="promptOutput"></div>
+  <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Kopier</button>
+</div>
+
+<script>
+const DEFAULTS = {
+  templateType: 'transactional',
+  bgColor: '#f4f1ec',
+  contentBg: '#ffffff',
+  primaryColor: '#2d5016',
+  secondaryColor: '#a0522d',
+  textColor: '#1a1a1a',
+  mutedColor: '#6b7280',
+  fontFamily: "Georgia, 'Times New Roman', serif",
+  headingSize: 24,
+  bodySize: 15,
+  lineHeight: 1.6,
+  contentPadding: 32,
+  sectionGap: 24,
+  btnRadius: 6,
+  showLogo: true,
+  showFooter: true,
+  showDividers: false,
+  roundedContent: true,
+  brandName: 'Roots & Culture',
+  senderEmail: 'hei@rootsculture.no',
+  viewMode: 'desktop'
+};
+
+const state = { ...DEFAULTS };
+
+const PRESETS = {
+  'Roots & Culture': {
+    bgColor: '#f4f1ec', contentBg: '#ffffff', primaryColor: '#2d5016',
+    secondaryColor: '#a0522d', textColor: '#1a1a1a', mutedColor: '#6b7280',
+    fontFamily: "Georgia, 'Times New Roman', serif", headingSize: 24,
+    bodySize: 15, lineHeight: 1.6, contentPadding: 32, sectionGap: 24,
+    btnRadius: 6, showLogo: true, showFooter: true, showDividers: false,
+    roundedContent: true, brandName: 'Roots & Culture'
+  },
+  'Minimalistisk': {
+    bgColor: '#ffffff', contentBg: '#ffffff', primaryColor: '#111111',
+    secondaryColor: '#555555', textColor: '#111111', mutedColor: '#888888',
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+    headingSize: 22, bodySize: 15, lineHeight: 1.7, contentPadding: 40,
+    sectionGap: 28, btnRadius: 0, showLogo: false, showFooter: true,
+    showDividers: true, roundedContent: false, brandName: 'Roots & Culture'
+  },
+  'Varm & Rustikk': {
+    bgColor: '#2c1a0e', contentBg: '#3d2817', primaryColor: '#d4943a',
+    secondaryColor: '#c4704b', textColor: '#f5efe8', mutedColor: '#b8a898',
+    fontFamily: "Georgia, 'Times New Roman', serif", headingSize: 26,
+    bodySize: 16, lineHeight: 1.6, contentPadding: 36, sectionGap: 24,
+    btnRadius: 8, showLogo: true, showFooter: true, showDividers: false,
+    roundedContent: true, brandName: 'Roots & Culture'
+  },
+  'Moderne Natur': {
+    bgColor: '#e8f0e8', contentBg: '#ffffff', primaryColor: '#1a5c2e',
+    secondaryColor: '#8b6914', textColor: '#1a2e1a', mutedColor: '#5a7a5a',
+    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+    headingSize: 28, bodySize: 14, lineHeight: 1.65, contentPadding: 32,
+    sectionGap: 20, btnRadius: 24, showLogo: true, showFooter: true,
+    showDividers: false, roundedContent: true, brandName: 'Roots & Culture'
+  },
+  'Klassisk Elegant': {
+    bgColor: '#f8f6f3', contentBg: '#fffef9', primaryColor: '#4a3728',
+    secondaryColor: '#8b6c42', textColor: '#2c2420', mutedColor: '#8a7e72',
+    fontFamily: "Georgia, 'Times New Roman', serif", headingSize: 26,
+    bodySize: 16, lineHeight: 1.7, contentPadding: 40, sectionGap: 28,
+    btnRadius: 3, showLogo: true, showFooter: true, showDividers: true,
+    roundedContent: false, brandName: 'Roots & Culture'
+  }
+};
+
+// --- Preset buttons ---
+const presetsEl = document.getElementById('presets');
+Object.keys(PRESETS).forEach(name => {
+  const btn = document.createElement('button');
+  btn.className = 'preset-btn' + (name === 'Roots & Culture' ? ' active' : '');
+  btn.textContent = name;
+  btn.onclick = () => applyPreset(name);
+  presetsEl.appendChild(btn);
+});
+
+function applyPreset(name) {
+  const p = PRESETS[name];
+  Object.assign(state, p);
+  syncControlsFromState();
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.textContent === name));
+  updateAll();
+}
+
+function toggleBtn(el) {
+  el.classList.toggle('on');
+  readState();
+  updateAll();
+}
+
+// --- Sync controls to/from state ---
+function syncControlsFromState() {
+  document.getElementById('bgColor').value = state.bgColor;
+  document.getElementById('bgColorHex').textContent = state.bgColor;
+  document.getElementById('contentBg').value = state.contentBg;
+  document.getElementById('contentBgHex').textContent = state.contentBg;
+  document.getElementById('primaryColor').value = state.primaryColor;
+  document.getElementById('primaryColorHex').textContent = state.primaryColor;
+  document.getElementById('secondaryColor').value = state.secondaryColor;
+  document.getElementById('secondaryColorHex').textContent = state.secondaryColor;
+  document.getElementById('textColor').value = state.textColor;
+  document.getElementById('textColorHex').textContent = state.textColor;
+  document.getElementById('mutedColor').value = state.mutedColor;
+  document.getElementById('mutedColorHex').textContent = state.mutedColor;
+  document.getElementById('fontFamily').value = state.fontFamily;
+  document.getElementById('headingSize').value = state.headingSize;
+  document.getElementById('headingSizeVal').textContent = state.headingSize + 'px';
+  document.getElementById('bodySize').value = state.bodySize;
+  document.getElementById('bodySizeVal').textContent = state.bodySize + 'px';
+  document.getElementById('lineHeight').value = state.lineHeight;
+  document.getElementById('lineHeightVal').textContent = state.lineHeight;
+  document.getElementById('contentPadding').value = state.contentPadding;
+  document.getElementById('contentPaddingVal').textContent = state.contentPadding + 'px';
+  document.getElementById('sectionGap').value = state.sectionGap;
+  document.getElementById('sectionGapVal').textContent = state.sectionGap + 'px';
+  document.getElementById('btnRadius').value = state.btnRadius;
+  document.getElementById('btnRadiusVal').textContent = state.btnRadius + 'px';
+  document.getElementById('brandName').value = state.brandName;
+  document.getElementById('showLogo').className = 'toggle' + (state.showLogo ? ' on' : '');
+  document.getElementById('showFooter').className = 'toggle' + (state.showFooter ? ' on' : '');
+  document.getElementById('showDividers').className = 'toggle' + (state.showDividers ? ' on' : '');
+  document.getElementById('roundedContent').className = 'toggle' + (state.roundedContent ? ' on' : '');
+}
+
+function readState() {
+  state.templateType = document.getElementById('templateType').value;
+  state.bgColor = document.getElementById('bgColor').value;
+  state.contentBg = document.getElementById('contentBg').value;
+  state.primaryColor = document.getElementById('primaryColor').value;
+  state.secondaryColor = document.getElementById('secondaryColor').value;
+  state.textColor = document.getElementById('textColor').value;
+  state.mutedColor = document.getElementById('mutedColor').value;
+  state.fontFamily = document.getElementById('fontFamily').value;
+  state.headingSize = parseInt(document.getElementById('headingSize').value);
+  state.bodySize = parseInt(document.getElementById('bodySize').value);
+  state.lineHeight = parseFloat(document.getElementById('lineHeight').value);
+  state.contentPadding = parseInt(document.getElementById('contentPadding').value);
+  state.sectionGap = parseInt(document.getElementById('sectionGap').value);
+  state.btnRadius = parseInt(document.getElementById('btnRadius').value);
+  state.showLogo = document.getElementById('showLogo').classList.contains('on');
+  state.showFooter = document.getElementById('showFooter').classList.contains('on');
+  state.showDividers = document.getElementById('showDividers').classList.contains('on');
+  state.roundedContent = document.getElementById('roundedContent').classList.contains('on');
+  state.brandName = document.getElementById('brandName').value || 'Roots & Culture';
+  state.viewMode = document.getElementById('viewMode').value;
+}
+
+// --- Attach listeners ---
+document.querySelectorAll('select, input[type="text"], input[type="number"]').forEach(el => {
+  el.addEventListener('input', () => { readState(); updateAll(); });
+});
+document.querySelectorAll('input[type="range"]').forEach(el => {
+  el.addEventListener('input', () => {
+    const valEl = document.getElementById(el.id + 'Val');
+    if (valEl) valEl.textContent = el.value + (el.id === 'lineHeight' ? '' : 'px');
+    readState(); updateAll();
+  });
+});
+document.querySelectorAll('input[type="color"]').forEach(el => {
+  el.addEventListener('input', () => {
+    const hexEl = document.getElementById(el.id + 'Hex');
+    if (hexEl) hexEl.textContent = el.value;
+    readState(); updateAll();
+  });
+});
+
+// --- Template content ---
+function getTemplateContent() {
+  const s = state;
+  const divider = s.showDividers
+    ? `<tr><td style="padding:${s.sectionGap/2}px 0"><hr style="border:none;border-top:1px solid ${s.mutedColor}33;margin:0"></td></tr>`
+    : `<tr><td style="height:${s.sectionGap}px"></td></tr>`;
+
+  const logo = s.showLogo ? `
+    <tr><td style="padding:${s.contentPadding}px ${s.contentPadding}px ${s.sectionGap}px;text-align:center;">
+      <div style="display:inline-block;width:48px;height:48px;border-radius:50%;background:${s.primaryColor};margin-bottom:12px">
+        <table role="presentation" width="48" height="48"><tr><td align="center" valign="middle" style="color:#fff;font-size:20px;font-weight:bold;font-family:${s.fontFamily}">${s.brandName.charAt(0)}</td></tr></table>
+      </div>
+      <div style="font-size:18px;font-weight:700;color:${s.primaryColor};font-family:${s.fontFamily};letter-spacing:-0.01em">${s.brandName}</div>
+    </td></tr>` : '';
+
+  const footer = s.showFooter ? `
+    ${divider}
+    <tr><td style="padding:${s.sectionGap}px ${s.contentPadding}px ${s.contentPadding}px;text-align:center;">
+      <p style="font-size:12px;color:${s.mutedColor};margin:0 0 8px;font-family:${s.fontFamily}">${s.brandName} &middot; Oslo, Norge</p>
+      <p style="font-size:12px;color:${s.mutedColor};margin:0;font-family:${s.fontFamily}">
+        <a href="#" style="color:${s.mutedColor};text-decoration:underline">Avmeld nyhetsbrev</a>
+      </p>
+    </td></tr>` : '';
+
+  const btnStyle = `display:inline-block;background:${s.primaryColor};color:#ffffff;padding:12px 28px;border-radius:${s.btnRadius}px;text-decoration:none;font-weight:600;font-size:${s.bodySize}px;font-family:${s.fontFamily}`;
+
+  const templates = {
+    transactional: `
+      ${logo}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <h1 style="font-size:${s.headingSize}px;color:${s.textColor};margin:0 0 ${s.sectionGap/2}px;font-family:${s.fontFamily};font-weight:700;line-height:1.3">Takk for din bestilling!</h1>
+        <p style="font-size:${s.bodySize}px;color:${s.textColor};line-height:${s.lineHeight};margin:0 0 ${s.sectionGap}px;font-family:${s.fontFamily}">Hei Ola, vi har mottatt din bestilling og den er nå under behandling. Du får en oppdatering når pakken sendes.</p>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <p style="font-size:12px;color:${s.mutedColor};text-transform:uppercase;letter-spacing:0.05em;margin:0 0 12px;font-family:${s.fontFamily};font-weight:600">Ordredetaljer</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding:10px 0;border-bottom:1px solid ${s.mutedColor}22;font-size:${s.bodySize}px;color:${s.textColor};font-family:${s.fontFamily}">Villblomst-honning (250g)</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${s.mutedColor}22;font-size:${s.bodySize}px;color:${s.textColor};font-family:${s.fontFamily};text-align:right">kr 189,00</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 0;border-bottom:1px solid ${s.mutedColor}22;font-size:${s.bodySize}px;color:${s.textColor};font-family:${s.fontFamily}">Bjørke-te (12 poser)</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${s.mutedColor}22;font-size:${s.bodySize}px;color:${s.textColor};font-family:${s.fontFamily};text-align:right">kr 129,00</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 0;font-size:${s.bodySize}px;color:${s.textColor};font-family:${s.fontFamily};font-weight:700">Totalt</td>
+            <td style="padding:12px 0;font-size:${s.bodySize}px;color:${s.textColor};font-family:${s.fontFamily};font-weight:700;text-align:right">kr 318,00</td>
+          </tr>
+        </table>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px ${s.contentPadding}px;text-align:center">
+        <a href="#" style="${btnStyle}">Se bestillingen din</a>
+      </td></tr>
+      ${footer}`,
+
+    welcome: `
+      ${logo}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <h1 style="font-size:${s.headingSize}px;color:${s.textColor};margin:0 0 ${s.sectionGap/2}px;font-family:${s.fontFamily};font-weight:700;line-height:1.3">Velkommen til ${s.brandName}!</h1>
+        <p style="font-size:${s.bodySize}px;color:${s.textColor};line-height:${s.lineHeight};margin:0 0 ${s.sectionGap/2}px;font-family:${s.fontFamily}">Hei Kari! Takk for at du ble med. Vi gleder oss til å dele norsk natur og kultur med deg.</p>
+        <p style="font-size:${s.bodySize}px;color:${s.textColor};line-height:${s.lineHeight};margin:0 0 ${s.sectionGap}px;font-family:${s.fontFamily}">Med din konto kan du følge bestillinger, lagre favoritter og booke eksklusive opplevelser.</p>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="padding:16px;background:${s.primaryColor}0a;border-radius:8px;margin-bottom:8px">
+              <p style="font-size:${s.bodySize}px;color:${s.secondaryColor};font-weight:700;margin:0 0 4px;font-family:${s.fontFamily}">Utforsk butikken</p>
+              <p style="font-size:${s.bodySize - 1}px;color:${s.mutedColor};margin:0;font-family:${s.fontFamily}">Honning, te, naturprodukter og mer</p>
+            </td>
+          </tr>
+          <tr><td style="height:8px"></td></tr>
+          <tr>
+            <td style="padding:16px;background:${s.primaryColor}0a;border-radius:8px">
+              <p style="font-size:${s.bodySize}px;color:${s.secondaryColor};font-weight:700;margin:0 0 4px;font-family:${s.fontFamily}">Book en opplevelse</p>
+              <p style="font-size:${s.bodySize - 1}px;color:${s.mutedColor};margin:0;font-family:${s.fontFamily}">Naturretreater, kurs og matopplevelser</p>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px ${s.contentPadding}px;text-align:center">
+        <a href="#" style="${btnStyle}">Kom i gang</a>
+      </td></tr>
+      ${footer}`,
+
+    booking: `
+      ${logo}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <h1 style="font-size:${s.headingSize}px;color:${s.textColor};margin:0 0 ${s.sectionGap/2}px;font-family:${s.fontFamily};font-weight:700;line-height:1.3">Booking bekreftet!</h1>
+        <p style="font-size:${s.bodySize}px;color:${s.textColor};line-height:${s.lineHeight};margin:0 0 ${s.sectionGap}px;font-family:${s.fontFamily}">Hei Erik, din plass er reservert. Her er detaljene for opplevelsen din.</p>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${s.primaryColor}08;border-radius:8px;overflow:hidden">
+          <tr>
+            <td style="padding:20px">
+              <p style="font-size:11px;color:${s.mutedColor};text-transform:uppercase;letter-spacing:0.05em;margin:0 0 8px;font-family:${s.fontFamily};font-weight:600">Opplevelse</p>
+              <p style="font-size:${s.headingSize - 4}px;color:${s.primaryColor};font-weight:700;margin:0 0 16px;font-family:${s.fontFamily}">Skogbad-retreat</p>
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding:0 24px 8px 0">
+                    <p style="font-size:11px;color:${s.mutedColor};margin:0 0 2px;font-family:${s.fontFamily}">Dato</p>
+                    <p style="font-size:${s.bodySize}px;color:${s.textColor};font-weight:600;margin:0;font-family:${s.fontFamily}">15. mai 2026</p>
+                  </td>
+                  <td style="padding:0 24px 8px 0">
+                    <p style="font-size:11px;color:${s.mutedColor};margin:0 0 2px;font-family:${s.fontFamily}">Tid</p>
+                    <p style="font-size:${s.bodySize}px;color:${s.textColor};font-weight:600;margin:0;font-family:${s.fontFamily}">10:00 – 15:00</p>
+                  </td>
+                  <td style="padding:0 0 8px 0">
+                    <p style="font-size:11px;color:${s.mutedColor};margin:0 0 2px;font-family:${s.fontFamily}">Sted</p>
+                    <p style="font-size:${s.bodySize}px;color:${s.textColor};font-weight:600;margin:0;font-family:${s.fontFamily}">Nordmarka</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <p style="font-size:${s.bodySize}px;color:${s.textColor};line-height:${s.lineHeight};margin:0 0 ${s.sectionGap/2}px;font-family:${s.fontFamily}"><strong style="color:${s.secondaryColor}">Hva du må ta med:</strong> Gode tursko, regntøy, matpakke og drikkeflaske.</p>
+      </td></tr>
+      <tr><td style="padding:0 ${s.contentPadding}px ${s.contentPadding}px;text-align:center">
+        <a href="#" style="${btnStyle}">Vis booking</a>
+        <p style="font-size:12px;color:${s.mutedColor};margin:12px 0 0;font-family:${s.fontFamily}">Avbestilling: kostnadsfritt inntil 48 timer før</p>
+      </td></tr>
+      ${footer}`,
+
+    newsletter: `
+      ${logo}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <p style="font-size:12px;color:${s.mutedColor};text-transform:uppercase;letter-spacing:0.05em;margin:0 0 8px;font-family:${s.fontFamily}">Nyhetsbrev &middot; April 2026</p>
+        <h1 style="font-size:${s.headingSize}px;color:${s.textColor};margin:0 0 ${s.sectionGap/2}px;font-family:${s.fontFamily};font-weight:700;line-height:1.3">Våren våkner i fjellet</h1>
+        <p style="font-size:${s.bodySize}px;color:${s.textColor};line-height:${s.lineHeight};margin:0 0 ${s.sectionGap}px;font-family:${s.fontFamily}">Snøen smelter, bekkene fosser og de første villblomstene titter fram. Les om vårens beste naturopplevelser og nye produkter i butikken.</p>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <div style="background:${s.primaryColor}08;border-radius:8px;overflow:hidden;margin-bottom:16px">
+          <div style="height:160px;background:linear-gradient(135deg, ${s.primaryColor}22, ${s.secondaryColor}22);display:flex;align-items:center;justify-content:center">
+            <table role="presentation" width="100%" height="160"><tr><td align="center" valign="middle" style="color:${s.primaryColor};font-size:14px;font-family:${s.fontFamily}">[ Bilde: Vårlandskap ]</td></tr></table>
+          </div>
+          <div style="padding:16px">
+            <p style="font-size:${s.bodySize}px;color:${s.textColor};font-weight:700;margin:0 0 6px;font-family:${s.fontFamily}">Nye vår-retreater er lagt ut</p>
+            <p style="font-size:${s.bodySize - 1}px;color:${s.mutedColor};margin:0 0 12px;font-family:${s.fontFamily};line-height:${s.lineHeight}">Tre nye skogbad-datoer i mai og juni. Begrenset antall plasser.</p>
+            <a href="#" style="font-size:${s.bodySize - 1}px;color:${s.primaryColor};font-weight:600;text-decoration:none;font-family:${s.fontFamily}">Les mer &rarr;</a>
+          </div>
+        </div>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <p style="font-size:12px;color:${s.mutedColor};text-transform:uppercase;letter-spacing:0.05em;margin:0 0 12px;font-family:${s.fontFamily};font-weight:600">Nytt i butikken</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid ${s.mutedColor}15">
+              <p style="font-size:${s.bodySize}px;color:${s.textColor};margin:0;font-family:${s.fontFamily}"><strong>Granskudd-sirup</strong> — Håndplukket i Telemark</p>
+            </td>
+            <td style="padding:8px 0;border-bottom:1px solid ${s.mutedColor}15;text-align:right;white-space:nowrap">
+              <span style="font-size:${s.bodySize}px;color:${s.secondaryColor};font-weight:600;font-family:${s.fontFamily}">kr 149</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0">
+              <p style="font-size:${s.bodySize}px;color:${s.textColor};margin:0;font-family:${s.fontFamily}"><strong>Ville urter-te</strong> — Nytt blanderi for våren</p>
+            </td>
+            <td style="padding:8px 0;text-align:right;white-space:nowrap">
+              <span style="font-size:${s.bodySize}px;color:${s.secondaryColor};font-weight:600;font-family:${s.fontFamily}">kr 119</span>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px ${s.contentPadding}px;text-align:center">
+        <a href="#" style="${btnStyle}">Se alle produkter</a>
+      </td></tr>
+      ${footer}`,
+
+    reset: `
+      ${logo}
+      <tr><td style="padding:0 ${s.contentPadding}px">
+        <h1 style="font-size:${s.headingSize}px;color:${s.textColor};margin:0 0 ${s.sectionGap/2}px;font-family:${s.fontFamily};font-weight:700;line-height:1.3">Tilbakestill passordet ditt</h1>
+        <p style="font-size:${s.bodySize}px;color:${s.textColor};line-height:${s.lineHeight};margin:0 0 ${s.sectionGap}px;font-family:${s.fontFamily}">Vi mottok en forespørsel om å tilbakestille passordet ditt. Klikk på knappen under for å velge et nytt passord.</p>
+      </td></tr>
+      <tr><td style="padding:0 ${s.contentPadding}px;text-align:center">
+        <a href="#" style="${btnStyle}">Tilbakestill passord</a>
+      </td></tr>
+      ${divider}
+      <tr><td style="padding:0 ${s.contentPadding}px ${s.contentPadding}px">
+        <p style="font-size:${s.bodySize - 1}px;color:${s.mutedColor};line-height:${s.lineHeight};margin:0;font-family:${s.fontFamily}">Lenken er gyldig i 60 minutter. Hvis du ikke ba om dette, kan du trygt ignorere denne e-posten.</p>
+      </td></tr>
+      ${footer}`
+  };
+
+  return templates[s.templateType] || templates.transactional;
+}
+
+// --- Render ---
+function renderPreview() {
+  const s = state;
+  const frame = document.getElementById('emailFrame');
+  const w = s.viewMode === 'mobile' ? '375px' : '600px';
+  frame.style.width = w;
+
+  const contentRadius = s.roundedContent ? '8px' : '0';
+
+  frame.innerHTML = `
+    <div style="background:${s.bgColor};padding:${s.viewMode === 'mobile' ? '16px 8px' : '32px 16px'}">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:100%;margin:0 auto;background:${s.contentBg};border-radius:${contentRadius};overflow:hidden;border-collapse:collapse">
+        ${getTemplateContent()}
+      </table>
+    </div>`;
+}
+
+function updatePrompt() {
+  const s = state;
+  const parts = [];
+  const templateNames = {
+    transactional: 'ordrebekreftelse',
+    welcome: 'velkomst-epost',
+    booking: 'bookingbekreftelse',
+    newsletter: 'nyhetsbrev',
+    reset: 'passord-tilbakestilling'
+  };
+
+  parts.push(`Lag en Resend e-post template (React Email) for ${templateNames[s.templateType]} til "${s.brandName}".`);
+
+  // Colors
+  const colorParts = [];
+  colorParts.push(`bakgrunnsfarge ${s.bgColor}`);
+  colorParts.push(`innholdsbakgrunn ${s.contentBg}`);
+  colorParts.push(`primærfarge ${s.primaryColor}`);
+  if (s.secondaryColor !== DEFAULTS.secondaryColor) colorParts.push(`aksentfarge ${s.secondaryColor}`);
+  colorParts.push(`tekstfarge ${s.textColor}`);
+  parts.push(`Farger: ${colorParts.join(', ')}.`);
+
+  // Typography
+  const fontName = s.fontFamily.split(',')[0].replace(/'/g, '');
+  parts.push(`Typografi: ${fontName}, overskrift ${s.headingSize}px, brødtekst ${s.bodySize}px, linjeavstand ${s.lineHeight}.`);
+
+  // Spacing
+  parts.push(`Spacing: ${s.contentPadding}px padding, ${s.sectionGap}px mellom seksjoner, knapp border-radius ${s.btnRadius}px.`);
+
+  // Options
+  const opts = [];
+  if (!s.showLogo) opts.push('uten logo-header');
+  if (!s.showFooter) opts.push('uten footer');
+  if (s.showDividers) opts.push('med skillelinjer mellom seksjoner');
+  if (!s.roundedContent) opts.push('skarpe hjørner på innholdsboks');
+  if (opts.length) parts.push(`Alternativer: ${opts.join(', ')}.`);
+
+  parts.push(`Avsender: ${s.senderEmail}. All tekst på norsk.`);
+
+  document.getElementById('promptOutput').textContent = parts.join('\n');
+}
+
+function updateAll() {
+  renderPreview();
+  updatePrompt();
+}
+
+function copyPrompt() {
+  const text = document.getElementById('promptOutput').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Kopiert!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Kopier'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+// Init
+updateAll();
+</script>
+</body>
+</html>
